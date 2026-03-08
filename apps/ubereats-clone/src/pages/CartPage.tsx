@@ -55,7 +55,10 @@ const CartPage = () => {
     return (
       <Box sx={{ maxWidth: 800, mx: 'auto', px: 3, pt: 3 }}>
         <Box sx={{ mb: 3 }}>
-          <IconButton onClick={() => navigate(-1)} tooltip='Back'>
+          <IconButton
+            onClick={() => navigate(-1)}
+            tooltip='Go back'
+            aria-label='Go back'>
             <ArrowBackIcon />
           </IconButton>
         </Box>
