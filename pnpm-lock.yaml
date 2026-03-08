@@ -265,6 +265,12 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(@types/node@20.19.35)(@vitest/ui@1.6.1)(jsdom@24.1.3)(sass@1.97.3)
 
+  apps/saas-dashboard:
+    dependencies:
+      kaze-ux:
+        specifier: workspace:*
+        version: link:../..
+
 packages:
 
   '@adobe/css-tools@4.4.4':

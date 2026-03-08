@@ -1,0 +1,186 @@
+export type InvoiceStatus =
+  | 'paid'
+  | 'pending'
+  | 'overdue'
+  | 'draft'
+  | 'cancelled'
+
+export type Invoice = {
+  id: string
+  number: string
+  client: string
+  amount: number
+  status: InvoiceStatus
+  issueDate: string
+  dueDate: string
+  project: string
+  description: string
+}
+
+export const invoices: Invoice[] = [
+  {
+    id: 'inv1',
+    number: 'INV-2025-001',
+    client: 'Acme Corp',
+    amount: 1500000,
+    status: 'paid',
+    issueDate: '2025-01-15',
+    dueDate: '2025-02-15',
+    project: 'Website Redesign',
+    description: 'Phase 1 - Design & Wireframes',
+  },
+  {
+    id: 'inv2',
+    number: 'INV-2025-002',
+    client: 'Globex Inc',
+    amount: 800000,
+    status: 'paid',
+    issueDate: '2025-01-20',
+    dueDate: '2025-02-20',
+    project: 'CRM Integration',
+    description: 'Initial setup and configuration',
+  },
+  {
+    id: 'inv3',
+    number: 'INV-2025-003',
+    client: 'Wayne Industries',
+    amount: 2500000,
+    status: 'paid',
+    issueDate: '2025-02-01',
+    dueDate: '2025-03-01',
+    project: 'Mobile App v2',
+    description: 'Architecture and MVP',
+  },
+  {
+    id: 'inv4',
+    number: 'INV-2025-004',
+    client: 'Stark Solutions',
+    amount: 1200000,
+    status: 'pending',
+    issueDate: '2025-02-15',
+    dueDate: '2025-03-15',
+    project: 'Design System',
+    description: 'Component library development',
+  },
+  {
+    id: 'inv5',
+    number: 'INV-2025-005',
+    client: 'Umbrella Corp',
+    amount: 3000000,
+    status: 'pending',
+    issueDate: '2025-03-01',
+    dueDate: '2025-04-01',
+    project: 'Cloud Migration',
+    description: 'Phase 1 - Assessment & Planning',
+  },
+  {
+    id: 'inv6',
+    number: 'INV-2025-006',
+    client: 'Cyberdyne Systems',
+    amount: 950000,
+    status: 'overdue',
+    issueDate: '2025-01-10',
+    dueDate: '2025-02-10',
+    project: 'Chatbot AI',
+    description: 'NLP model development',
+  },
+  {
+    id: 'inv7',
+    number: 'INV-2025-007',
+    client: 'Massive Dynamic',
+    amount: 1800000,
+    status: 'paid',
+    issueDate: '2025-02-10',
+    dueDate: '2025-03-10',
+    project: 'Data Pipeline',
+    description: 'ETL development and testing',
+  },
+  {
+    id: 'inv8',
+    number: 'INV-2025-008',
+    client: 'OsCorp',
+    amount: 650000,
+    status: 'pending',
+    issueDate: '2025-03-05',
+    dueDate: '2025-04-05',
+    project: 'SSO Implementation',
+    description: 'SAML/OAuth setup',
+  },
+  {
+    id: 'inv9',
+    number: 'INV-2025-009',
+    client: 'Initech',
+    amount: 2200000,
+    status: 'overdue',
+    issueDate: '2025-01-25',
+    dueDate: '2025-02-25',
+    project: 'Payment System Upgrade',
+    description: 'Payment gateway integration',
+  },
+  {
+    id: 'inv10',
+    number: 'INV-2025-010',
+    client: 'CHOAM Corp',
+    amount: 4500000,
+    status: 'draft',
+    issueDate: '2025-03-15',
+    dueDate: '2025-04-15',
+    project: 'Compliance Framework',
+    description: 'GDPR implementation phase',
+  },
+  {
+    id: 'inv11',
+    number: 'INV-2025-011',
+    client: 'Tyrell Corp',
+    amount: 1100000,
+    status: 'pending',
+    issueDate: '2025-03-10',
+    dueDate: '2025-04-10',
+    project: 'Performance Monitoring',
+    description: 'APM setup and configuration',
+  },
+  {
+    id: 'inv12',
+    number: 'INV-2025-012',
+    client: 'Aperture Science',
+    amount: 750000,
+    status: 'draft',
+    issueDate: '2025-03-20',
+    dueDate: '2025-04-20',
+    project: 'Analytics Dashboard',
+    description: 'Dashboard design phase',
+  },
+  {
+    id: 'inv13',
+    number: 'INV-2025-013',
+    client: 'Weyland Corp',
+    amount: 1600000,
+    status: 'paid',
+    issueDate: '2025-02-05',
+    dueDate: '2025-03-05',
+    project: 'API Gateway',
+    description: 'Gateway setup and rate limiting',
+  },
+  {
+    id: 'inv14',
+    number: 'INV-2025-014',
+    client: 'MomCorp',
+    amount: 500000,
+    status: 'cancelled',
+    issueDate: '2025-02-20',
+    dueDate: '2025-03-20',
+    project: 'Localization',
+    description: 'i18n implementation - cancelled',
+  },
+  {
+    id: 'inv15',
+    number: 'INV-2025-015',
+    client: 'Planet Express',
+    amount: 900000,
+    status: 'pending',
+    issueDate: '2025-03-18',
+    dueDate: '2025-04-18',
+    project: 'Inventory Management',
+    description: 'Additional reporting features',
+  },
+]

@@ -51,3 +51,6 @@ report.json
 
 # Serena
 .serena/
+
+# Demo app build outputs
+apps/*/dist

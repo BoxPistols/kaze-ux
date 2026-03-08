@@ -57,8 +57,14 @@ jobs:
 
       - name: Prepare deployment directory
         run: |
-          mkdir -p gh-pages
-          cp -r storybook-static/* gh-pages/
+          mkdir -p gh-pages/storybook
+          cp -r storybook-static/* gh-pages/storybook/
+
+      - name: Build SaaS Dashboard Demo
+        run: pnpm --filter saas-dashboard build:gh-pages
+
+      - name: Create landing page
+        run: cp scripts/gh-pages-index.html gh-pages/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -84,4 +90,6 @@ jobs:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           echo "Deployment completed!"
-          echo "Storybook: ${PAGE_URL}"
+          echo "Landing: ${PAGE_URL}"
+          echo "Storybook: ${PAGE_URL}storybook/"
+          echo "SaaS Dashboard: ${PAGE_URL}demo/saas-dashboard/"

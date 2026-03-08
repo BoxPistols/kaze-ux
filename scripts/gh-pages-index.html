@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaze UX - Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #0e0d6a, #5451d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: 1.125rem;
+      color: #64748b;
+      margin-bottom: 3rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    .card-icon.storybook { background: #fef3c7; }
+    .card-icon.dashboard { background: #dbeafe; }
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .card p {
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .badge.green { background: #dcfce7; color: #166534; }
+    .badge.blue { background: #dbeafe; color: #1e40af; }
+    .badge.gray { background: #f1f5f9; color: #475569; }
+    .footer {
+      margin-top: 2rem;
+      color: #94a3b8;
+      font-size: 0.875rem;
+    }
+    .footer a {
+      color: #5451d6;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kaze UX</h1>
+    <p class="subtitle">A modern React design system built with MUI v7, Tailwind CSS, and Storybook</p>
+
+    <div class="cards">
+      <a href="./storybook/" class="card">
+        <div class="card-icon storybook">&#128214;</div>
+        <h2>Storybook</h2>
+        <p>Browse 63+ components with interactive documentation, props tables, and usage examples.</p>
+        <span class="badge green">Live</span>
+      </a>
+
+      <a href="./demo/saas-dashboard/" class="card">
+        <div class="card-icon dashboard">&#128202;</div>
+        <h2>SaaS Dashboard</h2>
+        <p>B2B CRM dashboard demo showcasing 47+ components with full routing, CRUD, and dark mode.</p>
+        <span class="badge blue">Demo</span>
+      </a>
+    </div>
+
+    <div class="footer">
+      <p>MIT License &middot; <a href="https://github.com/your-username/kaze-ux">GitHub Repository</a></p>
+    </div>
+  </div>
+</body>
+</html>

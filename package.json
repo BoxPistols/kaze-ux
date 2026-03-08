@@ -51,9 +51,15 @@
     "build-all": "pnpm run build-storybook",
     "build:gh-pages": "vite build --mode gh-pages",
     "build:gh-pages:storybook": "storybook build -o gh-pages/storybook",
-    "build:gh-pages:all": "pnpm run build:gh-pages && pnpm run build:gh-pages:storybook",
+    "build:gh-pages:all": "pnpm run build:gh-pages:storybook && pnpm run build:gh-pages:dashboard",
     "prepare": "husky",
-    "export-tokens": "tsx scripts/export-design-tokens.ts"
+    "export-tokens": "tsx scripts/export-design-tokens.ts",
+    "dev:dashboard": "pnpm --filter saas-dashboard dev",
+    "dev:all": "pnpm dev & pnpm dev:dashboard",
+    "build:dashboard": "pnpm --filter saas-dashboard build",
+    "build:gh-pages:dashboard": "pnpm --filter saas-dashboard build:gh-pages",
+    "preview:dashboard": "pnpm --filter saas-dashboard preview",
+    "test:dashboard": "pnpm --filter saas-dashboard test"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --color-primary: #0e0d6a;
+  --color-primary-foreground: #ffffff;
+  --color-primary-light: #5451d6;
+  --color-primary-dark: #11114a;
+
+  --color-secondary: #696881;
+  --color-secondary-foreground: #ffffff;
+
+  --color-success: #46ab4a;
+  --color-success-foreground: #ffffff;
+  --color-success-light: #d4e9d4;
+  --color-success-border: #6db770;
+
+  --color-error: #da3737;
+  --color-error-foreground: #ffffff;
+  --color-error-light: #ffebee;
+  --color-error-border: #dc4e4e;
+
+  --color-warning: #eb8117;
+  --color-warning-foreground: #ffffff;
+  --color-warning-light: #fff3e0;
+  --color-warning-border: #dd9c3c;
+
+  --color-info: #1dafc2;
+  --color-info-foreground: #ffffff;
+  --color-info-light: #bde8ee;
+  --color-info-border: #43bfcf;
+
+  --color-background: #ffffff;
+  --color-background-paper: #ffffff;
+  --color-foreground: #223354;
+  --color-muted: #4a515e;
+  --color-border: #e0e0e0;
+
+  font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
+  --color-primary: #4f4ea7;
+  --color-primary-foreground: #ffffff;
+  --color-primary-light: #5a58b4;
+  --color-primary-dark: #272675;
+
+  --color-secondary: #8c8da3;
+  --color-secondary-foreground: #ffffff;
+
+  --color-success: #66bb6a;
+  --color-success-foreground: #ffffff;
+  --color-success-light: #e8f5e9;
+  --color-success-border: #81c784;
+
+  --color-error: #ef5350;
+  --color-error-foreground: #ffffff;
+  --color-error-light: #ffcdd2;
+  --color-error-border: #d55757;
+
+  --color-warning: #ffa726;
+  --color-warning-foreground: #ffffff;
+  --color-warning-light: #ffe0b2;
+  --color-warning-border: #eca233;
+
+  --color-info: #00acc1;
+  --color-info-foreground: #ffffff;
+  --color-info-light: #b2ebf2;
+  --color-info-border: #4dd0e1;
+
+  --color-background: #313035;
+  --color-background-paper: #3b3b3d;
+  --color-foreground: #ffffff;
+  --color-muted: #cfcfcf;
+  --color-border: #323235;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+html[data-theme-transitioning] body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+main > main {
+  inset: 0;
+}
