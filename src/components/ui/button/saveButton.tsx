@@ -3,8 +3,6 @@
 import SaveIcon from '@mui/icons-material/Save'
 import { Button, type SxProps, type Theme, Typography } from '@mui/material'
 
-import { colorData } from '@/themes/colorToken'
-
 export interface SaveButtonProps {
   /** 無効化状態 */
   disabled?: boolean
@@ -26,7 +24,7 @@ export const SaveButton = ({
     <Button
       variant='outlined'
       sx={{
-        backgroundColor: colorData.background.default,
+        backgroundColor: 'background.default',
         padding: 0.5,
         overflow: 'hidden',
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -37,7 +35,7 @@ export const SaveButton = ({
       onClick={onClick}>
       <SaveIcon
         sx={{
-          color: disabled ? colorData.grey[400] : colorData.primary.main,
+          color: disabled ? 'text.disabled' : 'primary.main',
           mr: '2px',
         }}
       />
@@ -45,7 +43,7 @@ export const SaveButton = ({
         sx={{
           fontSize: '12px',
           fontWeight: 'bold',
-          color: disabled ? colorData.grey[400] : colorData.primary.main,
+          color: disabled ? 'text.disabled' : 'primary.main',
         }}>
         {label}
       </Typography>

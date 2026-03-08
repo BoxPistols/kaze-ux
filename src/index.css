@@ -50,41 +50,41 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark Theme Colors from MUI colorData.dark */
+/* Dark Theme Colors - Dracula-inspired soft dark */
 .dark {
-  --color-primary: #4f4ea7;
+  --color-primary: #7c8cf8;
   --color-primary-foreground: #ffffff;
-  --color-primary-light: #5a58b4;
-  --color-primary-dark: #272675;
+  --color-primary-light: #9aa4fc;
+  --color-primary-dark: #6270d8;
 
-  --color-secondary: #8c8da3;
+  --color-secondary: #b0b1c8;
   --color-secondary-foreground: #ffffff;
 
-  --color-success: #66bb6a;
-  --color-success-foreground: #ffffff;
-  --color-success-light: #e8f5e9;
-  --color-success-border: #81c784;
+  --color-success: #50fa7b;
+  --color-success-foreground: #1a2e1a;
+  --color-success-light: #7afb9e;
+  --color-success-border: #50fa7b;
 
-  --color-error: #ef5350;
+  --color-error: #ff6e6e;
   --color-error-foreground: #ffffff;
-  --color-error-light: #ffcdd2;
-  --color-error-border: #d55757;
+  --color-error-light: #ff9a9a;
+  --color-error-border: #ff6e6e;
 
-  --color-warning: #ffa726;
+  --color-warning: #ffb86c;
   --color-warning-foreground: #ffffff;
-  --color-warning-light: #ffe0b2;
-  --color-warning-border: #eca233;
+  --color-warning-light: #ffd099;
+  --color-warning-border: #ffb86c;
 
-  --color-info: #00acc1;
-  --color-info-foreground: #ffffff;
-  --color-info-light: #b2ebf2;
-  --color-info-border: #4dd0e1;
+  --color-info: #8be9fd;
+  --color-info-foreground: #0d2528;
+  --color-info-light: #b0f0fc;
+  --color-info-border: #8be9fd;
 
-  --color-background: #313035;
-  --color-background-paper: #3b3b3d;
-  --color-foreground: #ffffff;
-  --color-muted: #cfcfcf;
-  --color-border: #323235;
+  --color-background: #282a36;
+  --color-background-paper: #343746;
+  --color-foreground: #f8f8f2;
+  --color-muted: #b8bece;
+  --color-border: #44475a;
 }
 
 /* === CSS Variables available for Tailwind utility classes === */
