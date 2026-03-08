@@ -22,6 +22,8 @@ import type { OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
 
+const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+
 const statusMap: Record<OrderStatus, StatusType> = {
   preparing: 'pending',
   'on-the-way': 'active',
@@ -53,15 +55,12 @@ const OrderTrackingPage = () => {
 
   if (!order) return <NotFoundView homePath='/orders' />
 
-  const formatPrice = (price: number) => `${price.toLocaleString()}`
   const activeStep = getActiveStep(order.status)
 
   return (
-    <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-        <IconButton
-          onClick={() => navigate('/orders')}
-          tooltip='Back to orders'>
+    <Box sx={{ maxWidth: 800, mx: 'auto', px: 3, pt: 3, pb: 6 }}>
+      <Box sx={{ mb: 3 }}>
+        <IconButton onClick={() => navigate('/orders')} tooltip='Back to orders'>
           <ArrowBackIcon />
         </IconButton>
       </Box>
@@ -71,13 +70,15 @@ const OrderTrackingPage = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 3,
+          mb: 4,
         }}>
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 700 }}>
+          <Typography
+            variant='h4'
+            sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
             Order #{order.id.toUpperCase()}
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant='body1' color='text.secondary' sx={{ mt: 0.5 }}>
             {order.restaurantName}
           </Typography>
         </Box>
@@ -86,7 +87,7 @@ const OrderTrackingPage = () => {
 
       {order.status !== 'cancelled' && (
         <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ p: 3 }}>
+          <CardContent sx={{ p: 4 }}>
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((label) => (
                 <Step key={label}>
@@ -99,12 +100,12 @@ const OrderTrackingPage = () => {
       )}
 
       {order.status === 'cancelled' && (
-        <Card sx={{ mb: 3, borderColor: 'error.main' }}>
-          <CardContent>
+        <Card sx={{ mb: 3 }}>
+          <CardContent sx={{ py: 4 }}>
             <Typography
               variant='body1'
               color='error.main'
-              sx={{ fontWeight: 500, textAlign: 'center' }}>
+              sx={{ fontWeight: 600, textAlign: 'center' }}>
               This order has been cancelled
             </Typography>
           </CardContent>
@@ -124,7 +125,7 @@ const OrderTrackingPage = () => {
                 color='primary'
               />
               <Box sx={{ flex: 1 }}>
-                <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
                   {order.driverName}
                 </Typography>
                 {order.driverPhone && (
@@ -150,18 +151,20 @@ const OrderTrackingPage = () => {
           <CardTitle>Delivery Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant='body2' color='text.secondary'>
                 Delivery Address
               </Typography>
-              <Typography variant='body2'>{order.deliveryAddress}</Typography>
+              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                {order.deliveryAddress}
+              </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant='body2' color='text.secondary'>
                 Estimated Delivery
               </Typography>
-              <Typography variant='body2'>
+              <Typography variant='body2' sx={{ fontWeight: 500 }}>
                 {new Date(order.estimatedDelivery).toLocaleTimeString('ja-JP', {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -172,7 +175,7 @@ const OrderTrackingPage = () => {
               <Typography variant='body2' color='text.secondary'>
                 Order Time
               </Typography>
-              <Typography variant='body2'>
+              <Typography variant='body2' sx={{ fontWeight: 500 }}>
                 {new Date(order.orderDate).toLocaleString('ja-JP', {
                   month: 'short',
                   day: 'numeric',
@@ -190,58 +193,61 @@ const OrderTrackingPage = () => {
           <CardTitle>Order Items</CardTitle>
         </CardHeader>
         <CardContent>
-          {order.items.map((item) => (
+          {order.items.map((item, idx) => (
             <Box key={item.id}>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  py: 1,
+                  py: 1.5,
                 }}>
-                <Box>
-                  <Typography variant='body1'>
-                    {item.quantity}x {item.name}
-                  </Typography>
-                </Box>
-                <Typography variant='body1' sx={{ fontWeight: 500 }}>
+                <Typography variant='body1'>
+                  {item.quantity}x {item.name}
+                </Typography>
+                <Typography variant='body1' sx={{ fontWeight: 600 }}>
                   {formatPrice(item.price * item.quantity)}
                 </Typography>
               </Box>
-              <Divider />
+              {idx < order.items.length - 1 && <Divider />}
             </Box>
           ))}
-          <Box sx={{ mt: 2 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                mb: 0.5,
-              }}>
-              <Typography variant='body2'>Subtotal</Typography>
-              <Typography variant='body2'>
-                {formatPrice(order.total)}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                mb: 0.5,
-              }}>
-              <Typography variant='body2'>Delivery Fee</Typography>
-              <Typography variant='body2'>
-                {formatPrice(order.deliveryFee)}
-              </Typography>
-            </Box>
-            <Divider sx={{ my: 1 }} />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                Total
-              </Typography>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                {formatPrice(order.total + order.deliveryFee)}
-              </Typography>
-            </Box>
+          <Divider sx={{ my: 2 }} />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              mb: 1,
+            }}>
+            <Typography variant='body2' color='text.secondary'>
+              Subtotal
+            </Typography>
+            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              {formatPrice(order.total)}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              mb: 1,
+            }}>
+            <Typography variant='body2' color='text.secondary'>
+              Delivery Fee
+            </Typography>
+            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              {formatPrice(order.deliveryFee)}
+            </Typography>
+          </Box>
+          <Divider sx={{ my: 1.5 }} />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
+              Total
+            </Typography>
+            <Typography
+              variant='subtitle1'
+              sx={{ fontWeight: 700, color: 'primary.main' }}>
+              {formatPrice(order.total + order.deliveryFee)}
+            </Typography>
           </Box>
         </CardContent>
       </Card>

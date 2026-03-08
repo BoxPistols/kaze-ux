@@ -5,13 +5,14 @@ import { ActionMenu } from '@/components/ui/menu'
 import { ResourceTable } from '@/components/ui/table'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
-import { PageHeader } from '@/components/ui/text'
 import { toast } from '@/components/ui/toast'
 
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import type { Order, OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
+
+const formatPrice = (price: number) => `¥${price.toLocaleString()}`
 
 const statusMap: Record<OrderStatus, StatusType> = {
   preparing: 'pending',
@@ -51,7 +52,7 @@ const OrderHistoryPage = () => {
       headerName: 'Total',
       width: 120,
       renderCell: (params) =>
-        `${(params.value + params.row.deliveryFee).toLocaleString()}`,
+        formatPrice(params.value + params.row.deliveryFee),
     },
     {
       field: 'status',
@@ -109,11 +110,24 @@ const OrderHistoryPage = () => {
   ]
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
-      <PageHeader
-        title='Order History'
-        subtitle='View your past and current orders.'
-      />
+    <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3, pt: 3, pb: 6 }}>
+      <Box sx={{ mb: 4 }}>
+        <Box
+          component='h1'
+          sx={{
+            typography: 'h4',
+            fontWeight: 800,
+            mb: 0.5,
+            letterSpacing: '-0.02em',
+          }}>
+          Order History
+        </Box>
+        <Box
+          component='p'
+          sx={{ typography: 'body1', color: 'text.secondary', m: 0 }}>
+          View your past and current orders.
+        </Box>
+      </Box>
 
       <ResourceTable
         columns={columns}

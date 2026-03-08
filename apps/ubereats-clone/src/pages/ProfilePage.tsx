@@ -5,7 +5,6 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { UserAvatar } from '@/components/ui/avatar'
 import { SaveButton } from '@/components/ui/button/saveButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { PageHeader } from '@/components/ui/text'
 import { toast } from '@/components/ui/toast'
 
 const ProfilePage = () => {
@@ -19,21 +18,33 @@ const ProfilePage = () => {
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
-      <PageHeader title='Profile' subtitle='Manage your account settings.' />
+    <Box sx={{ maxWidth: 960, mx: 'auto', px: 3, pt: 3, pb: 6 }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography
+          variant='h4'
+          sx={{ fontWeight: 800, mb: 0.5, letterSpacing: '-0.02em' }}>
+          Profile
+        </Typography>
+        <Typography variant='body1' color='text.secondary'>
+          Manage your account settings.
+        </Typography>
+      </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 4 }}>
+            <CardContent sx={{ textAlign: 'center', py: 5 }}>
               <UserAvatar name={name} size='large' color='primary' />
-              <Typography variant='h6' sx={{ mt: 2, fontWeight: 600 }}>
+              <Typography variant='h6' sx={{ mt: 2.5, fontWeight: 700 }}>
                 {name}
               </Typography>
               <Typography variant='body2' color='text.secondary'>
                 {email}
               </Typography>
-              <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ display: 'block', mt: 1.5 }}>
                 Member since March 2025
               </Typography>
             </CardContent>
@@ -46,7 +57,7 @@ const ProfilePage = () => {
               <CardTitle>Personal Information</CardTitle>
             </CardHeader>
             <CardContent>
-              <Grid container spacing={2}>
+              <Grid container spacing={2.5}>
                 <Grid size={12}>
                   <CustomTextField
                     label='Full Name'

@@ -25,15 +25,15 @@ export type Restaurant = {
 }
 
 export const categories = [
-  { id: 'all', label: 'All', icon: '🍽️' },
-  { id: 'japanese', label: 'Japanese', icon: '🍣' },
-  { id: 'italian', label: 'Italian', icon: '🍕' },
-  { id: 'chinese', label: 'Chinese', icon: '🥟' },
-  { id: 'korean', label: 'Korean', icon: '🥘' },
-  { id: 'burger', label: 'Burgers', icon: '🍔' },
-  { id: 'cafe', label: 'Cafe', icon: '☕' },
-  { id: 'healthy', label: 'Healthy', icon: '🥗' },
-  { id: 'dessert', label: 'Desserts', icon: '🍰' },
+  { id: 'all', label: 'All' },
+  { id: 'japanese', label: 'Japanese' },
+  { id: 'italian', label: 'Italian' },
+  { id: 'chinese', label: 'Chinese' },
+  { id: 'korean', label: 'Korean' },
+  { id: 'burger', label: 'Burgers' },
+  { id: 'cafe', label: 'Cafe' },
+  { id: 'healthy', label: 'Healthy' },
+  { id: 'dessert', label: 'Desserts' },
 ]
 
 export const restaurants: Restaurant[] = [

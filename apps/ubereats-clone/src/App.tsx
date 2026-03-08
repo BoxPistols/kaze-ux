@@ -3,6 +3,7 @@ import HomeIcon from '@mui/icons-material/Home'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import PersonIcon from '@mui/icons-material/Person'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import {
   Box,
@@ -47,7 +48,8 @@ const navItems = [
 const AppContent = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { isDarkMode, toggleTheme } = hookUseTheme()
+  const { mode, setMode } = hookUseTheme()
+  const isDarkMode = mode === 'dark'
   const cartCount = useCartStore((s) => s.totalItems())
   const isMobile = useMediaQuery('(max-width:768px)')
 
@@ -57,44 +59,78 @@ const AppContent = () => {
   })
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+      }}>
       <AppBar
         position='sticky'
-        color='inherit'
         elevation={0}
-        sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Toolbar>
-          <Typography
-            variant='h6'
+        sx={{
+          bgcolor: 'background.paper',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          backdropFilter: 'blur(12px)',
+        }}>
+        <Toolbar sx={{ maxWidth: 1200, width: '100%', mx: 'auto' }}>
+          <Box
             sx={{
-              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
               flex: 1,
               cursor: 'pointer',
-              color: 'primary.main',
             }}
             onClick={() => navigate('/')}>
-            Kaze Eats
-          </Typography>
+            <RestaurantMenuIcon
+              sx={{ color: 'primary.main', fontSize: 28 }}
+            />
+            <Typography
+              variant='h6'
+              sx={{
+                fontWeight: 800,
+                color: 'text.primary',
+                letterSpacing: '-0.02em',
+              }}>
+              Kaze
+              <Box component='span' sx={{ color: 'primary.main' }}>
+                Eats
+              </Box>
+            </Typography>
+          </Box>
           {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 1, mr: 1 }}>
-              {navItems.map((item) => (
-                <IconButton
-                  key={item.label}
-                  onClick={() => navigate(item.path)}
-                  tooltip={item.label}>
-                  {item.label === 'Cart' ? (
-                    <Badge badgeContent={cartCount} color='primary'>
-                      {item.icon}
-                    </Badge>
-                  ) : (
-                    item.icon
-                  )}
-                </IconButton>
-              ))}
+            <Box sx={{ display: 'flex', gap: 0.5, mr: 1 }}>
+              {navItems.map((item) => {
+                const isActive =
+                  item.path === '/'
+                    ? location.pathname === '/'
+                    : location.pathname.startsWith(item.path)
+                return (
+                  <IconButton
+                    key={item.label}
+                    onClick={() => navigate(item.path)}
+                    tooltip={item.label}
+                    sx={{
+                      color: isActive ? 'primary.main' : 'text.secondary',
+                      '&:hover': { color: 'primary.main' },
+                    }}>
+                    {item.label === 'Cart' ? (
+                      <Badge badgeContent={cartCount} color='primary'>
+                        {item.icon}
+                      </Badge>
+                    ) : (
+                      item.icon
+                    )}
+                  </IconButton>
+                )
+              })}
             </Box>
           )}
           <IconButton
-            onClick={toggleTheme}
+            onClick={() => setMode(isDarkMode ? 'light' : 'dark')}
             tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}>
             {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
@@ -126,6 +162,7 @@ const AppContent = () => {
             borderTop: '1px solid',
             borderColor: 'divider',
             zIndex: 1200,
+            bgcolor: 'background.paper',
           }}>
           {navItems.map((item) => (
             <BottomNavigationAction
