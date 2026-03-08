@@ -5,10 +5,12 @@ import PrintIcon from '@mui/icons-material/Print'
 import ShareIcon from '@mui/icons-material/Share'
 import TableChartIcon from '@mui/icons-material/TableChart'
 import TimelineIcon from '@mui/icons-material/Timeline'
-import { Box, Grid, Typography } from '@mui/material'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import { Box, Grid, LinearProgress, Typography } from '@mui/material'
 
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { CustomChip } from '@/components/ui/chip'
 import { SplitButton } from '@/components/ui/split-button'
 import { PageHeader } from '@/components/ui/text'
 import { toast } from '@/components/ui/toast'
@@ -17,10 +19,26 @@ import { invoices } from '~/data/invoices'
 import { projects } from '~/data/projects'
 
 const chartOptions = [
-  { value: 'bar', label: 'Bar', icon: <BarChartIcon fontSize='small' aria-hidden='true' /> },
-  { value: 'pie', label: 'Pie', icon: <PieChartIcon fontSize='small' aria-hidden='true' /> },
-  { value: 'line', label: 'Line', icon: <TimelineIcon fontSize='small' aria-hidden='true' /> },
-  { value: 'table', label: 'Table', icon: <TableChartIcon fontSize='small' aria-hidden='true' /> },
+  {
+    value: 'bar',
+    label: 'Bar',
+    icon: <BarChartIcon fontSize='small' aria-hidden='true' />,
+  },
+  {
+    value: 'pie',
+    label: 'Pie',
+    icon: <PieChartIcon fontSize='small' aria-hidden='true' />,
+  },
+  {
+    value: 'line',
+    label: 'Line',
+    icon: <TimelineIcon fontSize='small' aria-hidden='true' />,
+  },
+  {
+    value: 'table',
+    label: 'Table',
+    icon: <TableChartIcon fontSize='small' aria-hidden='true' />,
+  },
 ]
 
 const ReportsPage = () => {
@@ -30,6 +48,7 @@ const ReportsPage = () => {
   ).length
   const totalBudget = projects.reduce((sum, p) => sum + p.budget, 0)
   const totalSpent = projects.reduce((sum, p) => sum + p.spent, 0)
+  const budgetUtil = (totalSpent / totalBudget) * 100
   const paidInvoices = invoices
     .filter((i) => i.status === 'paid')
     .reduce((sum, i) => sum + i.amount, 0)
@@ -39,6 +58,7 @@ const ReportsPage = () => {
   const overdueInvoices = invoices
     .filter((i) => i.status === 'overdue')
     .reduce((sum, i) => sum + i.amount, 0)
+  const totalInvoiceAmount = paidInvoices + pendingInvoices + overdueInvoices
 
   return (
     <Box sx={{ p: 3 }}>
@@ -86,22 +106,26 @@ const ReportsPage = () => {
               <CardTitle>Project Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='body2' color='text.secondary'>
                     Active Projects
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                    {activeProjects}
-                  </Typography>
+                  <CustomChip
+                    label={String(activeProjects)}
+                    size='small'
+                    color='primary'
+                  />
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='body2' color='text.secondary'>
                     Completed Projects
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                    {completedProjects}
-                  </Typography>
+                  <CustomChip
+                    label={String(completedProjects)}
+                    size='small'
+                    color='success'
+                  />
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='body2' color='text.secondary'>
@@ -127,13 +151,32 @@ const ReportsPage = () => {
                     ¥{(totalSpent / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' color='text.secondary'>
-                    Budget Utilization
-                  </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                    {((totalSpent / totalBudget) * 100).toFixed(1)}%
-                  </Typography>
+                <Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                    }}>
+                    <Typography variant='body2' color='text.secondary'>
+                      Budget Utilization
+                    </Typography>
+                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                      {budgetUtil.toFixed(1)}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant='determinate'
+                    value={budgetUtil}
+                    sx={{ height: 8, borderRadius: 4 }}
+                    color={
+                      budgetUtil > 90
+                        ? 'error'
+                        : budgetUtil > 70
+                          ? 'warning'
+                          : 'primary'
+                    }
+                  />
                 </Box>
               </Box>
             </CardContent>
@@ -147,7 +190,7 @@ const ReportsPage = () => {
               <CardTitle>Invoice Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='body2' color='text.secondary'>
                     Total Invoices
@@ -156,70 +199,160 @@ const ReportsPage = () => {
                     {invoices.length}
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' color='text.secondary'>
-                    Paid Amount
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    sx={{ fontWeight: 600, color: 'success.main' }}>
-                    ¥{(paidInvoices / 1000000).toFixed(1)}M
-                  </Typography>
+                <Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                    }}>
+                    <Typography variant='body2' color='text.secondary'>
+                      Paid
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 600, color: 'success.main' }}>
+                      ¥{(paidInvoices / 1000000).toFixed(1)}M
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant='determinate'
+                    value={(paidInvoices / totalInvoiceAmount) * 100}
+                    sx={{ height: 8, borderRadius: 4 }}
+                    color='success'
+                  />
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' color='text.secondary'>
-                    Pending Amount
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    sx={{ fontWeight: 600, color: 'warning.main' }}>
-                    ¥{(pendingInvoices / 1000000).toFixed(1)}M
-                  </Typography>
+                <Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                    }}>
+                    <Typography variant='body2' color='text.secondary'>
+                      Pending
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 600, color: 'warning.main' }}>
+                      ¥{(pendingInvoices / 1000000).toFixed(1)}M
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant='determinate'
+                    value={(pendingInvoices / totalInvoiceAmount) * 100}
+                    sx={{ height: 8, borderRadius: 4 }}
+                    color='warning'
+                  />
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' color='text.secondary'>
-                    Overdue Amount
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    sx={{ fontWeight: 600, color: 'error.main' }}>
-                    ¥{(overdueInvoices / 1000000).toFixed(1)}M
-                  </Typography>
+                <Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                    }}>
+                    <Typography variant='body2' color='text.secondary'>
+                      Overdue
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 600, color: 'error.main' }}>
+                      ¥{(overdueInvoices / 1000000).toFixed(1)}M
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant='determinate'
+                    value={(overdueInvoices / totalInvoiceAmount) * 100}
+                    sx={{ height: 8, borderRadius: 4 }}
+                    color='error'
+                  />
                 </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* Chart Placeholder */}
+        {/* Revenue Trend Chart Placeholder */}
         <Grid size={12}>
           <Card>
             <CardHeader>
-              <CardTitle>Revenue Trend</CardTitle>
-            </CardHeader>
-            <CardContent>
               <Box
                 sx={{
-                  height: 300,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
+                  justifyContent: 'space-between',
+                  width: '100%',
                 }}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <BarChartIcon
-                    sx={{ fontSize: 64, color: 'text.secondary', opacity: 0.3 }}
+                <CardTitle>Revenue Trend</CardTitle>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <TrendingUpIcon
+                    sx={{ fontSize: 18, color: 'success.main' }}
                     aria-hidden='true'
                   />
-                  <Typography color='text.secondary' sx={{ mt: 1 }}>
-                    Chart visualization placeholder
-                  </Typography>
-                  <Typography variant='caption' color='text.secondary'>
-                    Integrate with your preferred charting library
+                  <Typography
+                    variant='caption'
+                    sx={{ color: 'success.main', fontWeight: 600 }}>
+                    +12.5% vs last quarter
                   </Typography>
                 </Box>
               </Box>
+            </CardHeader>
+            <CardContent>
+              {/* Simulated bar chart with progress bars */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {[
+                  { month: 'Jan', value: 75, amount: '¥4.8M' },
+                  { month: 'Feb', value: 88, amount: '¥6.6M' },
+                  { month: 'Mar', value: 65, amount: '¥5.2M' },
+                  { month: 'Apr', value: 92, amount: '¥7.2M' },
+                  { month: 'May', value: 78, amount: '¥5.9M' },
+                  { month: 'Jun', value: 95, amount: '¥8.1M' },
+                ].map((item) => (
+                  <Box
+                    key={item.month}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                    }}>
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        fontWeight: 500,
+                        minWidth: 32,
+                        color: 'text.secondary',
+                      }}>
+                      {item.month}
+                    </Typography>
+                    <LinearProgress
+                      variant='determinate'
+                      value={item.value}
+                      sx={{
+                        flex: 1,
+                        height: 24,
+                        borderRadius: 1.5,
+                        bgcolor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255,255,255,0.06)'
+                            : 'rgba(0,0,0,0.04)',
+                      }}
+                    />
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 600, minWidth: 56, textAlign: 'right' }}>
+                      {item.amount}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ display: 'block', mt: 2, textAlign: 'center' }}>
+                Integrate with your preferred charting library for interactive
+                visualizations
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
