@@ -17,8 +17,7 @@ import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
 import { restaurants } from '~/data/restaurants'
-
-const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+import { formatPrice } from '~/utils/format'
 
 export const RestaurantPage = () => {
   const { id } = useParams<{ id: string }>()

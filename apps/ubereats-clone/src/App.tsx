@@ -41,6 +41,8 @@ import { RestaurantPage } from '~/pages/RestaurantPage'
 
 type ThemeMode = 'light' | 'dark'
 
+// hookUseTheme ではなく独自管理: UberEats Clone は専用テーマ (lightTheme/darkTheme) を使用し、
+// localStorage キーも 'ubereats-theme' で他アプリと分離するため
 const getInitialMode = (): ThemeMode => {
   if (typeof window === 'undefined') return 'light'
   const saved = localStorage.getItem('ubereats-theme')

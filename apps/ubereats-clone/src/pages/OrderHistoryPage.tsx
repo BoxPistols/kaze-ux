@@ -16,8 +16,7 @@ import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import type { Order, OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
-
-const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+import { formatPrice } from '~/utils/format'
 
 const statusMap: Record<OrderStatus, StatusType> = {
   preparing: 'pending',

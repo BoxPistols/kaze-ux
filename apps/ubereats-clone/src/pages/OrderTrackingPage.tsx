@@ -21,8 +21,7 @@ import { toast } from '@/components/ui/toast'
 import type { OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
-
-const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+import { formatPrice } from '~/utils/format'
 
 const statusMap: Record<OrderStatus, StatusType> = {
   preparing: 'pending',

@@ -16,8 +16,7 @@ import { IconButton } from '@/components/ui/icon-button'
 import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
-
-const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+import { formatPrice } from '~/utils/format'
 
 const paymentOptions = [
   { value: 'credit', label: 'Credit Card' },

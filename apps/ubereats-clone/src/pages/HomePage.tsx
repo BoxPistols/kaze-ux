@@ -14,8 +14,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
 
 import { restaurants, categories } from '~/data/restaurants'
-
-const formatPrice = (price: number) => `¥${price.toLocaleString()}`
+import { formatPrice } from '~/utils/format'
 
 export const HomePage = () => {
   const navigate = useNavigate()
