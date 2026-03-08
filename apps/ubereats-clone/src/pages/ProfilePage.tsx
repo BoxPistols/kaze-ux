@@ -21,7 +21,7 @@ const orderStats = [
     label: 'Total Orders',
     value: '47',
     icon: <ReceiptLongIcon aria-hidden='true' />,
-    color: 'primary.main',
+    color: '#06C167',
   },
   {
     label: 'Deliveries',
@@ -48,7 +48,7 @@ const languageOptions = [
   { value: 'en', label: 'English' },
 ]
 
-const ProfilePage = () => {
+export const ProfilePage = () => {
   const [name, setName] = useState('Taro Yamada')
   const [email, setEmail] = useState('taro@example.com')
   const [phone, setPhone] = useState('090-1234-5678')
@@ -81,10 +81,10 @@ const ProfilePage = () => {
         <Box
           sx={{
             height: 100,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #06C167 0%, #048848 100%)',
           }}
         />
-        <CardContent sx={{ pt: 0, pb: 3, px: 3 }}>
+        <CardContent>
           <Box
             sx={{
               display: 'flex',
@@ -115,11 +115,11 @@ const ProfilePage = () => {
               </Typography>
             </Box>
             <Box sx={{ pb: 0.5 }}>
-              <CustomChip label='Premium Member' color='primary' size='small' />
+              <CustomChip label='Premium Member' color='success' size='small' />
             </Box>
           </Box>
 
-          <Divider sx={{ my: 2.5 }} />
+          <Divider sx={{ my: 2 }} />
 
           {/* Order Stats */}
           <Grid container spacing={2}>
@@ -172,7 +172,7 @@ const ProfilePage = () => {
               </Box>
             </CardHeader>
             <CardContent>
-              <Grid container spacing={2.5}>
+              <Grid container spacing={2}>
                 <Grid size={12}>
                   <CustomTextField
                     label='Full Name'
@@ -223,10 +223,7 @@ const ProfilePage = () => {
                         onClick={() => setIsEditing(false)}>
                         Cancel
                       </Button>
-                      <SaveButton
-                        onClick={handleSave}
-                        label='Save Changes'
-                      />
+                      <SaveButton onClick={handleSave} label='Save Changes' />
                     </Box>
                   </Grid>
                 )}
@@ -239,23 +236,20 @@ const ProfilePage = () => {
         <Grid size={{ xs: 12, md: 5 }}>
           <Card sx={{ mb: 3 }}>
             <CardHeader>
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <NotificationsIcon
-                  sx={{ fontSize: 20, color: 'primary.main' }}
+                  sx={{ fontSize: 20, color: '#06C167' }}
                   aria-hidden='true'
                 />
                 <CardTitle>Preferences</CardTitle>
               </Box>
             </CardHeader>
             <CardContent>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <CustomSelect
                   label='Notifications'
                   value={notifications}
-                  onChange={(e) =>
-                    setNotifications(e.target.value as string)
-                  }
+                  onChange={(e) => setNotifications(e.target.value as string)}
                   options={notificationOptions}
                   fullWidth
                 />
@@ -315,5 +309,3 @@ const ProfilePage = () => {
     </Box>
   )
 }
-
-export default ProfilePage

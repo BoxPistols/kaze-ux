@@ -1,13 +1,16 @@
 import AddIcon from '@mui/icons-material/Add'
-import { Box, Grid } from '@mui/material'
-import { useState } from 'react'
+import ContactsIcon from '@mui/icons-material/Contacts'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import PersonOffIcon from '@mui/icons-material/PersonOff'
+import { Box, Grid, Typography } from '@mui/material'
+import { useMemo, useState } from 'react'
 
 import { CustomSelect } from '@/components/Form/CustomSelect'
 import { CustomTextField } from '@/components/Form/CustomTextField'
 import { CustomTable } from '@/components/Table'
 import { Button } from '@/components/ui/Button'
-import { FormDialog } from '@/components/ui/dialog'
-import { ConfirmDialog } from '@/components/ui/dialog'
+import { Card, CardContent } from '@/components/ui/Card'
+import { ConfirmDialog, FormDialog } from '@/components/ui/dialog'
 import { PageHeader } from '@/components/ui/text'
 import { toast } from '@/components/ui/toast'
 
@@ -41,13 +44,50 @@ const emptyForm = {
   notes: '',
 }
 
-const ContactsPage = () => {
+export const ContactsPage = () => {
   const [contactList, setContactList] = useState<Contact[]>(initialContacts)
   const [formOpen, setFormOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Contact | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null)
   const [form, setForm] = useState(emptyForm)
+
+  const totalContacts = contactList.length
+  const activeContacts = useMemo(
+    () => contactList.filter((c) => c.status === 'active').length,
+    [contactList]
+  )
+  const leadsCount = useMemo(
+    () => contactList.filter((c) => c.status === 'lead').length,
+    [contactList]
+  )
+
+  const statCards = useMemo(
+    () => [
+      {
+        label: 'Total Contacts',
+        value: totalContacts,
+        icon: <ContactsIcon fontSize='small' aria-hidden='true' />,
+        bgColor: 'rgba(38, 66, 190, 0.08)',
+        color: 'primary.main',
+      },
+      {
+        label: 'Active',
+        value: activeContacts,
+        icon: <PersonAddIcon fontSize='small' aria-hidden='true' />,
+        bgColor: 'rgba(70, 171, 74, 0.08)',
+        color: 'success.main',
+      },
+      {
+        label: 'Leads',
+        value: leadsCount,
+        icon: <PersonOffIcon fontSize='small' aria-hidden='true' />,
+        bgColor: 'rgba(235, 129, 23, 0.08)',
+        color: 'warning.main',
+      },
+    ],
+    [totalContacts, activeContacts, leadsCount]
+  )
 
   const tableData = contactList.map((c) => ({
     id: c.id,
@@ -136,6 +176,49 @@ const ContactsPage = () => {
           Contact
         </Button>
       </PageHeader>
+
+      <Grid container spacing={2.5} sx={{ mb: 3 }}>
+        {statCards.map((stat) => (
+          <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
+            <Card>
+              <CardContent
+                sx={{
+                  py: 2.5,
+                  px: 3,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  '&:last-child': { pb: 2.5 },
+                }}>
+                <Box
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    bgcolor: stat.bgColor,
+                    color: stat.color,
+                    flexShrink: 0,
+                  }}>
+                  {stat.icon}
+                </Box>
+                <Box>
+                  <Typography
+                    variant='h5'
+                    sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    {stat.value}
+                  </Typography>
+                  <Typography variant='caption' color='text.secondary'>
+                    {stat.label}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
 
       <CustomTable
         columns={columns}
@@ -249,5 +332,3 @@ const ContactsPage = () => {
     </Box>
   )
 }
-
-export default ContactsPage

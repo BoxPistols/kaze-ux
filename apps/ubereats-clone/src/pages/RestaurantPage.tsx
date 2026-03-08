@@ -4,14 +4,12 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining'
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import StarIcon from '@mui/icons-material/Star'
-import { Box, Typography, Tab, Tabs, Badge } from '@mui/material'
-import { useMemo } from 'react'
-import { useState } from 'react'
+import { Box, Typography, Tab, Tabs, Badge, Divider } from '@mui/material'
+import { useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { CustomAccordion } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/Button'
-import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
 import { NotFoundView } from '@/components/ui/feedback'
 import { IconButton } from '@/components/ui/icon-button'
@@ -22,7 +20,7 @@ import { restaurants } from '~/data/restaurants'
 
 const formatPrice = (price: number) => `¥${price.toLocaleString()}`
 
-const RestaurantPage = () => {
+export const RestaurantPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const restaurant = restaurants.find((r) => r.id === id)
@@ -89,20 +87,24 @@ const RestaurantPage = () => {
             aria-label='Back to home'
             sx={{
               bgcolor: 'rgba(255,255,255,0.9)',
-              '&:hover': { bgcolor: '#fff' },
+              color: '#333',
+              '&:hover': { bgcolor: '#fff', color: '#000' },
             }}>
             <ArrowBackIcon />
           </IconButton>
         </Box>
         <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-          <Badge badgeContent={cartCount} color='primary'>
+          <Badge
+            badgeContent={cartCount}
+            sx={{ '& .MuiBadge-badge': { bgcolor: '#06C167', color: '#fff' } }}>
             <IconButton
               onClick={() => navigate('/cart')}
               tooltip='View cart'
               aria-label='View cart'
               sx={{
                 bgcolor: 'rgba(255,255,255,0.9)',
-                '&:hover': { bgcolor: '#fff' },
+                color: '#333',
+                '&:hover': { bgcolor: '#fff', color: '#000' },
               }}>
               <ShoppingCartIcon />
             </IconButton>
@@ -216,23 +218,10 @@ const RestaurantPage = () => {
                   </Typography>
                 }
                 details={
-                  <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    {items.map((item) => (
-                      <Card
-                        key={item.id}
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            boxShadow: (theme) =>
-                              theme.palette.mode === 'dark'
-                                ? '0 4px 16px rgba(0,0,0,0.4)'
-                                : '0 4px 16px rgba(0,0,0,0.08)',
-                          },
-                        }}>
-                        <CardContent sx={{ flex: 1, p: 2.5 }}>
+                  <Box>
+                    {items.map((item, idx) => (
+                      <Box key={item.id}>
+                        <Box sx={{ py: 2 }}>
                           <Box
                             sx={{
                               display: 'flex',
@@ -248,7 +237,7 @@ const RestaurantPage = () => {
                               <CustomChip
                                 label='Popular'
                                 size='small'
-                                color='primary'
+                                color='success'
                               />
                             )}
                             {item.spicy && (
@@ -269,11 +258,11 @@ const RestaurantPage = () => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
-                              mt: 1.5,
+                              mt: 1,
                             }}>
                             <Typography
                               variant='body1'
-                              sx={{ fontWeight: 700, color: 'primary.main' }}>
+                              sx={{ fontWeight: 700, color: '#06C167' }}>
                               {formatPrice(item.price)}
                             </Typography>
                             <Button
@@ -283,8 +272,9 @@ const RestaurantPage = () => {
                               + Add
                             </Button>
                           </Box>
-                        </CardContent>
-                      </Card>
+                        </Box>
+                        {idx < items.length - 1 && <Divider />}
+                      </Box>
                     ))}
                   </Box>
                 }
@@ -294,26 +284,21 @@ const RestaurantPage = () => {
         )}
 
         {tabValue === 1 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            {popularItems.map((item) => (
-              <Card
-                key={item.id}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    boxShadow: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? '0 4px 16px rgba(0,0,0,0.4)'
-                        : '0 4px 16px rgba(0,0,0,0.08)',
-                  },
-                }}>
-                <CardContent sx={{ flex: 1, p: 2.5 }}>
+          <Box>
+            {popularItems.map((item, idx) => (
+              <Box key={item.id}>
+                <Box sx={{ py: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography variant='subtitle2' sx={{ fontWeight: 700 }}>
                       {item.name}
                     </Typography>
+                    {item.popular && (
+                      <CustomChip
+                        label='Popular'
+                        size='small'
+                        color='success'
+                      />
+                    )}
                     {item.spicy && (
                       <LocalFireDepartmentIcon
                         sx={{ fontSize: 18, color: 'error.main' }}
@@ -332,11 +317,11 @@ const RestaurantPage = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      mt: 1.5,
+                      mt: 1,
                     }}>
                     <Typography
                       variant='body1'
-                      sx={{ fontWeight: 700, color: 'primary.main' }}>
+                      sx={{ fontWeight: 700, color: '#06C167' }}>
                       {formatPrice(item.price)}
                     </Typography>
                     <Button
@@ -346,8 +331,9 @@ const RestaurantPage = () => {
                       + Add
                     </Button>
                   </Box>
-                </CardContent>
-              </Card>
+                </Box>
+                {idx < popularItems.length - 1 && <Divider />}
+              </Box>
             ))}
           </Box>
         )}
@@ -355,5 +341,3 @@ const RestaurantPage = () => {
     </Box>
   )
 }
-
-export default RestaurantPage

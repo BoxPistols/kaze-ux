@@ -73,7 +73,7 @@ export const ICON_SIZE = {
  * WCAG 2.5.8: タッチターゲットは最低44×44px推奨
  */
 export const ICON_BUTTON_HIT_TARGET = {
-  small: 36,
+  small: 44,
   medium: 44,
   large: 48,
 } as const

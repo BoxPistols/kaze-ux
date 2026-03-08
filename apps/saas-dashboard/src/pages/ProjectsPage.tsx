@@ -34,7 +34,7 @@ const filterOptions = [
   { value: 'completed', label: 'Done' },
 ]
 
-const ProjectsPage = () => {
+export const ProjectsPage = () => {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<string | string[] | null>('all')
 
@@ -184,5 +184,3 @@ const ProjectsPage = () => {
     </Box>
   )
 }
-
-export default ProjectsPage

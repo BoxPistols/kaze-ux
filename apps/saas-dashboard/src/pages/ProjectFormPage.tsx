@@ -46,7 +46,7 @@ const tagOptions = [
   { value: 'ai', label: 'AI' },
 ]
 
-const ProjectFormPage = () => {
+export const ProjectFormPage = () => {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -190,5 +190,3 @@ const ProjectFormPage = () => {
     </Box>
   )
 }
-
-export default ProjectFormPage

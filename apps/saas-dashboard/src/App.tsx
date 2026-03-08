@@ -30,18 +30,18 @@ import {
 } from '@/layouts/sidebar'
 import { CalendarSettingsProvider } from '@/providers/CalendarSettingsProvider'
 
-import CalendarPage from '~/pages/CalendarPage'
-import ContactsPage from '~/pages/ContactsPage'
-import DashboardPage from '~/pages/DashboardPage'
-import IntegrationsPage from '~/pages/IntegrationsPage'
-import InvoicesPage from '~/pages/InvoicesPage'
-import MapPage from '~/pages/MapPage'
-import ProjectDetailPage from '~/pages/ProjectDetailPage'
-import ProjectFormPage from '~/pages/ProjectFormPage'
-import ProjectsPage from '~/pages/ProjectsPage'
-import ReportsPage from '~/pages/ReportsPage'
-import SettingsPage from '~/pages/SettingsPage'
-import TeamPage from '~/pages/TeamPage'
+import { CalendarPage } from '~/pages/CalendarPage'
+import { ContactsPage } from '~/pages/ContactsPage'
+import { DashboardPage } from '~/pages/DashboardPage'
+import { IntegrationsPage } from '~/pages/IntegrationsPage'
+import { InvoicesPage } from '~/pages/InvoicesPage'
+import { MapPage } from '~/pages/MapPage'
+import { ProjectDetailPage } from '~/pages/ProjectDetailPage'
+import { ProjectFormPage } from '~/pages/ProjectFormPage'
+import { ProjectsPage } from '~/pages/ProjectsPage'
+import { ReportsPage } from '~/pages/ReportsPage'
+import { SettingsPage } from '~/pages/SettingsPage'
+import { TeamPage } from '~/pages/TeamPage'
 
 const menuItems: SidebarMenuItem[] = [
   {
@@ -211,4 +211,4 @@ const App = () => {
   )
 }
 
-export default App
+export { App }

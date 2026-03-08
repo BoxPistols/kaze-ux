@@ -25,7 +25,7 @@ const paymentOptions = [
   { value: 'cash', label: 'Cash on Delivery' },
 ]
 
-const CartPage = () => {
+export const CartPage = () => {
   const navigate = useNavigate()
   const { items, restaurant, updateQuantity, removeItem, clearCart, subtotal } =
     useCartStore()
@@ -65,6 +65,7 @@ const CartPage = () => {
         <Box sx={{ textAlign: 'center', py: 10 }}>
           <ShoppingCartOutlinedIcon
             sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }}
+            aria-hidden='true'
           />
           <Typography
             variant='h5'
@@ -204,7 +205,7 @@ const CartPage = () => {
               <CardTitle>Delivery Details</CardTitle>
             </CardHeader>
             <CardContent>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <CustomTextField
                   label='Delivery Address'
                   value={address}
@@ -233,7 +234,18 @@ const CartPage = () => {
         </Box>
 
         <Box sx={{ width: { xs: '100%', md: 340 } }}>
-          <Card sx={{ position: 'sticky', top: 80 }}>
+          <Card
+            sx={{
+              position: 'sticky',
+              top: 80,
+              overflow: 'hidden',
+            }}>
+            <Box
+              sx={{
+                height: 4,
+                background: 'linear-gradient(90deg, #06C167 0%, #048848 100%)',
+              }}
+            />
             <CardHeader>
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
@@ -276,7 +288,7 @@ const CartPage = () => {
                 </Typography>
                 <Typography
                   variant='subtitle1'
-                  sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  sx={{ fontWeight: 700, color: '#06C167' }}>
                   {formatPrice(total)}
                 </Typography>
               </Box>
@@ -285,7 +297,15 @@ const CartPage = () => {
                 loading={isOrdering}
                 fullWidth
                 variant='contained'
-                sx={{ py: 1.5, fontWeight: 700, borderRadius: 2 }}>
+                sx={{
+                  py: 1.5,
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  bgcolor: '#000',
+                  '&:hover': {
+                    bgcolor: '#282828',
+                  },
+                }}>
                 Place Order
               </LoadingButton>
             </CardContent>
@@ -295,5 +315,3 @@ const CartPage = () => {
     </Box>
   )
 }
-
-export default CartPage

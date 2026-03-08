@@ -1,14 +1,8 @@
+import AddTaskIcon from '@mui/icons-material/AddTask'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import {
-  Box,
-  Grid,
-  Typography,
-  LinearProgress,
-  Tab,
-  Tabs,
-} from '@mui/material'
+import { Box, Grid, Typography, LinearProgress, Tab, Tabs } from '@mui/material'
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -37,7 +31,7 @@ const statusMap: Record<ProjectStatus, StatusType> = {
   cancelled: 'rejected',
 }
 
-const ProjectDetailPage = () => {
+export const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -261,8 +255,20 @@ const ProjectDetailPage = () => {
             onDelete={(row) => toast.error(`Delete task: ${row.title}`)}
           />
         ) : (
-          <Box sx={{ p: 4, textAlign: 'center' }}>
-            <Typography color='text.secondary'>No tasks yet</Typography>
+          <Box sx={{ py: 6, textAlign: 'center' }}>
+            <AddTaskIcon
+              sx={{ fontSize: 48, color: 'text.disabled', mb: 1.5 }}
+              aria-hidden='true'
+            />
+            <Typography
+              variant='body1'
+              sx={{ fontWeight: 600, mb: 0.5 }}
+              color='text.secondary'>
+              No tasks yet
+            </Typography>
+            <Typography variant='body2' color='text.disabled'>
+              Add tasks to track progress on this project.
+            </Typography>
           </Box>
         )}
       </CardContent>
@@ -295,7 +301,7 @@ const ProjectDetailPage = () => {
       <Tabs
         value={tabValue}
         onChange={(_e, v) => setTabValue(v)}
-        sx={{ mb: 2 }}>
+        sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Tab label='Overview' />
         <Tab label='Tasks' />
       </Tabs>
@@ -318,5 +324,3 @@ const ProjectDetailPage = () => {
     </Box>
   )
 }
-
-export default ProjectDetailPage

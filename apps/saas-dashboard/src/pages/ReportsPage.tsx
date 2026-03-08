@@ -41,7 +41,7 @@ const chartOptions = [
   },
 ]
 
-const ReportsPage = () => {
+export const ReportsPage = () => {
   const activeProjects = projects.filter((p) => p.status === 'active').length
   const completedProjects = projects.filter(
     (p) => p.status === 'completed'
@@ -340,7 +340,11 @@ const ReportsPage = () => {
                     />
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, minWidth: 56, textAlign: 'right' }}>
+                      sx={{
+                        fontWeight: 600,
+                        minWidth: 56,
+                        textAlign: 'right',
+                      }}>
                       {item.amount}
                     </Typography>
                   </Box>
@@ -360,5 +364,3 @@ const ReportsPage = () => {
     </Box>
   )
 }
-
-export default ReportsPage

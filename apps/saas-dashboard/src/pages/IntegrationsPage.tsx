@@ -23,7 +23,7 @@ const iconMap: Record<string, ReactNode> = {
   stripe: <PaymentIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
 }
 
-const IntegrationsPage = () => {
+export const IntegrationsPage = () => {
   return (
     <Box sx={{ p: 3 }}>
       <PageHeader
@@ -71,5 +71,3 @@ const IntegrationsPage = () => {
     </Box>
   )
 }
-
-export default IntegrationsPage

@@ -17,7 +17,7 @@ import { restaurants, categories } from '~/data/restaurants'
 
 const formatPrice = (price: number) => `¥${price.toLocaleString()}`
 
-const HomePage = () => {
+export const HomePage = () => {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -48,8 +48,8 @@ const HomePage = () => {
         sx={{
           background: (theme) =>
             theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'
-              : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              ? 'linear-gradient(135deg, #0a0a0a 0%, #1a2e1a 100%)'
+              : 'linear-gradient(135deg, #06C167 0%, #048848 100%)',
           pt: { xs: 4, md: 6 },
           pb: { xs: 5, md: 7 },
           px: 3,
@@ -105,7 +105,7 @@ const HomePage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3, mt: -3 }}>
+      <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3, pt: 3 }}>
         {/* Category Chips */}
         <Box
           sx={{
@@ -126,7 +126,7 @@ const HomePage = () => {
               label={cat.label}
               onClick={() => setSelectedCategory(cat.id)}
               variant={selectedCategory === cat.id ? 'filled' : 'outlined'}
-              color={selectedCategory === cat.id ? 'primary' : 'default'}
+              color={selectedCategory === cat.id ? 'success' : 'default'}
               sx={{
                 flexShrink: 0,
                 fontWeight: selectedCategory === cat.id ? 600 : 400,
@@ -145,11 +145,11 @@ const HomePage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 2.5,
+                mb: 2,
               }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon
-                  sx={{ color: 'primary.main', fontSize: 24 }}
+                  sx={{ color: '#06C167', fontSize: 24 }}
                   aria-hidden='true'
                 />
                 <Typography
@@ -162,7 +162,7 @@ const HomePage = () => {
             <Box
               sx={{
                 display: 'flex',
-                gap: 2.5,
+                gap: 3,
                 overflowX: 'auto',
                 pb: 2,
                 '&::-webkit-scrollbar': { height: 4 },
@@ -174,6 +174,15 @@ const HomePage = () => {
               {featuredRestaurants.map((r) => (
                 <Card
                   key={r.id}
+                  role='link'
+                  tabIndex={0}
+                  aria-label={r.name}
+                  onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      navigate(`/restaurant/${r.id}`)
+                    }
+                  }}
                   sx={{
                     minWidth: 300,
                     cursor: 'pointer',
@@ -213,8 +222,8 @@ const HomePage = () => {
                         position: 'absolute',
                         top: 12,
                         left: 12,
-                        bgcolor: 'primary.main',
-                        color: 'primary.contrastText',
+                        bgcolor: '#06C167',
+                        color: '#fff',
                         px: 1.5,
                         py: 0.5,
                         borderRadius: 2,
@@ -248,7 +257,7 @@ const HomePage = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <CardContent sx={{ p: 2.5 }}>
+                  <CardContent className='p-5'>
                     <Typography
                       variant='subtitle1'
                       sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -301,7 +310,7 @@ const HomePage = () => {
         <Box sx={{ mb: 4 }}>
           <Typography
             variant='h6'
-            sx={{ fontWeight: 700, mb: 2.5, letterSpacing: '-0.01em' }}>
+            sx={{ fontWeight: 700, mb: 3, letterSpacing: '-0.01em' }}>
             {selectedCategory === 'all'
               ? 'All Restaurants'
               : `${categories.find((c) => c.id === selectedCategory)?.label} Restaurants`}
@@ -311,6 +320,15 @@ const HomePage = () => {
             {filteredRestaurants.map((r) => (
               <Grid key={r.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <Card
+                  role='link'
+                  tabIndex={0}
+                  aria-label={r.name}
+                  onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      navigate(`/restaurant/${r.id}`)
+                    }
+                  }}
                   sx={{
                     cursor: 'pointer',
                     transition: 'all 0.25s ease',
@@ -370,7 +388,7 @@ const HomePage = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <CardContent sx={{ p: 2.5, flex: 1 }}>
+                  <CardContent className='flex-1 p-5'>
                     <Typography
                       variant='subtitle1'
                       sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -479,5 +497,3 @@ const HomePage = () => {
     </Box>
   )
 }
-
-export default HomePage

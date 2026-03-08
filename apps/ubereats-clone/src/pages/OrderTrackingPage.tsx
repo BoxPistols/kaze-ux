@@ -48,7 +48,7 @@ const getActiveStep = (status: OrderStatus) => {
   }
 }
 
-const OrderTrackingPage = () => {
+export const OrderTrackingPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const order = orders.find((o) => o.id === id)
@@ -90,7 +90,7 @@ const OrderTrackingPage = () => {
 
       {order.status !== 'cancelled' && (
         <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ p: 4 }}>
+          <CardContent className='p-8'>
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((label) => (
                 <Step key={label}>
@@ -103,8 +103,18 @@ const OrderTrackingPage = () => {
       )}
 
       {order.status === 'cancelled' && (
-        <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ py: 4 }}>
+        <Card
+          sx={{
+            mb: 3,
+            overflow: 'hidden',
+            borderLeft: 4,
+            borderColor: 'error.main',
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(218, 55, 55, 0.06)'
+                : 'rgba(218, 55, 55, 0.04)',
+          }}>
+          <CardContent className='p-8'>
             <Typography
               variant='body1'
               color='error.main'
@@ -116,12 +126,29 @@ const OrderTrackingPage = () => {
       )}
 
       {order.driverName && order.status === 'on-the-way' && (
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{ mb: 3, overflow: 'hidden' }}>
+          <Box
+            sx={{
+              height: 4,
+              background: 'linear-gradient(90deg, #06C167 0%, #048848 100%)',
+            }}
+          />
           <CardHeader>
             <CardTitle>Your Driver</CardTitle>
           </CardHeader>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                p: 2,
+                borderRadius: 2,
+                bgcolor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(70, 171, 74, 0.06)'
+                    : 'rgba(70, 171, 74, 0.04)',
+              }}>
               <UserAvatar
                 name={order.driverName}
                 size='medium'
@@ -141,8 +168,13 @@ const OrderTrackingPage = () => {
                 <IconButton
                   onClick={() => toast.info(`Calling ${order.driverName}...`)}
                   tooltip='Call driver'
-                  aria-label={`Call driver ${order.driverName}`}>
-                  <PhoneIcon />
+                  aria-label={`Call driver ${order.driverName}`}
+                  sx={{
+                    bgcolor: '#06C167',
+                    color: '#fff',
+                    '&:hover': { bgcolor: '#048848' },
+                  }}>
+                  <PhoneIcon aria-hidden='true' />
                 </IconButton>
               )}
             </Box>
@@ -249,7 +281,7 @@ const OrderTrackingPage = () => {
             </Typography>
             <Typography
               variant='subtitle1'
-              sx={{ fontWeight: 700, color: 'primary.main' }}>
+              sx={{ fontWeight: 700, color: '#06C167' }}>
               {formatPrice(order.total + order.deliveryFee)}
             </Typography>
           </Box>
@@ -258,5 +290,3 @@ const OrderTrackingPage = () => {
     </Box>
   )
 }
-
-export default OrderTrackingPage

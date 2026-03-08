@@ -10,11 +10,12 @@ import {
 } from '@/components/ui/calendar'
 import type { CalendarViewMode } from '@/components/ui/calendar'
 import { WeekStartSelector } from '@/components/ui/calendar/WeekStartSelector'
+import { Card, CardContent } from '@/components/ui/Card'
 import { PageHeader } from '@/components/ui/text'
 
 import { scheduleEvents } from '~/data/schedules'
 
-const CalendarPage = () => {
+export const CalendarPage = () => {
   const [viewMode, setViewMode] = useState<CalendarViewMode>('month')
   const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs())
 
@@ -40,7 +41,6 @@ const CalendarPage = () => {
     return currentDate.format('dddd, MMMM D, YYYY')
   }, [currentDate, viewMode])
 
-  // Convert scheduleEvents to Schedule format expected by MonthView/WeekView/DayView
   const schedules = useMemo(
     () =>
       scheduleEvents.map((e) => {
@@ -68,35 +68,37 @@ const CalendarPage = () => {
         <WeekStartSelector compact />
       </PageHeader>
 
-      <CalendarControl
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        dateHeaderText={dateHeaderText}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onTodayClick={() => setCurrentDate(dayjs())}
-      />
-
-      <Box sx={{ mt: 2 }}>
-        {viewMode === 'month' && (
-          <MonthView
-            currentDate={currentDate}
-            schedules={schedules}
-            onDateClick={(date: Dayjs) => {
-              setCurrentDate(date)
-              setViewMode('day')
-            }}
+      <Card>
+        <CardContent sx={{ p: { xs: 1.5, md: 2.5 } }}>
+          <CalendarControl
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            dateHeaderText={dateHeaderText}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onTodayClick={() => setCurrentDate(dayjs())}
           />
-        )}
-        {viewMode === 'week' && (
-          <WeekView currentDate={currentDate} schedules={schedules} />
-        )}
-        {viewMode === 'day' && (
-          <DayView currentDate={currentDate} schedules={schedules} />
-        )}
-      </Box>
+
+          <Box sx={{ mt: 2 }}>
+            {viewMode === 'month' && (
+              <MonthView
+                currentDate={currentDate}
+                schedules={schedules}
+                onDateClick={(date: Dayjs) => {
+                  setCurrentDate(date)
+                  setViewMode('day')
+                }}
+              />
+            )}
+            {viewMode === 'week' && (
+              <WeekView currentDate={currentDate} schedules={schedules} />
+            )}
+            {viewMode === 'day' && (
+              <DayView currentDate={currentDate} schedules={schedules} />
+            )}
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   )
 }
-
-export default CalendarPage

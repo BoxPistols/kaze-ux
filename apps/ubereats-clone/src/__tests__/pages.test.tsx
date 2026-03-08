@@ -5,12 +5,12 @@ import { describe, it, expect } from 'vitest'
 
 import { hookUseTheme } from '@/hooks/useTheme'
 
-import HomePage from '~/pages/HomePage'
-import RestaurantPage from '~/pages/RestaurantPage'
-import CartPage from '~/pages/CartPage'
-import OrderHistoryPage from '~/pages/OrderHistoryPage'
-import OrderTrackingPage from '~/pages/OrderTrackingPage'
-import ProfilePage from '~/pages/ProfilePage'
+import { HomePage } from '~/pages/HomePage'
+import { RestaurantPage } from '~/pages/RestaurantPage'
+import { CartPage } from '~/pages/CartPage'
+import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
+import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
+import { ProfilePage } from '~/pages/ProfilePage'
 
 const TestProviders = ({
   children,

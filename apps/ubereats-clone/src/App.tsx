@@ -17,6 +17,7 @@ import {
 } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
+import { useState, useCallback, useMemo } from 'react'
 import {
   HashRouter,
   Routes,
@@ -28,27 +29,55 @@ import {
 
 import { IconButton } from '@/components/ui/icon-button'
 import { CustomToaster } from '@/components/ui/toast'
-import { hookUseTheme } from '@/hooks/useTheme'
+import { darkTheme, lightTheme } from '@/themes/theme'
 
 import { useCartStore } from '~/data/cart'
-import CartPage from '~/pages/CartPage'
-import HomePage from '~/pages/HomePage'
-import OrderHistoryPage from '~/pages/OrderHistoryPage'
-import OrderTrackingPage from '~/pages/OrderTrackingPage'
-import ProfilePage from '~/pages/ProfilePage'
-import RestaurantPage from '~/pages/RestaurantPage'
+import { CartPage } from '~/pages/CartPage'
+import { HomePage } from '~/pages/HomePage'
+import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
+import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
+import { ProfilePage } from '~/pages/ProfilePage'
+import { RestaurantPage } from '~/pages/RestaurantPage'
+
+type ThemeMode = 'light' | 'dark'
+
+const getInitialMode = (): ThemeMode => {
+  if (typeof window === 'undefined') return 'light'
+  const saved = localStorage.getItem('ubereats-theme')
+  if (saved === 'dark' || saved === 'light') return saved
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
+}
 
 const navItems = [
-  { label: 'Home', path: '/', icon: <HomeIcon /> },
-  { label: 'Orders', path: '/orders', icon: <ReceiptLongIcon /> },
-  { label: 'Cart', path: '/cart', icon: <ShoppingCartIcon /> },
-  { label: 'Profile', path: '/profile', icon: <PersonIcon /> },
+  { label: 'Home', path: '/', icon: <HomeIcon aria-hidden='true' /> },
+  {
+    label: 'Orders',
+    path: '/orders',
+    icon: <ReceiptLongIcon aria-hidden='true' />,
+  },
+  {
+    label: 'Cart',
+    path: '/cart',
+    icon: <ShoppingCartIcon aria-hidden='true' />,
+  },
+  {
+    label: 'Profile',
+    path: '/profile',
+    icon: <PersonIcon aria-hidden='true' />,
+  },
 ]
 
-const AppContent = () => {
+const AppContent = ({
+  mode,
+  onToggleMode,
+}: {
+  mode: ThemeMode
+  onToggleMode: () => void
+}) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { mode, setMode } = hookUseTheme()
   const isDarkMode = mode === 'dark'
   const cartCount = useCartStore((s) => s.totalItems())
   const isMobile = useMediaQuery('(max-width:768px)')
@@ -75,120 +104,139 @@ const AppContent = () => {
           borderColor: 'divider',
         }}>
         <Toolbar
+          disableGutters
           sx={{
-            maxWidth: 1200,
-            width: '100%',
-            mx: 'auto',
-            minHeight: { xs: 64, md: 72 },
-            px: { xs: 2, md: 3 },
+            height: 64,
+            minHeight: 64,
           }}>
-          {/* Logo */}
           <Box
-            component='a'
-            onClick={() => navigate('/')}
-            role='link'
-            tabIndex={0}
-            aria-label='KazeEats Home'
-            onKeyDown={(e: React.KeyboardEvent) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                navigate('/')
-              }
-            }}
             sx={{
+              maxWidth: 1200,
+              width: '100%',
+              mx: 'auto',
+              px: { xs: 2, md: 3 },
               display: 'flex',
               alignItems: 'center',
-              gap: 1.5,
-              flex: 1,
-              cursor: 'pointer',
-              textDecoration: 'none',
-              color: 'inherit',
-              outline: 'none',
-              '&:focus-visible': {
-                outline: '2px solid',
-                outlineColor: 'primary.main',
-                outlineOffset: 4,
-                borderRadius: 1,
-              },
             }}>
+            {/* Logo */}
             <Box
+              component='a'
+              onClick={() => navigate('/')}
+              role='link'
+              tabIndex={0}
+              aria-label='KazeEats Home'
+              onKeyDown={(e: React.KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  navigate('/')
+                }
+              }}
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                width: 42,
-                height: 42,
-                borderRadius: 2.5,
-                background:
-                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                flexShrink: 0,
+                gap: 1.5,
+                flex: 1,
+                cursor: 'pointer',
+                textDecoration: 'none',
+                color: 'inherit',
+                outline: 'none',
+                '&:focus-visible': {
+                  outline: '2px solid',
+                  outlineColor: '#06C167',
+                  outlineOffset: 4,
+                  borderRadius: 1,
+                },
               }}>
-              <RestaurantMenuIcon sx={{ color: '#fff', fontSize: 26 }} />
-            </Box>
-            <Typography
-              sx={{
-                fontWeight: 800,
-                fontSize: { xs: '1.25rem', md: '1.4rem' },
-                letterSpacing: '-0.03em',
-                color: 'text.primary',
-                lineHeight: 1,
-              }}>
-              Kaze
-              <Box component='span' sx={{ color: 'primary.main' }}>
-                Eats
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 42,
+                  height: 42,
+                  borderRadius: 2.5,
+                  bgcolor: '#06C167',
+                  flexShrink: 0,
+                }}>
+                <RestaurantMenuIcon
+                  sx={{ color: '#fff', fontSize: 26 }}
+                  aria-hidden='true'
+                />
               </Box>
-            </Typography>
-          </Box>
-
-          {/* Desktop Navigation */}
-          {!isMobile && (
-            <Box
-              component='nav'
-              aria-label='Main navigation'
-              sx={{ display: 'flex', gap: 0.5, mr: 1 }}>
-              {navItems.map((item) => {
-                const isActive =
-                  item.path === '/'
-                    ? location.pathname === '/'
-                    : location.pathname.startsWith(item.path)
-                return (
-                  <IconButton
-                    key={item.label}
-                    onClick={() => navigate(item.path)}
-                    tooltip={item.label}
-                    aria-label={item.label}
-                    size='medium'
-                    sx={{
-                      color: isActive ? 'primary.main' : 'text.secondary',
-                      bgcolor: isActive ? 'action.selected' : 'transparent',
-                      '&:hover': {
-                        color: 'primary.main',
-                        bgcolor: 'action.hover',
-                      },
-                    }}>
-                    {item.label === 'Cart' ? (
-                      <Badge badgeContent={cartCount} color='primary'>
-                        {item.icon}
-                      </Badge>
-                    ) : (
-                      item.icon
-                    )}
-                  </IconButton>
-                )
-              })}
+              <Typography
+                sx={{
+                  fontWeight: 800,
+                  fontSize: { xs: '1.25rem', md: '1.4rem' },
+                  letterSpacing: '-0.03em',
+                  color: 'text.primary',
+                  lineHeight: 1,
+                }}>
+                Kaze
+                <Box component='span' sx={{ color: '#06C167' }}>
+                  Eats
+                </Box>
+              </Typography>
             </Box>
-          )}
 
-          {/* Theme Toggle */}
-          <IconButton
-            onClick={() => setMode(isDarkMode ? 'light' : 'dark')}
-            tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}
-            aria-label={
-              isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
-            }
-            size='medium'>
-            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-          </IconButton>
+            {/* Desktop Navigation */}
+            {!isMobile && (
+              <Box
+                component='nav'
+                aria-label='Main navigation'
+                sx={{ display: 'flex', gap: 0.5, mr: 1 }}>
+                {navItems.map((item) => {
+                  const isActive =
+                    item.path === '/'
+                      ? location.pathname === '/'
+                      : location.pathname.startsWith(item.path)
+                  return (
+                    <IconButton
+                      key={item.label}
+                      onClick={() => navigate(item.path)}
+                      tooltip={item.label}
+                      aria-label={item.label}
+                      size='medium'
+                      sx={{
+                        color: isActive ? '#06C167' : 'text.secondary',
+                        bgcolor: isActive
+                          ? 'rgba(6, 193, 103, 0.08)'
+                          : 'transparent',
+                        '&:hover': {
+                          color: '#06C167',
+                          bgcolor: 'action.hover',
+                        },
+                      }}>
+                      {item.label === 'Cart' ? (
+                        <Badge
+                          badgeContent={cartCount}
+                          sx={{
+                            '& .MuiBadge-badge': {
+                              bgcolor: '#06C167',
+                              color: '#fff',
+                            },
+                          }}>
+                          {item.icon}
+                        </Badge>
+                      ) : (
+                        item.icon
+                      )}
+                    </IconButton>
+                  )
+                })}
+              </Box>
+            )}
+
+            {/* Theme Toggle */}
+            <IconButton
+              onClick={onToggleMode}
+              tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}
+              aria-label={
+                isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+              }
+              size='medium'>
+              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -227,10 +275,16 @@ const AppContent = () => {
             <BottomNavigationAction
               key={item.label}
               label={item.label}
-              aria-label={item.label}
               icon={
                 item.label === 'Cart' ? (
-                  <Badge badgeContent={cartCount} color='primary'>
+                  <Badge
+                    badgeContent={cartCount}
+                    sx={{
+                      '& .MuiBadge-badge': {
+                        bgcolor: '#06C167',
+                        color: '#fff',
+                      },
+                    }}>
                     {item.icon}
                   </Badge>
                 ) : (
@@ -256,15 +310,27 @@ const AppContent = () => {
 }
 
 const App = () => {
-  const { theme } = hookUseTheme()
+  const [mode, setMode] = useState<ThemeMode>(getInitialMode)
+  const theme = useMemo(
+    () => (mode === 'dark' ? darkTheme : lightTheme),
+    [mode]
+  )
+  const toggleMode = useCallback(() => {
+    setMode((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark'
+      localStorage.setItem('ubereats-theme', next)
+      return next
+    })
+  }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <HashRouter>
-        <AppContent />
+        <AppContent mode={mode} onToggleMode={toggleMode} />
       </HashRouter>
     </ThemeProvider>
   )
 }
 
-export default App
+export { App }

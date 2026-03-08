@@ -1,9 +1,15 @@
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import PersonIcon from '@mui/icons-material/Person'
+import SettingsIcon from '@mui/icons-material/Settings'
+import TuneIcon from '@mui/icons-material/Tune'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
 import { useState } from 'react'
 
 import { CustomSelect } from '@/components/Form/CustomSelect'
 import { CustomTextField } from '@/components/Form/CustomTextField'
 import { CustomAccordion } from '@/components/ui/accordion'
+import { UserAvatar } from '@/components/ui/avatar'
 import { SaveButton } from '@/components/ui/button/saveButton'
 import { WeekStartSelector } from '@/components/ui/calendar/WeekStartSelector'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -11,7 +17,7 @@ import { PageHeader } from '@/components/ui/text'
 import { ThemeToggle } from '@/components/ui/themeToggle'
 import { toast } from '@/components/ui/toast'
 
-const SettingsPage = () => {
+export const SettingsPage = () => {
   const [tabValue, setTabValue] = useState(0)
   const [name, setName] = useState('Takeshi Yamada')
   const [email, setEmail] = useState('takeshi@example.com')
@@ -23,14 +29,62 @@ const SettingsPage = () => {
     toast.success('Settings saved successfully')
   }
 
+  const sectionIcon = (
+    icon: React.ReactNode,
+    color: string,
+    bgColor: string
+  ) => (
+    <Box
+      sx={{
+        width: 36,
+        height: 36,
+        borderRadius: 1.5,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: bgColor,
+        color,
+        flexShrink: 0,
+      }}>
+      {icon}
+    </Box>
+  )
+
   const generalTab = (
     <Grid container spacing={3}>
       <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardHeader>
-            <CardTitle>Profile</CardTitle>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              {sectionIcon(
+                <PersonIcon fontSize='small' aria-hidden='true' />,
+                'primary.main',
+                'rgba(38, 66, 190, 0.08)'
+              )}
+              <CardTitle>Profile</CardTitle>
+            </Box>
           </CardHeader>
           <CardContent>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                mb: 3,
+                p: 2,
+                borderRadius: 2,
+                bgcolor: 'action.hover',
+              }}>
+              <UserAvatar name={name} size='medium' color='primary' />
+              <Box>
+                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  {name}
+                </Typography>
+                <Typography variant='caption' color='text.secondary'>
+                  {email}
+                </Typography>
+              </Box>
+            </Box>
             <Grid container spacing={2}>
               <Grid size={12}>
                 <CustomTextField
@@ -70,7 +124,14 @@ const SettingsPage = () => {
       <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardHeader>
-            <CardTitle>Preferences</CardTitle>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              {sectionIcon(
+                <TuneIcon fontSize='small' aria-hidden='true' />,
+                'info.main',
+                'rgba(29, 175, 194, 0.08)'
+              )}
+              <CardTitle>Preferences</CardTitle>
+            </Box>
           </CardHeader>
           <CardContent>
             <Grid container spacing={2}>
@@ -119,7 +180,14 @@ const SettingsPage = () => {
       <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardHeader>
-            <CardTitle>Theme</CardTitle>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              {sectionIcon(
+                <DarkModeIcon fontSize='small' aria-hidden='true' />,
+                'warning.main',
+                'rgba(235, 129, 23, 0.08)'
+              )}
+              <CardTitle>Theme</CardTitle>
+            </Box>
           </CardHeader>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -133,7 +201,14 @@ const SettingsPage = () => {
       <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardHeader>
-            <CardTitle>Calendar</CardTitle>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              {sectionIcon(
+                <CalendarMonthIcon fontSize='small' aria-hidden='true' />,
+                'success.main',
+                'rgba(70, 171, 74, 0.08)'
+              )}
+              <CardTitle>Calendar</CardTitle>
+            </Box>
           </CardHeader>
           <CardContent>
             <WeekStartSelector
@@ -149,7 +224,14 @@ const SettingsPage = () => {
   const advancedTab = (
     <Card>
       <CardHeader>
-        <CardTitle>Advanced Settings</CardTitle>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {sectionIcon(
+            <SettingsIcon fontSize='small' aria-hidden='true' />,
+            'error.main',
+            'rgba(218, 55, 55, 0.08)'
+          )}
+          <CardTitle>Advanced Settings</CardTitle>
+        </Box>
       </CardHeader>
       <CardContent className='p-0'>
         <CustomAccordion
@@ -248,7 +330,7 @@ const SettingsPage = () => {
       <Tabs
         value={tabValue}
         onChange={(_e, v) => setTabValue(v)}
-        sx={{ mb: 3 }}>
+        sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
         <Tab label='General' />
         <Tab label='Appearance' />
         <Tab label='Advanced' />
@@ -260,5 +342,3 @@ const SettingsPage = () => {
     </Box>
   )
 }
-
-export default SettingsPage

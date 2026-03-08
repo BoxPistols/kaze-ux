@@ -19,7 +19,7 @@ const statusMap: Record<string, StatusType> = {
   away: 'pending',
 }
 
-const TeamPage = () => {
+export const TeamPage = () => {
   return (
     <Box sx={{ p: 3 }}>
       <PageHeader
@@ -103,5 +103,3 @@ const TeamPage = () => {
     </Box>
   )
 }
-
-export default TeamPage

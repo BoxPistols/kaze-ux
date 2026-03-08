@@ -5,16 +5,7 @@ import FolderIcon from '@mui/icons-material/Folder'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import {
-  Box,
-  Grid,
-  Typography,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-} from '@mui/material'
+import { Box, Grid, Typography, LinearProgress } from '@mui/material'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -33,11 +24,30 @@ import { kpiCards } from '~/data/kpi'
 import { projects } from '~/data/projects'
 import { teamMembers } from '~/data/team'
 
-const iconMap = {
-  projects: <FolderIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
-  contacts: <ContactsIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
-  revenue: <AttachMoneyIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
-  tasks: <TaskAltIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+const kpiIconConfig: Record<
+  string,
+  { icon: React.ReactNode; bgColor: string; color: string }
+> = {
+  projects: {
+    icon: <FolderIcon fontSize='small' aria-hidden='true' />,
+    bgColor: 'rgba(38, 66, 190, 0.08)',
+    color: 'primary.main',
+  },
+  contacts: {
+    icon: <ContactsIcon fontSize='small' aria-hidden='true' />,
+    bgColor: 'rgba(29, 175, 194, 0.08)',
+    color: 'info.main',
+  },
+  revenue: {
+    icon: <AttachMoneyIcon fontSize='small' aria-hidden='true' />,
+    bgColor: 'rgba(70, 171, 74, 0.08)',
+    color: 'success.main',
+  },
+  tasks: {
+    icon: <TaskAltIcon fontSize='small' aria-hidden='true' />,
+    bgColor: 'rgba(235, 129, 23, 0.08)',
+    color: 'warning.main',
+  },
 }
 
 const statusMap: Record<string, StatusType> = {
@@ -57,7 +67,16 @@ const activityTypeColors: Record<string, string> = {
   system: 'default',
 }
 
-const DashboardPage = () => {
+const activityDotColors: Record<string, string> = {
+  project: 'primary.main',
+  task: 'success.main',
+  contact: 'info.main',
+  invoice: 'warning.main',
+  team: 'secondary.main',
+  system: 'text.disabled',
+}
+
+export const DashboardPage = () => {
   const navigate = useNavigate()
   const [calendarDate, setCalendarDate] = useState(dayjs())
   const recentProjects = projects
@@ -74,75 +93,137 @@ const DashboardPage = () => {
       />
 
       {/* KPI Cards */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        {kpiCards.map((kpi) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.id}>
-            <Card>
-              <CardContent className='p-4'>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                  }}>
-                  <Box>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      sx={{ mb: 0.5 }}>
-                      {kpi.title}
-                    </Typography>
-                    <Typography variant='h4' sx={{ fontWeight: 700 }}>
-                      {kpi.value}
-                    </Typography>
+      <Grid container spacing={2.5} sx={{ mb: 3 }}>
+        {kpiCards.map((kpi) => {
+          const iconConfig = kpiIconConfig[kpi.icon]
+          return (
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.id}>
+              <Card
+                sx={{
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? '0 8px 24px rgba(0,0,0,0.4)'
+                        : '0 8px 24px rgba(0,0,0,0.08)',
+                  },
+                }}>
+                <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                    }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ mb: 0.5, fontWeight: 500 }}>
+                        {kpi.title}
+                      </Typography>
+                      <Typography
+                        variant='h4'
+                        sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+                        {kpi.value}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          mt: 1.5,
+                          gap: 0.5,
+                          bgcolor:
+                            kpi.change > 0
+                              ? 'rgba(70, 171, 74, 0.08)'
+                              : 'rgba(218, 55, 55, 0.08)',
+                          px: 1,
+                          py: 0.25,
+                          borderRadius: 1,
+                        }}>
+                        {kpi.change > 0 ? (
+                          <TrendingUpIcon
+                            sx={{ fontSize: 16, color: 'success.main' }}
+                            aria-hidden='true'
+                          />
+                        ) : (
+                          <TrendingDownIcon
+                            sx={{ fontSize: 16, color: 'error.main' }}
+                            aria-hidden='true'
+                          />
+                        )}
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            color:
+                              kpi.change > 0 ? 'success.main' : 'error.main',
+                            fontWeight: 600,
+                          }}>
+                          {kpi.change > 0 ? '+' : ''}
+                          {kpi.change}%
+                        </Typography>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{ fontSize: '0.7rem' }}>
+                          {kpi.changeLabel}
+                        </Typography>
+                      </Box>
+                    </Box>
                     <Box
                       sx={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 2,
                         display: 'flex',
                         alignItems: 'center',
-                        mt: 1,
-                        gap: 0.5,
+                        justifyContent: 'center',
+                        bgcolor: iconConfig.bgColor,
+                        color: iconConfig.color,
+                        flexShrink: 0,
                       }}>
-                      {kpi.change > 0 ? (
-                        <TrendingUpIcon
-                          sx={{ fontSize: 18, color: 'success.main' }}
-                          aria-hidden='true'
-                        />
-                      ) : (
-                        <TrendingDownIcon
-                          sx={{ fontSize: 18, color: 'error.main' }}
-                          aria-hidden='true'
-                        />
-                      )}
-                      <Typography
-                        variant='caption'
-                        sx={{
-                          color: kpi.change > 0 ? 'success.main' : 'error.main',
-                          fontWeight: 600,
-                        }}>
-                        {kpi.change > 0 ? '+' : ''}
-                        {kpi.change}%
-                      </Typography>
-                      <Typography variant='caption' color='text.secondary'>
-                        {kpi.changeLabel}
-                      </Typography>
+                      {iconConfig.icon}
                     </Box>
                   </Box>
-                  <Box sx={{ color: 'primary.main', opacity: 0.7 }}>
-                    {iconMap[kpi.icon]}
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          )
+        })}
       </Grid>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2.5}>
         {/* Recent Projects */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardHeader>
-              <CardTitle>Recent Projects</CardTitle>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}>
+                <CardTitle>Recent Projects</CardTitle>
+                <Typography
+                  component='a'
+                  href='/projects'
+                  variant='caption'
+                  sx={{
+                    color: 'primary.main',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' },
+                  }}
+                  onClick={(e: React.MouseEvent) => {
+                    e.preventDefault()
+                    navigate('/projects')
+                  }}>
+                  View all
+                </Typography>
+              </Box>
             </CardHeader>
             <CardContent className='p-0'>
               <Box sx={{ overflowX: 'auto' }}>
@@ -155,11 +236,12 @@ const DashboardPage = () => {
                             key={h}
                             style={{
                               textAlign: 'left',
-                              padding: '12px 16px',
+                              padding: '10px 16px',
                               borderBottom: '1px solid var(--color-border)',
-                              fontSize: '0.75rem',
+                              fontSize: '0.7rem',
                               fontWeight: 600,
                               textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
                               color: 'var(--color-muted)',
                             }}>
                             {h}
@@ -178,7 +260,7 @@ const DashboardPage = () => {
                         }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor =
-                            'var(--color-hover, rgba(0,0,0,0.04))')
+                            'var(--color-hover, rgba(0,0,0,0.02))')
                         }
                         onMouseLeave={(e) =>
                           (e.currentTarget.style.backgroundColor = '')
@@ -189,7 +271,7 @@ const DashboardPage = () => {
                             padding: '12px 16px',
                             borderBottom: '1px solid var(--color-border)',
                           }}>
-                          <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                          <Typography variant='body2' sx={{ fontWeight: 600 }}>
                             {project.name}
                           </Typography>
                         </td>
@@ -240,7 +322,7 @@ const DashboardPage = () => {
                             />
                             <Typography
                               variant='caption'
-                              color='text.secondary'>
+                              sx={{ fontWeight: 500, minWidth: 28 }}>
                               {project.progress}%
                             </Typography>
                           </Box>
@@ -273,10 +355,17 @@ const DashboardPage = () => {
 
         {/* Mini Calendar */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <MiniCalendar
-            currentDate={calendarDate}
-            onDateChange={setCalendarDate}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Calendar</CardTitle>
+            </CardHeader>
+            <CardContent sx={{ pt: 0 }}>
+              <MiniCalendar
+                currentDate={calendarDate}
+                onDateChange={setCalendarDate}
+              />
+            </CardContent>
+          </Card>
         </Grid>
 
         {/* Activity Feed */}
@@ -285,51 +374,96 @@ const DashboardPage = () => {
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
             </CardHeader>
-            <CardContent className='p-0'>
-              <List dense disablePadding>
+            <CardContent sx={{ pt: 0 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {recentActivities.map((activity, idx) => (
-                  <ListItem
+                  <Box
                     key={activity.id}
-                    divider={idx < recentActivities.length - 1}
-                    sx={{ px: 2 }}>
-                    <ListItemAvatar>
-                      <UserAvatar name={activity.user} size='small' />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      py: 1.5,
+                      borderBottom:
+                        idx < recentActivities.length - 1
+                          ? '1px solid'
+                          : 'none',
+                      borderColor: 'divider',
+                    }}>
+                    {/* Timeline dot */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        pt: 0.5,
+                      }}>
+                      <Box
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          bgcolor:
+                            activityDotColors[activity.type] || 'text.disabled',
+                          flexShrink: 0,
+                        }}
+                      />
+                      {idx < recentActivities.length - 1 && (
                         <Box
                           sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                          }}>
-                          <Typography variant='body2'>
-                            {activity.message}
-                          </Typography>
-                          <CustomChip
-                            label={activity.type}
-                            size='small'
-                            color={
-                              activityTypeColors[activity.type] as
-                                | 'primary'
-                                | 'success'
-                                | 'info'
-                                | 'warning'
-                                | 'secondary'
-                                | 'default'
-                            }
-                            variant='outlined'
-                            sx={{ height: 20, fontSize: '0.65rem' }}
-                          />
-                        </Box>
-                      }
-                      secondary={dayjs(activity.timestamp).format(
-                        'MMM D, HH:mm'
+                            width: 1,
+                            flex: 1,
+                            bgcolor: 'divider',
+                            mt: 0.5,
+                          }}
+                        />
                       )}
-                    />
-                  </ListItem>
+                    </Box>
+
+                    {/* Content */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          mb: 0.25,
+                        }}>
+                        <UserAvatar name={activity.user} size='small' />
+                        <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                          {activity.user}
+                        </Typography>
+                        <CustomChip
+                          label={activity.type}
+                          size='small'
+                          color={
+                            activityTypeColors[activity.type] as
+                              | 'primary'
+                              | 'success'
+                              | 'info'
+                              | 'warning'
+                              | 'secondary'
+                              | 'default'
+                          }
+                          variant='outlined'
+                          sx={{ height: 18, fontSize: '0.6rem' }}
+                        />
+                      </Box>
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ mb: 0.25 }}>
+                        {activity.message}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        color='text.disabled'
+                        sx={{ fontSize: '0.7rem' }}>
+                        {dayjs(activity.timestamp).format('MMM D, HH:mm')}
+                      </Typography>
+                    </Box>
+                  </Box>
                 ))}
-              </List>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
@@ -338,20 +472,48 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardHeader>
-              <CardTitle>Team Online</CardTitle>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}>
+                <CardTitle>Team Online</CardTitle>
+                <Box
+                  sx={{
+                    bgcolor: 'success.main',
+                    color: '#fff',
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: 1,
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
+                  }}>
+                  {onlineTeam.length}
+                </Box>
+              </Box>
             </CardHeader>
             <CardContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {onlineTeam.map((member) => (
                   <Box
                     key={member.id}
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      p: 1,
+                      borderRadius: 1.5,
+                      transition: 'background-color 0.15s ease',
+                      '&:hover': { bgcolor: 'action.hover' },
+                    }}>
                     <UserAvatar
                       name={member.name}
                       size='small'
                       color='primary'
                     />
-                    <Box>
+                    <Box sx={{ flex: 1 }}>
                       <Typography variant='body2' sx={{ fontWeight: 500 }}>
                         {member.name}
                       </Typography>
@@ -359,6 +521,14 @@ const DashboardPage = () => {
                         {member.role}
                       </Typography>
                     </Box>
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        bgcolor: 'success.main',
+                      }}
+                    />
                   </Box>
                 ))}
               </Box>
@@ -375,5 +545,3 @@ const DashboardPage = () => {
     </Box>
   )
 }
-
-export default DashboardPage

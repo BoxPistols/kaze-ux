@@ -34,7 +34,7 @@ const statusFilters: { value: OrderStatus | 'all'; label: string }[] = [
   { value: 'cancelled', label: 'Cancelled' },
 ]
 
-const OrderHistoryPage = () => {
+export const OrderHistoryPage = () => {
   const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all')
 
@@ -142,9 +142,7 @@ const OrderHistoryPage = () => {
               id: 'reorder',
               label: 'Reorder',
               onClick: () =>
-                toast.info(
-                  `Reordering from ${params.row.restaurantName}...`
-                ),
+                toast.info(`Reordering from ${params.row.restaurantName}...`),
             },
             {
               id: 'help',
@@ -177,17 +175,10 @@ const OrderHistoryPage = () => {
       </Box>
 
       {/* Summary Stats */}
-      <Grid container spacing={2.5} sx={{ mb: 3 }}>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card>
-            <CardContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                py: 2.5,
-                px: 3,
-              }}>
+            <CardContent className='flex items-center gap-4 py-4 px-6'>
               <Box
                 sx={{
                   display: 'flex',
@@ -196,20 +187,19 @@ const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'primary.main',
-                  color: '#fff',
+                  bgcolor: 'rgba(6, 193, 103, 0.08)',
+                  color: '#06C167',
                   flexShrink: 0,
                 }}>
-                <ReceiptLongIcon aria-hidden='true' />
+                <ReceiptLongIcon fontSize='small' aria-hidden='true' />
               </Box>
               <Box>
-                <Typography variant='h5' sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant='h5'
+                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
                   {orders.length}
                 </Typography>
-                <Typography
-                  variant='caption'
-                  color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                <Typography variant='caption' color='text.secondary'>
                   Total Orders
                 </Typography>
               </Box>
@@ -218,14 +208,7 @@ const OrderHistoryPage = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card>
-            <CardContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                py: 2.5,
-                px: 3,
-              }}>
+            <CardContent className='flex items-center gap-4 py-4 px-6'>
               <Box
                 sx={{
                   display: 'flex',
@@ -234,8 +217,8 @@ const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'success.main',
-                  color: '#fff',
+                  bgcolor: 'rgba(70, 171, 74, 0.08)',
+                  color: 'success.main',
                   flexShrink: 0,
                 }}>
                 <Typography
@@ -245,13 +228,12 @@ const OrderHistoryPage = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant='h5' sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant='h5'
+                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
                   {formatPrice(totalSpent)}
                 </Typography>
-                <Typography
-                  variant='caption'
-                  color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                <Typography variant='caption' color='text.secondary'>
                   Total Spent
                 </Typography>
               </Box>
@@ -260,14 +242,7 @@ const OrderHistoryPage = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card>
-            <CardContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                py: 2.5,
-                px: 3,
-              }}>
+            <CardContent className='flex items-center gap-4 py-4 px-6'>
               <Box
                 sx={{
                   display: 'flex',
@@ -276,20 +251,19 @@ const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'warning.main',
-                  color: '#fff',
+                  bgcolor: 'rgba(235, 129, 23, 0.08)',
+                  color: 'warning.main',
                   flexShrink: 0,
                 }}>
-                <LocalShippingIcon aria-hidden='true' />
+                <LocalShippingIcon fontSize='small' aria-hidden='true' />
               </Box>
               <Box>
-                <Typography variant='h5' sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant='h5'
+                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
                   {activeOrders}
                 </Typography>
-                <Typography
-                  variant='caption'
-                  color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                <Typography variant='caption' color='text.secondary'>
                   Active Orders
                 </Typography>
               </Box>
@@ -299,14 +273,14 @@ const OrderHistoryPage = () => {
       </Grid>
 
       {/* Status Filter */}
-      <Box sx={{ display: 'flex', gap: 1, mb: 2.5, flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
         {statusFilters.map((filter) => (
           <CustomChip
             key={filter.value}
             label={filter.label}
             onClick={() => setStatusFilter(filter.value)}
             variant={statusFilter === filter.value ? 'filled' : 'outlined'}
-            color={statusFilter === filter.value ? 'primary' : 'default'}
+            color={statusFilter === filter.value ? 'success' : 'default'}
             sx={{
               cursor: 'pointer',
               fontWeight: statusFilter === filter.value ? 600 : 400,
@@ -330,5 +304,3 @@ const OrderHistoryPage = () => {
     </Box>
   )
 }
-
-export default OrderHistoryPage

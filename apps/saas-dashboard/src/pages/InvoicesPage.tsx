@@ -41,7 +41,7 @@ const statusFilters: { value: InvoiceStatus | 'all'; label: string }[] = [
   { value: 'draft', label: 'Draft' },
 ]
 
-const InvoicesPage = () => {
+export const InvoicesPage = () => {
   const [sending, setSending] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | 'all'>('all')
 
@@ -364,5 +364,3 @@ const InvoicesPage = () => {
     </Box>
   )
 }
-
-export default InvoicesPage

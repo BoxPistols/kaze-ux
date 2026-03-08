@@ -13,6 +13,7 @@ export default defineConfig({
       tsconfig: './tsconfig.test.json',
       include: ['**/*.{test,spec}.{ts,tsx}'],
     },
+    exclude: ['**/node_modules/**', '**/dist/**', 'apps/**'],
     css: true,
     deps: { inline: ['@mui/x-data-grid'] },
     pool: 'forks',
