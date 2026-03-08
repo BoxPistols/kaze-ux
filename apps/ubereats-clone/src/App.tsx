@@ -29,7 +29,6 @@ import {
 
 import { IconButton } from '@/components/ui/icon-button'
 import { CustomToaster } from '@/components/ui/toast'
-import { darkTheme, lightTheme } from '@/themes/theme'
 
 import { useCartStore } from '~/data/cart'
 import { CartPage } from '~/pages/CartPage'
@@ -38,6 +37,8 @@ import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
 import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
 import { ProfilePage } from '~/pages/ProfilePage'
 import { RestaurantPage } from '~/pages/RestaurantPage'
+import { UE_GREEN, UE_GREEN_LIGHT } from '~/theme/colors'
+import { ueDarkTheme, ueLightTheme } from '~/theme/ueTheme'
 
 type ThemeMode = 'light' | 'dark'
 
@@ -70,6 +71,19 @@ const navItems = [
     icon: <PersonIcon aria-hidden='true' />,
   },
 ]
+
+const BADGE_SX = {
+  '& .MuiBadge-badge': { bgcolor: 'ueGreen.main', color: '#fff' },
+} as const
+
+const renderNavIcon = (item: (typeof navItems)[0], cartCount: number) =>
+  item.label === 'Cart' ? (
+    <Badge badgeContent={cartCount} sx={BADGE_SX}>
+      {item.icon}
+    </Badge>
+  ) : (
+    item.icon
+  )
 
 const AppContent = ({
   mode,
@@ -144,7 +158,7 @@ const AppContent = ({
                 outline: 'none',
                 '&:focus-visible': {
                   outline: '2px solid',
-                  outlineColor: '#06C167',
+                  outlineColor: UE_GREEN,
                   outlineOffset: 4,
                   borderRadius: 1,
                 },
@@ -157,7 +171,7 @@ const AppContent = ({
                   width: 42,
                   height: 42,
                   borderRadius: 2.5,
-                  bgcolor: '#06C167',
+                  bgcolor: UE_GREEN,
                   flexShrink: 0,
                 }}>
                 <RestaurantMenuIcon
@@ -174,7 +188,7 @@ const AppContent = ({
                   lineHeight: 1,
                 }}>
                 Kaze
-                <Box component='span' sx={{ color: '#06C167' }}>
+                <Box component='span' sx={{ color: UE_GREEN }}>
                   Eats
                 </Box>
               </Typography>
@@ -199,29 +213,16 @@ const AppContent = ({
                       aria-label={item.label}
                       size='medium'
                       sx={{
-                        color: isActive ? '#06C167' : 'text.secondary',
+                        color: isActive ? UE_GREEN : 'text.secondary',
                         bgcolor: isActive
-                          ? 'rgba(6, 193, 103, 0.08)'
+                          ? UE_GREEN_LIGHT
                           : 'transparent',
                         '&:hover': {
-                          color: '#06C167',
+                          color: UE_GREEN,
                           bgcolor: 'action.hover',
                         },
                       }}>
-                      {item.label === 'Cart' ? (
-                        <Badge
-                          badgeContent={cartCount}
-                          sx={{
-                            '& .MuiBadge-badge': {
-                              bgcolor: '#06C167',
-                              color: '#fff',
-                            },
-                          }}>
-                          {item.icon}
-                        </Badge>
-                      ) : (
-                        item.icon
-                      )}
+                      {renderNavIcon(item, cartCount)}
                     </IconButton>
                   )
                 })}
@@ -277,22 +278,7 @@ const AppContent = ({
             <BottomNavigationAction
               key={item.label}
               label={item.label}
-              icon={
-                item.label === 'Cart' ? (
-                  <Badge
-                    badgeContent={cartCount}
-                    sx={{
-                      '& .MuiBadge-badge': {
-                        bgcolor: '#06C167',
-                        color: '#fff',
-                      },
-                    }}>
-                    {item.icon}
-                  </Badge>
-                ) : (
-                  item.icon
-                )
-              }
+              icon={renderNavIcon(item, cartCount)}
               sx={{
                 minWidth: 64,
                 '& .MuiSvgIcon-root': { fontSize: 24 },
@@ -314,7 +300,7 @@ const AppContent = ({
 const App = () => {
   const [mode, setMode] = useState<ThemeMode>(getInitialMode)
   const theme = useMemo(
-    () => (mode === 'dark' ? darkTheme : lightTheme),
+    () => (mode === 'dark' ? ueDarkTheme : ueLightTheme),
     [mode]
   )
   const toggleMode = useCallback(() => {

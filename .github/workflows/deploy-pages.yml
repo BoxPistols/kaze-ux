@@ -50,7 +50,7 @@ jobs:
           echo "public-hoist-pattern[]=prop-types" >> .npmrc
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build Storybook
         run: pnpm run build-storybook

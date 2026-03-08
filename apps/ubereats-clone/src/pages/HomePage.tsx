@@ -14,6 +14,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
 
 import { restaurants, categories } from '~/data/restaurants'
+import { UE_GREEN, UE_GREEN_DARK, UE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const HomePage = () => {
@@ -48,7 +49,7 @@ export const HomePage = () => {
           background: (theme) =>
             theme.palette.mode === 'dark'
               ? 'linear-gradient(135deg, #0a0a0a 0%, #1a2e1a 100%)'
-              : 'linear-gradient(135deg, #06C167 0%, #048848 100%)',
+              : `linear-gradient(135deg, ${UE_GREEN} 0%, ${UE_GREEN_DARK} 100%)`,
           pt: { xs: 4, md: 6 },
           pb: { xs: 5, md: 7 },
           px: 3,
@@ -148,7 +149,7 @@ export const HomePage = () => {
               }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon
-                  sx={{ color: '#06C167', fontSize: 24 }}
+                  sx={{ color: UE_GREEN, fontSize: 24 }}
                   aria-hidden='true'
                 />
                 <Typography
@@ -221,7 +222,7 @@ export const HomePage = () => {
                         position: 'absolute',
                         top: 12,
                         left: 12,
-                        bgcolor: '#06C167',
+                        bgcolor: UE_GREEN,
                         color: '#fff',
                         px: 1.5,
                         py: 0.5,
@@ -241,7 +242,7 @@ export const HomePage = () => {
                         gap: 0.5,
                       }}>
                       <StarIcon
-                        sx={{ fontSize: 18, color: '#fbbf24' }}
+                        sx={{ fontSize: 18, color: UE_STAR }}
                         aria-hidden='true'
                       />
                       <Typography

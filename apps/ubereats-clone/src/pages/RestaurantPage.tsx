@@ -17,6 +17,7 @@ import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
 import { restaurants } from '~/data/restaurants'
+import { UE_GREEN, UE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const RestaurantPage = () => {
@@ -26,6 +27,7 @@ export const RestaurantPage = () => {
   const { addItem, totalItems } = useCartStore()
   const [tabValue, setTabValue] = useState(0)
 
+  // Map は挿入順を保証するため、データ定義順でカテゴリが表示される
   const menuCategories = useMemo(() => {
     if (!restaurant) return []
     const cats = new Map<string, typeof restaurant.menu>()
@@ -95,7 +97,7 @@ export const RestaurantPage = () => {
         <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
           <Badge
             badgeContent={cartCount}
-            sx={{ '& .MuiBadge-badge': { bgcolor: '#06C167', color: '#fff' } }}>
+            sx={{ '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: '#fff' } }}>
             <IconButton
               onClick={() => navigate('/cart')}
               tooltip='View cart'
@@ -145,7 +147,7 @@ export const RestaurantPage = () => {
                 borderRadius: 2,
               }}>
               <StarIcon
-                sx={{ fontSize: 18, color: '#fbbf24' }}
+                sx={{ fontSize: 18, color: UE_STAR }}
                 aria-hidden='true'
               />
               <Typography
@@ -261,7 +263,7 @@ export const RestaurantPage = () => {
                             }}>
                             <Typography
                               variant='body1'
-                              sx={{ fontWeight: 700, color: '#06C167' }}>
+                              sx={{ fontWeight: 700, color: UE_GREEN }}>
                               {formatPrice(item.price)}
                             </Typography>
                             <Button
@@ -320,7 +322,7 @@ export const RestaurantPage = () => {
                     }}>
                     <Typography
                       variant='body1'
-                      sx={{ fontWeight: 700, color: '#06C167' }}>
+                      sx={{ fontWeight: 700, color: UE_GREEN }}>
                       {formatPrice(item.price)}
                     </Typography>
                     <Button

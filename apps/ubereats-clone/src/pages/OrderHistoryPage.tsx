@@ -16,6 +16,7 @@ import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import type { Order, OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
+import { UE_GREEN } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 const statusMap: Record<OrderStatus, StatusType> = {
@@ -187,7 +188,7 @@ export const OrderHistoryPage = () => {
                   height: 44,
                   borderRadius: 2,
                   bgcolor: 'rgba(6, 193, 103, 0.08)',
-                  color: '#06C167',
+                  color: UE_GREEN,
                   flexShrink: 0,
                 }}>
                 <ReceiptLongIcon fontSize='small' aria-hidden='true' />
