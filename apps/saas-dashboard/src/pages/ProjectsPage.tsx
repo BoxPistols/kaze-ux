@@ -153,7 +153,8 @@ const ProjectsPage = () => {
         title='Projects'
         subtitle='Manage and track all your projects.'>
         <Button variant='default' onClick={() => navigate('/projects/new')}>
-          <AddIcon sx={{ fontSize: 18, mr: 0.5 }} /> New Project
+          <AddIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' /> New
+          Project
         </Button>
       </PageHeader>
 

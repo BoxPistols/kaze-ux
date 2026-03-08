@@ -76,11 +76,17 @@ const TeamPage = () => {
 
                 <Box
                   sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                  <IconButton tooltip={member.email} size='small'>
-                    <EmailIcon fontSize='small' />
+                  <IconButton
+                    tooltip={member.email}
+                    aria-label={`Email ${member.name}`}
+                    size='small'>
+                    <EmailIcon />
                   </IconButton>
-                  <IconButton tooltip={member.phone} size='small'>
-                    <PhoneIcon fontSize='small' />
+                  <IconButton
+                    tooltip={member.phone}
+                    aria-label={`Call ${member.name}`}
+                    size='small'>
+                    <PhoneIcon />
                   </IconButton>
                   <Typography
                     variant='caption'

@@ -132,7 +132,8 @@ const ContactsPage = () => {
         title='Contacts'
         subtitle='Manage your CRM contacts and leads.'>
         <Button variant='default' onClick={openAdd}>
-          <AddIcon sx={{ fontSize: 18, mr: 0.5 }} /> Add Contact
+          <AddIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' /> Add
+          Contact
         </Button>
       </PageHeader>
 

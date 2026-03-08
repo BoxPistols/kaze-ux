@@ -73,27 +73,65 @@ const AppContent = () => {
           bgcolor: 'background.paper',
           borderBottom: '1px solid',
           borderColor: 'divider',
-          backdropFilter: 'blur(12px)',
         }}>
-        <Toolbar sx={{ maxWidth: 1200, width: '100%', mx: 'auto' }}>
+        <Toolbar
+          sx={{
+            maxWidth: 1200,
+            width: '100%',
+            mx: 'auto',
+            minHeight: { xs: 64, md: 72 },
+            px: { xs: 2, md: 3 },
+          }}>
+          {/* Logo */}
           <Box
+            component='a'
+            onClick={() => navigate('/')}
+            role='link'
+            tabIndex={0}
+            aria-label='KazeEats Home'
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                navigate('/')
+              }
+            }}
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 1,
+              gap: 1.5,
               flex: 1,
               cursor: 'pointer',
-            }}
-            onClick={() => navigate('/')}>
-            <RestaurantMenuIcon
-              sx={{ color: 'primary.main', fontSize: 28 }}
-            />
+              textDecoration: 'none',
+              color: 'inherit',
+              outline: 'none',
+              '&:focus-visible': {
+                outline: '2px solid',
+                outlineColor: 'primary.main',
+                outlineOffset: 4,
+                borderRadius: 1,
+              },
+            }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 42,
+                height: 42,
+                borderRadius: 2.5,
+                background:
+                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                flexShrink: 0,
+              }}>
+              <RestaurantMenuIcon sx={{ color: '#fff', fontSize: 26 }} />
+            </Box>
             <Typography
-              variant='h6'
               sx={{
                 fontWeight: 800,
+                fontSize: { xs: '1.25rem', md: '1.4rem' },
+                letterSpacing: '-0.03em',
                 color: 'text.primary',
-                letterSpacing: '-0.02em',
+                lineHeight: 1,
               }}>
               Kaze
               <Box component='span' sx={{ color: 'primary.main' }}>
@@ -101,8 +139,13 @@ const AppContent = () => {
               </Box>
             </Typography>
           </Box>
+
+          {/* Desktop Navigation */}
           {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 0.5, mr: 1 }}>
+            <Box
+              component='nav'
+              aria-label='Main navigation'
+              sx={{ display: 'flex', gap: 0.5, mr: 1 }}>
               {navItems.map((item) => {
                 const isActive =
                   item.path === '/'
@@ -113,9 +156,15 @@ const AppContent = () => {
                     key={item.label}
                     onClick={() => navigate(item.path)}
                     tooltip={item.label}
+                    aria-label={item.label}
+                    size='medium'
                     sx={{
                       color: isActive ? 'primary.main' : 'text.secondary',
-                      '&:hover': { color: 'primary.main' },
+                      bgcolor: isActive ? 'action.selected' : 'transparent',
+                      '&:hover': {
+                        color: 'primary.main',
+                        bgcolor: 'action.hover',
+                      },
                     }}>
                     {item.label === 'Cart' ? (
                       <Badge badgeContent={cartCount} color='primary'>
@@ -129,15 +178,21 @@ const AppContent = () => {
               })}
             </Box>
           )}
+
+          {/* Theme Toggle */}
           <IconButton
             onClick={() => setMode(isDarkMode ? 'light' : 'dark')}
-            tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}>
+            tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}
+            aria-label={
+              isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+            }
+            size='medium'>
             {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ flex: 1, pb: isMobile ? 8 : 0 }}>
+      <Box component='main' sx={{ flex: 1, pb: isMobile ? 8 : 0 }}>
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/restaurant/:id' element={<RestaurantPage />} />
@@ -149,8 +204,11 @@ const AppContent = () => {
         </Routes>
       </Box>
 
+      {/* Mobile Bottom Navigation */}
       {isMobile && (
         <BottomNavigation
+          component='nav'
+          aria-label='Main navigation'
           value={currentTab >= 0 ? currentTab : 0}
           onChange={(_e, newValue) => navigate(navItems[newValue].path)}
           showLabels
@@ -159,6 +217,7 @@ const AppContent = () => {
             bottom: 0,
             left: 0,
             right: 0,
+            height: 64,
             borderTop: '1px solid',
             borderColor: 'divider',
             zIndex: 1200,
@@ -168,6 +227,7 @@ const AppContent = () => {
             <BottomNavigationAction
               key={item.label}
               label={item.label}
+              aria-label={item.label}
               icon={
                 item.label === 'Cart' ? (
                   <Badge badgeContent={cartCount} color='primary'>
@@ -177,6 +237,14 @@ const AppContent = () => {
                   item.icon
                 )
               }
+              sx={{
+                minWidth: 64,
+                '& .MuiSvgIcon-root': { fontSize: 24 },
+                '& .MuiBottomNavigationAction-label': {
+                  fontSize: '0.7rem',
+                  mt: 0.25,
+                },
+              }}
             />
           ))}
         </BottomNavigation>

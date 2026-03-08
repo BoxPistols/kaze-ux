@@ -85,7 +85,10 @@ const CartPage = () => {
   return (
     <Box sx={{ maxWidth: 960, mx: 'auto', px: 3, pt: 3, pb: 6 }}>
       <Box sx={{ mb: 3 }}>
-        <IconButton onClick={() => navigate(-1)} tooltip='Back'>
+        <IconButton
+          onClick={() => navigate(-1)}
+          tooltip='Go back'
+          aria-label='Go back'>
           <ArrowBackIcon />
         </IconButton>
       </Box>
@@ -145,14 +148,16 @@ const CartPage = () => {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity - 1)
                         }
-                        tooltip='Decrease'>
-                        <RemoveIcon sx={{ fontSize: 16 }} />
+                        tooltip='Decrease quantity'
+                        aria-label={`Decrease ${item.name} quantity`}
+                        size='small'>
+                        <RemoveIcon />
                       </IconButton>
                       <Typography
                         variant='body2'
                         sx={{
                           fontWeight: 700,
-                          minWidth: 24,
+                          minWidth: 28,
                           textAlign: 'center',
                         }}>
                         {item.quantity}
@@ -161,8 +166,10 @@ const CartPage = () => {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
                         }
-                        tooltip='Increase'>
-                        <AddIcon sx={{ fontSize: 16 }} />
+                        tooltip='Increase quantity'
+                        aria-label={`Increase ${item.name} quantity`}
+                        size='small'>
+                        <AddIcon />
                       </IconButton>
                     </Box>
                     <Typography
@@ -176,10 +183,11 @@ const CartPage = () => {
                     </Typography>
                     <IconButton
                       onClick={() => removeItem(item.id)}
-                      tooltip='Remove'>
-                      <DeleteOutlineIcon
-                        sx={{ fontSize: 18, color: 'error.main' }}
-                      />
+                      tooltip='Remove item'
+                      aria-label={`Remove ${item.name} from cart`}
+                      color='error'
+                      size='small'>
+                      <DeleteOutlineIcon />
                     </IconButton>
                   </Box>
                   {idx < items.length - 1 && <Divider />}

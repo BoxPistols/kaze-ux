@@ -149,7 +149,8 @@ const HomePage = () => {
               }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon
-                  sx={{ color: 'primary.main', fontSize: 22 }}
+                  sx={{ color: 'primary.main', fontSize: 24 }}
+                  aria-hidden='true'
                 />
                 <Typography
                   variant='h6'
@@ -231,7 +232,10 @@ const HomePage = () => {
                         alignItems: 'center',
                         gap: 0.5,
                       }}>
-                      <StarIcon sx={{ fontSize: 16, color: '#fbbf24' }} />
+                      <StarIcon
+                        sx={{ fontSize: 18, color: '#fbbf24' }}
+                        aria-hidden='true'
+                      />
                       <Typography
                         variant='body2'
                         sx={{ color: '#fff', fontWeight: 600 }}>
@@ -263,7 +267,10 @@ const HomePage = () => {
                           alignItems: 'center',
                           gap: 0.5,
                         }}>
-                        <AccessTimeIcon sx={{ fontSize: 15 }} />
+                        <AccessTimeIcon
+                          sx={{ fontSize: 18 }}
+                          aria-hidden='true'
+                        />
                         <Typography variant='body2'>
                           {r.deliveryTime}
                         </Typography>
@@ -274,7 +281,10 @@ const HomePage = () => {
                           alignItems: 'center',
                           gap: 0.5,
                         }}>
-                        <DeliveryDiningIcon sx={{ fontSize: 15 }} />
+                        <DeliveryDiningIcon
+                          sx={{ fontSize: 18 }}
+                          aria-hidden='true'
+                        />
                         <Typography variant='body2'>
                           {formatPrice(r.deliveryFee)}
                         </Typography>
@@ -350,7 +360,8 @@ const HomePage = () => {
                         borderRadius: 2,
                       }}>
                       <AccessTimeIcon
-                        sx={{ fontSize: 14, color: '#fff' }}
+                        sx={{ fontSize: 16, color: '#fff' }}
+                        aria-hidden='true'
                       />
                       <Typography
                         variant='caption'
@@ -430,6 +441,7 @@ const HomePage = () => {
                   }}>
                   <SearchIcon
                     sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }}
+                    aria-hidden='true'
                   />
                   <Typography
                     variant='h6'
@@ -449,7 +461,10 @@ const HomePage = () => {
                       setSearch('')
                       setSelectedCategory('all')
                     }}>
-                    <ArrowForwardIcon sx={{ fontSize: 16, mr: 0.5 }} />
+                    <ArrowForwardIcon
+                      sx={{ fontSize: 18, mr: 0.5 }}
+                      aria-hidden='true'
+                    />
                     View all restaurants
                   </Button>
                 </Box>

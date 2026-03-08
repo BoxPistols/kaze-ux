@@ -85,7 +85,8 @@ const RestaurantPage = () => {
           }}>
           <IconButton
             onClick={() => navigate('/')}
-            tooltip='Back'
+            tooltip='Back to home'
+            aria-label='Back to home'
             sx={{
               bgcolor: 'rgba(255,255,255,0.9)',
               '&:hover': { bgcolor: '#fff' },
@@ -97,7 +98,8 @@ const RestaurantPage = () => {
           <Badge badgeContent={cartCount} color='primary'>
             <IconButton
               onClick={() => navigate('/cart')}
-              tooltip='Cart'
+              tooltip='View cart'
+              aria-label='View cart'
               sx={{
                 bgcolor: 'rgba(255,255,255,0.9)',
                 '&:hover': { bgcolor: '#fff' },
@@ -141,7 +143,10 @@ const RestaurantPage = () => {
                 py: 0.5,
                 borderRadius: 2,
               }}>
-              <StarIcon sx={{ fontSize: 16, color: '#fbbf24' }} />
+              <StarIcon
+                sx={{ fontSize: 18, color: '#fbbf24' }}
+                aria-hidden='true'
+              />
               <Typography
                 variant='body2'
                 sx={{ color: '#fff', fontWeight: 600 }}>
@@ -160,7 +165,7 @@ const RestaurantPage = () => {
                 gap: 0.5,
                 color: 'rgba(255,255,255,0.9)',
               }}>
-              <AccessTimeIcon sx={{ fontSize: 16 }} />
+              <AccessTimeIcon sx={{ fontSize: 18 }} aria-hidden='true' />
               <Typography variant='body2' sx={{ fontWeight: 500 }}>
                 {restaurant.deliveryTime}
               </Typography>
@@ -172,7 +177,7 @@ const RestaurantPage = () => {
                 gap: 0.5,
                 color: 'rgba(255,255,255,0.9)',
               }}>
-              <DeliveryDiningIcon sx={{ fontSize: 16 }} />
+              <DeliveryDiningIcon sx={{ fontSize: 18 }} aria-hidden='true' />
               <Typography variant='body2' sx={{ fontWeight: 500 }}>
                 {formatPrice(restaurant.deliveryFee)}
               </Typography>
@@ -248,7 +253,8 @@ const RestaurantPage = () => {
                             )}
                             {item.spicy && (
                               <LocalFireDepartmentIcon
-                                sx={{ fontSize: 16, color: 'error.main' }}
+                                sx={{ fontSize: 18, color: 'error.main' }}
+                                aria-hidden='true'
                               />
                             )}
                           </Box>

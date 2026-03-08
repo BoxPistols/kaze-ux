@@ -274,7 +274,8 @@ const ProjectDetailPage = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
         <IconButton
           onClick={() => navigate('/projects')}
-          tooltip='Back to projects'>
+          tooltip='Back to projects'
+          aria-label='Back to projects'>
           <ArrowBackIcon />
         </IconButton>
       </Box>
@@ -282,10 +283,11 @@ const ProjectDetailPage = () => {
       <PageHeader title={project.name} subtitle={project.description}>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button variant='outline' onClick={() => toast.info('Edit project')}>
-            <EditIcon sx={{ fontSize: 16, mr: 0.5 }} /> Edit
+            <EditIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' /> Edit
           </Button>
           <Button variant='destructive' onClick={() => setDeleteOpen(true)}>
-            <DeleteIcon sx={{ fontSize: 16, mr: 0.5 }} /> Delete
+            <DeleteIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' />{' '}
+            Delete
           </Button>
         </Box>
       </PageHeader>

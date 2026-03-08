@@ -60,7 +60,10 @@ const OrderTrackingPage = () => {
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto', px: 3, pt: 3, pb: 6 }}>
       <Box sx={{ mb: 3 }}>
-        <IconButton onClick={() => navigate('/orders')} tooltip='Back to orders'>
+        <IconButton
+          onClick={() => navigate('/orders')}
+          tooltip='Back to orders'
+          aria-label='Back to orders'>
           <ArrowBackIcon />
         </IconButton>
       </Box>
@@ -137,7 +140,8 @@ const OrderTrackingPage = () => {
               {order.driverPhone && (
                 <IconButton
                   onClick={() => toast.info(`Calling ${order.driverName}...`)}
-                  tooltip='Call driver'>
+                  tooltip='Call driver'
+                  aria-label={`Call driver ${order.driverName}`}>
                   <PhoneIcon />
                 </IconButton>
               )}

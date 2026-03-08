@@ -112,7 +112,8 @@ const InvoicesPage = () => {
           <Button
             variant='default'
             onClick={() => toast.info('Create invoice')}>
-            <AddIcon sx={{ fontSize: 18, mr: 0.5 }} /> New Invoice
+            <AddIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' /> New
+            Invoice
           </Button>
         </Box>
       </PageHeader>

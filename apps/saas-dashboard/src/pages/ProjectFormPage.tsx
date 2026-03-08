@@ -76,7 +76,8 @@ const ProjectFormPage = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
         <IconButton
           onClick={() => navigate('/projects')}
-          tooltip='Back to projects'>
+          tooltip='Back to projects'
+          aria-label='Back to projects'>
           <ArrowBackIcon />
         </IconButton>
       </Box>

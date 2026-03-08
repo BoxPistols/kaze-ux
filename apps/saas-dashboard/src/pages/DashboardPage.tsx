@@ -104,11 +104,13 @@ const DashboardPage = () => {
                       }}>
                       {kpi.change > 0 ? (
                         <TrendingUpIcon
-                          sx={{ fontSize: 16, color: 'success.main' }}
+                          sx={{ fontSize: 18, color: 'success.main' }}
+                          aria-hidden='true'
                         />
                       ) : (
                         <TrendingDownIcon
-                          sx={{ fontSize: 16, color: 'error.main' }}
+                          sx={{ fontSize: 18, color: 'error.main' }}
+                          aria-hidden='true'
                         />
                       )}
                       <Typography
