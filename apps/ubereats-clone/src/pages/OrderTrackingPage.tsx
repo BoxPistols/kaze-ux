@@ -171,7 +171,7 @@ export const OrderTrackingPage = () => {
                   aria-label={`Call driver ${order.driverName}`}
                   sx={{
                     bgcolor: UE_GREEN,
-                    color: '#fff',
+                    color: 'common.white',
                     '&:hover': { bgcolor: UE_GREEN_DARK },
                   }}>
                   <PhoneIcon aria-hidden='true' />

@@ -1,6 +1,7 @@
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import { Box, Grid, Typography } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,7 +17,7 @@ import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import type { Order, OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
-import { UE_GREEN } from '~/theme/colors'
+import { UE_GREEN, UE_GREEN_LIGHT } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 const statusMap: Record<OrderStatus, StatusType> = {
@@ -187,7 +188,7 @@ export const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'rgba(6, 193, 103, 0.08)',
+                  bgcolor: UE_GREEN_LIGHT,
                   color: UE_GREEN,
                   flexShrink: 0,
                 }}>
@@ -217,7 +218,7 @@ export const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'rgba(70, 171, 74, 0.08)',
+                  bgcolor: (theme) => alpha(theme.palette.success.main, 0.08),
                   color: 'success.main',
                   flexShrink: 0,
                 }}>
@@ -251,7 +252,7 @@ export const OrderHistoryPage = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 2,
-                  bgcolor: 'rgba(235, 129, 23, 0.08)',
+                  bgcolor: (theme) => alpha(theme.palette.warning.main, 0.08),
                   color: 'warning.main',
                   flexShrink: 0,
                 }}>

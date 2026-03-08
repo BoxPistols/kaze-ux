@@ -82,14 +82,15 @@ export const RestaurantPage = () => {
             top: 16,
             left: 16,
           }}>
+          {/* ヒーロー画像上のボタン: 背景画像に重なるため固定色を使用 */}
           <IconButton
             onClick={() => navigate('/')}
             tooltip='Back to home'
             aria-label='Back to home'
             sx={{
               bgcolor: 'rgba(255,255,255,0.9)',
-              color: '#333',
-              '&:hover': { bgcolor: '#fff', color: '#000' },
+              color: 'grey.800',
+              '&:hover': { bgcolor: 'common.white', color: 'common.black' },
             }}>
             <ArrowBackIcon />
           </IconButton>
@@ -97,15 +98,15 @@ export const RestaurantPage = () => {
         <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
           <Badge
             badgeContent={cartCount}
-            sx={{ '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: '#fff' } }}>
+            sx={{ '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: 'common.white' } }}>
             <IconButton
               onClick={() => navigate('/cart')}
               tooltip='View cart'
               aria-label='View cart'
               sx={{
                 bgcolor: 'rgba(255,255,255,0.9)',
-                color: '#333',
-                '&:hover': { bgcolor: '#fff', color: '#000' },
+                color: 'grey.800',
+                '&:hover': { bgcolor: 'common.white', color: 'common.black' },
               }}>
               <ShoppingCartIcon />
             </IconButton>

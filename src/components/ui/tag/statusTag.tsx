@@ -57,9 +57,9 @@ const statusStyles: Record<
     borderColor: 'success.main',
   },
   inactive: {
-    backgroundColor: 'grey.200',
-    color: 'grey.600',
-    borderColor: 'grey.400',
+    backgroundColor: 'action.selected',
+    color: 'text.secondary',
+    borderColor: 'divider',
   },
 }
 

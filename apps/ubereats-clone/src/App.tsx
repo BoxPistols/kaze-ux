@@ -42,8 +42,10 @@ import { ueDarkTheme, ueLightTheme } from '~/theme/ueTheme'
 
 type ThemeMode = 'light' | 'dark'
 
-// hookUseTheme ではなく独自管理: UberEats Clone は専用テーマ (lightTheme/darkTheme) を使用し、
-// localStorage キーも 'ubereats-theme' で他アプリと分離するため
+// hookUseTheme ではなく独自管理: UberEats Clone は専用テーマ (ueLightTheme/ueDarkTheme) を使用し、
+// localStorage キーも 'ubereats-theme' で他アプリと分離するため。
+// SaaS Dashboard は共通 ThemeProvider + CssVarsProvider を利用するが、
+// 本アプリは UE ブランドカラー専用のため独立した ThemeProvider/useState で管理する。
 const getInitialMode = (): ThemeMode => {
   if (typeof window === 'undefined') return 'light'
   const saved = localStorage.getItem('ubereats-theme')
@@ -73,7 +75,7 @@ const navItems = [
 ]
 
 const BADGE_SX = {
-  '& .MuiBadge-badge': { bgcolor: 'ueGreen.main', color: '#fff' },
+  '& .MuiBadge-badge': { bgcolor: 'ueGreen.main', color: 'common.white' },
 } as const
 
 const renderNavIcon = (item: (typeof navItems)[0], cartCount: number) =>
@@ -175,7 +177,7 @@ const AppContent = ({
                   flexShrink: 0,
                 }}>
                 <RestaurantMenuIcon
-                  sx={{ color: '#fff', fontSize: 26 }}
+                  sx={{ color: 'common.white', fontSize: 26 }}
                   aria-hidden='true'
                 />
               </Box>
@@ -214,9 +216,7 @@ const AppContent = ({
                       size='medium'
                       sx={{
                         color: isActive ? UE_GREEN : 'text.secondary',
-                        bgcolor: isActive
-                          ? UE_GREEN_LIGHT
-                          : 'transparent',
+                        bgcolor: isActive ? UE_GREEN_LIGHT : 'transparent',
                         '&:hover': {
                           color: UE_GREEN,
                           bgcolor: 'action.hover',
