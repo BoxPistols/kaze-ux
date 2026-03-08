@@ -271,6 +271,12 @@ importers:
         specifier: workspace:*
         version: link:../..
 
+  apps/ubereats-clone:
+    dependencies:
+      kaze-ux:
+        specifier: workspace:*
+        version: link:../..
+
 packages:
 
   '@adobe/css-tools@4.4.4':

@@ -63,6 +63,9 @@ jobs:
       - name: Build SaaS Dashboard Demo
         run: pnpm --filter saas-dashboard build:gh-pages
 
+      - name: Build UberEats Clone Demo
+        run: pnpm --filter ubereats-clone build:gh-pages
+
       - name: Create landing page
         run: cp scripts/gh-pages-index.html gh-pages/index.html
 
@@ -93,3 +96,4 @@ jobs:
           echo "Landing: ${PAGE_URL}"
           echo "Storybook: ${PAGE_URL}storybook/"
           echo "SaaS Dashboard: ${PAGE_URL}demo/saas-dashboard/"
+          echo "UberEats Clone: ${PAGE_URL}demo/ubereats-clone/"

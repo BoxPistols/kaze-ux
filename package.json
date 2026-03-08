@@ -55,11 +55,16 @@
     "prepare": "husky",
     "export-tokens": "tsx scripts/export-design-tokens.ts",
     "dev:dashboard": "pnpm --filter saas-dashboard dev",
-    "dev:all": "pnpm dev & pnpm dev:dashboard",
+    "dev:ubereats": "pnpm --filter ubereats-clone dev",
+    "dev:all": "pnpm dev & pnpm dev:dashboard & pnpm dev:ubereats",
     "build:dashboard": "pnpm --filter saas-dashboard build",
+    "build:ubereats": "pnpm --filter ubereats-clone build",
     "build:gh-pages:dashboard": "pnpm --filter saas-dashboard build:gh-pages",
+    "build:gh-pages:ubereats": "pnpm --filter ubereats-clone build:gh-pages",
     "preview:dashboard": "pnpm --filter saas-dashboard preview",
-    "test:dashboard": "pnpm --filter saas-dashboard test"
+    "preview:ubereats": "pnpm --filter ubereats-clone preview",
+    "test:dashboard": "pnpm --filter saas-dashboard test",
+    "test:ubereats": "pnpm --filter ubereats-clone test"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
