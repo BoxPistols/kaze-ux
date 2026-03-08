@@ -45,7 +45,7 @@ const meta: Meta<typeof Stepper> = {
 
 export default meta
 
-const steps = ['フライト設定', 'ルート作成', '安全確認', '承認申請', '完了']
+const steps = ['基本設定', 'ルート作成', '確認', '承認申請', '完了']
 
 const StepperDemo = () => {
   const [activeStep, setActiveStep] = useState(1)

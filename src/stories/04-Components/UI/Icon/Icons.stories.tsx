@@ -1,8 +1,7 @@
+import DevicesIcon from '@mui/icons-material/Devices'
+import PersonIcon from '@mui/icons-material/Person'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { Box, Typography } from '@mui/material'
-
-import { DroneIcon } from '@/components/ui/icon/droneIcon'
-import { FixedCameraIcon } from '@/components/ui/icon/fixedCameraIcon'
-import { ProjectRoleIcon } from '@/components/ui/icon/projectRoleIcon'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -13,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'カスタムSVGアイコンコンポーネント。DroneIcon、FixedCameraIcon、ProjectRoleIconを提供。MUI SvgIconベースでサイズ、カラー、バリアントに対応。',
+          'MUI標準アイコンコンポーネントの使用例。SvgIconベースでサイズ、カラーに対応。',
       },
     },
   },
@@ -33,29 +32,32 @@ export const Default: StoryObj = {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box>
         <Typography variant='subtitle2' gutterBottom>
-          DroneIcon
+          DevicesIcon
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <DroneIcon sx={{ fontSize: 32 }} />
-          <DroneIcon variant='outlined' sx={{ fontSize: 32 }} />
+          <DevicesIcon sx={{ fontSize: 32 }} />
+          <DevicesIcon sx={{ fontSize: 32 }} color='primary' />
+          <DevicesIcon sx={{ fontSize: 32 }} color='secondary' />
         </Box>
       </Box>
       <Box>
         <Typography variant='subtitle2' gutterBottom>
-          FixedCameraIcon
+          PersonIcon
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <FixedCameraIcon sx={{ fontSize: 32 }} />
-          <FixedCameraIcon variant='outlined' sx={{ fontSize: 32 }} />
+          <PersonIcon sx={{ fontSize: 32 }} />
+          <PersonIcon sx={{ fontSize: 32 }} color='primary' />
+          <PersonIcon sx={{ fontSize: 32 }} color='secondary' />
         </Box>
       </Box>
       <Box>
         <Typography variant='subtitle2' gutterBottom>
-          ProjectRoleIcon
+          SettingsIcon
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <ProjectRoleIcon isAdmin={true} />
-          <ProjectRoleIcon isAdmin={false} />
+          <SettingsIcon sx={{ fontSize: 32 }} />
+          <SettingsIcon sx={{ fontSize: 32 }} color='primary' />
+          <SettingsIcon sx={{ fontSize: 32 }} color='secondary' />
         </Box>
       </Box>
     </Box>

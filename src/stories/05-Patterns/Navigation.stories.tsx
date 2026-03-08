@@ -1,6 +1,6 @@
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import FlightIcon from '@mui/icons-material/Flight'
 import FolderIcon from '@mui/icons-material/Folder'
 import HomeIcon from '@mui/icons-material/Home'
 import MapIcon from '@mui/icons-material/Map'
@@ -70,7 +70,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { icon: <DashboardIcon />, label: 'ダッシュボード' },
-  { icon: <FlightIcon />, label: 'フライト管理' },
+  { icon: <AssignmentIcon />, label: 'タスク管理' },
   { icon: <MapIcon />, label: 'マップ' },
   { icon: <StorageIcon />, label: 'データ管理', dividerBefore: true },
   { icon: <SettingsIcon />, label: '設定' },
@@ -113,7 +113,7 @@ const AppBarWithDrawerContent = () => {
 
           {/* ロゴ */}
           <Typography variant='h6' sx={{ fontWeight: 700, letterSpacing: 2 }}>
-            SDPF
+            Kaze
           </Typography>
 
           {/* スペーサー */}
@@ -160,10 +160,10 @@ const AppBarWithDrawerContent = () => {
           {/* Drawer ヘッダー */}
           <Box sx={{ p: 2 }}>
             <Typography variant='subtitle2' sx={{ fontWeight: 700 }}>
-              KDDI Smart Drone
+              Kaze UX
             </Typography>
             <Typography variant='caption' color='text.secondary'>
-              運航管理システム
+              管理システム
             </Typography>
           </Box>
           <Divider />
@@ -208,27 +208,27 @@ const AppBarWithDrawerContent = () => {
               ホーム
             </Link>
             <Link underline='hover' color='inherit' href='#'>
-              フライト管理
+              タスク管理
             </Link>
-            <Typography color='text.primary'>FL-2024-042</Typography>
+            <Typography color='text.primary'>TSK-2024-042</Typography>
           </Breadcrumbs>
 
           {/* コンテンツ表示領域 */}
           <Paper sx={{ p: 3 }}>
             <Typography variant='h6' sx={{ fontWeight: 600, mb: 1 }}>
-              フライト FL-2024-042
+              タスク TSK-2024-042
             </Typography>
             <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-              東京湾岸エリア 定期点検飛行
+              東京エリア 定期点検
             </Typography>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={1.5}>
               {[
-                { label: 'ステータス', value: '飛行中' },
-                { label: '機体', value: 'Alpha-01 (DJI Matrice 350)' },
+                { label: 'ステータス', value: '進行中' },
+                { label: '担当デバイス', value: 'Alpha-01' },
                 { label: '開始時刻', value: '2024-12-15 09:30' },
                 { label: '予定終了', value: '2024-12-15 11:00' },
-                { label: 'パイロット', value: '山田 太郎' },
+                { label: '担当者', value: '山田 太郎' },
               ].map((row) => (
                 <Box key={row.label} sx={{ display: 'flex', gap: 2 }}>
                   <Typography
@@ -316,8 +316,8 @@ const BreadcrumbPatternsContent = () => (
             color='inherit'
             href='#'
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <FlightIcon fontSize='small' />
-            フライト管理
+            <AssignmentIcon fontSize='small' />
+            タスク管理
           </Link>
           <Typography
             color='text.primary'
@@ -349,12 +349,12 @@ const BreadcrumbPatternsContent = () => (
             東京湾岸プロジェクト
           </Link>
           <Link underline='hover' color='inherit' href='#'>
-            フライト計画
+            タスク計画
           </Link>
           <Link underline='hover' color='inherit' href='#'>
             FL-2024-042
           </Link>
-          <Typography color='text.primary'>飛行ルート編集</Typography>
+          <Typography color='text.primary'>ルート編集</Typography>
         </Breadcrumbs>
       </Paper>
 
@@ -375,14 +375,14 @@ const BreadcrumbPatternsContent = () => (
             ホーム
           </Link>
           <Link underline='hover' color='inherit' href='#'>
-            フライト管理
+            タスク管理
           </Link>
           <Chip
             label='FL-2024-042'
             size='small'
             color='primary'
             variant='outlined'
-            icon={<FlightIcon />}
+            icon={<AssignmentIcon />}
           />
         </Breadcrumbs>
       </Paper>

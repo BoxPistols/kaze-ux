@@ -14,13 +14,13 @@ export type ChipColor =
   | 'warning'
 
 /**
- * ドローンの飛行状態に対応する色を取得
- * @param status ドローンの状態（飛行中、待機中、オフライン等）
+ * デバイスの稼働状態に対応する色を取得
+ * @param status デバイスの状態（稼働中、待機中、オフライン等）
  * @returns MUI Chipコンポーネント用の色
  */
-export const getDroneStatusColor = (status: string): ChipColor => {
+export const getDeviceStatusColor = (status: string): ChipColor => {
   switch (status) {
-    case '飛行中':
+    case '稼働中':
       return 'success'
     case '待機中':
       return 'info'

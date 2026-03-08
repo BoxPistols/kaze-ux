@@ -8,7 +8,7 @@ import {
   formatDate,
   formatDateISO,
   formatDuration,
-  formatFlightDuration,
+  formatSecondsDuration,
   formatFileSize,
   formatRelativeTime,
 } from '../dateTimeFormatters'
@@ -96,24 +96,24 @@ describe('dateTimeFormatters', () => {
     })
   })
 
-  describe('formatFlightDuration', () => {
+  describe('formatSecondsDuration', () => {
     it('秒数を分:秒形式でフォーマットする', () => {
-      const result = formatFlightDuration(125)
+      const result = formatSecondsDuration(125)
       expect(result).toBe('2:05')
     })
 
     it('1時間以上をH:mm:ss形式でフォーマットする', () => {
-      const result = formatFlightDuration(3725)
+      const result = formatSecondsDuration(3725)
       expect(result).toBe('1:02:05')
     })
 
     it('0秒は0:00を返す', () => {
-      const result = formatFlightDuration(0)
+      const result = formatSecondsDuration(0)
       expect(result).toBe('0:00')
     })
 
     it('負の値は0:00を返す', () => {
-      const result = formatFlightDuration(-100)
+      const result = formatSecondsDuration(-100)
       expect(result).toBe('0:00')
     })
   })

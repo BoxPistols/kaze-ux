@@ -1,6 +1,6 @@
 /**
  * 日付・時刻フォーマット用ユーティリティ
- * UTMコンポーネント全体で使用する統一フォーマット関数群
+ * アプリケーション全体で使用する統一フォーマット関数群
  */
 
 /**
@@ -102,11 +102,11 @@ export const formatDuration = (startTime: Date, endTime?: Date): string => {
 }
 
 /**
- * 飛行時間をフォーマット（秒単位からの変換）
- * @param seconds - 飛行秒数
- * @returns フォーマット済みの飛行時間文字列
+ * 稼働時間をフォーマット（秒単位からの変換）
+ * @param seconds - 稼働秒数
+ * @returns フォーマット済みの稼働時間文字列
  */
-export const formatFlightDuration = (seconds: number): string => {
+export const formatSecondsDuration = (seconds: number): string => {
   if (seconds < 0) {
     return '0:00'
   }

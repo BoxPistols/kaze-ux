@@ -107,8 +107,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
               currentStory={{
                 title: context.title,
                 name: context.name,
-                description:
-                  context.parameters?.docs?.description?.component,
+                description: context.parameters?.docs?.description?.component,
               }}
             />
           )}
@@ -182,8 +181,6 @@ const preview: Preview = {
             ['*', ['Docs', '*']],
             'Maps',
             ['*', ['Docs', '*']],
-            'UTM',
-            ['*', ['Docs', '*']],
             '*',
           ],
           'Patterns',
@@ -210,14 +207,14 @@ const preview: Preview = {
       },
     },
     padding: {
-      name: 'パディング',
-      description: 'コンテンツ周囲のパディング',
+      name: 'Padding',
+      description: 'Content padding / コンテンツ周囲のパディング',
       defaultValue: 'standard',
       toolbar: {
         icon: 'box',
         items: [
-          { value: 'none', title: 'パディングなし' },
-          { value: 'standard', title: '標準パディング' },
+          { value: 'none', title: 'No Padding' },
+          { value: 'standard', title: 'Standard Padding' },
         ],
       },
     },

@@ -1,5 +1,5 @@
 // src/components/Form/DateTimePicker/index.tsx
-// sdpf-frontend-nextに準拠したDateTimePickerコンポーネント
+// DateTimePickerコンポーネント
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Box, FormHelperText, Tooltip, Typography } from '@mui/material'
 import { styled, type SxProps, type Theme } from '@mui/material/styles'

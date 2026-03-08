@@ -129,7 +129,7 @@ const FlexboxDemo = () => {
     fontWeight: 600,
   }
 
-  const demos = [
+  const demos: { label: string; sx: Record<string, unknown> }[] = [
     {
       label: 'row (default)',
       sx: { display: 'flex', gap: 1, flexDirection: 'row' },
@@ -693,18 +693,34 @@ const HtmlCssContent = () => {
       </Grid>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://mui.com/material-ui/react-box/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/react-box/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Box
           </Link>
-          <Link href='https://mui.com/material-ui/react-grid/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/react-grid/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Grid
           </Link>
-          <Link href='https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             CSS Flexbox (MDN)
           </Link>
         </Stack>

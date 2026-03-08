@@ -92,8 +92,8 @@ const BasicContent = () => {
           anchorEl={menu.anchorEl}
           open={menu.open}
           onClose={menu.handleClose}>
-          <MenuItem onClick={menu.handleClose}>フライト一覧</MenuItem>
-          <MenuItem onClick={menu.handleClose}>機体管理</MenuItem>
+          <MenuItem onClick={menu.handleClose}>タスク一覧</MenuItem>
+          <MenuItem onClick={menu.handleClose}>デバイス管理</MenuItem>
           <MenuItem onClick={menu.handleClose}>レポート</MenuItem>
           <MenuItem onClick={menu.handleClose}>設定</MenuItem>
         </Menu>

@@ -1,5 +1,5 @@
 // src/components/ui/button/saveButton.tsx
-// sdpf-frontend-nextに準拠したSaveButtonコンポーネント
+// SaveButtonコンポーネント
 import SaveIcon from '@mui/icons-material/Save'
 import { Button, type SxProps, type Theme, Typography } from '@mui/material'
 

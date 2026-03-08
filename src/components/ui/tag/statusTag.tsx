@@ -1,5 +1,5 @@
 // src/components/ui/tag/statusTag.tsx
-// sdpf-frontend-nextに準拠したStatusTagコンポーネント
+// StatusTagコンポーネント
 import { Chip, type SxProps, type Theme } from '@mui/material'
 
 import { colorData } from '@/themes/colorToken'

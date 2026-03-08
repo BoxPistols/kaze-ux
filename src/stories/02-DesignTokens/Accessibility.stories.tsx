@@ -334,7 +334,8 @@ function TouchTargetsShowcase() {
       label: 'クリティカル操作',
       size: 56,
       usage: '安全上重要な操作のタッチターゲット',
-      examples: '緊急停止、離陸/着陸、ミッション中止などのドローン制御',
+      examples:
+        '緊急停止、重要な操作の確認、ミッション中止などのクリティカル制御',
       color: 'error',
     },
   ]
@@ -348,7 +349,7 @@ function TouchTargetsShowcase() {
         タッチ操作における最小ヒットエリアの基準
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 5 }}>
-        ドローン運航プラットフォームでは、屋外環境やグローブ着用時の操作を考慮し、
+        業務プラットフォームでは、屋外環境やモバイル操作を考慮し、
         安全上重要なコントロールには大きなタッチターゲットを採用する。
       </Typography>
 
@@ -534,7 +535,7 @@ function TouchTargetsShowcase() {
           bgcolor: 'action.hover',
         }}>
         <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-          ドローン運航における注意事項
+          業務運用における注意事項
         </Typography>
         <Stack spacing={1}>
           <Typography variant='caption' color='text.secondary'>

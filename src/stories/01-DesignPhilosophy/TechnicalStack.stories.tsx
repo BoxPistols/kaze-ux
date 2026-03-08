@@ -137,7 +137,7 @@ const TechnicalStackOverview = () => {
             fontWeight: 700,
             fontSize: { xs: '2rem', md: '2.5rem' },
           }}>
-          KDDI Smart Drone Design Systemを支える技術基盤
+          Kaze UX Design Systemを支える技術基盤
         </Typography>
       </Box>
 

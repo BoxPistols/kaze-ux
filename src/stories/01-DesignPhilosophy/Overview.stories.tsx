@@ -20,12 +20,12 @@ const DesignPhilosophyOverview = () => {
   const isDark = theme.palette.mode === 'dark'
 
   const brandIdentity = {
-    slogan: '叶えるために、飛ぶ',
-    mission: '空を舞台に人とテクノロジーの調和で社会の仕組みをデザインする',
+    slogan: 'デザインの力で、つなぐ',
+    mission: 'テクノロジーと人の調和で社会の仕組みをデザインする',
     vision: [
-      '世界の優れた技術と共に、空間の隔たりを超えて、人と現場、人とモノとの新たなつながりを創造する',
-      '空を舞台に人とテクノロジーの調和で社会の仕組みをデザインする',
-      '空は、もっと近いはずだ',
+      '世界の優れた技術と共に、隔たりを超えて、人と現場、人とモノとの新たなつながりを創造する',
+      'テクノロジーと人の調和で社会の仕組みをデザインする',
+      'もっと身近に、もっと自然に',
     ],
     values: [
       {
@@ -123,7 +123,7 @@ const DesignPhilosophyOverview = () => {
             mb: 2,
             display: 'block',
           }}>
-          KDDI SMART DRONE PLATFORM
+          KAZE UX DESIGN SYSTEM
         </Typography>
         <Typography
           variant='h1'
@@ -207,9 +207,7 @@ const DesignPhilosophyOverview = () => {
                 sx={{
                   fontSize: { xs: 28, sm: 36 },
                   fontWeight: 200,
-                  color: isDark
-                    ? 'rgba(255,255,255,0.15)'
-                    : 'rgba(0,0,0,0.1)',
+                  color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
                   lineHeight: 1,
                   fontVariantNumeric: 'tabular-nums',
                   flexShrink: 0,

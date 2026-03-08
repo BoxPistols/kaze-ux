@@ -3,4 +3,3 @@
  */
 
 export * from './layout'
-export * from './utmLabels'

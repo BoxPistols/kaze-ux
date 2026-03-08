@@ -179,19 +179,19 @@ export default tseslint.config({
       'error',
       {
         selector: "TSTypeReference[typeName.name='FC']",
-        message: '🚨 React.FC の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。詳細は.claude/skills/react-patterns/SKILL.mdを参照してください。',
+        message: '🚨 React.FC の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。See CODING_RULES.md for details.',
       },
       {
         selector: "TSTypeReference[typeName.left.name='React'][typeName.right.name='FC']",
-        message: '🚨 React.FC の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。詳細は.claude/skills/react-patterns/SKILL.mdを参照してください。',
+        message: '🚨 React.FC の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。See CODING_RULES.md for details.',
       },
       {
         selector: "TSTypeReference[typeName.name='FunctionComponent']",
-        message: '🚨 FunctionComponent の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。詳細は.claude/skills/react-patterns/SKILL.mdを参照してください。',
+        message: '🚨 FunctionComponent の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。See CODING_RULES.md for details.',
       },
       {
         selector: "TSTypeReference[typeName.left.name='React'][typeName.right.name='FunctionComponent']",
-        message: '🚨 React.FunctionComponent の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。詳細は.claude/skills/react-patterns/SKILL.mdを参照してください。',
+        message: '🚨 React.FunctionComponent の使用は禁止されています。代わりに通常の関数定義とprops型定義を使用してください。See CODING_RULES.md for details.',
       },
     ],
     'react-hooks/exhaustive-deps': [

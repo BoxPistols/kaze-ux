@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/calendar/calendarControl'
 import { MiniCalendar } from '@/components/ui/calendar/miniCalendar'
 import { MonthView } from '@/components/ui/calendar/monthView'
-import { CalendarSettingsProvider } from '@/providers/CalendarSettingsProvider'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { Dayjs } from 'dayjs'
@@ -20,29 +19,29 @@ dayjs.locale('ja')
 const mockSchedules = [
   {
     id: '1',
-    title: '東京湾岸 定期点検',
+    title: 'チームミーティング',
     date: dayjs().format('YYYY-MM-DD'),
     time: '09:00',
-    duration: '2時間',
-    type: '点検',
+    duration: '1時間',
+    type: '会議',
     assignee: '山田太郎',
   },
   {
     id: '2',
-    title: 'ドローン機体整備',
+    title: 'デザインレビュー',
     date: dayjs().format('YYYY-MM-DD'),
     time: '14:00',
     duration: '1時間',
-    type: '整備',
+    type: 'レビュー',
     assignee: '鈴木花子',
   },
   {
     id: '3',
-    title: '農地モニタリング飛行',
+    title: 'スプリント計画',
     date: dayjs().add(1, 'day').format('YYYY-MM-DD'),
     time: '10:00',
-    duration: '3時間',
-    type: '飛行',
+    duration: '2時間',
+    type: '計画',
     assignee: '佐藤一郎',
   },
 ]
@@ -54,17 +53,15 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'カレンダーコンポーネント群。日/週/月ビューの切替、ミニカレンダー、週開始日設定に対応。ドローン運用スケジュール管理に使用。',
+          'カレンダーコンポーネント群。日/週/月ビューの切替、ミニカレンダー、週開始日設定に対応。スケジュール管理に使用。',
       },
     },
   },
   decorators: [
     (Story) => (
-      <CalendarSettingsProvider>
-        <Box sx={{ p: 3 }}>
-          <Story />
-        </Box>
-      </CalendarSettingsProvider>
+      <Box sx={{ p: 3 }}>
+        <Story />
+      </Box>
     ),
   ],
 }

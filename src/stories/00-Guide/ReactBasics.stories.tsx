@@ -138,8 +138,8 @@ const ReactBasicsContent = () => {
 
       {/* コード例 */}
       <SectionHeader title='コンポーネントの構造' />
-      <CodeBlock caption='SDPF: React.FC は禁止。通常の関数定義 + interface で型を定義'>
-        {`// SDPFスタイルのコンポーネント定義
+      <CodeBlock caption='Kaze UX: React.FC は禁止。通常の関数定義 + interface で型を定義'>
+        {`// Kaze UXスタイルのコンポーネント定義
 interface ServiceCardProps {
   title: string
   description: string
@@ -285,8 +285,8 @@ const ServiceCard = ({
         </Table>
       </TableContainer>
 
-      {/* SDPFルール */}
-      <SectionHeader title='SDPFのReactルール' />
+      {/* Kaze UXルール */}
+      <SectionHeader title='Kaze UXのReactルール' />
       <Paper
         variant='outlined'
         sx={{
@@ -320,15 +320,26 @@ const ServiceCard = ({
       </Paper>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://react.dev/learn' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://react.dev/learn'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             React Documentation
           </Link>
-          <Link href='https://react.dev/reference/react' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://react.dev/reference/react'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             React Hooks
           </Link>
         </Stack>

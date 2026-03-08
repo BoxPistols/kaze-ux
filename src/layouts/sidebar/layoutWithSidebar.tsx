@@ -66,7 +66,7 @@ export type LayoutWithSidebarProps = {
   sidebarExcludedPaths: (string | RegExp)[]
   /**
    * サイドバーを自動的に閉じるページのパス一覧
-   * 例: ['/utm', '/map']
+   * 例: ['/dashboard', '/map']
    */
   sidebarCollapsedPaths?: (string | RegExp)[]
   /**

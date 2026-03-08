@@ -41,12 +41,12 @@ const meta: Meta = {
 export default meta
 
 // --- 共通データ ---
-const droneModels = [
-  { value: 'phantom4', label: 'Phantom 4 RTK' },
-  { value: 'mavic3', label: 'Mavic 3 Enterprise' },
-  { value: 'matrice300', label: 'Matrice 300 RTK' },
-  { value: 'matrice350', label: 'Matrice 350 RTK' },
-  { value: 'inspire3', label: 'Inspire 3' },
+const deviceModels = [
+  { value: 'modelA', label: 'Model A Standard' },
+  { value: 'modelB', label: 'Model B Enterprise' },
+  { value: 'modelC', label: 'Model C Pro' },
+  { value: 'modelD', label: 'Model D Advanced' },
+  { value: 'modelE', label: 'Model E Lite' },
 ]
 
 const prefectures = ['東京都', '神奈川県', '千葉県', '埼玉県', '大阪府']
@@ -67,18 +67,18 @@ const MUIBaseRender = () => {
   return (
     <Stack spacing={3}>
       <FormControl fullWidth size='small'>
-        <InputLabel>ドローン機種</InputLabel>
+        <InputLabel>デバイス機種</InputLabel>
         <Select
           value={value}
           onChange={(e: SelectChangeEvent) => setValue(e.target.value)}
-          label='ドローン機種'>
-          {droneModels.map((m) => (
+          label='デバイス機種'>
+          {deviceModels.map((m) => (
             <MenuItem key={m.value} value={m.value}>
               {m.label}
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>使用するドローンの機種</FormHelperText>
+        <FormHelperText>使用するデバイスの機種</FormHelperText>
       </FormControl>
     </Stack>
   )
@@ -89,6 +89,7 @@ const SimpleRender = (args: Record<string, unknown>) => {
   return (
     <SimpleSelect
       {...args}
+      label='Prefecture'
       items={prefectures}
       value={value}
       onChange={setValue}
@@ -101,6 +102,7 @@ const MultipleRender = (args: Record<string, unknown>) => {
   return (
     <MultipleSelect
       {...args}
+      label='Prefectures'
       items={prefectures}
       selectedItems={selected}
       onSelectedItemsChange={setSelected}
@@ -148,12 +150,12 @@ export const Simple: StoryObj<typeof SimpleSelect> = {
 /** ツールチップや必須マークなどの装飾が付いた高機能版 */
 export const Custom: StoryObj<typeof CustomSelect> = {
   name: 'CustomSelect (Rich)',
-  render: (args) => <CustomSelect {...args} options={droneModels} />,
+  render: (args) => <CustomSelect {...args} options={deviceModels} />,
   args: {
-    label: 'ドローン選択',
+    label: 'デバイス選択',
     placeholder: '選択してください',
     size: 'small',
-    tooltip: '運用に使用する機体を選択してください',
+    tooltip: '運用に使用するデバイスを選択してください',
   },
 }
 

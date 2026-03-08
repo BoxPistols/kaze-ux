@@ -481,7 +481,7 @@ const FullColorPalette = () => {
             color: theme.palette.text.secondary,
             mb: 1,
           }}>
-          KDDI Smart Drone Platform のデザイントークンカラー一覧。
+          Kaze UX Design System のデザイントークンカラー一覧。
           カラーチップをクリックすると値をコピーできます。
         </Typography>
         <Typography

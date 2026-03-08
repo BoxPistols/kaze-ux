@@ -1,5 +1,5 @@
 // src/components/Form/RegisterForm/index.tsx
-// sdpf-frontend-nextに準拠した登録フォームテンプレート
+// 登録フォームテンプレート
 import {
   Box,
   Button,

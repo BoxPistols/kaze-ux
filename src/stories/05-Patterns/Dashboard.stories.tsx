@@ -1,7 +1,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import FlightIcon from '@mui/icons-material/Flight'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
@@ -62,7 +62,7 @@ interface StatCardItem {
 
 const statCards: StatCardItem[] = [
   {
-    icon: <FlightIcon />,
+    icon: <AssignmentIcon />,
     label: '稼働機体数',
     value: '12',
     change: '先月比 +2',
@@ -70,14 +70,14 @@ const statCards: StatCardItem[] = [
   },
   {
     icon: <AccessTimeIcon />,
-    label: '本日のフライト',
+    label: '本日のタスク',
     value: '8',
-    change: '3件 飛行中',
+    change: '3件 進行中',
     trend: 'neutral',
   },
   {
     icon: <TrendingUpIcon />,
-    label: '月間飛行時間',
+    label: '月間稼働時間',
     value: '256h',
     change: '+18%',
     trend: 'positive',
@@ -188,35 +188,35 @@ interface ActivityItem {
 const activities: ActivityItem[] = [
   {
     icon: <CheckCircleIcon />,
-    primary: 'ドローンAlpha 飛行完了',
+    primary: 'デバイスAlpha タスク完了',
     secondary: '5分前',
     chipLabel: '完了',
     chipColor: 'success',
   },
   {
     icon: <WarningAmberIcon />,
-    primary: 'ドローンBeta メンテナンス開始',
+    primary: 'デバイスBeta メンテナンス開始',
     secondary: '15分前',
     chipLabel: 'メンテナンス',
     chipColor: 'warning',
   },
   {
-    icon: <FlightIcon />,
-    primary: 'フライトプランFL-042 承認',
+    icon: <AssignmentIcon />,
+    primary: 'プランTSK-042 承認',
     secondary: '30分前',
     chipLabel: '承認済み',
     chipColor: 'info',
   },
   {
     icon: <BatteryChargingFullIcon />,
-    primary: 'ドローンGamma バッテリー低下',
+    primary: 'デバイスGamma バッテリー低下',
     secondary: '1時間前',
     chipLabel: '警告',
     chipColor: 'error',
   },
   {
     icon: <AccessTimeIcon />,
-    primary: '新規パイロット登録',
+    primary: '新規メンバー登録',
     secondary: '2時間前',
     chipLabel: '登録',
     chipColor: 'default',
@@ -304,7 +304,7 @@ export const ActivityFeed: StoryObj = {
 // ---------------------------------------------------------------------------
 
 /** 機体ステータス1件のデータ型 */
-interface DroneRow {
+interface DeviceRow {
   name: string
   model: string
   battery: number
@@ -312,24 +312,24 @@ interface DroneRow {
   statusColor: 'success' | 'info' | 'warning' | 'error'
 }
 
-const drones: DroneRow[] = [
+const devices: DeviceRow[] = [
   {
     name: 'Alpha-01',
-    model: 'DJI Matrice 350',
+    model: 'Model X-350',
     battery: 82,
-    status: '飛行中',
+    status: '稼働中',
     statusColor: 'success',
   },
   {
     name: 'Beta-03',
-    model: 'DJI Mavic 3E',
+    model: 'Model Y-300',
     battery: 54,
     status: '待機中',
     statusColor: 'info',
   },
   {
     name: 'Gamma-07',
-    model: 'Skydio X10',
+    model: 'Model Z-200',
     battery: 21,
     status: '充電中',
     statusColor: 'warning',
@@ -347,14 +347,14 @@ interface ScheduleItem {
 const schedules: ScheduleItem[] = [
   {
     time: '09:00',
-    route: '東京湾岸 - 調査飛行',
+    route: '東京湾岸 - 調査タスク',
     status: '完了',
     statusColor: 'success',
   },
   {
     time: '11:30',
-    route: '横浜港 - 点検飛行',
-    status: '飛行中',
+    route: '横浜港 - 点検タスク',
+    status: '進行中',
     statusColor: 'info',
   },
   {
@@ -394,8 +394,8 @@ const FleetOverviewContent = () => (
           />
           <CardContent>
             <Stack spacing={2.5}>
-              {drones.map((drone) => (
-                <Box key={drone.name}>
+              {devices.map((device) => (
+                <Box key={device.name}>
                   {/* 上段: 機体名 / モデル / ステータス */}
                   <Stack
                     direction='row'
@@ -404,15 +404,15 @@ const FleetOverviewContent = () => (
                     sx={{ mb: 1 }}>
                     <Box>
                       <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                        {drone.name}
+                        {device.name}
                       </Typography>
                       <Typography variant='caption' color='text.secondary'>
-                        {drone.model}
+                        {device.model}
                       </Typography>
                     </Box>
                     <Chip
-                      label={drone.status}
-                      color={drone.statusColor}
+                      label={device.status}
+                      color={device.statusColor}
                       size='small'
                     />
                   </Stack>
@@ -422,9 +422,9 @@ const FleetOverviewContent = () => (
                     <BatteryChargingFullIcon
                       fontSize='small'
                       color={
-                        drone.battery < 30
+                        device.battery < 30
                           ? 'error'
-                          : drone.battery < 60
+                          : device.battery < 60
                             ? 'warning'
                             : 'success'
                       }
@@ -432,11 +432,11 @@ const FleetOverviewContent = () => (
                     <Box sx={{ flex: 1 }}>
                       <LinearProgress
                         variant='determinate'
-                        value={drone.battery}
+                        value={device.battery}
                         color={
-                          drone.battery < 30
+                          device.battery < 30
                             ? 'error'
-                            : drone.battery < 60
+                            : device.battery < 60
                               ? 'warning'
                               : 'success'
                         }
@@ -451,7 +451,7 @@ const FleetOverviewContent = () => (
                         minWidth: 36,
                         textAlign: 'right',
                       }}>
-                      {drone.battery}%
+                      {device.battery}%
                     </Typography>
                   </Stack>
                 </Box>

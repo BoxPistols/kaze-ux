@@ -28,13 +28,13 @@ jobs:
           sudo make install
           cd $GITHUB_WORKSPACE
 
-          # AWSアクセスキー・シークレットキーのパターンのみ登録
+          # Register patterns for AWS access keys and secret keys
           git secrets --add '(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'
           git secrets --add '("|'"'"')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)("|'"'"')?\s*(:|=>|=)\s*("|'"'"')?[A-Za-z0-9/\+=]{40}("|'"'"')?'
           git secrets --install
 
           git secrets --scan
-          echo "✓ git-secrets passed"
+          echo "git-secrets scan passed"
         continue-on-error: false
 
   sca-scan:
@@ -65,18 +65,17 @@ jobs:
   gitleaks-scan:
     runs-on: ubuntu-latest
     name: Secrets Detection (Gitleaks)
-    # dependabotはシークレットにアクセスできないためスキップ
+    # Skip for dependabot as it cannot access secrets
     if: github.actor != 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # ベースブランチとの比較のため履歴が必要
+          fetch-depth: 0
 
       - name: Gitleaks scan (PR diff only)
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
-          # PRの差分のみスキャン（baseブランチからHEADまで）
           GITLEAKS_LOG_OPTS: ${{ github.event.pull_request.base.sha }}..${{ github.sha }}

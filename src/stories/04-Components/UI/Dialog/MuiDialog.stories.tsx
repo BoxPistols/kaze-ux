@@ -274,7 +274,7 @@ const PracticalPatternsContent = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            このフライトプランを削除してもよろしいですか？
+            このプランを削除してもよろしいですか？
             関連するログデータもすべて削除されます。この操作は取り消せません。
           </DialogContentText>
         </DialogContent>
@@ -295,10 +295,10 @@ const PracticalPatternsContent = () => {
         onClose={() => setFormOpen(false)}
         maxWidth='sm'
         fullWidth>
-        <DialogTitle>新規フライトプラン登録</DialogTitle>
+        <DialogTitle>新規プラン登録</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ mb: 2 }}>
-            フライトプランの基本情報を入力してください。
+            プランの基本情報を入力してください。
           </DialogContentText>
           <Stack spacing={2}>
             <TextField
@@ -306,14 +306,14 @@ const PracticalPatternsContent = () => {
               fullWidth
               required
               autoFocus
-              placeholder='例: 東京湾岸調査フライト'
+              placeholder='例: 東京エリア調査タスク'
             />
             <TextField
               label='説明'
               fullWidth
               multiline
               rows={3}
-              placeholder='フライトの目的や概要を記入してください'
+              placeholder='タスクの目的や概要を記入してください'
             />
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -326,7 +326,7 @@ const PracticalPatternsContent = () => {
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
-                  label='飛行時間（分）'
+                  label='所要時間（分）'
                   type='number'
                   fullWidth
                   placeholder='45'

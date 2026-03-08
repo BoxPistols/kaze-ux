@@ -29,7 +29,7 @@ export interface CalendarSettingsContextValue {
   isSunday: (dayIndex: number) => boolean
 }
 
-const STORAGE_KEY = 'sdpf-calendar-settings'
+const STORAGE_KEY = 'kaze-ux-calendar-settings'
 
 const DEFAULT_SETTINGS: CalendarSettings = {
   weekStart: 1, // デフォルトは月曜始まり

@@ -48,7 +48,7 @@ export const InLayout: Story = {
           display: 'flex',
           justifyContent: 'space-between',
         }}>
-        <Typography variant='h6'>SDPF Dashboard</Typography>
+        <Typography variant='h6'>Kaze Dashboard</Typography>
       </Box>
       <Box sx={{ p: 4 }}>
         <Typography variant='h4' gutterBottom>

@@ -6,27 +6,27 @@ import { ResourceTable } from '@/components/ui/table/resourceTable'
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-interface DroneRow {
+interface DeviceRow {
   id: number
   name: string
-  status: '飛行中' | '待機中' | 'メンテナンス' | 'オフライン'
+  status: '稼働中' | '待機中' | 'メンテナンス' | 'オフライン'
   battery: number
-  lastFlight: string
+  lastActive: string
 }
 
 const statusColorMap: Record<
-  DroneRow['status'],
+  DeviceRow['status'],
   'success' | 'info' | 'warning' | 'default'
 > = {
-  飛行中: 'success',
+  稼働中: 'success',
   待機中: 'info',
   メンテナンス: 'warning',
   オフライン: 'default',
 }
 
-const sampleColumns: GridColDef<DroneRow>[] = [
+const sampleColumns: GridColDef<DeviceRow>[] = [
   { field: 'id', headerName: 'ID', width: 80 },
-  { field: 'name', headerName: '機体名', flex: 1, minWidth: 160 },
+  { field: 'name', headerName: 'デバイス名', flex: 1, minWidth: 160 },
   {
     field: 'status',
     headerName: 'ステータス',
@@ -35,7 +35,7 @@ const sampleColumns: GridColDef<DroneRow>[] = [
       <Chip
         label={params.value as string}
         size='small'
-        color={statusColorMap[params.value as DroneRow['status']]}
+        color={statusColorMap[params.value as DeviceRow['status']]}
         variant='outlined'
       />
     ),
@@ -58,44 +58,44 @@ const sampleColumns: GridColDef<DroneRow>[] = [
       )
     },
   },
-  { field: 'lastFlight', headerName: '最終フライト', width: 160 },
+  { field: 'lastActive', headerName: '最終アクティブ', width: 160 },
 ]
 
-const sampleRows: DroneRow[] = [
+const sampleRows: DeviceRow[] = [
   {
     id: 1,
-    name: 'KDDI-Alpha-01',
-    status: '飛行中',
+    name: 'Alpha-01',
+    status: '稼働中',
     battery: 82,
-    lastFlight: '2026-03-07 09:15',
+    lastActive: '2026-03-07 09:15',
   },
   {
     id: 2,
-    name: 'KDDI-Bravo-02',
+    name: 'Bravo-02',
     status: '待機中',
     battery: 95,
-    lastFlight: '2026-03-06 16:42',
+    lastActive: '2026-03-06 16:42',
   },
   {
     id: 3,
-    name: 'KDDI-Charlie-03',
+    name: 'Charlie-03',
     status: 'メンテナンス',
     battery: 23,
-    lastFlight: '2026-03-05 11:30',
+    lastActive: '2026-03-05 11:30',
   },
   {
     id: 4,
-    name: 'KDDI-Delta-04',
+    name: 'Delta-04',
     status: 'オフライン',
     battery: 0,
-    lastFlight: '2026-02-28 08:00',
+    lastActive: '2026-02-28 08:00',
   },
   {
     id: 5,
-    name: 'KDDI-Echo-05',
+    name: 'Echo-05',
     status: '待機中',
     battery: 67,
-    lastFlight: '2026-03-07 07:55',
+    lastActive: '2026-03-07 07:55',
   },
 ]
 
@@ -130,8 +130,8 @@ const DefaultRenderer = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <ResourceTable<DroneRow>
-        title='ドローン機体管理'
+      <ResourceTable<DeviceRow>
+        title='デバイス管理'
         columns={sampleColumns}
         rows={sampleRows}
         onAdd={handleAdd}

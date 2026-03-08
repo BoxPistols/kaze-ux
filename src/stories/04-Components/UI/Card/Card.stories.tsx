@@ -1,5 +1,5 @@
 import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull'
-import FlightIcon from '@mui/icons-material/Flight'
+import DevicesIcon from '@mui/icons-material/Devices'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SpeedIcon from '@mui/icons-material/Speed'
@@ -131,13 +131,13 @@ export const Basic: StoryObj = {
   render: () => <BasicContent />,
 }
 
-// --- ドローンステータスカード ---
+// --- デバイスステータスカード ---
 
-const DroneStatusContent = () => {
-  const drones = [
+const DeviceStatusContent = () => {
+  const devices = [
     {
-      name: 'Drone-Alpha',
-      status: '飛行中',
+      name: 'Device-Alpha',
+      status: '稼働中',
       statusColor: 'success' as const,
       battery: 78,
       altitude: 120,
@@ -145,7 +145,7 @@ const DroneStatusContent = () => {
       location: '東京湾岸エリア',
     },
     {
-      name: 'Drone-Beta',
+      name: 'Device-Beta',
       status: '待機中',
       statusColor: 'info' as const,
       battery: 95,
@@ -154,7 +154,7 @@ const DroneStatusContent = () => {
       location: '横浜基地',
     },
     {
-      name: 'Drone-Gamma',
+      name: 'Device-Gamma',
       status: 'メンテナンス',
       statusColor: 'warning' as const,
       battery: 42,
@@ -167,28 +167,28 @@ const DroneStatusContent = () => {
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
       <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-        ドローンステータスカード
+        デバイスステータスカード
       </Typography>
 
       <Grid container spacing={3}>
-        {drones.map((drone) => (
-          <Grid key={drone.name} size={{ xs: 12, md: 4 }}>
+        {devices.map((device) => (
+          <Grid key={device.name} size={{ xs: 12, md: 4 }}>
             <Card>
               <CardHeader
                 avatar={
-                  <Avatar sx={{ bgcolor: `${drone.statusColor}.main` }}>
-                    <FlightIcon />
+                  <Avatar sx={{ bgcolor: `${device.statusColor}.main` }}>
+                    <DevicesIcon />
                   </Avatar>
                 }
                 action={
                   <Chip
-                    label={drone.status}
-                    color={drone.statusColor}
+                    label={device.status}
+                    color={device.statusColor}
                     size='small'
                   />
                 }
-                title={drone.name}
-                subheader={drone.location}
+                title={device.name}
+                subheader={device.location}
               />
               <CardContent>
                 <Stack spacing={2}>
@@ -202,20 +202,20 @@ const DroneStatusContent = () => {
                       <Stack direction='row' spacing={0.5} alignItems='center'>
                         <BatteryChargingFullIcon
                           fontSize='small'
-                          color={drone.battery < 50 ? 'warning' : 'success'}
+                          color={device.battery < 50 ? 'warning' : 'success'}
                         />
                         <Typography variant='caption'>バッテリー</Typography>
                       </Stack>
                       <Typography
                         variant='caption'
                         sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
-                        {drone.battery}%
+                        {device.battery}%
                       </Typography>
                     </Stack>
                     <LinearProgress
                       variant='determinate'
-                      value={drone.battery}
-                      color={drone.battery < 50 ? 'warning' : 'success'}
+                      value={device.battery}
+                      color={device.battery < 50 ? 'warning' : 'success'}
                       sx={{ borderRadius: 1, height: 6 }}
                     />
                   </Box>
@@ -242,7 +242,7 @@ const DroneStatusContent = () => {
                             fontWeight: 600,
                             display: 'block',
                           }}>
-                          {drone.altitude}m
+                          {device.altitude}m
                         </Typography>
                         <Typography
                           variant='caption'
@@ -272,7 +272,7 @@ const DroneStatusContent = () => {
                             fontWeight: 600,
                             display: 'block',
                           }}>
-                          {drone.speed}m/s
+                          {device.speed}m/s
                         </Typography>
                         <Typography
                           variant='caption'
@@ -287,7 +287,7 @@ const DroneStatusContent = () => {
               </CardContent>
               <CardActions>
                 <Button size='small'>詳細</Button>
-                {drone.status === '飛行中' && (
+                {device.status === '稼働中' && (
                   <Button size='small' variant='contained' color='error'>
                     緊急停止
                   </Button>
@@ -301,9 +301,9 @@ const DroneStatusContent = () => {
   )
 }
 
-export const DroneStatus: StoryObj = {
-  name: 'ドローンステータス',
-  render: () => <DroneStatusContent />,
+export const DeviceStatus: StoryObj = {
+  name: 'デバイスステータス',
+  render: () => <DeviceStatusContent />,
 }
 
 // --- レイアウトパターン ---
@@ -322,9 +322,9 @@ const LayoutPatternsContent = () => (
         </Typography>
         <Grid container spacing={3}>
           {[
-            { label: '総フライト数', value: '1,234', change: '+12%' },
-            { label: '稼働機体', value: '8', change: '+2' },
-            { label: '今月の飛行時間', value: '156h', change: '+8%' },
+            { label: '総タスク数', value: '1,234', change: '+12%' },
+            { label: '稼働デバイス', value: '8', change: '+2' },
+            { label: '今月の稼働時間', value: '156h', change: '+8%' },
             { label: 'インシデント', value: '0', change: '-' },
           ].map((stat) => (
             <Grid key={stat.label} size={{ xs: 6, md: 3 }}>
@@ -369,18 +369,18 @@ const LayoutPatternsContent = () => (
                 justifyContent: 'center',
                 flexShrink: 0,
               }}>
-              <FlightIcon sx={{ color: 'white', fontSize: 40 }} />
+              <DevicesIcon sx={{ color: 'white', fontSize: 40 }} />
             </Box>
             <Box sx={{ flex: 1 }}>
               <CardContent>
                 <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                  フライトプラン FL-2024-0042
+                  タスクプラン TSK-2024-0042
                 </Typography>
                 <Typography
                   variant='body2'
                   color='text.secondary'
                   sx={{ mt: 0.5 }}>
-                  東京湾岸調査 | 予定: 2024-02-15 10:00 | 飛行時間: 45分
+                  東京エリア調査 | 予定: 2024-02-15 10:00 | 所要時間: 45分
                 </Typography>
               </CardContent>
               <CardActions>

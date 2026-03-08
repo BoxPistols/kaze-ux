@@ -111,7 +111,7 @@ const WithAlertContent = () => {
     {
       severity: 'success' as const,
       label: '成功',
-      message: 'フライト計画が保存されました',
+      message: '計画が保存されました',
       color: 'success' as const,
       open: openSuccess,
       setOpen: setOpenSuccess,
@@ -135,7 +135,7 @@ const WithAlertContent = () => {
     {
       severity: 'info' as const,
       label: '情報',
-      message: '新しいフライトプランが登録されました',
+      message: '新しいプランが登録されました',
       color: 'info' as const,
       open: openInfo,
       setOpen: setOpenInfo,

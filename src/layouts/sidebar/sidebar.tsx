@@ -49,7 +49,7 @@ export const Sidebar = ({
   onClose,
   onToggle,
   menuItems = [],
-  appName = 'SDPF Theme',
+  appName = 'Kaze UX',
   pathname = '',
   defaultUrl = '/',
   accountMenu,

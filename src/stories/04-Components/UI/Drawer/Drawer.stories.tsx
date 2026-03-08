@@ -1,6 +1,6 @@
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import CloseIcon from '@mui/icons-material/Close'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import FlightIcon from '@mui/icons-material/Flight'
 import MapIcon from '@mui/icons-material/Map'
 import SettingsIcon from '@mui/icons-material/Settings'
 import StorageIcon from '@mui/icons-material/Storage'
@@ -60,7 +60,7 @@ export default meta
 
 const navItems = [
   { icon: <DashboardIcon />, label: 'ダッシュボード' },
-  { icon: <FlightIcon />, label: 'フライト管理' },
+  { icon: <AssignmentIcon />, label: 'タスク管理' },
   { icon: <MapIcon />, label: 'マップ' },
   { icon: <StorageIcon />, label: 'データ管理' },
   { icon: <SettingsIcon />, label: '設定' },
@@ -196,10 +196,10 @@ const NavigationDrawerContent = () => {
               <Typography
                 variant='h6'
                 sx={{ fontWeight: 700, letterSpacing: 1 }}>
-                SDPF
+                Kaze
               </Typography>
               <Typography variant='caption' color='text.secondary'>
-                Smart Drone Platform
+                UX Design System
               </Typography>
             </Box>
             <Divider />
@@ -284,7 +284,7 @@ const PracticalPatternsContent = () => {
               variant='caption'
               color='text.secondary'
               sx={{ display: 'block', mb: 2 }}>
-              選択したドローンの詳細情報を表示するドロワー
+              選択したリソースの詳細情報を表示するドロワー
             </Typography>
             <Button variant='outlined' onClick={() => setDetailOpen(true)}>
               詳細を開く
@@ -333,7 +333,7 @@ const PracticalPatternsContent = () => {
                 label='キーワード'
                 size='small'
                 fullWidth
-                placeholder='フライト名で検索'
+                placeholder='タスク名で検索'
               />
               <FormControl size='small' fullWidth>
                 <InputLabel>ステータス</InputLabel>
@@ -418,7 +418,7 @@ const PracticalPatternsContent = () => {
               borderColor: 'divider',
             }}>
             <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-              ドローン詳細
+              リソース詳細
             </Typography>
             <IconButton
               onClick={() => setDetailOpen(false)}
@@ -438,9 +438,9 @@ const PracticalPatternsContent = () => {
                   alignItems='center'
                   spacing={1}
                   sx={{ mb: 1.5 }}>
-                  <FlightIcon color='primary' />
+                  <AssignmentIcon color='primary' />
                   <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    Drone-Alpha
+                    Device-Alpha
                   </Typography>
                 </Stack>
                 <Chip label='運航中' color='success' size='small' />
@@ -458,8 +458,8 @@ const PracticalPatternsContent = () => {
                 </Typography>
                 <Stack spacing={1.5}>
                   {[
-                    { label: '機体ID', value: 'DRN-2024-001' },
-                    { label: '機体モデル', value: 'Matrice 350 RTK' },
+                    { label: 'デバイスID', value: 'DEV-2024-001' },
+                    { label: 'モデル', value: 'Model X-350' },
                     { label: '登録日', value: '2024-04-15' },
                     { label: '最終点検日', value: '2024-12-01' },
                   ].map((row) => (
@@ -479,21 +479,21 @@ const PracticalPatternsContent = () => {
 
               <Divider />
 
-              {/* 飛行情報 */}
+              {/* 稼働情報 */}
               <Box>
                 <Typography
                   variant='caption'
                   color='text.secondary'
                   sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
-                  飛行情報
+                  稼働情報
                 </Typography>
                 <Stack spacing={1.5}>
                   {[
-                    { label: '現在地', value: '東京都港区' },
-                    { label: '高度', value: '120m' },
-                    { label: '速度', value: '8.5 m/s' },
+                    { label: '設置場所', value: '東京都港区' },
+                    { label: 'CPU使用率', value: '45%' },
+                    { label: 'メモリ使用率', value: '62%' },
                     { label: 'バッテリー', value: '78%' },
-                    { label: '総飛行時間', value: '342時間' },
+                    { label: '総稼働時間', value: '342時間' },
                   ].map((row) => (
                     <Box
                       key={row.label}

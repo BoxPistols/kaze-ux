@@ -1,111 +1,111 @@
-# AIエージェント統合ガイド (AGENTS.md)
+# AI Agent Integration Guide / AIエージェント統合ガイド (AGENTS.md)
 
-## 1. 中核原則: Single Source of Truth
+## 1. Core Principle: Single Source of Truth / 中核原則
 
-このプロジェクトでは、一貫性と保守性を確保するため、すべての開発ルールとガイドラインを単一ファイルに集約しています。
+This project consolidates all development rules and guidelines into a single file for consistency and maintainability.
 
-**主要参照: `AI_DEVELOPMENT_RULES.md`**
+**Primary Reference: `AI_DEVELOPMENT_RULES.md`**
 
-すべてのAIエージェントは、以下について`AI_DEVELOPMENT_RULES.md`を**Single Source of Truth**として参照する必要があります:
+All AI agents must reference `AI_DEVELOPMENT_RULES.md` as the **Single Source of Truth** for:
 
-- プロジェクト概要（KDDI Smart Drone Platform UI Theme）
-- 技術スタック（MUI v7, Tailwind CSS v3, TypeScript, React, Storybook）
-- プロジェクト構造
-- 重要なコマンド
-- コーディング規約とガイドライン
-- 開発ワークフロー
-- トラブルシューティング
+- Project overview (Kaze UX Design System)
+- Tech stack (MUI v7, Tailwind CSS v3, TypeScript, React, Storybook)
+- Project structure
+- Key commands
+- Coding standards and guidelines
+- Development workflow
+- Troubleshooting
 
-## 2. このファイルの使用方法
+## 2. How to Use This File / このファイルの使用方法
 
-この`AGENTS.md`ファイルは、汎用AIエージェント（例：OpenAI GPTモデル等）向けの軽量なエントリーポイントとして機能します。主な目的は、エージェントを正しい統一ドキュメントに導くことです。
+This `AGENTS.md` file serves as a lightweight entry point for generic AI agents (e.g., OpenAI GPT models). Its primary purpose is to direct agents to the correct unified documentation.
 
-## 3. AIエージェント向け指示
+## 3. Instructions for AI Agents / AIエージェント向け指示
 
-開発タスクを開始する際は、以下の手順に従ってください:
+When starting a development task, follow these steps:
 
-1. **最初に`AI_DEVELOPMENT_RULES.md`を読む。** これは必須です。
-2. そのファイルからプロジェクトの中核原則、コマンド、構造を理解する。
-3. Claude Code固有の設定については、`.claude/CLAUDE.md`を参照する。
-4. 技術固有の詳細（MUI v7コンポーネント、Storybook、テーマカスタマイズ）については、`.claude/skills/`ディレクトリ内のSkillsを参照する。
-   - `mui-v7-component.md` - MUI v7コンポーネント作成ガイド
-   - `storybook-story.md` - Storybookストーリー作成ガイド
-   - `theme-customization.md` - テーマカスタマイズガイド
-5. 生成されるすべてのコードが`AI_DEVELOPMENT_RULES.md`に記載されたルールに厳密に準拠していることを確認する。
+1. **Read `AI_DEVELOPMENT_RULES.md` first.** This is mandatory.
+2. Understand the project's core principles, commands, and structure from that file.
+3. For Claude Code-specific settings, refer to `.claude/CLAUDE.md`.
+4. For technology-specific details (MUI v7 components, Storybook, theme customization), refer to Skills in the `.claude/skills/` directory:
+   - `mui-v7-component.md` - MUI v7 component creation guide
+   - `storybook-story.md` - Storybook story creation guide
+   - `theme-customization.md` - Theme customization guide
+5. Ensure all generated code strictly complies with the rules in `AI_DEVELOPMENT_RULES.md`.
 
-## 4. AI統合開発システム概要
+## 4. AI Integration System Overview / AI統合開発システム概要
 
-このプロジェクトでは、複数のAIエージェントが協調して開発を進める統合システムを採用しています。
+This project adopts an integrated system where multiple AI agents collaborate on development.
 
-### 主要統合ポイント
+### Key Integration Points / 主要統合ポイント
 
-1. **統一ルール管理**: 全AIエージェントが同一の開発原則に従う
-2. **技術別専門化**: MUI v7、Tailwind CSS、Storybookなど各技術領域での最適化された支援
-3. **品質保証自動化**: ESLintエラーゼロ、型安全性の徹底
-4. **コンポーネント品質向上**: アクセシビリティ、レスポンシブデザインの自動チェック
+1. **Unified rule management**: All AI agents follow the same development principles
+2. **Technology specialization**: Optimized support for MUI v7, Tailwind CSS, Storybook, etc.
+3. **Automated quality assurance**: Zero ESLint errors, strict type safety
+4. **Component quality improvement**: Automatic accessibility and responsive design checks
 
-### AIエージェントの役割
+### AI Agent Roles / AIエージェントの役割
 
-- **Claude Code**: メイン開発アシスタント、包括的なコンポーネント実装
-- **Cursor**: IDE統合エージェント、インライン補完とリファクタリング支援
-- **GitHub Copilot**: コード補完エージェント、パターン学習と提案
-- **その他AI**: 汎用補完、コードレビュー、ドキュメント生成
+- **Claude Code**: Main development assistant, comprehensive component implementation
+- **Cursor**: IDE integration agent, inline completion and refactoring support
+- **GitHub Copilot**: Code completion agent, pattern learning and suggestions
+- **Other AI**: General completion, code review, documentation generation
 
-## 5. 開発制約事項
+## 5. Development Constraints / 開発制約事項
 
-### 必須遵守事項
+### Mandatory Rules / 必須遵守事項
 
-- **絵文字使用禁止**: すべてのコード、コメント、コミットメッセージで絵文字を使用しない
-- **日本語優先**: コメントとドキュメントは日本語、コードは英語
-- **MUI v7新API使用**: Grid コンポーネントは `<Grid size={{ xs: 12 }}>` 形式を使用
-- **TypeScript strict mode**: `any`型は原則禁止、厳密な型定義を実施
-- **pnpm専用**: npmコマンドは使用禁止
-- **ESLintエラーゼロ**: 全てのコードでLintエラーが無い状態を維持
+- **No emoji**: Do not use emoji in any code, comments, or commit messages
+- **Bilingual**: Comments and docs in Japanese, code in English
+- **MUI v7 new API**: Use `<Grid size={{ xs: 12 }}>` format for Grid component
+- **TypeScript strict mode**: `any` type is prohibited, strict type definitions required
+- **pnpm only**: npm commands are prohibited
+- **Zero ESLint errors**: Maintain lint-error-free state across all code
 
-### 禁止事項
+### Prohibited Practices / 禁止事項
 
-- `any`型の使用（理由がある場合はコメントで明記）
-- 古いMUI Grid API（`item xs={12}`形式）の使用
-- npmコマンドの使用
-- console.logの残存
-- 絵文字の使用
+- `any` type usage (document reason in comments if absolutely necessary)
+- Old MUI Grid API (`item xs={12}` format)
+- npm commands
+- console.log remnants
+- Emoji usage
 
-## 6. 起動メッセージ
+## 6. Startup Message / 起動メッセージ
 
 ```text
-KDDI Smart Drone Platform UI Theme用AIエージェントが起動しました。
+Kaze UX Design System AI agent activated.
 
-【重要】すべての開発ルールは`AI_DEVELOPMENT_RULES.md`に集約されています。
-このファイルがSingle Source of Truthです。作業前に必ず読んでください。
+IMPORTANT: All development rules are consolidated in AI_DEVELOPMENT_RULES.md.
+This file is the Single Source of Truth. Read it before starting work.
 
-主要指示:
-1. `AI_DEVELOPMENT_RULES.md`のガイドラインに厳密に従う。
-2. ESLintエラーゼロを維持する。
-3. MUI v7の新しいGrid APIを使用する。
-4. TypeScript strict modeに準拠する。
-5. 絵文字を一切使用しない。
-6. 日本語コメント、英語コードを徹底する。
+Key instructions:
+1. Strictly follow AI_DEVELOPMENT_RULES.md guidelines.
+2. Maintain zero ESLint errors.
+3. Use MUI v7 new Grid API.
+4. Comply with TypeScript strict mode.
+5. Do not use emoji.
+6. Japanese comments, English code.
 
-統一ルールに基づいて高品質なUIコンポーネント開発を進めます。
+Proceeding with high-quality UI component development based on unified rules.
 ```
 
-## 7. トラブルシューティング
+## 7. Troubleshooting / トラブルシューティング
 
-### よくある問題
+### Common Issues / よくある問題
 
-| 問題                           | 対処法                                                      |
-| :----------------------------- | :---------------------------------------------------------- |
-| **ルールが分からない**         | `AI_DEVELOPMENT_RULES.md`を確認してください                 |
-| **MUI v7のAPIが不明**          | `.claude/skills/mui-v7-component.md`を参照してください      |
-| **Storybookの書き方が不明**    | `.claude/skills/storybook-story.md`を参照してください       |
-| **テーマカスタマイズ方法不明** | `.claude/skills/theme-customization.md`を参照してください   |
-| **型エラーが解決できない**     | TypeScript strict modeの設定とAI_DEVELOPMENT_RULES.mdを確認 |
+| Issue                           | Solution                                                 |
+| :------------------------------ | :------------------------------------------------------- |
+| **Rules unclear**               | Check `AI_DEVELOPMENT_RULES.md`                          |
+| **MUI v7 API unknown**          | See `.claude/skills/mui-v7-component.md`                 |
+| **Storybook writing unclear**   | See `.claude/skills/storybook-story.md`                  |
+| **Theme customization unknown** | See `.claude/skills/theme-customization.md`              |
+| **Type errors unresolvable**    | Check TypeScript strict mode and AI_DEVELOPMENT_RULES.md |
 
-## 8. 参考リンク
+## 8. References / 参考リンク
 
-- [AI_DEVELOPMENT_RULES.md](./AI_DEVELOPMENT_RULES.md) - 統一開発ルール
-- [.claude/CLAUDE.md](./.claude/CLAUDE.md) - Claude Code専用設定
-- [.claude/skills/](./.claude/skills/) - 技術別Skillsガイド
+- [AI_DEVELOPMENT_RULES.md](./AI_DEVELOPMENT_RULES.md) - Unified development rules
+- [.claude/CLAUDE.md](./.claude/CLAUDE.md) - Claude Code settings
+- [.claude/skills/](./.claude/skills/) - Technology-specific Skills guides
 - [MUI v7 Documentation](https://mui.com/material-ui/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Storybook Documentation](https://storybook.js.org/docs)

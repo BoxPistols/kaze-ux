@@ -1,8 +1,15 @@
 import type { ThemeColors, ColorSet, GreyShades } from '../themes/colorToken'
 import type { PaletteOptions, Theme as MuiTheme } from '@mui/material/styles'
 
+// Augment MUI's Easing interface with custom easing values
+declare module '@mui/material/styles' {
+  interface Easing {
+    smooth: string
+  }
+}
+
 /**
- * KDDI Smart Drone Platformで拡張されたパレットオプション
+ * Kaze UX Design Systemで拡張されたパレットオプション
  * MUI 6のカラースキームに対応
  */
 export interface ExtendedPaletteOptions extends PaletteOptions {

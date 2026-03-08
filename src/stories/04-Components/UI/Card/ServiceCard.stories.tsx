@@ -1,4 +1,4 @@
-import FlightIcon from '@mui/icons-material/Flight'
+import CloudIcon from '@mui/icons-material/Cloud'
 import { Box } from '@mui/material'
 import { action } from 'storybook/actions'
 
@@ -34,9 +34,9 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    title: 'DJI FlightHub 2',
-    description: 'ドローン運航管理サービス',
-    icon: <FlightIcon sx={{ fontSize: 28 }} />,
+    title: 'Cloud Hub',
+    description: 'クラウド管理サービス',
+    icon: <CloudIcon sx={{ fontSize: 28 }} />,
     connected: false,
     onRegisterClick: action('onRegisterClick'),
   },

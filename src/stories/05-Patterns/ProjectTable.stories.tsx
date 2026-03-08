@@ -32,7 +32,7 @@ interface Project {
   startDate: string
   endDate: string
   memberCount: number
-  droneCount: number
+  deviceCount: number
 }
 
 // モックデータ
@@ -46,7 +46,7 @@ const mockProjects: Project[] = [
     startDate: '2024-01-01',
     endDate: '2024-03-31',
     memberCount: 5,
-    droneCount: 2,
+    deviceCount: 2,
   },
   {
     id: '2',
@@ -57,7 +57,7 @@ const mockProjects: Project[] = [
     startDate: '2024-02-01',
     endDate: '2024-04-30',
     memberCount: 3,
-    droneCount: 1,
+    deviceCount: 1,
   },
   {
     id: '3',
@@ -68,7 +68,7 @@ const mockProjects: Project[] = [
     startDate: '2023-10-01',
     endDate: '2023-12-31',
     memberCount: 4,
-    droneCount: 2,
+    deviceCount: 2,
   },
   {
     id: '4',
@@ -79,7 +79,7 @@ const mockProjects: Project[] = [
     startDate: '2024-01-15',
     endDate: '2024-06-30',
     memberCount: 8,
-    droneCount: 3,
+    deviceCount: 3,
   },
 ]
 
@@ -204,7 +204,7 @@ const ProjectTable = ({
                   </Box>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='body2'>{project.droneCount}</Typography>
+                  <Typography variant='body2'>{project.deviceCount}</Typography>
                 </TableCell>
                 <TableCell>
                   <Chip

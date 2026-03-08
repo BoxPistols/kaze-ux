@@ -83,9 +83,18 @@ const InfoCallout = ({
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
   const palette = {
-    info: { border: theme.palette.info.main, bg: isDark ? 'rgba(33,150,243,0.06)' : 'rgba(33,150,243,0.04)' },
-    warning: { border: theme.palette.warning.main, bg: isDark ? 'rgba(235,129,23,0.06)' : 'rgba(235,129,23,0.04)' },
-    success: { border: theme.palette.success.main, bg: isDark ? 'rgba(70,171,74,0.06)' : 'rgba(70,171,74,0.04)' },
+    info: {
+      border: theme.palette.info.main,
+      bg: isDark ? 'rgba(33,150,243,0.06)' : 'rgba(33,150,243,0.04)',
+    },
+    warning: {
+      border: theme.palette.warning.main,
+      bg: isDark ? 'rgba(235,129,23,0.06)' : 'rgba(235,129,23,0.04)',
+    },
+    success: {
+      border: theme.palette.success.main,
+      bg: isDark ? 'rgba(70,171,74,0.06)' : 'rgba(70,171,74,0.04)',
+    },
   }
   const c = palette[color]
   return (
@@ -133,9 +142,7 @@ const StyledTable = ({
         <TableHead>
           <TableRow
             sx={{
-              bgcolor: isDark
-                ? 'rgba(255,255,255,0.03)'
-                : 'rgba(0,0,0,0.02)',
+              bgcolor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
             }}>
             {headers.map((h) => (
               <TableCell
@@ -202,13 +209,12 @@ const IntroductionContent = () => {
     {
       name: 'Guide',
       color: 'primary' as const,
-      description:
-        'Storybook の使い方ガイド。初めて使う方はまずここから。',
+      description: 'Storybook の使い方ガイド。初めて使う方はまずここから。',
     },
     {
       name: 'Design Philosophy',
       color: 'secondary' as const,
-      description: 'KDDI Smart Drone Platform のデザイン理念と技術スタック。',
+      description: 'Kaze UX Design System のデザイン理念と技術スタック。',
     },
     {
       name: 'Design Tokens',
@@ -219,8 +225,7 @@ const IntroductionContent = () => {
     {
       name: 'Components',
       color: 'success' as const,
-      description:
-        'UI / Form / UTM の各カテゴリに整理された実際のコンポーネント群。',
+      description: 'UI / Form の各カテゴリに整理された実際のコンポーネント群。',
     },
     {
       name: 'Patterns',
@@ -232,7 +237,11 @@ const IntroductionContent = () => {
 
   const techStack = [
     { name: 'React', version: '19', purpose: 'UIライブラリ' },
-    { name: 'MUI (Material UI)', version: 'v7', purpose: 'コンポーネントライブラリ' },
+    {
+      name: 'MUI (Material UI)',
+      version: 'v7',
+      purpose: 'コンポーネントライブラリ',
+    },
     { name: 'TypeScript', version: '5.x', purpose: '型安全' },
     { name: 'Tailwind CSS', version: 'v3', purpose: 'ユーティリティCSS' },
     { name: 'Storybook', version: '10.x', purpose: 'コンポーネントカタログ' },
@@ -280,7 +289,7 @@ const IntroductionContent = () => {
             mb: 2,
             display: 'block',
           }}>
-          KDDI SMART DRONE PLATFORM
+          KAZE UX DESIGN SYSTEM
         </Typography>
         <Typography
           sx={{
@@ -331,11 +340,20 @@ const IntroductionContent = () => {
                   },
                 }}>
                 <Typography
-                  sx={{ fontWeight: 700, fontSize: 15, mb: 1.5, color: isDark ? 'grey.100' : 'grey.900' }}>
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: 15,
+                    mb: 1.5,
+                    color: isDark ? 'grey.100' : 'grey.900',
+                  }}>
                   {b.title}
                 </Typography>
                 <Typography
-                  sx={{ fontSize: 14, lineHeight: 1.8, color: 'text.secondary' }}>
+                  sx={{
+                    fontSize: 14,
+                    lineHeight: 1.8,
+                    color: 'text.secondary',
+                  }}>
                   {b.description}
                 </Typography>
               </Box>
@@ -432,11 +450,20 @@ const IntroductionContent = () => {
               </Box>
               <Box sx={{ pt: 0.5 }}>
                 <Typography
-                  sx={{ fontWeight: 700, fontSize: 15, mb: 0.75, color: isDark ? 'grey.100' : 'grey.900' }}>
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: 15,
+                    mb: 0.75,
+                    color: isDark ? 'grey.100' : 'grey.900',
+                  }}>
                   {item.title}
                 </Typography>
                 <Typography
-                  sx={{ fontSize: 14, lineHeight: 1.8, color: 'text.secondary' }}>
+                  sx={{
+                    fontSize: 14,
+                    lineHeight: 1.8,
+                    color: 'text.secondary',
+                  }}>
                   {item.description}
                 </Typography>
               </Box>
@@ -482,13 +509,16 @@ const IntroductionContent = () => {
           ))}
         </StyledTable>
         <InfoCallout title='ショートカットのカスタマイズ'>
-          <Box component='span' sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+          <Box
+            component='span'
+            sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
             Cmd + Shift + ,
           </Box>{' '}
-          （Windows: Ctrl + Shift + ,）で設定画面を開き、「Keyboard shortcuts」タブからすべてのショートカットを変更できます。
+          （Windows: Ctrl + Shift + ,）で設定画面を開き、「Keyboard
+          shortcuts」タブからすべてのショートカットを変更できます。
         </InfoCallout>
 
-        {/* SDPF Concierge ショートカット */}
+        {/* Concierge ショートカット */}
         <Typography
           sx={{
             fontSize: { xs: 18, sm: 20 },
@@ -497,21 +527,42 @@ const IntroductionContent = () => {
             mt: 6,
             letterSpacing: '-0.01em',
           }}>
-          SDPF Concierge ショートカット
+          Concierge ショートカット
         </Typography>
         <Typography
-          sx={{ fontSize: 14, lineHeight: 1.85, color: 'text.secondary', mb: 4 }}>
-          SDPF独自のチャットウィジェット用ショートカットです。右下のConciergeチャットが対象です。
+          sx={{
+            fontSize: 14,
+            lineHeight: 1.85,
+            color: 'text.secondary',
+            mb: 4,
+          }}>
+          チャットウィジェット用ショートカットです。右下のConciergeチャットが対象です。
         </Typography>
         <StyledTable headers={['操作', 'Mac', 'Windows']}>
           {[
             { action: 'チャット開閉', mac: 'Cmd+Shift+K', win: 'Ctrl+Shift+K' },
             { action: '入力欄にフォーカス', mac: 'Cmd+/', win: 'Ctrl+/' },
             { action: 'メッセージ送信', mac: 'Cmd+Enter', win: 'Ctrl+Enter' },
-            { action: '設定パネル切替', mac: 'Cmd+Shift+S', win: 'Ctrl+Shift+S' },
-            { action: '履歴ダウンロード', mac: 'Cmd+Shift+D', win: 'Ctrl+Shift+D' },
-            { action: 'サイドバー/ウィジェット切替', mac: 'Cmd+Shift+L', win: 'Ctrl+Shift+L' },
-            { action: '履歴クリア', mac: 'Cmd+Shift+Delete', win: 'Ctrl+Shift+Delete' },
+            {
+              action: '設定パネル切替',
+              mac: 'Cmd+Shift+S',
+              win: 'Ctrl+Shift+S',
+            },
+            {
+              action: '履歴ダウンロード',
+              mac: 'Cmd+Shift+D',
+              win: 'Ctrl+Shift+D',
+            },
+            {
+              action: 'サイドバー/ウィジェット切替',
+              mac: 'Cmd+Shift+L',
+              win: 'Ctrl+Shift+L',
+            },
+            {
+              action: '履歴クリア',
+              mac: 'Cmd+Shift+Delete',
+              win: 'Ctrl+Shift+Delete',
+            },
             { action: 'チャットを閉じる', mac: 'Esc', win: 'Esc' },
           ].map((s) => (
             <TableRow key={s.action}>
@@ -521,7 +572,11 @@ const IntroductionContent = () => {
                   label={s.mac}
                   size='small'
                   variant='outlined'
-                  sx={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 12 }}
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontWeight: 600,
+                    fontSize: 12,
+                  }}
                 />
               </TableCell>
               <TableCell>
@@ -529,14 +584,18 @@ const IntroductionContent = () => {
                   label={s.win}
                   size='small'
                   variant='outlined'
-                  sx={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 12 }}
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontWeight: 600,
+                    fontSize: 12,
+                  }}
                 />
               </TableCell>
             </TableRow>
           ))}
         </StyledTable>
         <InfoCallout title='Storybook標準との違い' color='warning'>
-          上記のConciergeショートカットはSDPFが独自に実装したものです。
+          上記のConciergeショートカットは独自に実装したものです。
           Storybookの設定画面（Keyboard shortcuts）からは変更できません。
         </InfoCallout>
       </Box>
@@ -591,18 +650,32 @@ const IntroductionContent = () => {
           px: 3,
           py: 3,
           borderRadius: 2,
-          bgcolor: isDark
-            ? 'rgba(255,255,255,0.02)'
-            : 'rgba(0,0,0,0.015)',
+          bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
         }}>
-        <Typography sx={{ fontWeight: 700, fontSize: 13, mb: 2, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+        <Typography
+          sx={{
+            fontWeight: 700,
+            fontSize: 13,
+            mb: 2,
+            color: 'text.secondary',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+          }}>
           参考リンク
         </Typography>
         <Stack spacing={1}>
-          <Link href='https://storybook.js.org/docs' target='_blank' rel='noopener noreferrer' sx={{ fontSize: 14 }}>
+          <Link
+            href='https://storybook.js.org/docs'
+            target='_blank'
+            rel='noopener noreferrer'
+            sx={{ fontSize: 14 }}>
             Storybook Documentation
           </Link>
-          <Link href='https://mui.com/material-ui/' target='_blank' rel='noopener noreferrer' sx={{ fontSize: 14 }}>
+          <Link
+            href='https://mui.com/material-ui/'
+            target='_blank'
+            rel='noopener noreferrer'
+            sx={{ fontSize: 14 }}>
             MUI Documentation
           </Link>
         </Stack>

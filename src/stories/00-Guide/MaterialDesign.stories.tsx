@@ -76,10 +76,11 @@ const MaterialDesignContent = () => {
           Material Design 概要
         </Typography>
         <Typography variant='h6' color='text.secondary' sx={{ mb: 2 }}>
-          Googleの設計体系とSDPFでの活用
+          Googleの設計体系とKaze UXでの活用
         </Typography>
         <Typography variant='body1' color='text.secondary'>
-          SDPFは MUI（Material UI）v7 を通じてMaterial Designをベースにしている
+          Kaze UXは MUI（Material UI）v7 を通じてMaterial
+          Designをベースにしている
         </Typography>
       </Paper>
 
@@ -167,7 +168,7 @@ const MaterialDesignContent = () => {
               : 'rgba(33,150,243,0.03)',
         }}>
         <Typography variant='body2' sx={{ fontWeight: 600, mb: 0.5 }}>
-          SDPF方針
+          Kaze UX方針
         </Typography>
         <Typography variant='body1' color='text.secondary'>
           Card = <strong>elevation 0（フラット）</strong> + outlined border
@@ -349,18 +350,34 @@ const MaterialDesignContent = () => {
       </TableContainer>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://m3.material.io/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://m3.material.io/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             Material Design 3
           </Link>
-          <Link href='https://mui.com/material-ui/react-paper/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/react-paper/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Paper (Elevation)
           </Link>
-          <Link href='https://mui.com/material-ui/transitions/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/transitions/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Transitions
           </Link>
         </Stack>
@@ -440,7 +457,7 @@ const ElevationPlayground = ({
       variant='body1'
       color='text.secondary'
       sx={{ textAlign: 'center' }}>
-      SDPF方針: Card = elevation 0 + outlined
+      Kaze UX方針: Card = elevation 0 + outlined
       を基本。浮き上がりはFAB・ドロップダウンのみ。
     </Typography>
   </Box>
@@ -464,7 +481,7 @@ export const ElevationDemo: StoryObj<ElevationArgs> = {
     },
     showOutline: {
       control: 'boolean',
-      description: 'outlined variant（SDPF推奨）',
+      description: 'outlined variant（Kaze UX推奨）',
     },
   },
   render: (args) => <ElevationPlayground {...args} />,

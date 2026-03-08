@@ -31,7 +31,7 @@ const CommomButtonStyles = {
   whiteSpace: 'nowrap',
 }
 
-// 共通設定 - sdpf-frontend-nextに準拠
+// 共通設定 - kaze-ux準拠
 const commonThemeOptions = {
   typography: typographyOptions,
   shape: { borderRadius: 8 }, // モダンな角丸
@@ -398,7 +398,7 @@ const componentStyles = {
       }),
     },
   },
-  // Chip - sdpf-frontend-nextに準拠
+  // Chip - kaze-ux準拠
   MuiChip: {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
@@ -560,7 +560,7 @@ const componentStyles = {
       },
     },
   },
-  // Tab - sdpf-frontend-nextに準拠
+  // Tab - kaze-ux準拠
   MuiTabs: {
     styleOverrides: {
       root: {
@@ -588,7 +588,7 @@ const componentStyles = {
       }),
     },
   },
-  // Avatar - sdpf-frontend-nextに準拠
+  // Avatar - kaze-ux準拠
   MuiAvatar: {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
@@ -599,7 +599,7 @@ const componentStyles = {
       }),
     },
   },
-  // Menu - sdpf-frontend-nextに準拠
+  // Menu - kaze-ux準拠
   MuiMenu: {
     styleOverrides: {
       paper: ({ theme }: { theme: Theme }) => ({

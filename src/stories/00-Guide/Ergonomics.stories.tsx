@@ -600,10 +600,10 @@ const ErgonomicsContent = () => {
             key={`line-height-demo-${lhValue}`}
             variant='body2'
             sx={{ lineHeight: `${lhValue} !important` }}>
-            ドローン運航管理システムは、複数の無人航空機を安全かつ効率的に管理するためのプラットフォームです。
-            リアルタイムの位置情報追跡、フライト計画の作成と承認ワークフロー、気象データとの統合、
-            緊急時の自動帰還機能など、運航に必要な機能を包括的に提供します。
-            航空法に基づく飛行制限区域の自動チェック機能も搭載しています。
+            業務管理システムは、複数のリソースを安全かつ効率的に管理するためのプラットフォームです。
+            リアルタイムのステータス追跡、タスク計画の作成と承認ワークフロー、外部データとの統合、
+            緊急時の自動通知機能など、運用に必要な機能を包括的に提供します。
+            各種規制に基づく制限事項の自動チェック機能も搭載しています。
           </Typography>
         </Paper>
       </Paper>
@@ -712,15 +712,26 @@ const ErgonomicsContent = () => {
       </Grid>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://www.w3.org/WAI/WCAG21/quickref/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://www.w3.org/WAI/WCAG21/quickref/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             WCAG Quick Reference
           </Link>
-          <Link href='https://mui.com/material-ui/getting-started/accessibility/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/getting-started/accessibility/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Accessibility
           </Link>
         </Stack>

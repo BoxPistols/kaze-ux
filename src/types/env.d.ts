@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-	readonly VITE_APP_PASSWORD: string
-	// 他の環境変数を定義
+	readonly VITE_MAPBOX_ACCESS_TOKEN?: string
+	readonly VITE_OPENAI_API_KEY?: string
+	readonly VITE_OPENAI_MODEL?: string
 }
 
 interface ImportMeta {

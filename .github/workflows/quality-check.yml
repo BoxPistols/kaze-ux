@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 基本的な品質チェック
+  # Lint & Type Check
   lint-and-typecheck:
     name: Lint & TypeCheck
     runs-on: ubuntu-latest
@@ -59,19 +59,19 @@ jobs:
 
       - name: Check for console.log
         run: |
-          echo "console.log残存チェック..."
+          echo "Checking for console.log remnants..."
           if grep -rn "console\.log" --include="*.ts" --include="*.tsx" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "// eslint-disable" | grep -v ".stories." | head -20; then
-            echo "警告: console.logが検出されました"
+            echo "Warning: console.log detected"
           fi
 
       - name: Check for any type
         run: |
-          echo "any型使用チェック..."
+          echo "Checking for 'any' type usage..."
           if grep -rn ": any" --include="*.ts" --include="*.tsx" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "// eslint-disable" | head -20; then
-            echo "警告: any型が検出されました"
+            echo "Warning: 'any' type detected"
           fi
 
-  # テスト実行
+  # Unit Tests
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -125,7 +125,7 @@ jobs:
           path: coverage/
           retention-days: 7
 
-  # Storybookビルドチェック
+  # Storybook Build Check
   storybook-build:
     name: Storybook Build
     runs-on: ubuntu-latest
@@ -172,7 +172,7 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-  # 変更ファイルの分析
+  # Change Analysis
   change-analysis:
     name: Change Analysis
     runs-on: ubuntu-latest
@@ -188,32 +188,30 @@ jobs:
 
       - name: Analyze changes
         id: check
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          # 変更されたファイルを取得
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || echo "")
+          CHANGED_FILES=$(git diff --name-only "origin/${BASE_REF}...HEAD" 2>/dev/null || echo "")
 
-          # コンポーネント変更の確認
           if echo "$CHANGED_FILES" | grep -q "src/components/"; then
             echo "has_component_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_component_changes=false" >> $GITHUB_OUTPUT
           fi
 
-          # Storybookストーリー変更の確認
           if echo "$CHANGED_FILES" | grep -q "\.stories\."; then
             echo "has_story_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_story_changes=false" >> $GITHUB_OUTPUT
           fi
 
-          # 変更ファイル数
           CHANGED_COUNT=$(echo "$CHANGED_FILES" | grep -c "\.tsx\|\.ts") || CHANGED_COUNT=0
           echo "changed_files_count=$CHANGED_COUNT" >> $GITHUB_OUTPUT
 
-          echo "変更されたファイル:"
+          echo "Changed files:"
           echo "$CHANGED_FILES" | head -30
 
-  # PR品質サマリー
+  # Quality Summary
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-latest
@@ -221,33 +219,37 @@ jobs:
     if: always()
     steps:
       - name: Create summary
+        env:
+          LINT_RESULT: ${{ needs.lint-and-typecheck.result }}
+          TEST_RESULT: ${{ needs.test.result }}
+          SB_RESULT: ${{ needs.storybook-build.result }}
+          HAS_COMPONENT: ${{ needs.change-analysis.outputs.has_component_changes }}
+          HAS_STORY: ${{ needs.change-analysis.outputs.has_story_changes }}
+          CHANGED_COUNT: ${{ needs.change-analysis.outputs.changed_files_count }}
         run: |
-          echo "## 品質チェック結果" >> $GITHUB_STEP_SUMMARY
+          echo "## Quality Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Lint結果
-          if [ "${{ needs.lint-and-typecheck.result }}" == "success" ]; then
-            echo "- Lint & TypeCheck: 成功" >> $GITHUB_STEP_SUMMARY
+          if [ "${LINT_RESULT}" == "success" ]; then
+            echo "- Lint & TypeCheck: Passed" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- Lint & TypeCheck: 失敗" >> $GITHUB_STEP_SUMMARY
+            echo "- Lint & TypeCheck: Failed" >> $GITHUB_STEP_SUMMARY
           fi
 
-          # テスト結果
-          if [ "${{ needs.test.result }}" == "success" ]; then
-            echo "- Unit Tests: 成功" >> $GITHUB_STEP_SUMMARY
+          if [ "${TEST_RESULT}" == "success" ]; then
+            echo "- Unit Tests: Passed" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- Unit Tests: 失敗" >> $GITHUB_STEP_SUMMARY
+            echo "- Unit Tests: Failed" >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Storybookビルド結果
-          if [ "${{ needs.storybook-build.result }}" == "success" ]; then
-            echo "- Storybook Build: 成功" >> $GITHUB_STEP_SUMMARY
+          if [ "${SB_RESULT}" == "success" ]; then
+            echo "- Storybook Build: Passed" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- Storybook Build: 失敗" >> $GITHUB_STEP_SUMMARY
+            echo "- Storybook Build: Failed" >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 変更分析" >> $GITHUB_STEP_SUMMARY
-          echo "- コンポーネント変更: ${{ needs.change-analysis.outputs.has_component_changes }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Storybook変更: ${{ needs.change-analysis.outputs.has_story_changes }}" >> $GITHUB_STEP_SUMMARY
-          echo "- 変更ファイル数: ${{ needs.change-analysis.outputs.changed_files_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Change Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "- Component changes: ${HAS_COMPONENT}" >> $GITHUB_STEP_SUMMARY
+          echo "- Storybook changes: ${HAS_STORY}" >> $GITHUB_STEP_SUMMARY
+          echo "- Changed files count: ${CHANGED_COUNT}" >> $GITHUB_STEP_SUMMARY

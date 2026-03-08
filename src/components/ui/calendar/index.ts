@@ -3,15 +3,12 @@ import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import 'dayjs/locale/ja'
 
-import { initCalendarSettings } from '@/hooks/useCalendarSettings'
-
 // Date Pickers / カレンダー全体で週開始曜日を設定する
 // MUI X Date Pickers はアダプターの locale 設定に従うため、dayjs 側の locale を上書きする
-// 初期設定はlocalStorageから読み込み、なければデフォルト（月曜始まり）を使用
+// デフォルト: 月曜始まり (weekStart: 1)
 dayjs.extend(updateLocale)
-const initialSettings = initCalendarSettings()
 dayjs.updateLocale('ja', {
-  weekStart: initialSettings.weekStart,
+  weekStart: 1,
 })
 
 export { MiniCalendar, type MiniCalendarProps } from './miniCalendar'

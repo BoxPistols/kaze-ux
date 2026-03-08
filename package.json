@@ -1,22 +1,23 @@
 {
-  "name": "sdpf-theme",
+  "name": "kaze-ux",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KDDIsmartdrone-dev/sdpf-theme.git"
+    "url": "https://github.com/your-username/kaze-ux.git"
   },
-  "private": true,
-  "description": "KDDI Smart Drone Platform UI theme components",
+  "private": false,
+  "description": "A modern React design system built with MUI v7, Tailwind CSS, and Storybook",
   "keywords": [
     "react",
     "mui",
     "theme",
     "components",
     "ui",
-    "kddi",
-    "drone"
+    "design-system",
+    "storybook",
+    "tailwindcss"
   ],
-  "author": "KDDI Smart Drone",
-  "license": "UNLICENSED",
+  "author": "",
+  "license": "MIT",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
@@ -51,11 +52,8 @@
     "build:gh-pages": "vite build --mode gh-pages",
     "build:gh-pages:storybook": "storybook build -o gh-pages/storybook",
     "build:gh-pages:all": "pnpm run build:gh-pages && pnpm run build:gh-pages:storybook",
-    "build:gh-pages:inject-auth": "node scripts/inject-auth.js",
     "prepare": "husky",
-    "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
-    "export-tokens": "tsx scripts/export-design-tokens.ts",
-    "export-story-catalog": "tsx scripts/generate-story-catalog.ts"
+    "export-tokens": "tsx scripts/export-design-tokens.ts"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
@@ -81,12 +79,10 @@
     "@types/maplibre-gl": "^1.14.0",
     "@types/react-router-dom": "^5.3.3",
     "class-variance-authority": "^0.7.1",
-    "cli-table3": "^0.6.5",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "framer-motion": "^12.34.3",
     "fuse.js": "^7.1.0",
-    "init": "^0.1.2",
     "lucide-react": "^0.575.0",
     "map-or-similar": "^1.5.0",
     "mapbox-gl": "^3.19.0",
@@ -100,12 +96,10 @@
     "remark-gfm": "^4.0.1",
     "sass": "^1.97.3",
     "sonner": "^2.0.7",
-    "string-width": "^4.2.3",
     "tailwind-merge": "^2.6.1",
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "4.1.3",
     "@eslint/js": "^9.39.3",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@storybook/addon-a11y": "^10.2.13",
@@ -129,7 +123,6 @@
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/ui": "^1.6.1",
     "autoprefixer": "^10.4.27",
-    "chromatic": "^13.3.5",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -164,7 +157,7 @@
     ]
   },
   "volta": {
-    "node": "24.12.0"
+    "node": "22.14.0"
   },
   "pnpm": {
     "overrides": {

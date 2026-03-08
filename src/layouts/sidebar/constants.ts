@@ -2,7 +2,7 @@ import type { MenuItem } from './types'
 
 /**
  * サイドバーの寸法設定（環境別）
- * sdpf-frontend-nextと同等の値を使用
+ * レスポンシブ対応の値を使用
  */
 export const SIDEBAR_WIDTH = {
   laptop: {

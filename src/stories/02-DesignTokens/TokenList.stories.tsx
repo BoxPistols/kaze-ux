@@ -56,7 +56,7 @@ const TokenOverview = () => {
         デザイントークン概要
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
-        sdpf-themeで定義されている全デザイントークンの俯瞰。各カテゴリの詳細は個別ページを参照
+        kaze-ux-themeで定義されている全デザイントークンの俯瞰。各カテゴリの詳細は個別ページを参照
       </Typography>
 
       <Grid container spacing={4}>

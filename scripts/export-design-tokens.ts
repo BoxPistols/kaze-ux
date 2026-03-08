@@ -296,7 +296,7 @@ const buildContainerTokens = (): TokenGroup => {
 
 const tokens = {
   $schema: 'https://design-tokens.github.io/community-group/format/',
-  $description: 'KDDI Smart Drone Platform UI Theme - Design Tokens',
+  $description: 'Kaze UX Design System - Design Tokens',
   color: {
     light: buildColorTokens(lightColors),
     dark: buildColorTokens(darkColors),

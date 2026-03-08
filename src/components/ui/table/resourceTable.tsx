@@ -1,5 +1,5 @@
 // src/components/ui/table/resourceTable.tsx
-// sdpf-frontend-nextに準拠したResourceTableコンポーネント
+// ResourceTableコンポーネント
 import AddIcon from '@mui/icons-material/Add'
 import SearchOffIcon from '@mui/icons-material/SearchOff'
 import TableRowsIcon from '@mui/icons-material/TableRows'

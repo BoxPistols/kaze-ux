@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => {
     plugins,
     // GitHub Pages用のベースパス設定
     // 環境変数 VITE_BASE_PATH が設定されていればそれを使用、なければリポジトリ名
-    base: isGitHubPages ? (process.env.VITE_BASE_PATH || '/sdpf-theme/') : '/',
+    base: isGitHubPages ? (process.env.VITE_BASE_PATH || '/kaze-ux/') : '/',
     build: {
       // Webアプリモードとライブラリモードで異なる設定
       ...(isWebApp
@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
             // ライブラリモード: ライブラリとしてビルド
             lib: {
               entry: path.resolve(__dirname, 'src/index.ts'),
-              name: 'KddiSmartDroneTheme',
+              name: 'KazeUX',
               formats: ['es', 'cjs'],
               fileName: (format) => `index.${format === 'es' ? 'es.js' : 'js'}`,
             },

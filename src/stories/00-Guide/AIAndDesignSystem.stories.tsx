@@ -150,12 +150,12 @@ const AIDesignSystemContent = () => {
           {
             name: 'Cursor',
             desc: 'AI搭載コードエディタ。コードベース全体を理解してコード生成・修正。',
-            use: 'SDPFコンポーネントの開発、既存コードの修正',
+            use: 'Kaze UXコンポーネントの開発、既存コードの修正',
           },
           {
             name: 'Claude Code',
             desc: 'Anthropic社のCLI型AIエージェント。ファイル操作・Git操作含む自律的開発。',
-            use: 'SDPFの新規コンポーネント作成、ストーリー自動生成',
+            use: 'Kaze UXの新規コンポーネント作成、ストーリー自動生成',
           },
           {
             name: 'GitHub Copilot',
@@ -260,7 +260,7 @@ const AIDesignSystemContent = () => {
             曖昧な指示
           </Typography>
           <CodeBlock language='markdown'>
-            {`「ドローンの状態を表示するカードを作って。
+            {`「デバイスの状態を表示するカードを作って。
  青くて、角丸で、影を付けて。
  サイズは大中小の3つ。」`}
           </CodeBlock>
@@ -269,7 +269,7 @@ const AIDesignSystemContent = () => {
           <Typography
             variant='body2'
             sx={{ fontWeight: 600, mb: 1, color: 'success.main' }}>
-            SDPF語彙を使った指示
+            Kaze UX語彙を使った指示
           </Typography>
           <CodeBlock language='markdown'>
             {`「ServiceCardコンポーネントを作成。
@@ -284,8 +284,8 @@ const AIDesignSystemContent = () => {
         </Grid>
       </Grid>
 
-      {/* SDPFでの活用 */}
-      <SectionHeader title='SDPFでのAI活用' />
+      {/* Kaze UXでの活用 */}
+      <SectionHeader title='Kaze UXでのAI活用' />
       <TableContainer component={Paper} variant='outlined'>
         <Table size='small'>
           <TableHead>
@@ -310,7 +310,7 @@ const AIDesignSystemContent = () => {
               [
                 'コード生成',
                 'Cursor / Claude Code',
-                'SDPFルールに基づくコード生成',
+                'Kaze UXルールに基づくコード生成',
               ],
               [
                 'レビュー',

@@ -1,4 +1,3 @@
-
 import {
   Alert,
   Avatar,
@@ -427,7 +426,7 @@ const PrinciplesContent = () => {
                   }}>
                   <Typography variant='caption' color='text.secondary'>
                     <Box component='span' sx={{ fontWeight: 600 }}>
-                      SDPF例:{' '}
+                      例:{' '}
                     </Box>
                     {p.example}
                   </Typography>
@@ -495,7 +494,7 @@ const PathDependencyContent = () => {
             技術的制約が消えた後もデファクトスタンダードであり続ける。デザインシステムでも初期の命名やディレクトリ構造の選択が時間と共に方向転換を難しくする。
           </Typography>
         </Paper>
-        <InfoBox title='SDPF例' color='warning'>
+        <InfoBox title='例' color='warning'>
           <code>primary</code>を<code>brand-blue</code>に後から変更 →
           全ファイル修正 + Figma更新 + ドキュメント修正 = 数週間の工数
         </InfoBox>
@@ -591,9 +590,7 @@ const PathDependencyContent = () => {
                 {item.step}
               </Typography>
             </Paper>
-            <Typography
-              variant='body1'
-              sx={{ pt: 0.75, lineHeight: 1.8 }}>
+            <Typography variant='body1' sx={{ pt: 0.75, lineHeight: 1.8 }}>
               {item.text}
             </Typography>
           </Stack>
@@ -615,7 +612,7 @@ const PathDependencyContent = () => {
           [
             <strong key='b'>バランス（推奨）</strong>,
             '汎用コンポーネント + ドメイン特化',
-            'SDPFのアプローチ',
+            'Kaze UXのアプローチ',
           ],
         ]}
       />
@@ -657,7 +654,7 @@ const StrategyContent = () => {
             '独自デザイン + アクセシビリティ両立',
           ],
           [
-            <strong key='d'>ハイブリッド（SDPF採用）</strong>,
+            <strong key='d'>ハイブリッド（Kaze UX採用）</strong>,
             '汎用=MUI、ドメイン=独自',
             '多くのインハウス組織の現実解',
           ],
@@ -737,9 +734,7 @@ const StrategyContent = () => {
             { title: '独立した状態', desc: '自分だけのstate/ロジックがある' },
           ].map((item) => (
             <Grid key={item.title} size={{ xs: 12, sm: 6 }}>
-              <Paper
-                variant='outlined'
-                sx={{ px: 3, py: 3, borderRadius: 2 }}>
+              <Paper variant='outlined' sx={{ px: 3, py: 3, borderRadius: 2 }}>
                 <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
                   {item.title}
                 </Typography>
@@ -776,7 +771,7 @@ const StrategyContent = () => {
 
       <SubSection title='汎用 vs ドメインコンポーネント'>
         <SimpleTable
-          headers={['種類', '特徴', 'SDPF例']}
+          headers={['種類', '特徴', '例']}
           rows={[
             [
               <strong key='a'>汎用</strong>,
@@ -786,7 +781,7 @@ const StrategyContent = () => {
             [
               <strong key='b'>ドメイン</strong>,
               '特定データ・ビジネスロジック依存',
-              'ServiceCard, ZoneStatusChip, FlightStatusChip',
+              'ServiceCard, ZoneStatusChip, TaskStatusChip',
             ],
           ]}
         />
@@ -803,7 +798,10 @@ const StrategyContent = () => {
       <SectionHeader title='命名' subtitle='コンポーネントに名前をつける' />
 
       <SubSection title='業界の語彙から借りる'>
-        <Typography variant='body1' color='text.secondary' sx={{ mb: 3, lineHeight: 1.8 }}>
+        <Typography
+          variant='body1'
+          color='text.secondary'
+          sx={{ mb: 3, lineHeight: 1.8 }}>
           Dialog, Popover, Tooltip
           などの名前は主要ライブラリで定着している。独自命名より既存の語彙に揃えることでコミュニケーションコストを下げる。
         </Typography>
@@ -839,9 +837,12 @@ const StrategyContent = () => {
       </SubSection>
 
       <SubSection title='データモデルとコンポーネント名'>
-        <Typography variant='body1' color='text.secondary' sx={{ mb: 3, lineHeight: 1.8 }}>
+        <Typography
+          variant='body1'
+          color='text.secondary'
+          sx={{ mb: 3, lineHeight: 1.8 }}>
           ドメインコンポーネントはバックエンドのデータモデル（User, Job,
-          Flight）と名前を揃える。 UserCard, FlightItem
+          Task）と名前を揃える。 UserCard, TaskItem
           のように対応させると、コードとデザインの語彙が一致する。
           汎用コンポーネントには特定のデータ名を含めない。
         </Typography>
@@ -901,18 +902,26 @@ const VariablesContent = () => {
 
   // --- Enum デモ用 state ---
   const [btnSize, setBtnSize] = useState<'small' | 'medium' | 'large'>('medium')
-  const [btnVariant, setBtnVariant] = useState<'contained' | 'outlined' | 'text'>('contained')
+  const [btnVariant, setBtnVariant] = useState<
+    'contained' | 'outlined' | 'text'
+  >('contained')
 
   // --- String/Number デモ用 state ---
   const [labelText, setLabelText] = useState('送信する')
   const [badgeCount, setBadgeCount] = useState(3)
 
   // --- 直交性デモ用 state ---
-  const [orthoSize, setOrthoSize] = useState<'small' | 'medium' | 'large'>('medium')
-  const [orthoColor, setOrthoColor] = useState<'primary' | 'secondary' | 'success' | 'error'>('primary')
+  const [orthoSize, setOrthoSize] = useState<'small' | 'medium' | 'large'>(
+    'medium'
+  )
+  const [orthoColor, setOrthoColor] = useState<
+    'primary' | 'secondary' | 'success' | 'error'
+  >('primary')
 
   // --- スロットデモ用 state ---
-  const [slotIcon, setSlotIcon] = useState<'user' | 'mail' | 'star' | 'heart'>('user')
+  const [slotIcon, setSlotIcon] = useState<'user' | 'mail' | 'star' | 'heart'>(
+    'user'
+  )
   const slotIcons = {
     user: <User size={20} />,
     mail: <Mail size={20} />,
@@ -939,7 +948,10 @@ const VariablesContent = () => {
           {/* 操作パネル */}
           <Grid size={{ xs: 12, md: 5 }}>
             <Stack spacing={3}>
-              <Stack direction='row' justifyContent='space-between' alignItems='center'>
+              <Stack
+                direction='row'
+                justifyContent='space-between'
+                alignItems='center'>
                 <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                   アイコンを表示
                 </Typography>
@@ -949,7 +961,10 @@ const VariablesContent = () => {
                   color='primary'
                 />
               </Stack>
-              <Stack direction='row' justifyContent='space-between' alignItems='center'>
+              <Stack
+                direction='row'
+                justifyContent='space-between'
+                alignItems='center'>
                 <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                   バッジを表示
                 </Typography>
@@ -959,7 +974,10 @@ const VariablesContent = () => {
                   color='primary'
                 />
               </Stack>
-              <Stack direction='row' justifyContent='space-between' alignItems='center'>
+              <Stack
+                direction='row'
+                justifyContent='space-between'
+                alignItems='center'>
                 <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                   無効化（操作不可）
                 </Typography>
@@ -994,7 +1012,10 @@ const VariablesContent = () => {
                 size='large'
                 sx={{ px: 4 }}>
                 {showBadge ? (
-                  <Badge badgeContent={3} color='error' sx={{ '& .MuiBadge-badge': { right: -12, top: -4 } }}>
+                  <Badge
+                    badgeContent={3}
+                    color='error'
+                    sx={{ '& .MuiBadge-badge': { right: -12, top: -4 } }}>
                     通知ボタン
                   </Badge>
                 ) : (
@@ -1079,8 +1100,9 @@ const VariablesContent = () => {
       </DemoPanel>
 
       <InfoBox title='命名のコツ'>
-        Enumの選択肢名は見た目ではなく<strong>意味</strong>で付けます。
-        例: &quot;Red&quot; ではなく &quot;Danger&quot;、&quot;Type1&quot; ではなく &quot;outlined&quot;
+        Enumの選択肢名は見た目ではなく<strong>意味</strong>で付けます。 例:
+        &quot;Red&quot; ではなく &quot;Danger&quot;、&quot;Type1&quot; ではなく
+        &quot;outlined&quot;
       </InfoBox>
 
       <SectionDivider />
@@ -1160,7 +1182,8 @@ const VariablesContent = () => {
                   lineHeight: 1.7,
                 }}>
                 {labelText === '' && 'テキストが空の場合どう見えるか？ '}
-                {badgeCount > 99 && '99を超えると「99+」表記に。上限のデザインが重要です。'}
+                {badgeCount > 99 &&
+                  '99を超えると「99+」表記に。上限のデザインが重要です。'}
               </Typography>
             )}
           </Grid>
@@ -1232,14 +1255,36 @@ const VariablesContent = () => {
               <Button variant='contained' size={orthoSize} color={orthoColor}>
                 ボタン
               </Button>
-              <Chip label='ステータス' color={orthoColor} size={orthoSize === 'large' ? 'medium' : 'small'} />
+              <Chip
+                label='ステータス'
+                color={orthoColor}
+                size={orthoSize === 'large' ? 'medium' : 'small'}
+              />
               <Avatar
                 sx={{
                   bgcolor: `${orthoColor}.main`,
-                  width: orthoSize === 'small' ? 32 : orthoSize === 'medium' ? 40 : 52,
-                  height: orthoSize === 'small' ? 32 : orthoSize === 'medium' ? 40 : 52,
+                  width:
+                    orthoSize === 'small'
+                      ? 32
+                      : orthoSize === 'medium'
+                        ? 40
+                        : 52,
+                  height:
+                    orthoSize === 'small'
+                      ? 32
+                      : orthoSize === 'medium'
+                        ? 40
+                        : 52,
                 }}>
-                <User size={orthoSize === 'small' ? 16 : orthoSize === 'medium' ? 20 : 26} />
+                <User
+                  size={
+                    orthoSize === 'small'
+                      ? 16
+                      : orthoSize === 'medium'
+                        ? 20
+                        : 26
+                  }
+                />
               </Avatar>
             </Box>
           </Grid>
@@ -1266,33 +1311,48 @@ const VariablesContent = () => {
               左アイコンを選ぶ
             </Typography>
             <Grid container spacing={1.5}>
-              {(Object.keys(slotIcons) as Array<keyof typeof slotIcons>).map((key) => (
-                <Grid size={{ xs: 3 }} key={key}>
-                  <Box
-                    onClick={() => setSlotIcon(key)}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      border: 2,
-                      borderColor: slotIcon === key ? 'primary.main' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                      bgcolor: slotIcon === key
-                        ? isDark ? 'rgba(38,66,190,0.15)' : 'rgba(38,66,190,0.06)'
-                        : 'transparent',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                      },
-                    }}>
-                    {slotIcons[key]}
-                  </Box>
-                </Grid>
-              ))}
+              {(Object.keys(slotIcons) as Array<keyof typeof slotIcons>).map(
+                (key) => (
+                  <Grid size={{ xs: 3 }} key={key}>
+                    <Box
+                      onClick={() => setSlotIcon(key)}
+                      sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        border: 2,
+                        borderColor:
+                          slotIcon === key
+                            ? 'primary.main'
+                            : isDark
+                              ? 'rgba(255,255,255,0.08)'
+                              : 'rgba(0,0,0,0.08)',
+                        bgcolor:
+                          slotIcon === key
+                            ? isDark
+                              ? 'rgba(38,66,190,0.15)'
+                              : 'rgba(38,66,190,0.06)'
+                            : 'transparent',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                        },
+                      }}>
+                      {slotIcons[key]}
+                    </Box>
+                  </Grid>
+                )
+              )}
             </Grid>
             <Typography
-              sx={{ mt: 2, fontSize: 12, color: 'text.secondary', lineHeight: 1.7 }}>
+              sx={{
+                mt: 2,
+                fontSize: 12,
+                color: 'text.secondary',
+                lineHeight: 1.7,
+              }}>
               バリアントを増やさず、スロットを入れ替えるだけで多様なUIを実現
             </Typography>
           </Grid>
@@ -1312,13 +1372,22 @@ const VariablesContent = () => {
                 gap: 2,
                 minHeight: 120,
               }}>
-              <Button variant='contained' startIcon={slotIcons[slotIcon]} sx={{ px: 3 }}>
+              <Button
+                variant='contained'
+                startIcon={slotIcons[slotIcon]}
+                sx={{ px: 3 }}>
                 アクション
               </Button>
-              <Button variant='outlined' startIcon={slotIcons[slotIcon]} sx={{ px: 3 }}>
+              <Button
+                variant='outlined'
+                startIcon={slotIcons[slotIcon]}
+                sx={{ px: 3 }}>
                 アクション
               </Button>
-              <Chip icon={<Box sx={{ display: 'flex' }}>{slotIcons[slotIcon]}</Box>} label='ラベル' />
+              <Chip
+                icon={<Box sx={{ display: 'flex' }}>{slotIcons[slotIcon]}</Box>}
+                label='ラベル'
+              />
             </Box>
           </Grid>
         </Grid>
@@ -1326,7 +1395,8 @@ const VariablesContent = () => {
 
       <InfoBox title='スロット設計のメリット'>
         「左アイコンあり」「右アイコンあり」とバリアントを増やす代わりに、
-        <strong>好きなアイコンを入れられる枠（スロット）</strong>を用意すればバリアント爆発を防げます。
+        <strong>好きなアイコンを入れられる枠（スロット）</strong>
+        を用意すればバリアント爆発を防げます。
       </InfoBox>
 
       <SectionDivider />
@@ -1355,7 +1425,11 @@ const VariablesContent = () => {
                 <Alert severity={semantic} sx={{ width: '100%', py: 0 }}>
                   Alert
                 </Alert>
-                <Button variant='outlined' color={semantic} size='small' fullWidth>
+                <Button
+                  variant='outlined'
+                  color={semantic}
+                  size='small'
+                  fullWidth>
                   Button
                 </Button>
               </Stack>
@@ -1370,7 +1444,8 @@ const VariablesContent = () => {
             color: 'text.secondary',
             lineHeight: 1.7,
           }}>
-          info / success / error の色をトークンで管理 → トークンを変えるだけでChip, Alert, Buttonの色が一括で変わる
+          info / success / error の色をトークンで管理 →
+          トークンを変えるだけでChip, Alert, Buttonの色が一括で変わる
         </Typography>
       </Box>
     </Box>
@@ -1541,7 +1616,7 @@ const StatesLayoutContent = () => {
 
       <SubSection title='サイジング: Fill / Hug / Fixed'>
         <SimpleTable
-          headers={['パターン', '動作', 'Figma', 'CSS', 'SDPF例']}
+          headers={['パターン', '動作', 'Figma', 'CSS', '例']}
           rows={[
             [
               'Fill',
@@ -1605,14 +1680,17 @@ const StatesLayoutContent = () => {
       </SubSection>
 
       <SubSection title='SVG色制御: currentColor'>
-        <Typography variant='body1' color='text.secondary' sx={{ mb: 3, lineHeight: 1.8 }}>
+        <Typography
+          variant='body1'
+          color='text.secondary'
+          sx={{ mb: 3, lineHeight: 1.8 }}>
           fill=&quot;#000&quot; ではなく <code>currentColor</code> を使う →
-          親のテキスト色に自動追従（ダークモード/ホバー自動対応）。
-          SDPFではlucide-reactを標準使用（全てcurrentColor対応済み）。
+          親のテキスト色に自動追従（ダークモード/ホバー自動対応）。 Kaze
+          UXではlucide-reactを標準使用（全てcurrentColor対応済み）。
         </Typography>
       </SubSection>
 
-      <InfoBox title='SDPF方針' color='success'>
+      <InfoBox title='Kaze UX方針' color='success'>
         アイコン: lucide-react + MUI Icons
         標準使用。独自SVGは最終手段。装飾画像は alt=&quot;&quot;
         でスクリーンリーダーから隠す。
@@ -1659,8 +1737,8 @@ interface UIStateArgs {
   showInteraction: boolean
 }
 
-/** ドローンステータス行 */
-const DroneRow = ({
+/** デバイスステータス行 */
+const DeviceRow = ({
   name,
   status,
   battery,
@@ -1697,7 +1775,12 @@ const DroneRow = ({
         },
       }}>
       {/* 接続インジケータ */}
-      <Box sx={{ mr: 2, display: 'flex', color: isActive ? 'success.main' : 'text.disabled' }}>
+      <Box
+        sx={{
+          mr: 2,
+          display: 'flex',
+          color: isActive ? 'success.main' : 'text.disabled',
+        }}>
         {isActive ? <Signal size={16} /> : <SignalZero size={16} />}
       </Box>
 
@@ -1730,7 +1813,11 @@ const DroneRow = ({
           />
           <Stack direction='row' spacing={0.5} alignItems='center'>
             <Box sx={{ color: batteryColor, display: 'flex' }}>
-              {battery > 20 ? <Battery size={14} /> : <BatteryWarning size={14} />}
+              {battery > 20 ? (
+                <Battery size={14} />
+              ) : (
+                <BatteryWarning size={14} />
+              )}
             </Box>
             <Typography
               variant='caption'
@@ -1748,10 +1835,22 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
   const stateConfig = {
-    Ideal: { color: 'success' as const, label: 'Ideal', desc: '全データ取得完了' },
+    Ideal: {
+      color: 'success' as const,
+      label: 'Ideal',
+      desc: '全データ取得完了',
+    },
     Empty: { color: 'info' as const, label: 'Empty', desc: 'データなし' },
-    Loading: { color: 'primary' as const, label: 'Loading', desc: '読み込み中...' },
-    Partial: { color: 'warning' as const, label: 'Partial', desc: '一部データ欠損' },
+    Loading: {
+      color: 'primary' as const,
+      label: 'Loading',
+      desc: '読み込み中...',
+    },
+    Partial: {
+      color: 'warning' as const,
+      label: 'Partial',
+      desc: '一部データ欠損',
+    },
     Error: { color: 'error' as const, label: 'Error', desc: '通信エラー' },
   }
   const cfg = stateConfig[state]
@@ -1834,7 +1933,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
           }}>
           <Stack direction='row' spacing={1.5} alignItems='center'>
             <Typography variant='body1' sx={{ fontWeight: 700 }}>
-              Drone Fleet
+              Device Fleet
             </Typography>
             <Chip
               icon={stateIcon[state]}
@@ -1863,7 +1962,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
           {state === 'Ideal' && (
             <Stack spacing={1}>
               {items.map((item) => (
-                <DroneRow key={item.name} {...item} />
+                <DeviceRow key={item.name} {...item} />
               ))}
             </Stack>
           )}
@@ -1885,7 +1984,12 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
                   />
                   <Skeleton variant='text' width={80} sx={{ flex: 0 }} />
                   <Box sx={{ flex: 1 }} />
-                  <Skeleton variant='rounded' width={60} height={24} sx={{ mr: 1 }} />
+                  <Skeleton
+                    variant='rounded'
+                    width={60}
+                    height={24}
+                    sx={{ mr: 1 }}
+                  />
                   <Skeleton variant='rounded' width={40} height={16} />
                 </Stack>
               ))}
@@ -1894,16 +1998,15 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
 
           {/* Empty: 空状態 */}
           {state === 'Empty' && (
-            <Stack
-              alignItems='center'
-              spacing={2}
-              sx={{ py: 5, px: 3 }}>
+            <Stack alignItems='center' spacing={2} sx={{ py: 5, px: 3 }}>
               <Box
                 sx={{
                   width: 56,
                   height: 56,
                   borderRadius: '50%',
-                  bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+                  bgcolor: isDark
+                    ? 'rgba(255,255,255,0.04)'
+                    : 'rgba(0,0,0,0.04)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1913,15 +2016,15 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
               </Box>
               <Stack alignItems='center' spacing={0.5}>
                 <Typography variant='body1' sx={{ fontWeight: 600 }}>
-                  ドローンが登録されていません
+                  デバイスが登録されていません
                 </Typography>
                 <Typography variant='body1' color='text.secondary'>
-                  フリートにドローンを追加して監視を開始してください
+                  デバイスを追加して監視を開始してください
                 </Typography>
               </Stack>
               <Chip
                 icon={<Plus size={14} />}
-                label='ドローンを追加'
+                label='デバイスを追加'
                 color='primary'
                 sx={{ cursor: 'pointer', fontWeight: 600, mt: 1 }}
               />
@@ -1931,9 +2034,14 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
           {/* Partial: 一部データ欠損 */}
           {state === 'Partial' && (
             <Stack spacing={1}>
-              <DroneRow {...items[0]} />
-              <DroneRow name={items[1].name} status='inactive' battery={0} failed />
-              <DroneRow {...items[2]} />
+              <DeviceRow {...items[0]} />
+              <DeviceRow
+                name={items[1].name}
+                status='inactive'
+                battery={0}
+                failed
+              />
+              <DeviceRow {...items[2]} />
               <Alert
                 severity='warning'
                 variant='outlined'
@@ -1945,16 +2053,15 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
 
           {/* Error: 通信エラー */}
           {state === 'Error' && (
-            <Stack
-              alignItems='center'
-              spacing={2}
-              sx={{ py: 5, px: 3 }}>
+            <Stack alignItems='center' spacing={2} sx={{ py: 5, px: 3 }}>
               <Box
                 sx={{
                   width: 56,
                   height: 56,
                   borderRadius: '50%',
-                  bgcolor: isDark ? 'rgba(244,67,54,0.08)' : 'rgba(244,67,54,0.06)',
+                  bgcolor: isDark
+                    ? 'rgba(244,67,54,0.08)'
+                    : 'rgba(244,67,54,0.06)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -2012,7 +2119,10 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
         variant='caption'
         color='text.secondary'
         sx={{ mt: 2, display: 'block', fontFamily: 'monospace' }}>
-        width: {typeof widthMap[sizing] === 'number' ? `${widthMap[sizing]}px` : widthMap[sizing]}
+        width:{' '}
+        {typeof widthMap[sizing] === 'number'
+          ? `${widthMap[sizing]}px`
+          : widthMap[sizing]}
         {showInteraction ? ' | hover: enabled' : ''}
       </Typography>
     </Box>

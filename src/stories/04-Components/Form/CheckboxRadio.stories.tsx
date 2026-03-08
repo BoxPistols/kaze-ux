@@ -58,9 +58,9 @@ const RadioDemo = () => {
 
   return (
     <FormControl>
-      <FormLabel>フライトモード</FormLabel>
+      <FormLabel>動作モード</FormLabel>
       <RadioGroup value={value} onChange={(e) => setValue(e.target.value)}>
-        <FormControlLabel value='auto' control={<Radio />} label='自動飛行' />
+        <FormControlLabel value='auto' control={<Radio />} label='自動実行' />
         <FormControlLabel value='manual' control={<Radio />} label='手動操作' />
         <FormControlLabel
           value='hover'

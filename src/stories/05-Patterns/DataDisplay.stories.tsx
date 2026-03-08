@@ -44,15 +44,15 @@ const meta: Meta = {
 export default meta
 
 // ===========================================================================
-// 共通モックデータ: ドローン一覧
+// 共通モックデータ: デバイス一覧
 // ===========================================================================
 
-/** ドローンデータの型定義 */
-interface DroneRecord {
+/** デバイスデータの型定義 */
+interface DeviceRecord {
   id: string
   name: string
   model: string
-  status: '飛行中' | '待機中' | 'メンテナンス'
+  status: '稼働中' | '待機中' | 'メンテナンス'
   battery: number
   location: string
   lastUpdated: string
@@ -60,10 +60,10 @@ interface DroneRecord {
 
 /** ステータスに対応するChipカラーを返す */
 function getStatusColor(
-  status: DroneRecord['status']
+  status: DeviceRecord['status']
 ): 'success' | 'info' | 'warning' {
-  const map: Record<DroneRecord['status'], 'success' | 'info' | 'warning'> = {
-    飛行中: 'success',
+  const map: Record<DeviceRecord['status'], 'success' | 'info' | 'warning'> = {
+    稼働中: 'success',
     待機中: 'info',
     メンテナンス: 'warning',
   }
@@ -78,78 +78,78 @@ function getBatteryColor(battery: number): string {
 }
 
 /** フィルターの選択肢 */
-const filterOptions = ['全て', '飛行中', '待機中', 'メンテナンス'] as const
+const filterOptions = ['全て', '稼働中', '待機中', 'メンテナンス'] as const
 type FilterOption = (typeof filterOptions)[number]
 
-/** モックデータ: 8件のドローンレコード */
-const droneRecords: DroneRecord[] = [
+/** モックデータ: 8件のデバイスレコード */
+const deviceRecords: DeviceRecord[] = [
   {
-    id: 'D-001',
-    name: 'スカイホーク1号',
-    model: 'Matrice 300 RTK',
-    status: '飛行中',
+    id: 'DEV-001',
+    name: 'センサーAlpha',
+    model: 'Model X-300',
+    status: '稼働中',
     battery: 82,
     location: '東京都江東区',
     lastUpdated: '2026-03-07 09:15',
   },
   {
-    id: 'D-002',
-    name: 'イーグルアイ',
-    model: 'Phantom 4 RTK',
+    id: 'DEV-002',
+    name: 'モニターBeta',
+    model: 'Model Y-400',
     status: '待機中',
     battery: 100,
     location: '千葉県幕張',
     lastUpdated: '2026-03-07 08:45',
   },
   {
-    id: 'D-003',
-    name: 'ウィンドランナー',
-    model: 'Mavic 3 Enterprise',
+    id: 'DEV-003',
+    name: 'トラッカーGamma',
+    model: 'Model Z-500',
     status: 'メンテナンス',
     battery: 45,
     location: '大阪府大阪市',
     lastUpdated: '2026-03-06 17:30',
   },
   {
-    id: 'D-004',
-    name: 'サーベイヤーX',
-    model: 'Matrice 350 RTK',
-    status: '飛行中',
+    id: 'DEV-004',
+    name: 'サーベイヤーDelta',
+    model: 'Model X-350',
+    status: '稼働中',
     battery: 67,
     location: '愛知県名古屋市',
     lastUpdated: '2026-03-07 10:02',
   },
   {
-    id: 'D-005',
-    name: 'パトロール3号',
-    model: 'Mavic 3 Thermal',
+    id: 'DEV-005',
+    name: 'パトロールEpsilon',
+    model: 'Model Y-450',
     status: '待機中',
     battery: 95,
     location: '福岡県福岡市',
     lastUpdated: '2026-03-07 07:20',
   },
   {
-    id: 'D-006',
-    name: 'ファルコン7号',
-    model: 'Inspire 3',
+    id: 'DEV-006',
+    name: 'スキャナーZeta',
+    model: 'Model W-600',
     status: 'メンテナンス',
     battery: 12,
     location: '北海道札幌市',
     lastUpdated: '2026-03-05 14:00',
   },
   {
-    id: 'D-007',
-    name: 'スイフトアルファ',
-    model: 'Matrice 300 RTK',
-    status: '飛行中',
+    id: 'DEV-007',
+    name: 'レシーバーEta',
+    model: 'Model X-300',
+    status: '稼働中',
     battery: 74,
     location: '神奈川県横浜市',
     lastUpdated: '2026-03-07 09:50',
   },
   {
-    id: 'D-008',
-    name: 'オブザーバーK',
-    model: 'Phantom 4 RTK',
+    id: 'DEV-008',
+    name: 'オブザーバーTheta',
+    model: 'Model Y-400',
     status: '待機中',
     battery: 88,
     location: '京都府京都市',
@@ -238,10 +238,10 @@ function SearchBar({
 
 /** 検索クエリとフィルターに基づいてレコードを絞り込む */
 function filterRecords(
-  records: DroneRecord[],
+  records: DeviceRecord[],
   searchQuery: string,
   activeFilter: FilterOption
-): DroneRecord[] {
+): DeviceRecord[] {
   return records.filter((record) => {
     // 機体名による検索フィルター
     const matchesSearch =
@@ -267,7 +267,7 @@ const SearchableTableContent = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
   /** フィルタリング済みデータ */
-  const filteredData = filterRecords(droneRecords, searchQuery, activeFilter)
+  const filteredData = filterRecords(deviceRecords, searchQuery, activeFilter)
 
   /** ページネーション適用済みデータ */
   const visibleRows = filteredData.slice(
@@ -419,7 +419,7 @@ const CardGridContent = () => {
   const [activeFilter, setActiveFilter] = useState<FilterOption>('全て')
 
   /** フィルタリング済みデータ */
-  const filteredData = filterRecords(droneRecords, searchQuery, activeFilter)
+  const filteredData = filterRecords(deviceRecords, searchQuery, activeFilter)
 
   /** 検索クエリ変更ハンドラ */
   const handleSearchChange = (value: string) => {

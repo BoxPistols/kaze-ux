@@ -56,80 +56,80 @@ const meta: Meta = {
 export default meta
 
 // ===========================================================================
-// ドローン関連の共通データ
+// デバイス関連の共通データ
 // ===========================================================================
 
-/** ドローン機種一覧 */
-const droneModels = [
-  { value: 'phantom4', label: 'Phantom 4 RTK' },
-  { value: 'mavic3', label: 'Mavic 3 Enterprise' },
-  { value: 'matrice300', label: 'Matrice 300 RTK' },
-  { value: 'matrice350', label: 'Matrice 350 RTK' },
-  { value: 'inspire3', label: 'Inspire 3' },
+/** デバイス機種一覧 */
+const deviceModels = [
+  { value: 'modelA', label: 'Model A Standard' },
+  { value: 'modelB', label: 'Model B Enterprise' },
+  { value: 'modelC', label: 'Model C Pro' },
+  { value: 'modelD', label: 'Model D Advanced' },
+  { value: 'modelE', label: 'Model E Lite' },
 ]
 
-/** 飛行目的 */
-const flightPurposes = [
+/** タスク目的 */
+const taskPurposes = [
   { value: 'inspection', label: '点検' },
-  { value: 'survey', label: '測量' },
+  { value: 'survey', label: '調査' },
   { value: 'monitoring', label: 'モニタリング' },
   { value: 'delivery', label: '配送' },
   { value: 'test', label: 'テスト' },
 ]
 
 // ===========================================================================
-// 1. BasicForm - フライト計画登録フォーム
+// 1. BasicForm - タスク計画登録フォーム
 // ===========================================================================
 
-interface FlightPlanFormState {
-  flightName: string
-  droneModel: string
+interface TaskPlanFormState {
+  taskName: string
+  deviceModel: string
   pilot: string
   departure: string
   destination: string
-  flightDate: string
-  flightTime: string
+  taskDate: string
+  taskTime: string
   purpose: string
   notes: string
 }
 
-const initialFlightPlan: FlightPlanFormState = {
-  flightName: '',
-  droneModel: '',
+const initialTaskPlan: TaskPlanFormState = {
+  taskName: '',
+  deviceModel: '',
   pilot: '',
   departure: '',
   destination: '',
-  flightDate: '',
-  flightTime: '',
+  taskDate: '',
+  taskTime: '',
   purpose: '',
   notes: '',
 }
 
 const BasicFormContent = () => {
-  const [form, setForm] = useState<FlightPlanFormState>(initialFlightPlan)
+  const [form, setForm] = useState<TaskPlanFormState>(initialTaskPlan)
 
   /** テキストフィールドの変更ハンドラ */
   const handleChange =
-    (field: keyof FlightPlanFormState) =>
+    (field: keyof TaskPlanFormState) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [field]: e.target.value }))
     }
 
   /** Selectの変更ハンドラ */
   const handleSelectChange =
-    (field: keyof FlightPlanFormState) => (e: SelectChangeEvent) => {
+    (field: keyof TaskPlanFormState) => (e: SelectChangeEvent) => {
       setForm((prev) => ({ ...prev, [field]: e.target.value }))
     }
 
   /** フォームリセット */
   const handleReset = () => {
-    setForm(initialFlightPlan)
+    setForm(initialTaskPlan)
   }
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto' }}>
       <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-        フライト計画登録フォーム
+        タスク計画登録フォーム
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
         Card内にGridレイアウトで配置したフォーム。
@@ -137,19 +137,19 @@ const BasicFormContent = () => {
       </Typography>
 
       <Card>
-        <CardHeader title='フライト計画登録' />
+        <CardHeader title='タスク計画登録' />
         <CardContent>
           <Box component='form' noValidate>
             <Grid container spacing={5}>
-              {/* フライト名 - 全幅 */}
+              {/* タスク名 - 全幅 */}
               <Grid size={{ xs: 12 }}>
                 <TextField
-                  label='フライト名'
+                  label='タスク名'
                   placeholder='例: 東京湾岸エリア定期点検'
                   required
                   fullWidth
-                  value={form.flightName}
-                  onChange={handleChange('flightName')}
+                  value={form.taskName}
+                  onChange={handleChange('taskName')}
                 />
               </Grid>
 
@@ -158,30 +158,28 @@ const BasicFormContent = () => {
                 <FormControl fullWidth required>
                   <InputLabel>使用機体</InputLabel>
                   <Select
-                    value={form.droneModel}
-                    onChange={handleSelectChange('droneModel')}
+                    value={form.deviceModel}
+                    onChange={handleSelectChange('deviceModel')}
                     displayEmpty>
                     <MenuItem value='' disabled>
                       <Typography color='text.secondary'>
                         機体を選択してください
                       </Typography>
                     </MenuItem>
-                    {droneModels.map((model) => (
+                    {deviceModels.map((model) => (
                       <MenuItem key={model.value} value={model.value}>
                         {model.label}
                       </MenuItem>
                     ))}
                   </Select>
-                  <FormHelperText>
-                    フライトに使用するドローン機体
-                  </FormHelperText>
+                  <FormHelperText>使用するデバイス機種</FormHelperText>
                 </FormControl>
               </Grid>
 
-              {/* パイロット */}
+              {/* 担当者 */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
-                  label='パイロット'
+                  label='担当者'
                   placeholder='例: 山田 太郎'
                   required
                   fullWidth
@@ -212,32 +210,32 @@ const BasicFormContent = () => {
                 />
               </Grid>
 
-              {/* 飛行予定日 | 飛行時間 */}
+              {/* 実施予定日 | 所要時間 */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
-                  label='飛行予定日'
+                  label='実施予定日'
                   type='date'
                   required
                   fullWidth
-                  value={form.flightDate}
-                  onChange={handleChange('flightDate')}
+                  value={form.taskDate}
+                  onChange={handleChange('taskDate')}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
-                  label='飛行時間'
+                  label='所要時間'
                   type='time'
                   required
                   fullWidth
-                  value={form.flightTime}
-                  onChange={handleChange('flightTime')}
+                  value={form.taskTime}
+                  onChange={handleChange('taskTime')}
                 />
               </Grid>
 
-              {/* 飛行目的 */}
+              {/* タスク目的 */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth required>
-                  <InputLabel>飛行目的</InputLabel>
+                  <InputLabel>タスク目的</InputLabel>
                   <Select
                     value={form.purpose}
                     onChange={handleSelectChange('purpose')}
@@ -247,7 +245,7 @@ const BasicFormContent = () => {
                         目的を選択してください
                       </Typography>
                     </MenuItem>
-                    {flightPurposes.map((purpose) => (
+                    {taskPurposes.map((purpose) => (
                       <MenuItem key={purpose.value} value={purpose.value}>
                         {purpose.label}
                       </MenuItem>
@@ -260,7 +258,7 @@ const BasicFormContent = () => {
               <Grid size={{ xs: 12 }}>
                 <TextField
                   label='備考'
-                  placeholder='フライトに関する補足情報を入力してください'
+                  placeholder='タスクに関する補足情報を入力してください'
                   multiline
                   rows={3}
                   fullWidth
@@ -285,7 +283,7 @@ const BasicFormContent = () => {
 }
 
 export const BasicForm: StoryObj = {
-  name: 'フライト計画登録',
+  name: 'タスク計画登録',
   render: () => <BasicFormContent />,
 }
 
@@ -300,7 +298,7 @@ interface NotificationSettings {
 }
 
 interface SafetySettings {
-  preflightCheck: boolean
+  safetyCheck: boolean
   weatherAutoCheck: boolean
   emergencyStopDialog: boolean
 }
@@ -321,7 +319,7 @@ const initialSettings: SettingsFormState = {
   theme: 'system',
   language: 'ja',
   safety: {
-    preflightCheck: true,
+    safetyCheck: true,
     weatherAutoCheck: true,
     emergencyStopDialog: false,
   },
@@ -474,17 +472,17 @@ const SettingsFormContent = () => {
                 安全設定
               </Typography>
               <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
-                フライト運用時の安全チェックに関する設定です。
+                運用時の安全チェックに関する設定です。
               </Typography>
               <Stack spacing={1}>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={settings.safety.preflightCheck}
-                      onChange={handleSafetyChange('preflightCheck')}
+                      checked={settings.safety.safetyCheck}
+                      onChange={handleSafetyChange('safetyCheck')}
                     />
                   }
-                  label='フライト前チェック必須'
+                  label='実行前チェック必須'
                 />
                 <FormControlLabel
                   control={
@@ -524,11 +522,11 @@ export const SettingsForm: StoryObj = {
 }
 
 // ===========================================================================
-// 3. InlineEditForm - 機体詳細（表示/編集切替）
+// 3. InlineEditForm - デバイス詳細（表示/編集切替）
 // ===========================================================================
 
-/** 機体詳細データの型 */
-interface DroneDetailData {
+/** デバイス詳細データの型 */
+interface DeviceDetailData {
   name: string
   serialNumber: string
   registrationDate: string
@@ -537,20 +535,20 @@ interface DroneDetailData {
 }
 
 /** 初期表示データ */
-const initialDroneDetail: DroneDetailData = {
-  name: 'Matrice 300 RTK',
-  serialNumber: 'DJI-M300-2024-00142',
+const initialDeviceDetail: DeviceDetailData = {
+  name: 'Model X-300 Pro',
+  serialNumber: 'KZ-X300-2024-00142',
   registrationDate: '2024-04-15',
   lastInspectionDate: '2025-02-28',
   status: '運用中',
 }
 
 /** フィールド定義（表示ラベルとキーのマッピング） */
-const droneDetailFields: {
-  key: keyof DroneDetailData
+const deviceDetailFields: {
+  key: keyof DeviceDetailData
   label: string
 }[] = [
-  { key: 'name', label: '機体名' },
+  { key: 'name', label: 'デバイス名' },
   { key: 'serialNumber', label: 'シリアル番号' },
   { key: 'registrationDate', label: '登録日' },
   { key: 'lastInspectionDate', label: '最終点検日' },
@@ -559,9 +557,9 @@ const droneDetailFields: {
 
 const InlineEditFormContent = () => {
   const [isEditing, setIsEditing] = useState(false)
-  const [data, setData] = useState<DroneDetailData>(initialDroneDetail)
+  const [data, setData] = useState<DeviceDetailData>(initialDeviceDetail)
   /** 編集開始時のバックアップ（キャンセル用） */
-  const [backup, setBackup] = useState<DroneDetailData>(initialDroneDetail)
+  const [backup, setBackup] = useState<DeviceDetailData>(initialDeviceDetail)
 
   /** 編集モードに切替 */
   const handleEdit = () => {
@@ -582,7 +580,7 @@ const InlineEditFormContent = () => {
 
   /** フィールド値の変更ハンドラ */
   const handleFieldChange =
-    (field: keyof DroneDetailData) =>
+    (field: keyof DeviceDetailData) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setData((prev) => ({ ...prev, [field]: e.target.value }))
     }
@@ -619,7 +617,7 @@ const InlineEditFormContent = () => {
         />
         <CardContent>
           <Stack spacing={3}>
-            {droneDetailFields.map((field) => (
+            {deviceDetailFields.map((field) => (
               <Box key={field.key}>
                 {isEditing ? (
                   <TextField

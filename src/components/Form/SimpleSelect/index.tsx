@@ -1,5 +1,5 @@
 // src/components/Form/SimpleSelect/index.tsx
-// sdpf-frontend-nextに準拠したシンプルなSelectコンポーネント
+// シンプルなSelectコンポーネント
 import {
   FormControl,
   InputLabel,

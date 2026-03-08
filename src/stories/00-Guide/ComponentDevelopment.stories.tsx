@@ -364,7 +364,7 @@ export const Default: Story = {
 │   │   ├── Dialog/
 │   │   └── ...
 │   ├── Form/              # フォームコンポーネント
-│   └── UTM/               # UTM固有コンポーネント
+│   └── Domain/            # ドメイン固有コンポーネント
 └── 05-Patterns/           # レイアウトパターン`}
       </CodeBlock>
 
@@ -437,18 +437,34 @@ import type { Meta, StoryObj } from '@storybook/react-vite'`}
       </Paper>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://mui.com/material-ui/getting-started/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/getting-started/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Getting Started
           </Link>
-          <Link href='https://storybook.js.org/docs/writing-stories' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://storybook.js.org/docs/writing-stories'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             Storybook Writing Stories
           </Link>
-          <Link href='https://react.dev/learn' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://react.dev/learn'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             React Documentation
           </Link>
         </Stack>

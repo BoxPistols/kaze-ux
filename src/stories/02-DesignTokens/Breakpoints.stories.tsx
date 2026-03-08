@@ -652,8 +652,8 @@ const TouchTargetsDemo = () => {
         タッチターゲットサイズ
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
-        ドローン操作環境を考慮した推奨タッチターゲットサイズ。
-        グローブ着用時や屋外での利用を想定しています。
+        業務操作環境を考慮した推奨タッチターゲットサイズ。
+        モバイルや屋外での利用を想定しています。
       </Typography>
       <Alert severity='warning' sx={{ mb: 5 }}>
         以下の円・正方形は実寸大で表示されています。ディスプレイの DPI

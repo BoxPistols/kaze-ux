@@ -1,89 +1,89 @@
-# AI開発ルール・ガイドライン (Single Source of Truth)
+# AI Development Rules & Guidelines / AI開発ルール・ガイドライン (Single Source of Truth)
 
-## AI開発モード開始通知
+## AI Development Mode Startup / AI開発モード開始通知
 
 ```text
-KDDI Smart Drone Platform UI Theme - AI開発アシスタントが起動しました
+Kaze UX Design System - AI Development Assistant activated
 
-【プロジェクト設定】
-- プロジェクト名: KDDI Smart Drone Platform UI Theme
-- 技術スタック: MUI v7, Tailwind CSS v3, TypeScript, React, Storybook
-- 開発ルール: このファイル「AI_DEVELOPMENT_RULES.md」が全てのルールの単一情報源(Source of Truth)です。
+Project Settings:
+- Project name: Kaze UX Design System
+- Tech stack: MUI v7, Tailwind CSS v3, TypeScript, React, Storybook
+- Development rules: This file "AI_DEVELOPMENT_RULES.md" is the Single Source of Truth for all rules.
 
-【必須確認事項】
-- ESLintエラーゼロでの実装
-- MUI v7 の新しいGrid APIの使用
-- TypeScript strict mode準拠
-- 既存パターンの踏襲
+Required Checks:
+- Zero ESLint errors
+- MUI v7 new Grid API usage
+- TypeScript strict mode compliance
+- Follow existing patterns
 
-【各AIツール向けドキュメント】
-- Claude: .claude/CLAUDE.md を参照
-- Cursor: .cursorrules を参照
-- その他AI: AGENTS.md を参照
+AI Tool References:
+- Claude: .claude/CLAUDE.md
+- Cursor: .cursorrules
+- Other AI: AGENTS.md
 
-型安全性とコンポーネント品質を重視した開発を開始します。
+Starting development with emphasis on type safety and component quality.
 ```
 
-## 1. プロジェクト概要
+## 1. Project Overview / プロジェクト概要
 
-KDDI Smart Drone Platform のUIコンポーネントライブラリ・デザインシステム開発。
+Kaze UX Design System - A UI component library and design system.
 
-### 1.1. 技術スタック
+### 1.1. Tech Stack / 技術スタック
 
 - **UI Framework**: MUI v7 (Material-UI)
 - **Styling**: Tailwind CSS v3
-- **Language**: TypeScript (strict mode必須)
+- **Language**: TypeScript (strict mode required)
 - **UI Library**: React
 - **Documentation**: Storybook
 - **Package Manager**: pnpm
 - **Linting/Formatting**: ESLint, Prettier
 
-### 1.2. プロジェクト構造
+### 1.2. Project Structure / プロジェクト構造
 
 ```bash
 src/
-├── components/     # 再利用可能なコンポーネント
-├── stories/        # Storybookストーリー
-├── themes/         # MUIテーマ設定
-├── types/          # TypeScript型定義
-└── utils/          # ユーティリティ関数
+├── components/     # Reusable components / 再利用可能なコンポーネント
+├── stories/        # Storybook stories / Storybookストーリー
+├── themes/         # MUI theme config / MUIテーマ設定
+├── types/          # TypeScript types / TypeScript型定義
+└── utils/          # Utilities / ユーティリティ関数
 ```
 
-## 2. 重要なコマンド
+## 2. Commands / 重要なコマンド
 
-| カテゴリ         | コマンド         | 説明                                         |
-| :--------------- | :--------------- | :------------------------------------------- |
-| **開発**         | `pnpm dev`       | 開発サーバーを起動します。                   |
-|                  | `pnpm storybook` | Storybookを起動します。                      |
-| **品質チェック** | `pnpm lint`      | ESLintルールに基づきコードをチェックします。 |
-|                  | `pnpm format`    | Prettierでコードをフォーマットします。       |
-|                  | `pnpm fix`       | lint + format を実行します。                 |
-| **ビルド**       | `pnpm build`     | 本番用のビルドを生成します。                 |
+| Category        | Command          | Description              |
+| :-------------- | :--------------- | :----------------------- |
+| **Development** | `pnpm dev`       | Start development server |
+|                 | `pnpm storybook` | Start Storybook          |
+| **Quality**     | `pnpm lint`      | Run ESLint               |
+|                 | `pnpm format`    | Run Prettier             |
+|                 | `pnpm fix`       | Run lint + format        |
+| **Build**       | `pnpm build`     | Production build         |
 
-## 3. 開発ルールとガイドライン
+## 3. Development Rules / 開発ルールとガイドライン
 
-### 3.1. 基本原則
+### 3.1. Core Principles / 基本原則
 
-1. **ESLint準拠**: エラーゼロが必須です。
-2. **型安全性の徹底**: TypeScriptの`strict`モードに準拠し、`any`型は原則禁止です。
-3. **コンポーネント再利用**: 新規作成の前に、既存コンポーネントがないか必ず確認します。
-4. **日本語優先**: ユーザー向けメッセージやコードコメントは日本語を基本とします。変数名・関数名は英語（camelCase）です。
-5. **絵文字の使用禁止**: AI生成コードおよびコメントでの絵文字使用は原則禁止です。
-6. **デフォルトブランチ**: プロジェクトのデフォルトブランチは `main` です。
+1. **ESLint compliance**: Zero errors required.
+2. **Type safety**: TypeScript strict mode, `any` type is prohibited.
+3. **Component reuse**: Always check for existing components before creating new ones.
+4. **Bilingual**: User-facing messages and code comments in Japanese. Variable/function names in English (camelCase).
+5. **No emoji**: Emoji usage is prohibited in AI-generated code and comments.
+6. **Default branch**: The default branch is `main`.
 
-### 3.2. MUI v7 コンポーネント実装規約
+### 3.2. MUI v7 Component Implementation / MUI v7 コンポーネント実装規約
 
-#### Grid コンポーネント
+#### Grid Component
 
-- **新しいAPI（必須）**: `<Grid size={{ xs: 12, sm: 6, md: 4 }}>`
-- **古いAPI（非推奨）**: `<Grid item xs={12} sm={6} md={4}>` は使用しない
+- **New API (required)**: `<Grid size={{ xs: 12, sm: 6, md: 4 }}>`
+- **Old API (deprecated)**: `<Grid item xs={12} sm={6} md={4}>` -- do not use
 
-#### コンポーネントのprops型定義
+#### Component Props Type Definitions / コンポーネントのprops型定義
 
-**🚨 重要: React.FC / FC / FunctionComponent の使用は完全に禁止されています**
+**IMPORTANT: React.FC / FC / FunctionComponent usage is completely prohibited**
 
 ```typescript
-// ✅ 良い例: 通常の関数定義と明確な型定義
+// Good: Plain function definition with explicit type
 interface UserCardProps {
   name: string
   email: string
@@ -92,422 +92,267 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ name, email, avatar, onEdit }: UserCardProps) => {
-  // 実装
   return null
 }
 
-// ❌ 悪い例1: React.FC の使用（禁止）
+// Bad: React.FC usage (PROHIBITED)
 import { FC } from 'react'
 export const UserCard: FC<UserCardProps> = ({ name, email }) => {
-  // React.FC は使用禁止
+  // React.FC is prohibited
 }
 
-// ❌ 悪い例2: any型の使用
+// Bad: any type usage
 export const UserCard = (props: any) => {
-  // any型は禁止
+  // any type is prohibited
 }
 ```
 
-**React.FC を使用してはいけない理由:**
+**Why React.FC should not be used:**
 
-- 暗黙的な children の型定義により意図しない props が受け入れられる
-- ジェネリック型の扱いに制約がある
-- React 18+ で defaultProps のサポートが限定的
-- React チームが React.FC の使用を推奨していない
+- Implicit children type allows unintended props
+- Limitations with generic types
+- Limited defaultProps support in React 18+
+- React team does not recommend React.FC
 
-**詳細は `.claude/skills/react-patterns/SKILL.md` を参照してください。**
+**See `.claude/skills/react-patterns/SKILL.md` for details.**
 
-### 3.3. 命名規則
+### 3.3. Naming Conventions / 命名規則
 
-- **ファイル名**: `camelCase` (例: `userCard.tsx`, `themeProvider.tsx`)
-- **コンポーネント名**: `PascalCase` (例: `export const UserCard`, `export const ThemeProvider`)
-- **Custom Hooks**: `use` + `PascalCase` (例: `useTheme`, `useBreakpoint`)
-- **イベントハンドラー**: `handle` + 動詞 (例: `handleClick`, `handleChange`)
+- **File names**: `camelCase` (e.g., `userCard.tsx`, `themeProvider.tsx`)
+- **Component names**: `PascalCase` (e.g., `UserCard`, `ThemeProvider`)
+- **Custom Hooks**: `use` + `PascalCase` (e.g., `useTheme`, `useBreakpoint`)
+- **Event handlers**: `handle` + verb (e.g., `handleClick`, `handleChange`)
 - **Boolean State**:
-  - 状態確認: `is` + 形容詞 (例: `isOpen`, `isActive`, `isLoading`)
-  - 所有確認: `has` + 名詞 (例: `hasError`, `hasData`)
-  - 可能性: `can` + 動詞 (例: `canSubmit`, `canEdit`)
-- **関数・変数**: `camelCase` (例: `getUserData`, `themeColors`)
-- **定数**: `UPPER_SNAKE_CASE` (例: `MAX_WIDTH`, `DEFAULT_THEME`)
+  - State check: `is` + adjective (e.g., `isOpen`, `isActive`, `isLoading`)
+  - Ownership: `has` + noun (e.g., `hasError`, `hasData`)
+  - Capability: `can` + verb (e.g., `canSubmit`, `canEdit`)
+- **Functions/variables**: `camelCase` (e.g., `getUserData`, `themeColors`)
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `MAX_WIDTH`, `DEFAULT_THEME`)
 
-### 3.4. コーディングスタイル
+### 3.4. Coding Style / コーディングスタイル
 
-- **インデント**: スペース2
-- **行長**: 最大100文字
-- **セミコロン**: 省略可（Prettierの設定に従う）
-- **クォート**: シングルクォート (`'`) 優先
-- **末尾カンマ**: オブジェクト・配列・TS型リストで必須
-- **インポート**: 絶対パスを使用し、深い階層の相対パス (`../../`) は避けます。
-- **関数**: アロー関数 (`const fn = () => {}`) を使用します。
-- **エクスポート**: `export const` を使用
+- **Indent**: 2 spaces
+- **Line length**: Max 100 characters
+- **Semicolons**: Omit (following Prettier config)
+- **Quotes**: Single quotes (`'`) preferred
+- **Trailing commas**: Required in objects, arrays, and TS type lists
+- **Imports**: Use absolute paths, avoid deep relative paths (`../../`)
+- **Functions**: Arrow functions (`const fn = () => {}`)
+- **Exports**: Use `export const`
 
-### 3.5. UI/UX開発指針
+### 3.5. UI/UX Guidelines / UI/UX開発指針
 
-- **デザインシステム**: MUI v7のテーマシステムとTailwind CSSを最大限活用します。
-- **スタイリング**: Tailwind CSSを優先し、カスタムCSSは最小限に留めます。
-- **アクセシビリティ**: 適切な`role`や`aria-*`属性を設定し、キーボード操作を保証します。
-- **レスポンシブデザイン**: モバイルファーストで設計し、すべてのブレークポイントで動作確認します。
+- **Design system**: Maximize use of MUI v7 theme system and Tailwind CSS.
+- **Styling**: Prefer Tailwind CSS, minimize custom CSS.
+- **Accessibility**: Set proper `role` and `aria-*` attributes, ensure keyboard navigation.
+- **Responsive design**: Mobile-first approach, verify all breakpoints.
 
-### 3.6. パフォーマンス最適化
+### 3.6. Performance Optimization / パフォーマンス最適化
 
-- **コンポーネント分割**: 大きなコンポーネントは小さく分割します。
-- **遅延ローディング**: 必要に応じて`React.lazy`を活用します。
-- **メモ化**: 高コストな計算は`useMemo`で、コールバックは`useCallback`でメモ化します。
+- **Component splitting**: Break large components into smaller ones.
+- **Lazy loading**: Use `React.lazy` where appropriate.
+- **Memoization**: Use `useMemo` for expensive computations, `useCallback` for callbacks.
 
-### 3.7. Storybook 実装規約
+### 3.7. Storybook Standards / Storybook 実装規約
 
-- **ストーリー配置**: コンポーネントと同じディレクトリに `ComponentName.stories.tsx` を配置
-- **バリエーション**: 主要な状態（デフォルト、ローディング、エラー等）のストーリーを用意
-- **ドキュメント**: コンポーネントの使用方法を明確に記述
-- **アクセシビリティチェック**: Storybook addon-a11yで確認
+- **Story placement**: Place `ComponentName.stories.tsx` in the same directory as the component
+- **Variations**: Provide stories for key states (default, loading, error, etc.)
+- **Documentation**: Clearly describe component usage
+- **Accessibility**: Verify with Storybook addon-a11y
 
-### 3.8. 避けるべきアンチパターン
+### 3.8. Anti-Patterns to Avoid / 避けるべきアンチパターン
 
-- **🚨 `React.FC` / `FC` の使用**: 完全に禁止（ESLintでエラーになります）
-- **`any`型の使用**: 基本的に禁止。使用する際は理由をコメントで明記
-- **インラインスタイル**: Tailwind CSSまたはMUIのsx propを使用
-- **console.logの残存**: デバッグ用のconsole.logはコミットしない
-- **深いネスト**: コンポーネントのネストは最大4レベルまで
+- **`React.FC` / `FC` usage**: Completely prohibited (ESLint error)
+- **`any` type usage**: Prohibited. If unavoidable, add a comment explaining why
+- **Inline styles**: Use Tailwind CSS or MUI sx prop
+- **console.log remnants**: Do not commit debug console.log
+- **Deep nesting**: Max 4 levels of component nesting
 
-## 4. ワークフロー
+## 4. Workflow / ワークフロー
 
-### 4.1. 開発フローのチェックリスト
+### 4.1. Development Checklist / 開発フローのチェックリスト
 
-- **実装前**:
-  - [ ] 既存コンポーネントに類似機能がないか確認
-  - [ ] デザインシステムのトークンを確認
-- **実装中**:
-  - [ ] TypeScriptの`strict`モードに準拠
-  - [ ] アクセシビリティを考慮
-  - [ ] レスポンシブデザインを実装
-- **実装後**:
-  - [ ] `pnpm lint`でエラーがないことを確認
-  - [ ] Storybookストーリーを作成
-  - [ ] アクセシビリティチェックを実施
+- **Before implementation**:
+  - [ ] Check for existing similar components
+  - [ ] Review design system tokens
+- **During implementation**:
+  - [ ] TypeScript strict mode compliance
+  - [ ] Accessibility considerations
+  - [ ] Responsive design implementation
+- **After implementation**:
+  - [ ] Verify zero `pnpm lint` errors
+  - [ ] Create Storybook stories
+  - [ ] Run accessibility checks
 
-### 4.2. プルリクエストのガイドライン
+### 4.2. Pull Request Guidelines / プルリクエストのガイドライン
 
-- **PR作成前**: `pnpm lint`と`pnpm build`が成功することを確認
-- **コミットメッセージ**: 日本語でConventional Commits形式に従う
-  - 例: `feat: ユーザーカードコンポーネント追加`
-  - 例: `fix: テーマカラーの型定義を修正`
-  - 例: `docs: Storybookドキュメント更新`
-- **Claudeのクレジット禁止**: コミットメッセージに「Generated with Claude Code」等を含めない
-- **絵文字禁止**: コミットメッセージで絵文字を使用しない
+- **Before PR**: Verify `pnpm lint` and `pnpm build` succeed
+- **Commit messages**: Follow Conventional Commits format
+  - Example: `feat: add user card component`
+  - Example: `fix: correct theme color type definition`
+  - Example: `docs: update Storybook documentation`
+- **No emoji**: Do not use emoji in commit messages
 
-## 5. AI駆動開発プロセス
+## 5. AI-Driven Development / AI駆動開発プロセス
 
-### 5.1. AI統合開発の基本原則
+### 5.1. Core Principles / AI統合開発の基本原則
 
-すべてのAIエージェント（Claude、Cursor等）は以下のプロセスに従って作業を進めてください：
+All AI agents (Claude, Cursor, etc.) should follow this process:
 
-#### タスク分析と計画
+#### Task Analysis and Planning / タスク分析と計画
 
-1. **指示の分析**: 主要なタスクを簡潔に要約
-2. **ルール確認**: このAI_DEVELOPMENT_RULES.mdを必ずチェック
-3. **要件と制約の特定**: 重要な要件と制約を特定
-4. **実行計画**: 具体的なステップと最適な実行順序を決定
+1. **Analyze instructions**: Summarize the main task concisely
+2. **Check rules**: Always review this AI_DEVELOPMENT_RULES.md
+3. **Identify requirements**: Identify key requirements and constraints
+4. **Execution plan**: Determine concrete steps and optimal execution order
 
-#### 重複実装の防止
+#### Preventing Duplicate Implementation / 重複実装の防止
 
-実装前に以下の確認を行ってください：
+Before implementation, verify:
 
-- 既存の類似コンポーネントの有無
-- 同名または類似名の関数やコンポーネント
-- 共通化可能な処理の特定
+- Existence of similar components
+- Same or similar function/component names
+- Opportunities for shared/common logic
 
-#### 品質管理と問題対応
+#### Quality Management / 品質管理と問題対応
 
-- 各タスクの実行結果を迅速に検証
-- エラーや不整合が発生した場合の対応プロセス
-- Lintエラーの確認と修正
+- Verify execution results promptly
+- Follow error/inconsistency resolution process
+- Check and fix lint errors
 
-#### 最終確認と報告
+#### Final Review / 最終確認と報告
 
-- 成果物全体の評価
-- 当初の指示内容との整合性確認
-- 実装機能の重複確認
+- Evaluate overall deliverables
+- Verify alignment with original instructions
+- Check for duplicate implementations
 
-### 5.2. 重要な制約事項
+### 5.2. Constraints / 重要な制約事項
 
-- **明示的指示以外の変更禁止**: 指示されていない変更は提案として報告し、承認後に実施
-- **デザイン変更の制限**: レイアウト・色・フォント・間隔等の変更は原則禁止
-- **技術スタック固定**: MUI v7、Tailwind CSS v3等のバージョンを勝手に変更しない
+- **No unauthorized changes**: Report unasked changes as proposals, implement after approval
+- **Design change restrictions**: Layout, color, font, spacing changes are prohibited by default
+- **Fixed tech stack**: Do not change MUI v7, Tailwind CSS v3 versions without approval
 
-### 5.3. パッケージ管理ルール
+### 5.3. Package Management / パッケージ管理ルール
 
-**pnpm専用**: npmコマンドは使用禁止
+**pnpm only**: npm commands are prohibited
 
-- **依存関係の追加**: `pnpm add <package>`
-- **依存関係のインストール**: `pnpm install`
-- **禁止事項**: `npm install`や`npm`コマンドの使用、`package-lock.json`の作成
+- **Add dependency**: `pnpm add <package>`
+- **Install dependencies**: `pnpm install`
+- **Prohibited**: `npm install`, `npm` commands, creating `package-lock.json`
 
 ## 6. Claude Code Skills
 
-このプロジェクトには以下のカスタムSkillsが設定されています：
+This project has the following custom Skills:
 
-### 利用可能なSkills
+### Available Skills / 利用可能なSkills
 
-1. **🚨 react-patterns** - Reactコンポーネント実装パターン（最重要）
-   - **React.FC完全禁止ルール**
-   - 推奨される代替パターン
-   - TypeScript型定義のベストプラクティス
-   - パフォーマンス最適化パターン
+1. **react-patterns** - React component implementation patterns (critical)
+   - React.FC prohibition rules
+   - Recommended alternative patterns
+   - TypeScript type definition best practices
+   - Performance optimization patterns
 
-2. **mui-v7-component** - MUI v7コンポーネント作成ガイド
-   - 新しいGrid APIの使用
-   - TypeScript型定義（React.FC不使用）
-   - Tailwind CSS統合
-   - レスポンシブデザイン対応
+2. **mui-v7-component** - MUI v7 component creation guide
+   - New Grid API usage
+   - TypeScript type definitions (no React.FC)
+   - Tailwind CSS integration
+   - Responsive design
 
-3. **storybook-story** - Storybookストーリー作成ガイド
-   - ストーリー構成
-   - バリエーション定義
-   - ドキュメント作成
-   - アクセシビリティチェック
+3. **storybook-story** - Storybook story creation guide
+   - Story structure
+   - Variation definitions
+   - Documentation
+   - Accessibility checks
 
-4. **theme-customization** - テーマカスタマイズガイド
-   - カラーパレット設定
-   - タイポグラフィ設定
-   - ブレークポイント定義
-   - コンポーネントスタイルカスタマイズ
+4. **theme-customization** - Theme customization guide
+   - Color palette settings
+   - Typography settings
+   - Breakpoint definitions
+   - Component style customization
 
-Skillsは自動的に起動されます。詳細は`.claude/skills/`ディレクトリを参照してください。
+Skills are activated automatically. See `.claude/skills/` directory for details.
 
-## 7. AIエージェントへの特別指示
+## 7. AI Agent Instructions / AIエージェントへの特別指示
 
-### Claude向け
+### For Claude
 
-- 包括的なコンポーネント実装を生成する
-- TypeScript型定義を厳密に行う
-- Storybookストーリーも同時生成する
-- アクセシビリティを考慮した実装
+- Generate comprehensive component implementations
+- Strictly define TypeScript types
+- Generate Storybook stories alongside components
+- Implement with accessibility in mind
 
-### Cursor向け
+### For Cursor
 
-- インライン補完を優先
-- 既存パターンを学習して提案
-- MUI v7の新しいAPIを使用
+- Prioritize inline completion
+- Learn from existing patterns
+- Use MUI v7 new API
 
-### その他のAI向け
+### For Other AI
 
-- このAI_DEVELOPMENT_RULES.mdを必ず参照
-- 絵文字使用禁止を徹底
-- 日本語コメント、英語コードを遵守
+- Always reference this AI_DEVELOPMENT_RULES.md
+- Strictly enforce no-emoji rule
+- Follow Japanese comments, English code convention
 
-## 8. CI/CD と AI レビュー設定
+## 8. CI/CD and AI Review / CI/CD と AI レビュー設定
 
-### 8.1. 自動品質チェック
+### 8.1. Automated Quality Checks / 自動品質チェック
 
-PR作成時に以下のチェックが自動実行されます：
+The following checks run automatically on PR creation:
 
-| ワークフロー          | 実行内容                                                   |
-| :-------------------- | :--------------------------------------------------------- |
-| `quality-check.yml`   | ESLint、TypeCheck、テスト実行、Storybookビルド             |
-| `ai-review.yml`       | プロジェクトルールチェック、AI（OpenAI）レビュー           |
-| `gemini-dispatch.yml` | Gemini AIによる自動レビュー（PRオープン時 + 手動トリガー） |
-| `ci.yml`              | ビルド確認、Storybookビルド                                |
+| Workflow            | Description                               |
+| :------------------ | :---------------------------------------- |
+| `quality-check.yml` | ESLint, TypeCheck, tests, Storybook build |
+| `ci.yml`            | Build verification, Storybook build       |
 
-### 8.2. AI レビュー機能
+### 8.2. AI Review Features / AI レビュー機能
 
-#### プロジェクトルールチェック（自動実行）
+#### Project Rule Check (automatic) / プロジェクトルールチェック
 
-以下の項目を自動的にチェックします：
+The following items are checked automatically:
 
-- 🚨 **`React.FC` / `FC` / `FunctionComponent` の使用（最重要）**
-- `any`型の使用
-- 古いMUI Grid API（`Grid item`）の使用
-- `console.log`の残存（テスト・ストーリーファイル除く）
-- 絵文字の使用
+- **`React.FC` / `FC` / `FunctionComponent` usage (critical)**
+- `any` type usage
+- Old MUI Grid API (`Grid item`) usage
+- `console.log` remnants (excluding test/story files)
+- Emoji usage
 
-#### OpenAI レビュー（オプション）
-
-有効化するには以下のSecretsとVariablesを設定してください：
-
-```bash
-# GitHub Repository Settings > Secrets and variables > Actions
-
-# Secrets
-OPENAI_API_KEY=sk-xxx      # OpenAI APIキー
-
-# Variables
-ENABLE_AI_REVIEW=true      # OpenAIレビュー有効化
-```
-
-#### Gemini レビュー（推奨）
-
-**プロジェクト固有のルールに特化した高精度レビュー**
-
-Gemini AIによる自動コードレビュー機能が利用可能です。OpenAIレビューとは異なり、以下の特徴があります：
-
-**特徴:**
-
-- 🚨 **React.FC禁止**、**MUI v7新API**などプロジェクト固有ルールを最優先でチェック
-- 📝 **日本語でのレビューコメント**で開発者に分かりやすいフィードバック
-- 🎯 **重要度レベル付きコメント**（🔴 Critical、🟠 High、🟡 Medium、🟢 Low）
-- 💡 **コード提案機能**でsuggestionブロックによる修正案を提示
-- 🔄 **自動 + 手動トリガー**でPRオープン時の自動実行と`@gemini-cli`による手動実行が可能
-
-**使用方法:**
-
-1. **自動レビュー**: PRを開くと自動的に実行
-2. **手動レビュー**: PRコメントで`@gemini-cli /review`を実行
-
-**セットアップ:**
-
-```bash
-# GitHub Repository Settings > Secrets and variables > Actions
-
-# Secrets（必須）
-GEMINI_API_KEY=<your-api-key>  # Google AI Studioで取得
-
-# Variables（オプション）
-GEMINI_MODEL=gemini-2.0-flash-exp  # 使用するモデル
-GEMINI_DEBUG=false                  # デバッグモードの有効化
-```
-
-**詳細なセットアップ手順:**
-
-詳細は [.claude/GEMINI_SETUP_GUIDE.md](.claude/GEMINI_SETUP_GUIDE.md) を参照してください。
-
-**OpenAI vs Gemini 比較:**
-
-| 項目           | OpenAI Review      | Gemini Review              |
-| :------------- | :----------------- | :------------------------- |
-| **重点**       | 一般的なコード品質 | プロジェクト固有ルール     |
-| **トリガー**   | 自動のみ           | 自動 + 手動                |
-| **言語**       | 英語               | 日本語                     |
-| **コード提案** | なし               | あり（suggestionブロック） |
-| **重要度表示** | なし               | あり（🔴🟠🟡🟢）           |
-
-**推奨**: 両方を有効化して多角的なレビューを実現することを推奨します。
-
-### 8.3. GitHub Copilot 設定
+### 8.3. GitHub Copilot Settings / GitHub Copilot 設定
 
 #### Copilot Instructions
 
-`.github/copilot-instructions.md`にプロジェクト固有の指示が記載されています。
+Project-specific instructions are in `.github/copilot-instructions.md`.
 
-#### Copilot 除外設定
+#### Copilot Exclusions
 
-`.copilotignore`に以下のファイルが除外設定されています：
+`.copilotignore` excludes the following:
 
-- 依存関係（`node_modules/`）
-- ビルド成果物（`dist/`, `build/`）
-- 環境設定ファイル（`.env*`）
-- 自動生成ファイル（`*.min.js`, `*.d.ts`）
+- Dependencies (`node_modules/`)
+- Build artifacts (`dist/`, `build/`)
+- Environment files (`.env*`)
+- Auto-generated files (`*.min.js`, `*.d.ts`)
 
-### 8.4. レビュー設定ファイル
+### 8.4. Multi-AI Agent System / マルチAIエージェント活用
 
-`.github/ai-review-config.json`でレビュー設定をカスタマイズできます：
+| AI Agent       | Role                       | Config File                       |
+| :------------- | :------------------------- | :-------------------------------- |
+| Claude Code    | Main development assistant | `.claude/CLAUDE.md`               |
+| GitHub Copilot | IDE code completion        | `.github/copilot-instructions.md` |
+| Cursor         | Refactoring & type fixes   | `.cursorrules`                    |
 
-```json
-{
-  "rules": {
-    "typescript": {
-      "noAnyType": { "enabled": true, "severity": "error" }
-    },
-    "mui": {
-      "useNewGridApi": { "enabled": true, "severity": "error" }
-    }
-  }
-}
-```
+## 9. Troubleshooting / トラブルシューティング
 
-### 8.5. マルチAIエージェント活用
+| Issue                     | Solution                                     |
+| :------------------------ | :------------------------------------------- |
+| **Type errors**           | Check TypeScript strict mode settings        |
+| **Lint errors**           | Run `pnpm lint:fix` for auto-fix             |
+| **Storybook won't start** | Run `pnpm install` to reinstall dependencies |
+| **Build failures**        | Check `pnpm build` error messages            |
 
-| AIエージェント     | 役割                     | 設定ファイル                      |
-| :----------------- | :----------------------- | :-------------------------------- |
-| Claude Code        | メイン開発アシスタント   | `.claude/CLAUDE.md`               |
-| GitHub Copilot     | IDE内コード補完          | `.github/copilot-instructions.md` |
-| Cursor             | リファクタリング・型修正 | `.cursorrules`                    |
-| OpenAI (PR Review) | PRコードレビュー         | `.github/ai-review-config.json`   |
-
-### 8.6. AI 自動修正機能
-
-PRのコメントに以下のコマンドを入力すると、AIによる自動修正が実行されます。
-
-#### 利用可能なコマンド
-
-| コマンド            | 説明                             |
-| :------------------ | :------------------------------- |
-| `/fix all`          | 全ての問題を自動修正             |
-| `/fix typescript`   | TypeScript型エラーを自動修正     |
-| `/fix lint`         | ESLint/Prettierで自動修正        |
-| `/fix security`     | セキュリティ脆弱性を修正         |
-| `/fix performance`  | パフォーマンス問題を分析・報告   |
-| `/resolve-conflict` | マージコンフリクトをAIで自動解決 |
-
-#### 自動修正の対象
-
-**TypeScript型修正 (`/fix typescript`)**
-
-- `any`型の適切な型への置換
-- 型の不整合の修正
-- missing property エラーの修正
-- 型アサーションの改善
-
-**Lint修正 (`/fix lint`)**
-
-- ESLint自動修正可能なエラー
-- Prettierフォーマット
-- import順序の整理
-- 未使用変数の警告
-
-**セキュリティ修正 (`/fix security`)**
-
-- 依存関係の脆弱性更新（pnpm audit --fix）
-- 危険なパターンの検出・警告
-
-**パフォーマンス分析 (`/fix performance`)**
-
-- useEffect依存配列の問題検出
-- インラインオブジェクト生成の検出
-- メモ化欠如の指摘
-
-**コンフリクト解決 (`/resolve-conflict`)**
-
-- AIによるマージコンフリクトの自動解決
-- 両方の変更を統合した解決案の生成
-- 手動解決が必要な場合の通知
-
-#### 自動修正の有効化
-
-```bash
-# GitHub Repository Settings > Secrets and variables > Actions
-
-# Secrets（必須）
-OPENAI_API_KEY=sk-xxx    # OpenAI APIキー（GPT-4oを使用）
-```
-
-#### ワークフロー構成
-
-```
-ai-review.yml          → 問題検出・レビュー → 自動修正コマンド提示
-      ↓
-ai-auto-fix.yml        → /fix コマンド検出 → AI自動修正実行
-      ↓
-conflict-resolver.yml  → コンフリクト検出 → AI自動解決
-```
-
-## 9. トラブルシューティング
-
-| 問題                      | 対処法                                                 |
-| :------------------------ | :----------------------------------------------------- |
-| **型エラーが発生する**    | TypeScript strict modeの設定を確認してください。       |
-| **Lintエラーが出る**      | `pnpm lint:fix`で自動修正を試してください。            |
-| **Storybookが起動しない** | `pnpm install`で依存関係を再インストールしてください。 |
-| **ビルドが失敗する**      | `pnpm build`のエラーメッセージを確認してください。     |
-
-## 10. 参考資料
+## 10. References / 参考資料
 
 - [MUI v7 Documentation](https://mui.com/material-ui/)
 - [MUI Grid Documentation](https://mui.com/material-ui/react-grid/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Storybook Documentation](https://storybook.js.org/docs)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/)
-- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
-- [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
-- [Claude Code MCP Documentation](https://code.claude.com/docs/en/mcp)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [GitHub Copilot Documentation](https://docs.github.com/en/copilot)

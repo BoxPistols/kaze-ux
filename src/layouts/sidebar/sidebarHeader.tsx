@@ -24,7 +24,7 @@ interface SidebarHeaderProps {
 
 /**
  * ロゴコンポーネント
- * SDPFのテキストベースロゴを表示
+ * Kaze UXのテキストベースロゴを表示
  */
 export const Logo = ({ size = 24 }: { size?: number }) => {
   return (
@@ -45,7 +45,7 @@ export const Logo = ({ size = 24 }: { size?: number }) => {
         fontWeight: 'bold',
         letterSpacing: '-0.5px',
       }}>
-      SD
+      KU
     </Box>
   )
 }

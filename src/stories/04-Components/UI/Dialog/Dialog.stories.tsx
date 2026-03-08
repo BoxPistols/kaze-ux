@@ -55,7 +55,7 @@ export const ConfirmDialogPlayground: StoryObj = {
     confirmText: { control: 'text' },
     cancelText: { control: 'text' },
   },
-  render: (args) => {
+  render: (args: Record<string, unknown>) => {
     const Demo = () => {
       const [open, setOpen] = useState(false)
       return (
@@ -105,7 +105,7 @@ export const FormDialogPlayground: StoryObj = {
     submitText: { control: 'text' },
     cancelText: { control: 'text' },
   },
-  render: (args) => {
+  render: (args: Record<string, unknown>) => {
     const Demo = () => {
       const [open, setOpen] = useState(false)
       return (

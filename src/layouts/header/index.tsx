@@ -41,7 +41,7 @@ export const Header = ({ toggleDrawer, open }: HeaderProps) => {
             fontSize: '1.25rem',
             flexGrow: 1,
           }}>
-          Theme Sandbox - SDPF
+          Theme Sandbox - Kaze UX
         </Typography>
       </Toolbar>
     </AppBar>

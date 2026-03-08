@@ -1,7 +1,7 @@
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import BatteryFullIcon from '@mui/icons-material/BatteryFull'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import FlightIcon from '@mui/icons-material/Flight'
 import FolderIcon from '@mui/icons-material/Folder'
 import InboxIcon from '@mui/icons-material/Inbox'
 import PersonIcon from '@mui/icons-material/Person'
@@ -78,10 +78,10 @@ const BasicContent = () => (
           </Typography>
           <List>
             <ListItem>
-              <ListItemText primary='フライトプラン一覧' />
+              <ListItemText primary='プラン一覧' />
             </ListItem>
             <ListItem>
-              <ListItemText primary='機体管理' />
+              <ListItemText primary='デバイス管理' />
             </ListItem>
             <ListItem>
               <ListItemText
@@ -146,7 +146,7 @@ const BasicContent = () => (
           </Typography>
           <List>
             {[
-              { name: '田中太郎', role: 'パイロット', initial: 'T' },
+              { name: '田中太郎', role: 'オペレーター', initial: 'T' },
               { name: '鈴木花子', role: 'オペレーター', initial: 'S' },
               { name: '佐藤次郎', role: 'マネージャー', initial: 'J' },
             ].map((user) => (
@@ -175,9 +175,9 @@ const InteractiveContent = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const menuItems = [
-    { icon: <FlightIcon />, label: 'フライト管理', badge: 3 },
-    { icon: <PersonIcon />, label: 'パイロット一覧', badge: 0 },
-    { icon: <BatteryFullIcon />, label: '機体ステータス', badge: 1 },
+    { icon: <AssignmentIcon />, label: 'タスク管理', badge: 3 },
+    { icon: <PersonIcon />, label: 'メンバー一覧', badge: 0 },
+    { icon: <BatteryFullIcon />, label: 'デバイスステータス', badge: 1 },
     { icon: <SettingsIcon />, label: '設定', badge: 0 },
   ]
 
@@ -223,12 +223,12 @@ const InteractiveContent = () => {
             </Box>
             <List disablePadding>
               {[
-                { name: 'Drone-Alpha', status: '運航中' },
-                { name: 'Drone-Beta', status: '待機中' },
-                { name: 'Drone-Gamma', status: 'メンテナンス' },
-              ].map((drone) => (
+                { name: 'Device-Alpha', status: '稼働中' },
+                { name: 'Device-Beta', status: '待機中' },
+                { name: 'Device-Gamma', status: 'メンテナンス' },
+              ].map((device) => (
                 <ListItem
-                  key={drone.name}
+                  key={device.name}
                   secondaryAction={
                     <Stack direction='row' spacing={0.5}>
                       <IconButton size='small' aria-label='編集'>
@@ -243,16 +243,19 @@ const InteractiveContent = () => {
                     <Avatar
                       sx={{
                         bgcolor:
-                          drone.status === '運航中'
+                          device.status === '稼働中'
                             ? 'success.main'
-                            : drone.status === '待機中'
+                            : device.status === '待機中'
                               ? 'info.main'
                               : 'warning.main',
                       }}>
-                      <FlightIcon fontSize='small' />
+                      <AssignmentIcon fontSize='small' />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={drone.name} secondary={drone.status} />
+                  <ListItemText
+                    primary={device.name}
+                    secondary={device.status}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -272,7 +275,7 @@ export const Interactive: StoryObj = {
 
 const SettingsContent = () => {
   const [settings, setSettings] = useState({
-    autoFlight: true,
+    autoRun: true,
     geoFence: true,
     weatherAlert: false,
     darkMode: false,
@@ -292,14 +295,14 @@ const SettingsContent = () => {
         <List disablePadding>
           <ListItem>
             <ListItemText
-              primary='自動飛行モード'
-              secondary='ウェイポイントに基づく自動操縦を有効化'
+              primary='自動実行モード'
+              secondary='スケジュールに基づく自動実行を有効化'
             />
             <ListItemSecondaryAction>
               <Switch
                 edge='end'
-                checked={settings.autoFlight}
-                onChange={() => handleToggle('autoFlight')}
+                checked={settings.autoRun}
+                onChange={() => handleToggle('autoRun')}
               />
             </ListItemSecondaryAction>
           </ListItem>
@@ -307,7 +310,7 @@ const SettingsContent = () => {
           <ListItem>
             <ListItemText
               primary='ジオフェンス'
-              secondary='飛行禁止区域の境界警告を有効化'
+              secondary='制限区域の境界警告を有効化'
             />
             <ListItemSecondaryAction>
               <Switch

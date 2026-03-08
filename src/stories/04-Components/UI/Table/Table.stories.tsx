@@ -44,62 +44,62 @@ const meta: Meta<typeof Table> = {
 
 export default meta
 
-interface DroneData {
+interface DeviceData {
   id: string
   name: string
   model: string
-  status: '飛行中' | '待機中' | 'メンテナンス' | 'オフライン'
+  status: '稼働中' | '待機中' | 'メンテナンス' | 'オフライン'
   battery: number
   location: string
 }
 
 const statusColorMap: Record<
-  DroneData['status'],
+  DeviceData['status'],
   'success' | 'info' | 'warning' | 'default'
 > = {
-  飛行中: 'success',
+  稼働中: 'success',
   待機中: 'info',
   メンテナンス: 'warning',
   オフライン: 'default',
 }
 
-const droneRows: DroneData[] = [
+const deviceRows: DeviceData[] = [
   {
-    id: 'D-001',
-    name: 'スカイホーク1号',
-    model: 'Matrice 300 RTK',
-    status: '飛行中',
+    id: 'DEV-001',
+    name: 'センサーAlpha',
+    model: 'Model X-300',
+    status: '稼働中',
     battery: 82,
     location: '東京都江東区',
   },
   {
-    id: 'D-002',
-    name: 'イーグルアイ',
-    model: 'Phantom 4 RTK',
+    id: 'DEV-002',
+    name: 'モニターBeta',
+    model: 'Model Y-400',
     status: '待機中',
     battery: 100,
     location: '千葉県幕張',
   },
   {
-    id: 'D-003',
-    name: 'ウィンドランナー',
-    model: 'Mavic 3 Enterprise',
+    id: 'DEV-003',
+    name: 'トラッカーGamma',
+    model: 'Model Z-500',
     status: 'メンテナンス',
     battery: 45,
     location: '大阪府大阪市',
   },
   {
-    id: 'D-004',
-    name: 'サーベイヤーX',
-    model: 'Matrice 350 RTK',
-    status: '飛行中',
+    id: 'DEV-004',
+    name: 'サーベイヤーDelta',
+    model: 'Model X-350',
+    status: '稼働中',
     battery: 67,
     location: '愛知県名古屋市',
   },
   {
-    id: 'D-005',
-    name: 'パトロール3号',
-    model: 'Mavic 3 Thermal',
+    id: 'DEV-005',
+    name: 'パトロールEpsilon',
+    model: 'Model Y-450',
     status: 'オフライン',
     battery: 0,
     location: '福岡県福岡市',
@@ -116,7 +116,7 @@ export const Default: StoryObj<typeof Table> = {
       <Table {...args}>
         <TableHead>
           <TableRow>
-            <TableCell>機体名</TableCell>
+            <TableCell>デバイス名</TableCell>
             <TableCell>モデル</TableCell>
             <TableCell>ステータス</TableCell>
             <TableCell align='right'>バッテリー</TableCell>
@@ -124,7 +124,7 @@ export const Default: StoryObj<typeof Table> = {
           </TableRow>
         </TableHead>
         <TableBody>
-          {droneRows.map((row) => (
+          {deviceRows.map((row) => (
             <TableRow key={row.id} hover>
               <TableCell>
                 <Typography variant='body2' fontWeight={500}>

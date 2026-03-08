@@ -43,7 +43,7 @@ export const Default: Story = {
         プロジェクト
       </Link>
       <Link underline='hover' color='inherit' href='#'>
-        フライト計画
+        タスク計画
       </Link>
       <Typography color='text.primary'>ルート編集</Typography>
     </Breadcrumbs>

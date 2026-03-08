@@ -21,7 +21,7 @@ interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined)
 
-const SIDEBAR_STORAGE_KEY = 'sdpf-sidebar-open'
+const SIDEBAR_STORAGE_KEY = 'kaze-ux-sidebar-open'
 
 // LocalStorageから初期値を同期的に取得
 const getInitialSidebarState = (): boolean => {
