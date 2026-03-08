@@ -406,7 +406,10 @@ const HomePage = () => {
                         color: 'text.secondary',
                         mb: 1.5,
                       }}>
-                      <DeliveryDiningIcon sx={{ fontSize: 15 }} />
+                      <DeliveryDiningIcon
+                        sx={{ fontSize: 16 }}
+                        aria-hidden='true'
+                      />
                       <Typography variant='body2'>
                         {formatPrice(r.deliveryFee)}
                       </Typography>

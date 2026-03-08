@@ -316,7 +316,8 @@ const RestaurantPage = () => {
                     </Typography>
                     {item.spicy && (
                       <LocalFireDepartmentIcon
-                        sx={{ fontSize: 16, color: 'error.main' }}
+                        sx={{ fontSize: 18, color: 'error.main' }}
+                        aria-hidden='true'
                       />
                     )}
                   </Box>
