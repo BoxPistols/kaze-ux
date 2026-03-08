@@ -214,13 +214,9 @@ const ContactsPage = () => {
                   status: e.target.value as ContactStatus,
                 }))
               }
-              fullWidth>
-              {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </CustomSelect>
+              options={statusOptions}
+              fullWidth
+            />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <CustomTextField
