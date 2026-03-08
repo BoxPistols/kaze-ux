@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
   LinearProgress,
-  Chip,
   Tab,
   Tabs,
 } from '@mui/material'
@@ -17,6 +16,7 @@ import { CustomTable } from '@/components/Table'
 import { UserAvatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { CustomChip } from '@/components/ui/chip'
 import { ConfirmDialog } from '@/components/ui/dialog'
 import { NotFoundView } from '@/components/ui/feedback'
 import { IconButton } from '@/components/ui/icon-button'
@@ -94,7 +94,7 @@ const ProjectDetailPage = () => {
                   Priority
                 </Typography>
                 <Box sx={{ mt: 0.5 }}>
-                  <Chip
+                  <CustomChip
                     label={project.priority}
                     size='small'
                     color={
@@ -168,7 +168,7 @@ const ProjectDetailPage = () => {
                 <Box
                   sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
                   {project.tags.map((tag) => (
-                    <Chip
+                    <CustomChip
                       key={tag}
                       label={tag}
                       size='small'

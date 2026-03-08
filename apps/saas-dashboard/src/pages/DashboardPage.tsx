@@ -14,7 +14,6 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Chip,
 } from '@mui/material'
 import dayjs from 'dayjs'
 import { useState } from 'react'
@@ -23,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserAvatar } from '@/components/ui/avatar'
 import { MiniCalendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { CustomChip } from '@/components/ui/chip'
 import { Fab } from '@/components/ui/fab'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
@@ -34,10 +34,10 @@ import { projects } from '~/data/projects'
 import { teamMembers } from '~/data/team'
 
 const iconMap = {
-  projects: <FolderIcon sx={{ fontSize: 32 }} />,
-  contacts: <ContactsIcon sx={{ fontSize: 32 }} />,
-  revenue: <AttachMoneyIcon sx={{ fontSize: 32 }} />,
-  tasks: <TaskAltIcon sx={{ fontSize: 32 }} />,
+  projects: <FolderIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  contacts: <ContactsIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  revenue: <AttachMoneyIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  tasks: <TaskAltIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
 }
 
 const statusMap: Record<string, StatusType> = {
@@ -172,7 +172,17 @@ const DashboardPage = () => {
                     {recentProjects.map((project) => (
                       <tr
                         key={project.id}
-                        style={{ cursor: 'pointer' }}
+                        style={{
+                          cursor: 'pointer',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            'var(--color-hover, rgba(0,0,0,0.04))')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor = '')
+                        }
                         onClick={() => navigate(`/projects/${project.id}`)}>
                         <td
                           style={{
@@ -198,7 +208,7 @@ const DashboardPage = () => {
                             padding: '12px 16px',
                             borderBottom: '1px solid var(--color-border)',
                           }}>
-                          <Chip
+                          <CustomChip
                             label={project.priority}
                             size='small'
                             color={
@@ -296,7 +306,7 @@ const DashboardPage = () => {
                           <Typography variant='body2'>
                             {activity.message}
                           </Typography>
-                          <Chip
+                          <CustomChip
                             label={activity.type}
                             size='small'
                             color={

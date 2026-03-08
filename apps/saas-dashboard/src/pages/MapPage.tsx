@@ -25,6 +25,7 @@ const MapPage = () => {
         <Box sx={{ textAlign: 'center' }}>
           <LocationOnIcon
             sx={{ fontSize: 80, color: 'text.secondary', opacity: 0.3 }}
+            aria-hidden='true'
           />
           <Typography variant='h6' color='text.secondary' sx={{ mt: 2 }}>
             MapLibre Integration
@@ -56,6 +57,7 @@ const MapPage = () => {
                   sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
                   <LocationOnIcon
                     sx={{ fontSize: 20, color: 'primary.main', mt: 0.3 }}
+                    aria-hidden='true'
                   />
                   <Box>
                     <Typography variant='body2' sx={{ fontWeight: 500 }}>

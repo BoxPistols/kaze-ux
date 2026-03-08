@@ -1,10 +1,11 @@
 import AddIcon from '@mui/icons-material/Add'
-import { Box, LinearProgress, Chip } from '@mui/material'
+import { Box, LinearProgress } from '@mui/material'
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { UserAvatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
+import { CustomChip } from '@/components/ui/chip'
 import { ActionMenu } from '@/components/ui/menu'
 import { ResourceTable } from '@/components/ui/table'
 import { StatusTag } from '@/components/ui/tag'
@@ -65,7 +66,7 @@ const ProjectsPage = () => {
       headerName: 'Priority',
       width: 110,
       renderCell: (params) => (
-        <Chip
+        <CustomChip
           label={params.value}
           size='small'
           color={

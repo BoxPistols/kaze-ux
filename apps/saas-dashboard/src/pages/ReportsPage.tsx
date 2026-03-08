@@ -17,10 +17,10 @@ import { invoices } from '~/data/invoices'
 import { projects } from '~/data/projects'
 
 const chartOptions = [
-  { value: 'bar', label: 'Bar', icon: <BarChartIcon fontSize='small' /> },
-  { value: 'pie', label: 'Pie', icon: <PieChartIcon fontSize='small' /> },
-  { value: 'line', label: 'Line', icon: <TimelineIcon fontSize='small' /> },
-  { value: 'table', label: 'Table', icon: <TableChartIcon fontSize='small' /> },
+  { value: 'bar', label: 'Bar', icon: <BarChartIcon fontSize='small' aria-hidden='true' /> },
+  { value: 'pie', label: 'Pie', icon: <PieChartIcon fontSize='small' aria-hidden='true' /> },
+  { value: 'line', label: 'Line', icon: <TimelineIcon fontSize='small' aria-hidden='true' /> },
+  { value: 'table', label: 'Table', icon: <TableChartIcon fontSize='small' aria-hidden='true' /> },
 ]
 
 const ReportsPage = () => {
@@ -45,23 +45,23 @@ const ReportsPage = () => {
       <PageHeader title='Reports' subtitle='Analytics and business insights.'>
         <SplitButton
           label='Export'
-          icon={<DownloadIcon fontSize='small' />}
+          icon={<DownloadIcon fontSize='small' aria-hidden='true' />}
           onClick={() => toast.success('Report exported as PDF')}
           options={[
             {
               value: 'csv',
               label: 'Export as CSV',
-              icon: <TableChartIcon fontSize='small' />,
+              icon: <TableChartIcon fontSize='small' aria-hidden='true' />,
             },
             {
               value: 'print',
               label: 'Print Report',
-              icon: <PrintIcon fontSize='small' />,
+              icon: <PrintIcon fontSize='small' aria-hidden='true' />,
             },
             {
               value: 'share',
               label: 'Share Report',
-              icon: <ShareIcon fontSize='small' />,
+              icon: <ShareIcon fontSize='small' aria-hidden='true' />,
             },
           ]}
           onOptionClick={(opt) => toast.info(`${opt.label}`)}
@@ -210,6 +210,7 @@ const ReportsPage = () => {
                 <Box sx={{ textAlign: 'center' }}>
                   <BarChartIcon
                     sx={{ fontSize: 64, color: 'text.secondary', opacity: 0.3 }}
+                    aria-hidden='true'
                   />
                   <Typography color='text.secondary' sx={{ mt: 1 }}>
                     Chart visualization placeholder

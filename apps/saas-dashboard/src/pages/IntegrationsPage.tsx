@@ -15,12 +15,12 @@ import { toast } from '@/components/ui/toast'
 import { integrations } from '~/data/integrations'
 
 const iconMap: Record<string, ReactNode> = {
-  slack: <ChatIcon sx={{ fontSize: 32 }} />,
-  github: <CodeIcon sx={{ fontSize: 32 }} />,
-  aws: <CloudIcon sx={{ fontSize: 32 }} />,
-  jira: <AssignmentIcon sx={{ fontSize: 32 }} />,
-  'google-drive': <StorageIcon sx={{ fontSize: 32 }} />,
-  stripe: <PaymentIcon sx={{ fontSize: 32 }} />,
+  slack: <ChatIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  github: <CodeIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  aws: <CloudIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  jira: <AssignmentIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  'google-drive': <StorageIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
+  stripe: <PaymentIcon sx={{ fontSize: 32 }} aria-hidden='true' />,
 }
 
 const IntegrationsPage = () => {
