@@ -8,8 +8,6 @@ import MapIcon from '@mui/icons-material/Map'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SummarizeIcon from '@mui/icons-material/Summarize'
-import CssBaseline from '@mui/material/CssBaseline'
-import { ThemeProvider } from '@mui/material/styles'
 import {
   Navigate,
   Route,
@@ -18,10 +16,10 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
+import { ThemeProvider } from '@/components/ThemeProvider'
 import { ChatSupport } from '@/components/ui/ChatSupport/ChatSupport'
 import { NotFoundView } from '@/components/ui/feedback'
 import { CustomToaster } from '@/components/ui/toast'
-import { hookUseTheme } from '@/hooks/useTheme'
 import {
   LayoutWithSidebar,
   SidebarProvider,
@@ -197,11 +195,8 @@ const AppContent = () => {
 }
 
 const App = () => {
-  const { theme } = hookUseTheme()
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <ThemeProvider>
       <CalendarSettingsProvider>
         <Router>
           <AppContent />
