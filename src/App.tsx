@@ -3,8 +3,6 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import PaletteIcon from '@mui/icons-material/Palette'
 import WidgetsIcon from '@mui/icons-material/Widgets'
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-import { ThemeProvider } from '@mui/material/styles'
 import {
   Route,
   HashRouter as Router,
@@ -14,7 +12,6 @@ import {
 } from 'react-router-dom'
 
 import { NotFoundView } from '@/components/ui/feedback'
-import { hookUseTheme } from '@/hooks/useTheme'
 import {
   LayoutWithSidebar,
   SidebarProvider,
@@ -173,15 +170,10 @@ const AppContent = () => {
 }
 
 const App = () => {
-  const { theme } = hookUseTheme()
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <AppContent />
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <AppContent />
+    </Router>
   )
 }
 

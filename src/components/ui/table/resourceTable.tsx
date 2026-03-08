@@ -321,6 +321,8 @@ export const ResourceTable = <T extends { id: string | number }>({
               },
             },
             '& .MuiDataGrid-cell': {
+              display: 'flex',
+              alignItems: 'center',
               borderBottom: 1,
               borderColor: 'divider',
               '&:focus, &:focus-within': {

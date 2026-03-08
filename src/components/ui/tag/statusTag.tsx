@@ -2,8 +2,6 @@
 // StatusTagコンポーネント
 import { Chip, type SxProps, type Theme } from '@mui/material'
 
-import { colorData } from '@/themes/colorToken'
-
 /** ステータスの種類 */
 export type StatusType =
   | 'draft'
@@ -23,45 +21,45 @@ export interface StatusTagProps {
   sx?: SxProps<Theme>
 }
 
-// ステータスごとのスタイル定義
+// ステータスごとのスタイル定義（テーマパレット参照）
 const statusStyles: Record<
   StatusType,
   { backgroundColor: string; color: string; borderColor: string }
 > = {
   draft: {
-    backgroundColor: colorData.background.default,
-    color: colorData.primary.main,
-    borderColor: colorData.primary.main,
+    backgroundColor: 'background.default',
+    color: 'primary.main',
+    borderColor: 'primary.main',
   },
   submitted: {
-    backgroundColor: colorData.primary.main,
-    color: colorData.common.white,
-    borderColor: colorData.primary.main,
+    backgroundColor: 'primary.main',
+    color: 'common.white',
+    borderColor: 'primary.main',
   },
   approved: {
-    backgroundColor: colorData.success.main,
-    color: colorData.common.white,
-    borderColor: colorData.success.main,
+    backgroundColor: 'success.main',
+    color: 'common.white',
+    borderColor: 'success.main',
   },
   rejected: {
-    backgroundColor: colorData.error.main,
-    color: colorData.common.white,
-    borderColor: colorData.error.main,
+    backgroundColor: 'error.main',
+    color: 'common.white',
+    borderColor: 'error.main',
   },
   pending: {
-    backgroundColor: colorData.warning.main,
-    color: colorData.common.white,
-    borderColor: colorData.warning.main,
+    backgroundColor: 'warning.main',
+    color: 'common.white',
+    borderColor: 'warning.main',
   },
   active: {
-    backgroundColor: colorData.success.light,
-    color: colorData.success.dark,
-    borderColor: colorData.success.main,
+    backgroundColor: 'success.light',
+    color: 'success.dark',
+    borderColor: 'success.main',
   },
   inactive: {
-    backgroundColor: colorData.grey[200],
-    color: colorData.grey[600],
-    borderColor: colorData.grey[400],
+    backgroundColor: 'action.selected',
+    color: 'text.secondary',
+    borderColor: 'divider',
   },
 }
 

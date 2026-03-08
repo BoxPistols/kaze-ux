@@ -60,29 +60,31 @@ export const LOADING_INDICATOR_SIZE = {
 /**
  * アイコンサイズ（rem）
  * 1rem = 14px基準
+ * WCAG: アイコンは視認性のため最低16px推奨
  */
 export const ICON_SIZE = {
-  small: '1rem', // 14px
-  medium: '1.29rem', // 約18px
-  large: '1.43rem', // 約20px
+  small: '1.29rem', // 約18px
+  medium: '1.57rem', // 約22px
+  large: '1.71rem', // 約24px
 } as const
 
 /**
  * IconButtonのヒットターゲットサイズ（px）
+ * WCAG 2.5.8: タッチターゲットは最低44×44px推奨
  */
 export const ICON_BUTTON_HIT_TARGET = {
-  small: 24,
-  medium: 32,
-  large: 40,
+  small: 44,
+  medium: 44,
+  large: 48,
 } as const
 
 /**
  * IconButtonのパディング（テーマspacing単位）
  */
 export const ICON_BUTTON_PADDING = {
-  small: 0.25,
-  medium: 0.5,
-  large: 0.625,
+  small: 0.5,
+  medium: 0.75,
+  large: 1,
 } as const
 
 /**

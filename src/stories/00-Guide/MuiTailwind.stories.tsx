@@ -888,18 +888,34 @@ cn('p-4', 'p-6')
       </TableContainer>
 
       {/* 参考リンク */}
-      <Box sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box
+        sx={{ mt: 6, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
         <Stack spacing={0.75}>
-          <Link href='https://mui.com/system/getting-started/the-sx-prop/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/system/getting-started/the-sx-prop/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI sx prop
           </Link>
-          <Link href='https://mui.com/material-ui/customization/theming/' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://mui.com/material-ui/customization/theming/'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             MUI Theming
           </Link>
-          <Link href='https://tailwindcss.com/docs/configuration' target='_blank' rel='noopener noreferrer' variant='body1' color='primary'>
+          <Link
+            href='https://tailwindcss.com/docs/configuration'
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='body1'
+            color='primary'>
             Tailwind CSS Configuration
           </Link>
         </Stack>
