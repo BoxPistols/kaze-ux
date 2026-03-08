@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/build
+**/coverage
+graphql/schema.graphql
+.next
+**/storybook-static
+*.d.ts
+*.config.js
+*.config.ts
+pnpm-lock.yaml
+routeTree.gen.ts

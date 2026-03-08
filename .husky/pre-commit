@@ -1,0 +1,5 @@
+# React.FC 使用チェック（最重要）
+./scripts/check-react-fc.sh
+
+# lint-staged実行
+lint-staged

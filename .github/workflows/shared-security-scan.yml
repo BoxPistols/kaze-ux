@@ -1,0 +1,82 @@
+name: Shared Security Scan
+
+on:
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+
+jobs:
+  secrets-detection:
+    runs-on: ubuntu-latest
+    name: Secrets Detection
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secrets detection with git-secrets
+        run: |
+          git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
+          cd /tmp/git-secrets
+          sudo make install
+          cd $GITHUB_WORKSPACE
+
+          # AWSアクセスキー・シークレットキーのパターンのみ登録
+          git secrets --add '(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'
+          git secrets --add '("|'"'"')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)("|'"'"')?\s*(:|=>|=)\s*("|'"'"')?[A-Za-z0-9/\+=]{40}("|'"'"')?'
+          git secrets --install
+
+          git secrets --scan
+          echo "✓ git-secrets passed"
+        continue-on-error: false
+
+  sca-scan:
+    runs-on: ubuntu-latest
+    name: SCA Scan (Trivy)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SCA scan with Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+          trivy fs . \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --include-dev-deps \
+            --format sarif \
+            --output trivy-results.sarif
+        continue-on-error: false
+
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+          category: 'trivy'
+        continue-on-error: true
+
+  gitleaks-scan:
+    runs-on: ubuntu-latest
+    name: Secrets Detection (Gitleaks)
+    # dependabotはシークレットにアクセスできないためスキップ
+    if: github.actor != 'dependabot[bot]'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # ベースブランチとの比較のため履歴が必要
+
+      - name: Gitleaks scan (PR diff only)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+          # PRの差分のみスキャン（baseブランチからHEADまで）
+          GITLEAKS_LOG_OPTS: ${{ github.event.pull_request.base.sha }}..${{ github.sha }}

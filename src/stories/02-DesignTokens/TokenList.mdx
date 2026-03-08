@@ -1,0 +1,15 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './TokenList.stories'
+
+<Meta of={Stories} />
+
+# Token Overview
+
+## 概要
+
+MUIテーマに定義されたすべてのデザイントークンの一覧。
+カラー、タイポグラフィ、スペーシング、シャドウ、ブレークポイント等のトークン値をリアルタイムで確認できます。
+
+## トークン一覧
+
+<Canvas of={Stories.Default} />

@@ -1,0 +1,22 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './Dashboard.stories'
+
+<Meta of={Stories} />
+
+# Dashboard
+
+## 概要
+
+ダッシュボード画面で使用される主要なUIパターン集。統計カード、アクティビティフィード、フリート概要など。
+
+## 統計カード
+
+<Canvas of={Stories.StatCards} />
+
+## アクティビティフィード
+
+<Canvas of={Stories.ActivityFeed} />
+
+## フリート概要
+
+<Canvas of={Stories.FleetOverview} />

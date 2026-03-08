@@ -1,0 +1,19 @@
+# markdownlint設定
+# MD036: 強調記号を見出しとして使用することを許可
+MD036: false
+
+# MD013: 行の長さ制限（120文字）
+MD013:
+  line_length: 120
+  code_blocks: false
+  tables: false
+
+# MD033: HTMLタグの使用を許可
+MD033: false
+
+# MD041: ファイルの最初の行が見出しであることを要求しない
+MD041: false
+
+# MD024: 重複見出しは同一親配下（兄弟）間のみ禁止
+MD024:
+  siblings_only: true

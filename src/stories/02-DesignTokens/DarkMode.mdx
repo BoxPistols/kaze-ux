@@ -1,0 +1,28 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './DarkMode.stories'
+
+<Meta of={Stories} />
+
+# Dark Mode
+
+## 概要
+
+MUIテーマのダークモード対応。`palette.mode: 'dark'` で自動的にダークカラースキームが適用されます。
+
+### 主な変更点
+
+- 背景色: `#313035`（デフォルト）、`#3b3b3d`（Paper）
+- テキスト: `#ffffff`（primary）、`#cfcfcf`（muted）
+- コンポーネント: 各MUIコンポーネントが `theme.palette.mode` に応じてスタイルを切替
+
+## カラートークン比較
+
+<Canvas of={Stories.ColorTokens} />
+
+## コンポーネント比較
+
+<Canvas of={Stories.ComponentComparison} />
+
+## サーフェスレイヤー
+
+<Canvas of={Stories.SurfaceLayers} />

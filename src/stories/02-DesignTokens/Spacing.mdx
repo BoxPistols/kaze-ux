@@ -1,0 +1,27 @@
+import { Meta, Canvas, Story } from '@storybook/blocks'
+import * as Stories from './Spacing.stories'
+
+<Meta of={Stories} />
+
+# Spacing
+
+## 概要
+
+MUIテーマのスペーシングシステム。基本単位は `4px` で、`theme.spacing(n)` で倍数を計算します。
+
+- `spacing(1)` = 4px（基本単位）
+- `spacing(2)` = 8px（インライン要素間）
+- `spacing(4)` = 16px（標準余白）
+- `spacing(8)` = 32px（セクション間隔）
+
+## スペーシングスケール
+
+<Canvas of={Stories.Default} />
+
+## 使用ガイドライン
+
+<Canvas of={Stories.Usage} />
+
+## レイアウトパターン
+
+<Canvas of={Stories.LayoutPatterns} />

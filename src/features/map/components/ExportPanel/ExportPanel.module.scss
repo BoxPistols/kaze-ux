@@ -1,0 +1,795 @@
+.exportPanel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow-elevated), var(--glass-inner-highlight);
+  border: 1px solid var(--glass-border);
+  width: 90vw;
+  max-width: 900px;
+  min-width: 600px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  // タブレット (768px以下)
+  @media (max-width: 768px) {
+    width: 95vw;
+    min-width: auto;
+    max-height: 90vh;
+    border-radius: 10px;
+  }
+
+  // 大型スマートフォン (600px以下)
+  @media (max-width: 600px) {
+    width: 98vw;
+    max-height: 95vh;
+    border-radius: 8px;
+    margin: 8px;
+  }
+
+  // 標準スマートフォン (480px以下)
+  @media (max-width: 480px) {
+    width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+    border: none;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    flex: 1;
+  }
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin-right: 8px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text);
+  }
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 20px;
+  color: var(--color-text-tertiary);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+  }
+}
+
+.content {
+  padding: 20px;
+  background: rgba(var(--color-bg-modal-rgb), 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+}
+
+.count {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.exportButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-bg-hover);
+    border-color: var(--color-primary);
+  }
+
+  &:disabled {
+    color: var(--color-text-tertiary);
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+  }
+
+  &.backupButton {
+    color: var(--color-success);
+    background: var(--color-success-bg);
+    border-color: var(--color-border);
+
+    &:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--color-success);
+    }
+  }
+
+  &.dmsButton {
+    color: var(--color-warning);
+    background: var(--color-warning-bg);
+    border-color: var(--color-border);
+
+    &:hover:not(:disabled) {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--color-warning);
+    }
+  }
+}
+
+// Preview styles
+.previewContent {
+  flex: 1;
+  overflow: auto;
+  padding: 20px 24px;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  min-height: 300px;
+  max-height: 60vh;
+}
+
+.jsonPreview {
+  pre {
+    margin: 0;
+    padding: 12px;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 6px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-x: auto;
+  }
+}
+
+.csvPreview {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  th,
+  td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+
+  th {
+    background: #f0f0f0;
+    font-weight: 600;
+    color: #333;
+    position: sticky;
+    top: 0;
+  }
+
+  td {
+    color: #666;
+  }
+
+  tr:hover td {
+    background: #f9f9f9;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.notamPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.altitudeInputSection {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+
+    svg {
+      color: #e67e22;
+    }
+  }
+}
+
+.altitudeInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.altitudeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.altitudeColorDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.altitudeLabel {
+  flex: 1;
+  font-size: 13px;
+  color: #333;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.altitudeInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.altitudeInput {
+  width: 80px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #e67e22;
+  }
+
+  &::placeholder {
+    color: #bbb;
+    font-weight: normal;
+  }
+
+  // Hide spin buttons
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+}
+
+.altitudeUnit {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.notamContent {
+  pre {
+    margin: 0;
+    padding: 16px 20px;
+    background: #fffef8;
+    color: #333;
+    border: 1px solid #e8e4d4;
+    border-radius: 6px;
+    font-family: 'Noto Sans JP', 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: keep-all;
+  }
+}
+
+.truncateNote {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #888;
+  background: #fff;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.previewActions {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.downloadButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: #45b7d1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #3aa3bc;
+  }
+}
+
+// =============================================================================
+// モバイル対応スタイル
+// =============================================================================
+
+// タブレット (768px以下)
+@media (max-width: 768px) {
+  .header {
+    padding: 14px 16px;
+
+    h3 {
+      font-size: 15px;
+    }
+  }
+
+  .backButton,
+  .closeButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .buttons {
+    flex-wrap: wrap;
+  }
+
+  .exportButton {
+    padding: 10px 14px;
+    font-size: 12px;
+    min-height: 44px;
+  }
+
+  .previewContent {
+    padding: 16px;
+    min-height: 250px;
+    max-height: 50vh;
+  }
+
+  .previewActions {
+    padding: 12px 16px;
+  }
+
+  .downloadButton {
+    padding: 10px 20px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+}
+
+// 大型スマートフォン (600px以下)
+@media (max-width: 600px) {
+  .header {
+    padding: 12px 14px;
+
+    h3 {
+      font-size: 14px;
+    }
+  }
+
+  .content {
+    padding: 14px;
+  }
+
+  .section {
+    margin-bottom: 16px;
+
+    h4 {
+      font-size: 13px;
+    }
+  }
+
+  .count {
+    font-size: 12px;
+  }
+
+  .hint {
+    font-size: 12px;
+  }
+
+  .buttons {
+    gap: 8px;
+  }
+
+  .exportButton {
+    padding: 10px 12px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .previewContent {
+    padding: 12px;
+    min-height: 200px;
+  }
+
+  .jsonPreview pre {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .csvPreview {
+    th,
+    td {
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+  }
+
+  .altitudeInputSection {
+    padding: 12px;
+
+    h4 {
+      font-size: 13px;
+    }
+  }
+
+  .altitudeRow {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .altitudeLabel {
+    font-size: 12px;
+  }
+
+  .altitudeInput {
+    width: 70px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+}
+
+// 標準スマートフォン (480px以下)
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    background: var(--color-bg-modal);
+    z-index: 10;
+
+    h3 {
+      font-size: 13px;
+    }
+  }
+
+  .backButton,
+  .closeButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .content {
+    padding: 12px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section {
+    margin-bottom: 14px;
+
+    h4 {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+  }
+
+  .count {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .hint {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .exportButton {
+    padding: 12px;
+    font-size: 12px;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .previewContent {
+    padding: 10px;
+    min-height: 180px;
+    max-height: 45vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .jsonPreview pre {
+    font-size: 12px;
+    padding: 8px;
+    line-height: 1.4;
+  }
+
+  .csvPreview {
+    table {
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      padding: 5px 6px;
+    }
+  }
+
+  .notamPreview {
+    gap: 12px;
+  }
+
+  .altitudeInputSection {
+    padding: 10px;
+
+    h4 {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .altitudeInputs {
+    gap: 8px;
+  }
+
+  .altitudeRow {
+    flex-wrap: wrap;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .altitudeColorDot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .altitudeLabel {
+    font-size: 12px;
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .altitudeInputWrapper {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .altitudeInput {
+    width: 60px;
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .altitudeUnit {
+    font-size: 12px;
+  }
+
+  .notamContent pre {
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .truncateNote {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .previewActions {
+    padding: 12px;
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg-modal);
+  }
+
+  .downloadButton {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 13px;
+    min-height: 48px;
+  }
+}
+
+// 小型スマートフォン (375px以下)
+@media (max-width: 375px) {
+  .header {
+    padding: 8px 10px;
+
+    h3 {
+      font-size: 12px;
+    }
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  .exportButton {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .altitudeInput {
+    width: 55px;
+    font-size: 12px;
+  }
+
+  .jsonPreview pre {
+    font-size: 12px;
+  }
+
+  .csvPreview {
+    font-size: 12px;
+
+    th,
+    td {
+      padding: 4px 5px;
+    }
+  }
+}
+
+// 超小型スマートフォン (320px以下)
+@media (max-width: 320px) {
+  .header h3 {
+    font-size: 12px;
+  }
+
+  .exportButton {
+    font-size: 12px;
+    padding: 8px;
+    min-height: 44px;
+  }
+
+  .altitudeLabel {
+    font-size: 12px;
+  }
+
+  .altitudeInput {
+    width: 50px;
+    font-size: 12px;
+  }
+}
+
+// タッチデバイス最適化
+@media (hover: none) and (pointer: coarse) {
+  .exportButton:active,
+  .downloadButton:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+
+  .previewContent {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .csvPreview {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// セーフエリア対応
+@supports (padding: env(safe-area-inset-bottom)) {
+  @media (max-width: 480px) {
+    .previewActions {
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+  }
+}

@@ -1,0 +1,166 @@
+import { theme } from '@/themes/theme'
+import { Box, Button, Container, Typography } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
+import { Meta } from '@storybook/blocks'
+
+<Meta title='Design Tokens/Typography/Info' />
+
+<ThemeProvider theme={theme}>
+<Container>
+{/* Storybook mdxでのTypographyはMarkdownのLintやフォーマットの時にテキストが折り返されてしまう事があるので、{"text"}で明示的に囲むと問題なく表示されます */}
+
+# Typography
+
+## About
+
+Typography コンポーネントは、テキストのスタイルやフォーマットを指定するために使用され、MUI ではマテリアルデザインのテキストスタイルを提供しています。
+
+関連 Link
+
+- [Mui Typography](https://mui.com/material-ui/react-typography/)
+- [Material Design Typography](https://material.io/design/typography/the-type-system.html)
+
+このプロダクトのテキストトークン、theme ファイルで保持している一覧を以下にまとめています
+
+- [Typography Variants](/story/tokens-typography--vatiants) これは、MUI のデフォルトの Typography をベースにしていますが、より柔軟な対応ができるように拡張カスタマイズも実装しています
+
+<Typography variant='sm' color='text.secondary'>
+  {
+    '＊近日、MUIのアップデートに伴いMaterial Design2から3ベースへのアップデートが予定されており、その際にはTypographyのスタイルも変更される可能性があります'
+  }
+</Typography>
+
+[https://m3.material.io/styles/typography/type-scale-tokens](https://m3.material.io/styles/typography/type-scale-tokens)
+
+## WebFont
+
+<Typography color={theme.palette.text.secondary} variant='xl'>
+  {'Inter + Noto 日本語 / あ亜ABCabc1230@#$'}
+</Typography>
+
+- この環境では日本語に **Noto Sans JP** を使用しています。Google が開発したオープンソースの日本語フォントです。[Google Fonts: Noto Sans JP](https://fonts.google.com/specimen/Noto+Sans+JP)
+  - Noto Sans JP の特徴は、日本語のバランスを崩さずに、英語のフォントとの組み合わせが美しく見え、WebFont を使うことで OS に依存しない日本語の表示を実現できます。
+- 英語は **Inter** を使用しています。同じく Google が開発したオープンソースの英語フォントです。[Google Fonts: Inter](https://fonts.google.com/specimen/Inter)
+  - Inter は、日本語のフォントとの組み合わせが美しく見えることも特徴です。
+
+## Typography 概要
+
+- MUI のテキストは文字の大きさ、太さ、カラー、行間など、さまざまなスタイルをカスタマイズ可能で、汎用的に適用できます
+- 特に variant オプションの命名が特徴的ですが、マテリアルデザインの Type System に基づいています[Material Dedign / The type system](https://m2.material.io/design/typography/the-type-system.html#type-scale)
+- 特徴としてマークアップ構造と UI の関心事を分離しながらスタイル実装を実現することができます。
+  - 基本記述方法 `<Typography variant="xxx" component="yyy">Text</Typography>`
+  - variant=スタイルの適応
+  - component=マークアップ構造の適応
+- 実装としてマークアップ構造は意識せずとも良い設定をしており、基本的には`<Typography variant="xxx">Text</Typography>`だけで良いケースが多いです。
+- カラー指定や余白の追加などもオプションで指定できるので、スタイルの変更も容易です
+
+### Options
+
+<Typography
+  variant='h4'
+  color='primary.main'
+  align='center'
+  fontWeight='bold'
+  display='block'
+  backgroundColor='grey.100'
+  mt={2}
+  py={2}>
+  {'Example: オプション指定'}
+</Typography>
+
+```tsx
+<Typography
+  variant='h4'
+  color='primary.main'
+  align='center'
+  fontWeight='bold'
+  display='block'
+  backgroundColor='grey.100'
+  mt={2}
+  py={2}>
+  {'Example: オプション指定'}
+</Typography>
+```
+
+### 主要な API
+
+Typography コンポーネントには、頻出する以下のような主要な API があります:
+
+- <code>noWrap</code>: 改行防止
+- <code>align</code>: textAlign です。"center"や"left/right"などが使えます
+- <code>gutterBottom</code> Typography
+  コンポーネントの直下が狭い場合、下部に一定の余白を付けます
+
+詳細 [https://mui.com/material-ui/api/typography/](https://next.mui.com/material-ui/api/typography/)
+
+## Variant
+
+- Mui Typography コンポーネントは [Typography Variants](/story/tokens-typography--vatiants) にあるように、以下のような主要なバリアントを持っています：
+  - **h1** - **h6** 見出し。`h1`が最も大きく、`h6`が最も小さい。
+    - h1 は主にサービス名やロゴの Alt としてのマークアップ用途として使う事が多く、実質 h2 が最も大きな実用テキストとしてとして使われる事が多いです
+    - heading は全て variant としては div 扱いになり、component="h2"などを書かない限りマークアップ構造はあまり気にせず視覚に専念したデザインとして利用できます
+  - **subtitle1** - サブタイトルに適したスタイル。主に h2 や h3 レベルの見出しの下に使用されます。小さな見出しには通常は使いません。
+  - **subtitle2** - サブタイトルに適したもう少し小さいスタイル。主に h3-h6 レベル の下に使用されます。
+  - **body1** - 本文に適したスタイル。最も一般的なスタイルで、基本的には未指定の場合のデフォルトスタイルと同じになります。
+  - **body2** - 本文に適したもう少し小さいスタイル
+- 以下はあまり使われることがないが、以下のようなスタイルも用意されています
+  - **caption** - 小さな文字の Utilty テキストとしても使用できます
+  - **overline** - 小さな文字の Utilty テキストとしても使用できます
+  - **button** - ボタンのテキストスタイル
+
+### 拡張 variant
+
+- マテリアルデザインの Typography の命名ルールがマッチしないケースもありますので、拡張 variant を用意しています。
+- 具体的な Typography variant の一覧を[Variants](/story/tokens-typography--vatiants)にまとめていまるので、そちらを参照してください。
+
+### Use Case
+
+<Typography variant='h2'>{'h2 見出しテキスト'}</Typography>
+<Typography variant='subtitle1'>
+  {'subtitle1 サブタイトル、説明文を書く'}
+</Typography>
+```tsx
+<Typography variant='h2'>{'h2 見出しテキスト'}</Typography>
+<Typography variant='subtitle1'>
+  {'subtitle1 サブタイトル、説明文を書く'}
+</Typography>
+```
+
+## Tailwind との併用
+
+- MUI の Typography コンポーネントは、Tailwind CSS との併用も可能です
+- Tailwind CSS のクラスを直接適用することで、MUI の Typography コンポーネントにもスタイルを適用できます
+- 以下は、MUI の Typography コンポーネントに Tailwind CSS のクラスを適用した例です
+
+<Typography className='text-center text-2xl font-bold py-2 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer'>
+  {'Example: オプション指定'}
+</Typography>
+
+```tsx
+<Typography className='text-center text-2xl font-bold py-2 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer'>
+  {'Example: オプション指定'}
+</Typography>
+```
+
+上記のように、Tailwind のクラス設計は意味的な責務を持たない利便性の反面、クラスが増えることでスタイルの一元的な管理が難しくなることがあります。
+
+- MUI のデフォルトのスタイルと Tailwind CSS のスタイルが競合する場合があるので、適用する際は注意が必要です
+- また、デザイントークンは MUI の Typography コンポーネントのスタイルを優先するため、Tailwind CSS のスタイルを適用する際は別途カスタムスタイルを定義することをお勧めします
+
+### Tailwind CSS の採択
+
+- Tailwind はエンジニアにとって常に賛否両論の意見があり、プロジェクトの要件、開発者の意向やスキルによって異なりますので、適切な選択を行ってください
+- 今回のプロダクトでは MUI のデザイントークンを優先していますが、必要に応じて Tailwind を併用することで、MUI の煩雑性の弱点を補い、より柔軟なスタイリングを実現する事を目指しています
+
+Tailwind URL [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
+
+## Links
+
+Mui Reference
+
+- [Typography](https://mui.com/components/typography/)
+- [Typography API](https://mui.com/api/typography/)
+- [Material Design / The type system](https://material.io/design/typography/the-type-system.html)
+
+</Container>
+</ThemeProvider>

@@ -1,0 +1,564 @@
+name: AI Auto Fix
+
+on:
+  # レビューコメント時にトリガー
+  pull_request_review_comment:
+    types: [created]
+  # PRレビュー時にトリガー
+  pull_request_review:
+    types: [submitted]
+  # 手動トリガー
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR番号'
+        required: true
+        type: number
+      fix_type:
+        description: '修正タイプ'
+        required: true
+        type: choice
+        options:
+          - all
+          - typescript
+          - lint
+          - security
+          - performance
+      auto_commit:
+        description: '自動コミット'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ai-auto-fix-${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  # コメント解析とトリガー判定
+  analyze-trigger:
+    name: Analyze Trigger
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '/fix')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '/fix'))
+    outputs:
+      should_fix: ${{ steps.analyze.outputs.should_fix }}
+      fix_type: ${{ steps.analyze.outputs.fix_type }}
+      pr_number: ${{ steps.analyze.outputs.pr_number }}
+    steps:
+      - name: Analyze trigger
+        id: analyze
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "should_fix=true" >> $GITHUB_OUTPUT
+            echo "fix_type=${{ github.event.inputs.fix_type }}" >> $GITHUB_OUTPUT
+            echo "pr_number=${{ github.event.inputs.pr_number }}" >> $GITHUB_OUTPUT
+          else
+            COMMENT="${{ github.event.comment.body }}${{ github.event.review.body }}"
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
+            # /fix コマンドの解析
+            if echo "$COMMENT" | grep -q "/fix all"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=all" >> $GITHUB_OUTPUT
+            elif echo "$COMMENT" | grep -q "/fix typescript\|/fix type\|/fix ts"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=typescript" >> $GITHUB_OUTPUT
+            elif echo "$COMMENT" | grep -q "/fix lint\|/fix eslint"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=lint" >> $GITHUB_OUTPUT
+            elif echo "$COMMENT" | grep -q "/fix security\|/fix sec"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=security" >> $GITHUB_OUTPUT
+            elif echo "$COMMENT" | grep -q "/fix performance\|/fix perf"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=performance" >> $GITHUB_OUTPUT
+            elif echo "$COMMENT" | grep -q "/fix"; then
+              echo "should_fix=true" >> $GITHUB_OUTPUT
+              echo "fix_type=all" >> $GITHUB_OUTPUT
+            else
+              echo "should_fix=false" >> $GITHUB_OUTPUT
+              echo "fix_type=none" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+  # TypeScript型エラー修正
+  fix-typescript:
+    name: Fix TypeScript Errors
+    runs-on: ubuntu-latest
+    needs: analyze-trigger
+    if: |
+      needs.analyze-trigger.outputs.should_fix == 'true' &&
+      (needs.analyze-trigger.outputs.fix_type == 'all' || needs.analyze-trigger.outputs.fix_type == 'typescript')
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Collect TypeScript errors
+        id: ts-errors
+        run: |
+          # TypeScriptエラーを収集
+          pnpm tsc --noEmit 2>&1 | tee ts-errors.txt || true
+          ERROR_COUNT=$(grep -c "error TS" ts-errors.txt || echo 0)
+          echo "error_count=$ERROR_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Auto-fix with AI
+        if: steps.ts-errors.outputs.error_count > 0 && env.OPENAI_API_KEY != ''
+        uses: actions/github-script@v7
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // OpenAI API呼び出し（gpt-5-nano優先、フォールバックでgpt-4.1-nano）
+            async function callOpenAI(systemPrompt, userPrompt) {
+              const models = ['gpt-4.1-nano', 'gpt-4.1-mini'];
+
+              for (const model of models) {
+                try {
+                  console.log(`モデル ${model} で試行中...`);
+                  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      model: model,
+                      messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userPrompt }
+                      ],
+                      temperature: 0.1,
+                      max_tokens: 4000
+                    })
+                  });
+
+                  if (!response.ok) {
+                    const errorText = await response.text();
+                    console.log(`${model} エラー: ${response.status} - ${errorText}`);
+                    continue;
+                  }
+
+                  const data = await response.json();
+                  if (data.choices?.[0]?.message?.content) {
+                    console.log(`${model} で成功`);
+                    return data.choices[0].message.content;
+                  }
+                } catch (error) {
+                  console.log(`${model} 例外: ${error.message}`);
+                  continue;
+                }
+              }
+              return null;
+            }
+
+            // TypeScriptエラーを読み込み
+            const errors = fs.readFileSync('ts-errors.txt', 'utf8');
+
+            // エラーをファイルごとにグループ化
+            const errorsByFile = {};
+            const errorRegex = /(.+)\((\d+),(\d+)\): error (TS\d+): (.+)/g;
+            let match;
+
+            while ((match = errorRegex.exec(errors)) !== null) {
+              const [, filePath, line, col, code, message] = match;
+              if (!errorsByFile[filePath]) {
+                errorsByFile[filePath] = [];
+              }
+              errorsByFile[filePath].push({ line: parseInt(line), col: parseInt(col), code, message });
+            }
+
+            const fixedFiles = [];
+
+            for (const [filePath, fileErrors] of Object.entries(errorsByFile)) {
+              if (!fs.existsSync(filePath)) continue;
+              if (fileErrors.length > 10) continue; // エラーが多すぎるファイルはスキップ
+
+              const content = fs.readFileSync(filePath, 'utf8');
+
+              // ファイルサイズが大きすぎる場合はスキップ（APIトークン制限対策）
+              if (content.length > 5000) {
+                console.log(`${filePath} はサイズが大きすぎるためスキップ (${content.length} 文字)`);
+                continue;
+              }
+
+              const prompt = `以下のTypeScriptコードにはエラーがあります。エラーを修正したコードを返してください。
+              修正後のコードのみを返し、説明は不要です。
+
+              ファイル: ${filePath}
+
+              エラー:
+              ${fileErrors.map(e => `行${e.line}: ${e.code} - ${e.message}`).join('\n')}
+
+              コード:
+              ${content}`;
+
+              try {
+                const systemPrompt = 'あなたはTypeScriptの専門家です。型エラーを修正してください。修正後のコードのみを返してください。';
+                let fixedCode = await callOpenAI(systemPrompt, prompt);
+
+                if (fixedCode) {
+                  // コードブロックを除去
+                  fixedCode = fixedCode.replace(/^```[\w]*\n?/gm, '').replace(/\n?```$/gm, '').trim();
+
+                  if (fixedCode && fixedCode !== content) {
+                    fs.writeFileSync(filePath, fixedCode);
+                    fixedFiles.push(filePath);
+                  }
+                }
+              } catch (error) {
+                console.error(`${filePath} の修正中にエラー: ${error}`);
+              }
+            }
+
+            // 修正結果をファイルに保存
+
+      - name: Run lint fix
+        run: pnpm lint || true
+
+      - name: Commit fixes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "fix: TypeScript型エラーを自動修正
+
+            [AI Auto Fix] TypeScriptコンパイルエラーを修正しました。"
+            git push
+            echo "Changes committed and pushed"
+          else
+            echo "No changes to commit"
+          fi
+
+  # ESLint自動修正
+  fix-lint:
+    name: Fix Lint Errors
+    runs-on: ubuntu-latest
+    needs: analyze-trigger
+    if: |
+      needs.analyze-trigger.outputs.should_fix == 'true' &&
+      (needs.analyze-trigger.outputs.fix_type == 'all' || needs.analyze-trigger.outputs.fix_type == 'lint')
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Run ESLint auto-fix
+        run: |
+          pnpm eslint --fix ./src || true
+
+      - name: Run Prettier
+        run: |
+          pnpm prettier --write "src/**/*.{ts,tsx,js,jsx,json,css,scss,md}" || true
+
+      - name: Commit fixes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "fix: Lint・フォーマットエラーを自動修正
+
+            [AI Auto Fix] ESLint/Prettierで自動修正しました。"
+            git push
+            echo "Changes committed and pushed"
+          else
+            echo "No changes to commit"
+          fi
+
+  # セキュリティ問題の自動修正
+  fix-security:
+    name: Fix Security Issues
+    runs-on: ubuntu-latest
+    needs: analyze-trigger
+    if: |
+      needs.analyze-trigger.outputs.should_fix == 'true' &&
+      (needs.analyze-trigger.outputs.fix_type == 'all' || needs.analyze-trigger.outputs.fix_type == 'security')
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Run security audit
+        id: audit
+        run: |
+          pnpm audit --json > audit-results.json 2>&1 || true
+          cat audit-results.json
+
+      - name: Auto-fix security issues
+        run: |
+          # 脆弱性のある依存関係を更新
+          pnpm audit --fix || true
+
+          # 危険なパターンのチェックと修正
+          echo "セキュリティパターンチェック..."
+
+          # dangerouslySetInnerHTML の使用確認
+          if grep -rn "dangerouslySetInnerHTML" --include="*.tsx" --include="*.ts" src/ || true; then
+            echo "警告: dangerouslySetInnerHTML が使用されています"
+          fi
+
+          # eval の使用確認
+          if grep -rn "eval(" --include="*.tsx" --include="*.ts" src/ || true; then
+            echo "警告: eval() が使用されています"
+          fi
+
+      - name: Commit fixes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "fix: セキュリティ問題を自動修正
+
+            [AI Auto Fix] 依存関係の脆弱性を修正しました。"
+            git push
+            echo "Changes committed and pushed"
+          else
+            echo "No security changes needed"
+          fi
+
+  # パフォーマンス改善
+  fix-performance:
+    name: Fix Performance Issues
+    runs-on: ubuntu-latest
+    needs: analyze-trigger
+    if: |
+      needs.analyze-trigger.outputs.should_fix == 'true' &&
+      (needs.analyze-trigger.outputs.fix_type == 'all' || needs.analyze-trigger.outputs.fix_type == 'performance')
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Analyze and fix performance issues
+        if: env.OPENAI_API_KEY != ''
+        uses: actions/github-script@v7
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const { execSync } = require('child_process');
+
+            // 変更されたファイルを取得（PR全体の差分を取得）
+            const changedFiles = execSync(`git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || echo ""`, { encoding: 'utf8' })
+              .split('\n')
+              .filter(f => f.endsWith('.tsx') || f.endsWith('.ts'))
+              .filter(f => fs.existsSync(f));
+
+            const performanceIssues = [];
+
+            for (const file of changedFiles) {
+              const content = fs.readFileSync(file, 'utf8');
+
+              // パフォーマンス問題のパターン検出
+              const issues = [];
+
+              // useEffect内での依存配列の問題
+              if (content.includes('useEffect') && content.includes('// eslint-disable-next-line')) {
+                issues.push('useEffect依存配列の警告を抑制している可能性');
+              }
+
+              // インラインオブジェクト/配列の作成
+              if (/style=\{\{/.test(content)) {
+                issues.push('インラインスタイルオブジェクト（再レンダリング時に毎回作成される）');
+              }
+
+              // 大きなコンポーネントでのメモ化欠如
+              if (content.length > 5000 && !content.includes('useMemo') && !content.includes('useCallback')) {
+                issues.push('大きなコンポーネントでメモ化が使用されていない');
+              }
+
+              if (issues.length > 0) {
+                performanceIssues.push({ file, issues });
+              }
+            }
+
+            // パフォーマンス問題をログ出力
+            if (performanceIssues.length > 0) {
+              console.log('検出されたパフォーマンス問題:');
+              performanceIssues.forEach(({ file, issues }) => {
+                console.log(`\n${file}:`);
+                issues.forEach(issue => console.log(`  - ${issue}`));
+              });
+            }
+
+            // 結果をファイルに保存
+            fs.writeFileSync('performance-issues.json', JSON.stringify(performanceIssues, null, 2));
+
+      - name: Post performance report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            if (!fs.existsSync('performance-issues.json')) return;
+
+            const issues = JSON.parse(fs.readFileSync('performance-issues.json', 'utf8'));
+
+            if (issues.length === 0) {
+              console.log('パフォーマンス問題は検出されませんでした');
+              return;
+            }
+
+            const report = issues.map(({ file, issues }) =>
+              `### ${file}\n${issues.map(i => `- ${i}`).join('\n')}`
+            ).join('\n\n');
+
+            const prNumber = context.payload.pull_request?.number ||
+                            context.payload.issue?.number ||
+                            '${{ needs.analyze-trigger.outputs.pr_number }}';
+
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(prNumber),
+                body: `## パフォーマンス分析結果\n\n以下の潜在的なパフォーマンス問題が検出されました：\n\n${report}\n\n---\n*自動分析による検出結果です。必要に応じて手動で確認してください。*`
+              });
+            }
+
+  # 修正結果のサマリー
+  post-fix-summary:
+    name: Post Fix Summary
+    runs-on: ubuntu-latest
+    needs:
+      [analyze-trigger, fix-typescript, fix-lint, fix-security, fix-performance]
+    if: always() && needs.analyze-trigger.outputs.should_fix == 'true'
+    steps:
+      - name: Create summary comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = '${{ needs.analyze-trigger.outputs.pr_number }}';
+            const fixType = '${{ needs.analyze-trigger.outputs.fix_type }}';
+
+            const results = {
+              typescript: '${{ needs.fix-typescript.result }}',
+              lint: '${{ needs.fix-lint.result }}',
+              security: '${{ needs.fix-security.result }}',
+              performance: '${{ needs.fix-performance.result }}'
+            };
+
+            const statusEmoji = (status) => {
+              if (status === 'success') return '完了';
+              if (status === 'failure') return '失敗';
+              if (status === 'skipped') return 'スキップ';
+              return status;
+            };
+
+            let summary = `## AI Auto Fix 実行結果\n\n`;
+            summary += `| 修正タイプ | 結果 |\n`;
+            summary += `|------------|------|\n`;
+
+            if (fixType === 'all' || fixType === 'typescript') {
+              summary += `| TypeScript型修正 | ${statusEmoji(results.typescript)} |\n`;
+            }
+            if (fixType === 'all' || fixType === 'lint') {
+              summary += `| Lint/Format修正 | ${statusEmoji(results.lint)} |\n`;
+            }
+            if (fixType === 'all' || fixType === 'security') {
+              summary += `| セキュリティ修正 | ${statusEmoji(results.security)} |\n`;
+            }
+            if (fixType === 'all' || fixType === 'performance') {
+              summary += `| パフォーマンス分析 | ${statusEmoji(results.performance)} |\n`;
+            }
+
+            summary += `\n---\n`;
+            summary += `*このコメントは自動生成されました。修正内容を確認してください。*`;
+
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(prNumber),
+                body: summary
+              });
+            }

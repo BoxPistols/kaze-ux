@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './Shadows.stories'
+
+<Meta of={Stories} />
+
+# Shadows & Elevation
+
+## 概要
+
+MUIテーマのシャドウとエレベーションシステム。フラットデザインを基調とし、elevation 0がデフォルト。
+必要に応じて影を追加してUI要素の階層を表現します。
+
+- `elevation 0`: デフォルト（影なし）
+- `elevation 1-2`: 軽い浮遊感（カード、ペーパー）
+- `elevation 3-6`: 中程度の浮遊感（ポップアップ、ドロワー）
+- `elevation 8+`: 強い浮遊感（ダイアログ、モーダル）
+
+## エレベーションスケール
+
+<Canvas of={Stories.ElevationScale} />
+
+## コンポーネント別エレベーション
+
+<Canvas of={Stories.ComponentElevation} />
+
+## ボーダーラジウス
+
+<Canvas of={Stories.BorderRadius} />
+
+## Light/Dark比較
+
+<Canvas of={Stories.ShadowComparison} />

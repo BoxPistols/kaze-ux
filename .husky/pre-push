@@ -1,0 +1,7 @@
+echo "🧪 Running tests..."
+pnpm run test:all
+
+echo "🏗️  Building project..."
+pnpm run build-all
+
+echo "✅ Pre-push checks passed!"

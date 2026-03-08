@@ -1,0 +1,226 @@
+import { theme } from '@/themes/theme'
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  InputLabel,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
+import { Meta } from '@storybook/blocks'
+import { useState } from 'react'
+import { CustomSelect } from '.'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
+
+<Meta title='Components/CustomSelect/Info' />
+
+<ThemeProvider theme={theme}>
+
+<Container>
+
+# CustomSelect
+
+## 概要
+
+CustomSelect は、Material-UI の Select コンポーネントをベースにした高機能なドロップダウン選択コンポーネントです。単一選択と複数選択の両方をサポートし、MUI の機能性を活かしながら、よりシンプルで使いやすい UI を提供します。
+
+### 主要な Props
+
+- `label`: ラベル
+- `options`: 選択肢の配列（`{ value: string | number; label: string }[]`）
+- `placeholder`: プレースホルダー
+- `helperText`: ヘルパーテキスト
+- `error`: エラー状態
+- `disabled`: 無効化
+- `required`: 必須
+- `tooltip`: ツールチップ
+- `size`: サイズ（'small' | 'medium'）
+- `fullWidth`: 幅 100%
+- `multiple`: 複数選択モード
+
+Tooltip は独自にラベルに組み込んでおり、ユーザーに選択肢の説明を提供します。
+
+その他の props については、[MUI Select API](https://mui.com/api/select/)を参照してください。
+
+## 使用例
+
+### 基本的な Select フォームの例
+
+<CustomSelect
+  label='色を選択'
+  options={[
+    { value: 'red', label: '赤' },
+    { value: 'blue', label: '青' },
+    { value: 'green', label: '緑' },
+  ]}
+  required
+/>
+
+```tsx
+<CustomSelect
+  label='色を選択'
+  options={[
+    { value: 'red', label: '赤' },
+    { value: 'blue', label: '青' },
+    { value: 'green', label: '緑' },
+  ]}
+  required
+/>
+```
+
+### ツールチップ付きの例
+
+<CustomSelect
+  label='都道府県'
+  options={[
+    { value: 'tokyo', label: '東京都' },
+    { value: 'osaka', label: '大阪府' },
+    { value: 'kyoto', label: '京都府' },
+  ]}
+  tooltip='お住まいの都道府県を選択してください'
+/>
+
+```tsx
+<CustomSelect
+  label='都道府県'
+  options={[
+    { value: 'tokyo', label: '東京都' },
+    { value: 'osaka', label: '大阪府' },
+    { value: 'kyoto', label: '京都府' },
+  ]}
+  tooltip='お住まいの都道府県を選択してください'
+/>
+```
+
+### 複数選択の例
+
+<CustomSelect
+  label='好きな食べ物'
+  multiple
+  options={[
+    { value: 'sushi', label: '寿司' },
+    { value: 'ramen', label: 'ラーメン' },
+    { value: 'tempura', label: '天ぷら' },
+    { value: 'udon', label: 'うどん' },
+  ]}
+/>
+
+```tsx
+<CustomSelect
+  label='好きな食べ物'
+  multiple
+  options={[
+    { value: 'sushi', label: '寿司' },
+    { value: 'ramen', label: 'ラーメン' },
+    { value: 'tempura', label: '天ぷら' },
+    { value: 'udon', label: 'うどん' },
+  ]}
+/>
+```
+
+## API Props 一覧
+
+CustomSelect のオプションは、以下の通りです。詳細な API は[MUI Select API](https://mui.com/api/select/)も参照してください。
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>label</td>
+    <td>string</td>
+    <td></td>
+    <td>ラベル</td>
+  </tr>
+  <tr>
+    <td>options</td>
+    <td>Array`<{ value: string | number; label: string }>`</td>
+    <td></td>
+    <td>選択肢の配列</td>
+  </tr>
+  <tr>
+    <td>multiple</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>複数選択を有効にする</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>string | string[] | number | number[]</td>
+    <td>multiple ? [] : ''</td>
+    <td>選択値（複数選択の場合は配列）</td>
+  </tr>
+  <tr>
+    <td>onChange</td>
+    <td>(event, value) => void</td>
+    <td></td>
+    <td>値変更時のコールバック</td>
+  </tr>
+  <tr>
+    <td>placeholder</td>
+    <td>string</td>
+    <td>'選択してください'<br/>'複数の選択が可能です'</td>
+    <td>プレースホルダー</td>
+  </tr>
+  <tr>
+    <td>helperText</td>
+    <td>string</td>
+    <td></td>
+    <td>ヘルパーテキスト</td>
+  </tr>
+  <tr>
+    <td>error</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>エラー状態</td>
+  </tr>
+  <tr>
+    <td>disabled</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>無効化</td>
+  </tr>
+  <tr>
+    <td>required</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>必須</td>
+  </tr>
+  <tr>
+    <td>tooltip</td>
+    <td>string</td>
+    <td></td>
+    <td>ツールチップ</td>
+  </tr>
+  <tr>
+    <td>size</td>
+    <td>'small' | 'medium'</td>
+    <td>'medium'</td>
+    <td>サイズ</td>
+  </tr>
+  <tr>
+    <td>fullWidth</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>幅100%</td>
+  </tr>
+</table>
+
+## 関連リンク
+
+- [MUI Select](https://mui.com/components/selects/)
+- [MUI Select API](https://mui.com/api/select/)
+- [MUI Form Control API](https://mui.com/api/form-control/)
+
+</Container>
+
+</ThemeProvider>

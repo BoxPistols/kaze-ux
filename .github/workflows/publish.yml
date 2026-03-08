@@ -1,0 +1,112 @@
+name: Publish Package
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'パッケージバージョン (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_PACKAGES }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@kddi-smartdrone-dev'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+          pnpm add -D @types/node
+
+      - name: Create .npmrc for GitHub Packages
+        run: |
+          echo "@kddi-smartdrone-dev:registry=https://npm.pkg.github.com/" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PAT_PACKAGES }}" >> .npmrc
+          echo "Created .npmrc file:"
+          cat .npmrc
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Check Git status before version bump
+        run: |
+          echo "=== Git Status Before Version Bump ==="
+          git status
+          echo "=== End Git Status ==="
+
+      - name: Bump version (for workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+
+          git add -A
+
+          if ! git diff --staged --quiet; then
+            echo "コミットしていない変更があります。自動コミットします。"
+            git commit -m "ビルド成果物の自動コミット [skip ci]"
+          else
+            echo "コミットしていない変更はありません。処理を続行します。"
+          fi
+
+          npm version ${{ github.event.inputs.version }} -m "バージョンを %s にアップデート [skip ci]"
+          git push
+          git push --tags
+
+      - name: Check Git status after version bump
+        run: |
+          echo "=== Git Status After Version Bump ==="
+          git status
+          echo "=== End Git Status ==="
+          echo "Current Package Version: $(node -e "console.log(require('./package.json').version)")"
+
+      - name: Publish to GitHub Packages
+        if: github.event_name == 'workflow_dispatch'
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PAT_PACKAGES }}
+
+      - name: Publishing Debug Info
+        run: |
+          echo "=== Publishing Debug Info ==="
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Package Name: $(node -e "console.log(require('./package.json').name)")"
+          echo "Package Version: $(node -e "console.log(require('./package.json').version)")"
+          echo "Repository URL: $(node -e "console.log(require('./package.json').repository.url)")"
+          echo "Current npm registry: $(npm config get registry)"
+          echo "=== End Debug Info ==="

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+          pnpm add -D @types/node
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Build Storybook
+        run: pnpm run build-storybook

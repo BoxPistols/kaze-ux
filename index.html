@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SDPF Theme - UI Playground</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" />
+    <script>
+      // GitHub Pages SPA Redirect Handler
+      // Handle redirects from 404.html for client-side routing
+      ;(function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&')
+            })
+            .join('?')
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          )
+        }
+      })(window.location)
+    </script>
+    <script>
+      // テーマ初期化（FOUC防止）- Reactレンダリング前に実行
+      ;(function () {
+        var savedMode =
+          localStorage.getItem('mui-mode') || localStorage.getItem('theme-mode')
+        var prefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches
+        var isDark =
+          savedMode === 'dark' || (savedMode !== 'light' && prefersDark)
+        document.documentElement.classList.toggle('dark', isDark)
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light'
+        document.documentElement.setAttribute(
+          'data-theme',
+          isDark ? 'dark' : 'light'
+        )
+      })()
+    </script>
+    <style>
+      /* テーマ確定前の背景色を設定（FOUC防止） */
+      html {
+        background-color: #fff;
+      }
+      html.dark {
+        background-color: #121212;
+      }
+      /* 初期ロード時のちらつき防止 */
+      html:not(.dark):not([data-theme]) {
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

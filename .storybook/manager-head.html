@@ -1,0 +1,297 @@
+<script>
+  /**
+   * Storybook Manager Authentication
+   * Storybook全体へのアクセスを認証で保護
+   */
+  ;(function () {
+    'use strict'
+
+    var CONFIG = {
+      storageKey: 'sdpf_auth',
+      expiryDuration: 30 * 24 * 60 * 60 * 1000,
+      maxAttempts: 5,
+    }
+
+    // パスワードはビルド時に注入される
+    var AUTH_PASSWORD = window.__STORYBOOK_AUTH_PASSWORD__ || ''
+
+    // パスワード未設定の場合は認証をスキップ
+    if (!AUTH_PASSWORD) {
+      return
+    }
+
+    // 簡易ハッシュ関数（PasswordGateと同じロジック）
+    function simpleHash(str) {
+      var hash = 0
+      for (var i = 0; i < str.length; i++) {
+        var char = str.charCodeAt(i)
+        hash = (hash << 5) - hash + char
+        hash = hash & hash
+      }
+      return hash.toString(36)
+    }
+
+    // 認証済みかチェック
+    function isAuthenticated() {
+      try {
+        var authData = localStorage.getItem(CONFIG.storageKey)
+        if (!authData) return false
+
+        var data = JSON.parse(authData)
+
+        // 有効期限チェック
+        if (!data.expiry || Date.now() >= data.expiry) {
+          localStorage.removeItem(CONFIG.storageKey)
+          return false
+        }
+
+        // パスワードハッシュの検証
+        var currentPasswordHash = simpleHash(AUTH_PASSWORD)
+        if (data.passwordHash && data.passwordHash !== currentPasswordHash) {
+          localStorage.removeItem(CONFIG.storageKey)
+          return false
+        }
+
+        return data.authenticated === true
+      } catch (e) {
+        return false
+      }
+    }
+
+    // 認証状態を保存
+    function saveAuth() {
+      var data = {
+        authenticated: true,
+        timestamp: Date.now(),
+        expiry: Date.now() + CONFIG.expiryDuration,
+        passwordHash: simpleHash(AUTH_PASSWORD),
+      }
+      localStorage.setItem(CONFIG.storageKey, JSON.stringify(data))
+    }
+
+    // 認証が必要な場合、ページをブロック
+    if (!isAuthenticated()) {
+      // DOMが準備できるまで待機
+      document.addEventListener('DOMContentLoaded', function () {
+        var attempts = 0
+
+        // オーバーレイを作成
+        var overlay = document.createElement('div')
+        overlay.id = 'auth-overlay'
+        overlay.innerHTML =
+          '\
+        <style>\
+          #auth-overlay {\
+            position: fixed;\
+            top: 0;\
+            left: 0;\
+            right: 0;\
+            bottom: 0;\
+            background: #ffffff;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            z-index: 999999;\
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;\
+          }\
+          #auth-box {\
+            background: white;\
+            padding: 48px;\
+            border-radius: 12px;\
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);\
+            text-align: center;\
+            max-width: 500px;\
+            width: 90%;\
+          }\
+          #auth-icon {\
+            width: 56px;\
+            height: 56px;\
+            border-radius: 50%;\
+            background: #FF4785;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            margin: 0 auto 24px;\
+          }\
+          #auth-box h1 {\
+            margin: 0 0 8px 0;\
+            font-size: 24px;\
+            font-weight: 700;\
+            color: #1a1a2e;\
+          }\
+          #auth-box > p:first-of-type {\
+            margin: 0 0 32px 0;\
+            color: #6b7280;\
+            font-size: 14px;\
+            line-height: 1.5;\
+          }\
+          #auth-input-wrapper {\
+            position: relative;\
+            margin-bottom: 16px;\
+          }\
+          #auth-box input {\
+            width: 100%;\
+            padding: 12px 16px;\
+            padding-right: 52px;\
+            border: 1px solid #d1d5db;\
+            border-radius: 4px;\
+            font-size: 16px;\
+            box-sizing: border-box;\
+            transition: border-color 0.2s;\
+            font-family: inherit;\
+          }\
+          #auth-box input::placeholder {\
+            color: #d1d5db;\
+          }\
+          #auth-box input:focus {\
+            outline: none;\
+            border-color: #FF4785;\
+            box-shadow: 0 0 0 2px rgba(255, 71, 133, 0.1);\
+          }\
+          #auth-toggle-password {\
+            position: absolute;\
+            right: 8px;\
+            top: 50%;\
+            transform: translateY(-50%);\
+            background: none;\
+            border: none;\
+            cursor: pointer;\
+            padding: 8px;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            color: #9ca3af;\
+            width: 40px;\
+            height: 40px;\
+            border-radius: 4px;\
+            transition: color 0.2s, background-color 0.2s;\
+          }\
+          #auth-toggle-password:hover {\
+            color: #6b7280;\
+            background-color: rgba(0, 0, 0, 0.04);\
+          }\
+          #auth-toggle-password svg {\
+            width: 24px;\
+            height: 24px;\
+            fill: currentColor;\
+          }\
+          #auth-submit {\
+            width: 100%;\
+            padding: 12px 24px;\
+            background: #FF4785;\
+            color: white;\
+            border: none;\
+            border-radius: 6px;\
+            font-size: 16px;\
+            font-weight: 600;\
+            cursor: pointer;\
+            transition: transform 0.2s, box-shadow 0.2s;\
+          }\
+          #auth-submit:hover:not(:disabled) {\
+            transform: translateY(-2px);\
+            box-shadow: 0 4px 12px rgba(255, 71, 133, 0.4);\
+          }\
+          #auth-submit:disabled {\
+            opacity: 0.6;\
+            cursor: not-allowed;\
+          }\
+          #auth-error {\
+            color: #d32f2f;\
+            font-size: 14px;\
+            margin-top: 12px;\
+            min-height: 20px;\
+          }\
+          #auth-brand {\
+            margin-top: 24px;\
+            color: #9ca3af;\
+            font-size: 13px;\
+          }\
+        </style>\
+        <div id="auth-box">\
+          <div id="auth-icon">\
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="white">\
+              <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"></path>\
+            </svg>\
+          </div>\
+          <h1>SDPF Theme Storybook</h1>\
+          <p>Storybookにアクセスするにはパスワードが必要です</p>\
+          <form id="auth-form">\
+            <div id="auth-input-wrapper">\
+              <input type="password" id="auth-password" placeholder="パスワード" autocomplete="off" />\
+              <button type="button" id="auth-toggle-password" aria-label="パスワード表示切り替え">\
+                <svg id="auth-icon-visibility" viewBox="0 0 24 24">\
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>\
+                </svg>\
+              </button>\
+            </div>\
+            <button type="submit" id="auth-submit">ログイン</button>\
+          </form>\
+          <div id="auth-error"></div>\
+          <div id="auth-brand">KDDI Smart Drone Platform</div>\
+        </div>\
+      '
+
+        document.body.appendChild(overlay)
+
+        var form = document.getElementById('auth-form')
+        var input = document.getElementById('auth-password')
+        var button = document.getElementById('auth-submit')
+        var errorDiv = document.getElementById('auth-error')
+        var toggleButton = document.getElementById('auth-toggle-password')
+
+        input.focus()
+
+        // パスワード表示/非表示切り替え
+        var visibilityIcon = document.getElementById('auth-icon-visibility')
+        var visibilityOffPath =
+          'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 2.73-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 001 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm5.31-7.78l3.15 3.15.02-.02c-.99-.99-2.36-1.63-3.84-1.63-.98 0-1.9.27-2.72.74l2.2 2.2c.29-.04.57-.07.87-.07 1.66 0 3 1.34 3 3 0 .3-.03.58-.07.87l2.2 2.2c.47-.82.74-1.74.74-2.72 0-2.76-2.24-5-5-5-.81 0-1.58.19-2.26.52z'
+        toggleButton.addEventListener('click', function (e) {
+          e.preventDefault()
+          var isPassword = input.type === 'password'
+          input.type = isPassword ? 'text' : 'password'
+          if (isPassword) {
+            visibilityIcon.setAttribute('d', visibilityOffPath)
+          } else {
+            visibilityIcon.setAttribute(
+              'd',
+              'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z'
+            )
+          }
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+
+          var password = input.value
+
+          if (password === AUTH_PASSWORD) {
+            saveAuth()
+            overlay.remove()
+            location.reload()
+          } else {
+            attempts++
+            if (attempts >= CONFIG.maxAttempts) {
+              errorDiv.textContent =
+                '試行回数の上限に達しました。ページを再読み込みしてください。'
+              input.disabled = true
+              button.disabled = true
+            } else {
+              errorDiv.textContent =
+                'パスワードが正しくありません（残り' +
+                (CONFIG.maxAttempts - attempts) +
+                '回）'
+              input.value = ''
+              input.focus()
+            }
+          }
+        })
+      })
+
+      // Storybookの読み込みを遅延させるため、bodyを非表示に
+      var style = document.createElement('style')
+      style.textContent =
+        'body { visibility: hidden; } #auth-overlay, #auth-overlay * { visibility: visible; }'
+      document.head.appendChild(style)
+    }
+  })()
+</script>

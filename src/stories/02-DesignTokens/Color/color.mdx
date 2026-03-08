@@ -1,0 +1,219 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks'
+import { colorData } from '../../../themes/colorToken'
+
+<Meta title='Design Tokens/Colors/03-ColorPalette:light' />
+
+# Color Palette : light
+
+This design system uses colors shared between MUI and Tailwind CSS for consistency across components.
+
+## Primary Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Primary'
+    subtitle='Brand primary color'
+    colors={{
+      Main: colorData.primary.main,
+      Dark: colorData.primary.dark,
+      Light: colorData.primary.light,
+      Lighter: colorData.primary.lighter,
+    }}
+  />
+  <ColorItem
+    title='Secondary'
+    subtitle='Brand secondary color'
+    colors={{
+      Main: colorData.secondary.main,
+      Dark: colorData.secondary.dark,
+      Light: colorData.secondary.light,
+      Lighter: colorData.secondary.lighter,
+    }}
+  />
+</ColorPalette>
+
+## Semantic Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Success'
+    subtitle='Success states'
+    colors={{
+      Main: colorData.success.main,
+      Dark: colorData.success.dark,
+      Light: colorData.success.light,
+      Lighter: colorData.success.lighter,
+    }}
+  />
+  <ColorItem
+    title='Warning'
+    subtitle='Warning states'
+    colors={{
+      Main: colorData.warning.main,
+      Dark: colorData.warning.dark,
+      Light: colorData.warning.light,
+      Lighter: colorData.warning.lighter,
+    }}
+  />
+  <ColorItem
+    title='Error'
+    subtitle='Error states'
+    colors={{
+      Main: colorData.error.main,
+      Dark: colorData.error.dark,
+      Light: colorData.error.light,
+      Lighter: colorData.error.lighter,
+    }}
+  />
+  <ColorItem
+    title='Info'
+    subtitle='Information states'
+    colors={{
+      Main: colorData.info.main,
+      Dark: colorData.info.dark,
+      Light: colorData.info.light,
+      Lighter: colorData.info.lighter,
+    }}
+  />
+</ColorPalette>
+
+## Text Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Text'
+    subtitle='Text hierarchy'
+    colors={{
+      Primary: colorData.text.primary,
+      Secondary: colorData.text.secondary,
+      Disabled: colorData.text.disabled,
+      White: colorData.text.white,
+    }}
+  />
+</ColorPalette>
+
+## Background Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Background'
+    subtitle='Surface colors'
+    colors={{
+      Default: colorData.background.default,
+      Paper: colorData.background.paper,
+    }}
+  />
+  <ColorItem
+    title='Surface'
+    subtitle='Additional surface colors'
+    colors={{
+      Background: colorData.surface.background,
+      'Background Dark': colorData.surface.backgroundDark,
+      'Background Disabled': colorData.surface.backgroundDisabled,
+    }}
+  />
+</ColorPalette>
+
+## Grey Scale
+
+<ColorPalette>
+  <ColorItem
+    title='Grey Shades'
+    subtitle='Neutral colors'
+    colors={{
+      50: colorData.grey[50],
+      100: colorData.grey[100],
+      200: colorData.grey[200],
+      300: colorData.grey[300],
+      400: colorData.grey[400],
+      500: colorData.grey[500],
+      600: colorData.grey[600],
+      700: colorData.grey[700],
+      800: colorData.grey[800],
+      850: colorData.grey[850],
+      900: colorData.grey[900],
+    }}
+  />
+</ColorPalette>
+
+## Action Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Action'
+    subtitle='Interactive states'
+    colors={{
+      Hover: colorData.action.hover,
+      Selected: colorData.action.selected,
+      Disabled: colorData.action.disabled,
+      Active: colorData.action.active,
+    }}
+  />
+</ColorPalette>
+
+## Icon Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Icon'
+    subtitle='Icon color variants'
+    colors={{
+      White: colorData.icon.white,
+      Light: colorData.icon.light,
+      Dark: colorData.icon.dark,
+      Action: colorData.icon.action,
+      Disabled: colorData.icon.disabled,
+    }}
+  />
+</ColorPalette>
+
+## Common Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Common'
+    subtitle='Basic colors'
+    colors={{
+      Black: colorData.common.black,
+      White: colorData.common.white,
+      Divider: colorData.divider,
+    }}
+  />
+</ColorPalette>
+
+## Usage
+
+### MUI Components
+
+```tsx
+import { useTheme } from '@mui/material/styles'
+
+function MyComponent() {
+  const theme = useTheme()
+  return (
+    <Box
+      sx={{
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+      }}>
+      MUI Component
+    </Box>
+  )
+}
+```
+
+### Tailwind CSS Classes
+
+```tsx
+function MyComponent() {
+  return (
+    <div className='bg-primary-main text-primary-foreground'>
+      Tailwind Component
+    </div>
+  )
+}
+```
+
+### Shared Usage
+
+Both MUI and Tailwind use the same color tokens from `colorData`, ensuring design consistency across all components.

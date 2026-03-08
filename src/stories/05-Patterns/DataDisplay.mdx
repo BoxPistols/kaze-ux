@@ -1,0 +1,18 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './DataDisplay.stories'
+
+<Meta of={Stories} />
+
+# Data Display
+
+## 概要
+
+データ表示パターン集。検索可能テーブル、カードグリッドなど、データの一覧表示に使用するレイアウトパターン。
+
+## 検索可能テーブル
+
+<Canvas of={Stories.SearchableTable} />
+
+## カードグリッド
+
+<Canvas of={Stories.CardGrid} />

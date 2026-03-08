@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './Breakpoints.stories'
+
+<Meta of={Stories} />
+
+# Breakpoints
+
+## 概要
+
+MUIテーマのブレークポイントシステム。sdpf-frontend-nextに準拠したカスタム値を設定。
+
+| ブレークポイント | 値     |
+| :--------------- | :----- |
+| mobile           | 0px    |
+| tablet           | 768px  |
+| laptop           | 1024px |
+| desktop          | 1280px |
+| wide             | 1536px |
+
+## ブレークポイントスケール
+
+<Canvas of={Stories.BreakpointScale} />
+
+## コンテナ幅
+
+<Canvas of={Stories.ContainerWidths} />
+
+## タッチターゲット
+
+<Canvas of={Stories.TouchTargets} />
+
+## レスポンシブデモ
+
+<Canvas of={Stories.ResponsiveDemo} />

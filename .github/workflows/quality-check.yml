@@ -1,0 +1,253 @@
+name: Quality Check
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 基本的な品質チェック
+  lint-and-typecheck:
+    name: Lint & TypeCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm lint
+        continue-on-error: false
+
+      - name: Check for console.log
+        run: |
+          echo "console.log残存チェック..."
+          if grep -rn "console\.log" --include="*.ts" --include="*.tsx" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "// eslint-disable" | grep -v ".stories." | head -20; then
+            echo "警告: console.logが検出されました"
+          fi
+
+      - name: Check for any type
+        run: |
+          echo "any型使用チェック..."
+          if grep -rn ": any" --include="*.ts" --include="*.tsx" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "// eslint-disable" | head -20; then
+            echo "警告: any型が検出されました"
+          fi
+
+  # テスト実行
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Run tests
+        run: pnpm test:all
+        continue-on-error: false
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # Storybookビルドチェック
+  storybook-build:
+    name: Storybook Build
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+  # 変更ファイルの分析
+  change-analysis:
+    name: Change Analysis
+    runs-on: ubuntu-latest
+    outputs:
+      has_component_changes: ${{ steps.check.outputs.has_component_changes }}
+      has_story_changes: ${{ steps.check.outputs.has_story_changes }}
+      changed_files_count: ${{ steps.check.outputs.changed_files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze changes
+        id: check
+        run: |
+          # 変更されたファイルを取得
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || echo "")
+
+          # コンポーネント変更の確認
+          if echo "$CHANGED_FILES" | grep -q "src/components/"; then
+            echo "has_component_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_component_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Storybookストーリー変更の確認
+          if echo "$CHANGED_FILES" | grep -q "\.stories\."; then
+            echo "has_story_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_story_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          # 変更ファイル数
+          CHANGED_COUNT=$(echo "$CHANGED_FILES" | grep -c "\.tsx\|\.ts") || CHANGED_COUNT=0
+          echo "changed_files_count=$CHANGED_COUNT" >> $GITHUB_OUTPUT
+
+          echo "変更されたファイル:"
+          echo "$CHANGED_FILES" | head -30
+
+  # PR品質サマリー
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test, storybook-build, change-analysis]
+    if: always()
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 品質チェック結果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Lint結果
+          if [ "${{ needs.lint-and-typecheck.result }}" == "success" ]; then
+            echo "- Lint & TypeCheck: 成功" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Lint & TypeCheck: 失敗" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # テスト結果
+          if [ "${{ needs.test.result }}" == "success" ]; then
+            echo "- Unit Tests: 成功" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Unit Tests: 失敗" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Storybookビルド結果
+          if [ "${{ needs.storybook-build.result }}" == "success" ]; then
+            echo "- Storybook Build: 成功" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Storybook Build: 失敗" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 変更分析" >> $GITHUB_STEP_SUMMARY
+          echo "- コンポーネント変更: ${{ needs.change-analysis.outputs.has_component_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Storybook変更: ${{ needs.change-analysis.outputs.has_story_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 変更ファイル数: ${{ needs.change-analysis.outputs.changed_files_count }}" >> $GITHUB_STEP_SUMMARY
