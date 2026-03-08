@@ -1,5 +1,5 @@
 // src/components/ui/calendar/dayView.tsx
-// 日表示カレンダーコンポーネント
+// sdpf-frontend-nextに準拠した日表示カレンダーコンポーネント
 import { Box, Typography, Avatar } from '@mui/material'
 import dayjs from 'dayjs'
 
@@ -34,7 +34,7 @@ const getTypeColor = (type: string) => {
       return '#1976d2' // primary
     case '整備':
       return '#ed6c02' // warning
-    case '実行':
+    case '飛行':
       return '#2e7d32' // success
     default:
       return '#9e9e9e' // grey

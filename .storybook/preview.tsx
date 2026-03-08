@@ -104,6 +104,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
           </div>
           {context.viewMode !== 'docs' && (
             <ChatSupport
+              key={context.id}
               currentStory={{
                 title: context.title,
                 name: context.name,
@@ -181,6 +182,8 @@ const preview: Preview = {
             ['*', ['Docs', '*']],
             'Maps',
             ['*', ['Docs', '*']],
+            'UTM',
+            ['*', ['Docs', '*']],
             '*',
           ],
           'Patterns',
@@ -207,14 +210,14 @@ const preview: Preview = {
       },
     },
     padding: {
-      name: 'Padding',
-      description: 'Content padding / コンテンツ周囲のパディング',
+      name: 'パディング',
+      description: 'コンテンツ周囲のパディング',
       defaultValue: 'standard',
       toolbar: {
         icon: 'box',
         items: [
-          { value: 'none', title: 'No Padding' },
-          { value: 'standard', title: 'Standard Padding' },
+          { value: 'none', title: 'パディングなし' },
+          { value: 'standard', title: '標準パディング' },
         ],
       },
     },

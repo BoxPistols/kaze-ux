@@ -1,5 +1,5 @@
 // src/components/ui/table/tableToolbar.tsx
-// テーブルツールバーコンポーネント
+// sdpf-frontend-nextに準拠したテーブルツールバーコンポーネント
 import { Stack, type SxProps, type Theme } from '@mui/material'
 import { GridToolbarQuickFilter } from '@mui/x-data-grid'
 import type { ReactNode } from 'react'
