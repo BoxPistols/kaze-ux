@@ -54,3 +54,6 @@ report.json
 
 # Demo app build outputs
 apps/*/dist
+
+# Draft articles
+zenn-storybook-ai-chat.md

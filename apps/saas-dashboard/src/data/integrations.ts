@@ -12,6 +12,8 @@ export type Integration = {
   status: IntegrationStatus
   lastSync?: string
   category: string
+  apiKey?: string
+  webhookUrl?: string
 }
 
 export const integrations: Integration[] = [

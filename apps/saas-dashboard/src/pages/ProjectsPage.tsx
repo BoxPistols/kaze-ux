@@ -1,23 +1,25 @@
 import AddIcon from '@mui/icons-material/Add'
-import { Box, LinearProgress } from '@mui/material'
+import { Box, Grid, LinearProgress } from '@mui/material'
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { CustomSelect } from '@/components/Form/CustomSelect'
+import { CustomTextField } from '@/components/Form/CustomTextField'
 import { UserAvatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import { CustomChip } from '@/components/ui/chip'
+import { ConfirmDialog, FormDialog } from '@/components/ui/dialog'
 import { ActionMenu } from '@/components/ui/menu'
 import { ResourceTable } from '@/components/ui/table'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
 import { PageHeader } from '@/components/ui/text'
 import { toast } from '@/components/ui/toast'
-import { ToggleButtonGroup } from '@/components/ui/toggle-button'
 
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
-import type { Project, ProjectStatus } from '~/data/projects'
+import type { Project, ProjectStatus, ProjectPriority } from '~/data/projects'
 
-import { projects } from '~/data/projects'
+import { projects as initialProjects } from '~/data/projects'
 
 const statusMap: Record<ProjectStatus, StatusType> = {
   active: 'active',
@@ -27,21 +29,97 @@ const statusMap: Record<ProjectStatus, StatusType> = {
   cancelled: 'rejected',
 }
 
-const filterOptions = [
+const filterOptions: { value: ProjectStatus | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'active', label: 'Active' },
   { value: 'draft', label: 'Draft' },
   { value: 'completed', label: 'Done' },
 ]
 
+const statusOptions: { value: ProjectStatus; label: string }[] = [
+  { value: 'active', label: 'Active' },
+  { value: 'draft', label: 'Draft' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'on-hold', label: 'On Hold' },
+  { value: 'cancelled', label: 'Cancelled' },
+]
+
+const priorityOptions: { value: ProjectPriority; label: string }[] = [
+  { value: 'critical', label: 'Critical' },
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
+]
+
+const emptyForm = {
+  name: '',
+  description: '',
+  status: 'active' as ProjectStatus,
+  priority: 'medium' as ProjectPriority,
+  owner: '',
+  dueDate: '',
+}
+
 export const ProjectsPage = () => {
   const navigate = useNavigate()
-  const [filter, setFilter] = useState<string | string[] | null>('all')
+  const [projectList, setProjectList] = useState<Project[]>(initialProjects)
+  const [filter, setFilter] = useState<ProjectStatus | 'all'>('all')
+  const [formOpen, setFormOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<Project | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Project | null>(null)
+  const [form, setForm] = useState(emptyForm)
 
   const filteredProjects = useMemo(() => {
-    if (!filter || filter === 'all') return projects
-    return projects.filter((p) => p.status === filter)
-  }, [filter])
+    if (filter === 'all') return projectList
+    return projectList.filter((p) => p.status === filter)
+  }, [filter, projectList])
+
+  const openEdit = (project: Project) => {
+    setEditTarget(project)
+    setForm({
+      name: project.name,
+      description: project.description,
+      status: project.status,
+      priority: project.priority,
+      owner: project.owner,
+      dueDate: project.dueDate,
+    })
+    setFormOpen(true)
+  }
+
+  const openDelete = (project: Project) => {
+    setDeleteTarget(project)
+    setDeleteOpen(true)
+  }
+
+  const handleSubmit = () => {
+    if (!form.name.trim()) {
+      toast.error('Project name is required')
+      return
+    }
+
+    if (editTarget) {
+      setProjectList((prev) =>
+        prev.map((p) =>
+          p.id === editTarget.id
+            ? { ...p, ...form }
+            : p
+        )
+      )
+      toast.success(`Updated project: ${form.name}`)
+    }
+    setFormOpen(false)
+  }
+
+  const handleDelete = () => {
+    if (deleteTarget) {
+      setProjectList((prev) => prev.filter((p) => p.id !== deleteTarget.id))
+      toast.success(`Deleted project: ${deleteTarget.name}`)
+    }
+    setDeleteOpen(false)
+    setDeleteTarget(null)
+  }
 
   const columns: GridColDef<Project>[] = [
     {
@@ -133,13 +211,13 @@ export const ProjectsPage = () => {
             {
               id: 'edit',
               label: 'Edit',
-              onClick: () => toast.info(`Edit ${params.row.name}`),
+              onClick: () => openEdit(params.row),
             },
             {
               id: 'delete',
               label: 'Delete',
               danger: true,
-              onClick: () => toast.error(`Delete ${params.row.name}`),
+              onClick: () => openDelete(params.row),
             },
           ]}
           size='small'
@@ -159,14 +237,20 @@ export const ProjectsPage = () => {
         </Button>
       </PageHeader>
 
-      <Box sx={{ mb: 2 }}>
-        <ToggleButtonGroup
-          options={filterOptions}
-          value={filter}
-          onChange={setFilter}
-          size='small'
-          exclusive
-        />
+      <Box sx={{ display: 'flex', gap: 1, mb: 2.5, flexWrap: 'wrap' }}>
+        {filterOptions.map((opt) => (
+          <CustomChip
+            key={opt.value}
+            label={opt.label}
+            onClick={() => setFilter(opt.value)}
+            variant={filter === opt.value ? 'filled' : 'outlined'}
+            color={filter === opt.value ? 'primary' : 'default'}
+            sx={{
+              cursor: 'pointer',
+              fontWeight: filter === opt.value ? 600 : 400,
+            }}
+          />
+        ))}
       </Box>
 
       <ResourceTable
@@ -180,6 +264,104 @@ export const ProjectsPage = () => {
         initialPageSize={10}
         density='standard'
         autoHeight
+      />
+
+      <FormDialog
+        open={formOpen}
+        title='Edit Project'
+        onSubmit={handleSubmit}
+        onCancel={() => setFormOpen(false)}
+        submitText='Update'
+        maxWidth='sm'
+        fullWidth>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12 }}>
+            <CustomTextField
+              label='Name'
+              value={form.name}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, name: e.target.value }))
+              }
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <CustomTextField
+              label='Description'
+              value={form.description}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, description: e.target.value }))
+              }
+              fullWidth
+              multiline
+              rows={2}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <CustomSelect
+              label='Status'
+              value={form.status}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  status: e.target.value as ProjectStatus,
+                }))
+              }
+              options={statusOptions}
+              fullWidth
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <CustomSelect
+              label='Priority'
+              value={form.priority}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  priority: e.target.value as ProjectPriority,
+                }))
+              }
+              options={priorityOptions}
+              fullWidth
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <CustomTextField
+              label='Owner'
+              value={form.owner}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, owner: e.target.value }))
+              }
+              fullWidth
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <CustomTextField
+              label='Due Date'
+              value={form.dueDate}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, dueDate: e.target.value }))
+              }
+              fullWidth
+              type='date'
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+          </Grid>
+        </Grid>
+      </FormDialog>
+
+      <ConfirmDialog
+        open={deleteOpen}
+        title='Delete Project'
+        message={`Are you sure you want to delete "${deleteTarget?.name}"?`}
+        onCancel={() => {
+          setDeleteOpen(false)
+          setDeleteTarget(null)
+        }}
+        onConfirm={handleDelete}
+        confirmColor='error'
+        confirmText='Delete'
       />
     </Box>
   )
