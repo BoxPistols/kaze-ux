@@ -1,13 +1,8 @@
 /**
- * shadcn-inspired Button component built on MUI
- * Combines MUI's robustness with pure Tailwind CSS utility-first approach
- * Note: This is NOT shadcn/ui itself, but inspired by its design patterns
+ * shadcn-inspired Button component
+ * Pure Tailwind CSS + CVA — no MUI dependency
  */
 
-import {
-  Button as MuiButton,
-  type ButtonProps as MuiButtonProps,
-} from '@mui/material'
 import { type VariantProps, cva } from 'class-variance-authority'
 import * as React from 'react'
 
@@ -15,7 +10,7 @@ import { cn } from '@/utils/className'
 
 const buttonVariants = cva(
   // Base styles
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -42,8 +37,7 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends
-    Omit<MuiButtonProps, 'variant' | 'size' | 'color'>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
@@ -51,20 +45,9 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild: _asChild = false, ...props }, ref) => {
     return (
-      <MuiButton
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        variant='text'
-        disableRipple
-        disableElevation
-        sx={{
-          // MUIデフォルトスタイルをリセットし、Tailwind CVAに完全委譲
-          minWidth: 'unset',
-          padding: 0,
-          color: 'inherit',
-          backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: 'transparent' },
-        }}
         {...props}
       />
     )

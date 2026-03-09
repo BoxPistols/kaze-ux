@@ -17,7 +17,6 @@ import {
 } from 'react-router-dom'
 
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { ChatSupport } from '@/components/ui/ChatSupport/ChatSupport'
 import { NotFoundView } from '@/components/ui/feedback'
 import { CustomToaster } from '@/components/ui/toast'
 import {
@@ -188,7 +187,6 @@ const AppContent = () => {
           <Route path='*' element={<NotFoundView homePath='/dashboard' />} />
         </Routes>
       </LayoutWithSidebar>
-      <ChatSupport />
       <CustomToaster />
     </SidebarProvider>
   )
