@@ -11,7 +11,7 @@ import type { Language } from 'prism-react-renderer'
  * pre 要素のラッパー。コピーボタン + シンタックスハイライトを提供する。
  * ReactMarkdown の components={{ pre: CodeBlockPre }} で使用。
  */
-export const CodeBlockPre = ({ children }: { children: React.ReactNode }) => {
+export const CodeBlockPre = ({ children }: { children?: React.ReactNode }) => {
   const [copied, setCopied] = useState(false)
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
@@ -103,7 +103,7 @@ const CodeBlock = ({
   children,
   className,
 }: {
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) => {
   return <code className={className}>{children}</code>

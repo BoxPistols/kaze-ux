@@ -1,5 +1,4 @@
 // src/components/ui/calendar/monthView.tsx
-// sdpf-frontend-nextに準拠した月表示カレンダーコンポーネント
 import { Box, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 

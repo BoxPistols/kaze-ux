@@ -5,7 +5,7 @@
  * 方針:
  * - 実際のソースコード（theme.ts, colorToken.ts 等）に基づくデータを含める
  * - MUI公式ドキュメントURLを含める
- * - 汎用的な説明ではなく、SDPFプロジェクト固有の情報を優先する
+ * - 汎用的な説明ではなく、プロジェクト固有の情報を優先する
  */
 
 export interface StoryGuideEntry {
@@ -27,7 +27,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
   // --- Guide ---
   'Guide/Introduction': {
     summary:
-      'SDPFデザインシステムの入口。Storybookの基本操作とプロジェクト概要を説明する。',
+      'デザインシステムの入口。Storybookの基本操作とプロジェクト概要を説明する。',
     codeContext: [
       'テーマ定義: src/themes/theme.ts（lightTheme / darkTheme）',
       'Storybook設定: .storybook/preview.tsx でテーマ切替・デコレータ定義',
@@ -63,9 +63,9 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
     related: ['Guide/HTML CSS Basics', 'Design Tokens/Spacing'],
   },
   'Guide/Material Design': {
-    summary: 'Material Designの3原則とSDPFでの適用。',
+    summary: 'Material Designの3原則と本プロジェクトでの適用。',
     codeContext: [
-      'Elevation: MUI Paper elevation={0-24}。SDPFはCard=0、Dialog=24',
+      'Elevation: MUI Paper elevation={0-24}。本テーマではCard=0、Dialog=24',
       'スペーシング: theme.spacing(n) = n*4px。p:2 = 8px',
       'Ripple: MUI ButtonBase に内蔵。disableRipple で無効化可',
     ],
@@ -131,7 +131,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
   'Guide/React Basics': {
     summary: 'Reactの基礎。コンポーネント、Props、State、JSX。',
     codeContext: [
-      'SDPFではReact 19 + TypeScript strict mode',
+      '本プロジェクトではReact 19 + TypeScript strict mode',
       'React.FC禁止: interface Props + 通常の関数定義を使う',
       'State管理: useState / useEffect / useCallback',
     ],
@@ -149,15 +149,15 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
 
   // --- Design Philosophy ---
   'Design Philosophy/Overview': {
-    summary: 'SDPFの設計思想。信頼感、革新性、共創のブランド価値。',
+    summary: 'デザインシステムの設計思想。信頼感、革新性、共創のブランド価値。',
     codeContext: [
-      'ブランドカラー primary=#2642be がSDPFの信頼感を表現',
+      'ブランドカラー primary=#2642be がブランドの信頼感を表現',
       'テーマ構造: src/themes/ 配下に分離（theme.ts, colorToken.ts, typography.ts, breakpoints.ts）',
     ],
     related: ['Design Philosophy/Component Design Guide'],
   },
   'Design Philosophy/Technical Stack': {
-    summary: 'SDPFの技術スタック選定理由。',
+    summary: '技術スタックの選定理由。',
     codeContext: [
       'MUI v7: 新Grid API（size prop）、TypeScript完全対応',
       'Tailwind CSS v3: JIT、CSS変数連携、cn()ユーティリティ',
@@ -193,13 +193,13 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
   },
   'Design Tokens/Color Palette': {
     summary:
-      'SDPFのカラーパレット。colorToken.ts で定義された実際の色値を表示。',
+      'カラーパレット。colorToken.ts で定義された実際の色値を表示。',
     codeContext: [
       '定義ファイル: src/themes/colorToken.ts',
       'Light primary: #2642be(main) #1a2c80(dark) #4d68d4(light)',
       'Dark primary: #5d7ce8(main) #4a66c9(dark) #7b94ec(light)',
       'グレースケール: grey.50=#fafafa 〜 grey.900=#292929（全11段階）',
-      'grey.850=#323232 はSDPFカスタム追加（MUI標準にはない）',
+      'grey.850=#323232 はカスタム追加（MUI標準にはない）',
       'セマンティック: success=#46ab4a, info=#1dafc2, warning=#eb8117, error=#da3737',
       'ダークモード: createThemeColors(isLight) で Light/Dark を分岐生成',
       'ColorSet型: main, dark, light, lighter, contrastText の5値セット',
@@ -239,7 +239,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
     summary: 'MUI Elevation。影の深度で要素階層を表現。',
     codeContext: [
       'MUI: elevation={0-24} で Paper/Card の影を制御',
-      'SDPF標準: Card=elevation:0(outlined), Dialog=elevation:24',
+      'プロジェクト標準: Card=elevation:0(outlined), Dialog=elevation:24',
       'カスタム影: src/themes/theme.ts の shadows 配列',
       'Darkモード: 影ではなくsurface色の明るさで階層を表現',
     ],
@@ -252,7 +252,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
     summary: 'レスポンシブブレークポイント。src/themes/breakpoints.ts で定義。',
     codeContext: [
       '定義ファイル: src/themes/breakpoints.ts',
-      'SDPFカスタムブレークポイント: mobile=0, tablet=640, laptop=1024, desktop=1440',
+      'カスタムブレークポイント: mobile=0, tablet=640, laptop=1024, desktop=1440',
       'MUI標準(xs,sm,md,lg,xl)とは異なる独自定義',
       'Grid: size={{ xs: 12, sm: 6, md: 3 }} でレスポンシブ指定',
     ],

@@ -1,5 +1,4 @@
 // src/components/ui/tooltip/customTooltip.tsx
-// sdpf-frontend-nextに準拠したカスタムTooltipコンポーネント
 import { styled } from '@mui/material/styles'
 import MuiTooltip, {
   type TooltipProps,

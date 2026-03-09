@@ -1,5 +1,4 @@
 // src/components/ui/calendar/calendarControl.tsx
-// sdpf-frontend-nextに準拠したカレンダーコントロールコンポーネント
 import { ChevronLeft, ChevronRight, Today } from '@mui/icons-material'
 import {
   Box,

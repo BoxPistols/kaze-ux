@@ -96,7 +96,6 @@ export { NotFoundView } from './feedback'
 export type { NotFoundViewProps } from './feedback'
 
 // Icon components
-export { DroneIcon, FixedCameraIcon, ProjectRoleIcon } from './icon'
 export type { CustomIconProps } from './icon'
 
 // Calendar components

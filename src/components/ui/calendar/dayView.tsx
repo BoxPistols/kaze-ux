@@ -1,5 +1,4 @@
 // src/components/ui/calendar/dayView.tsx
-// sdpf-frontend-nextに準拠した日表示カレンダーコンポーネント
 import { Box, Typography, Avatar } from '@mui/material'
 import dayjs from 'dayjs'
 

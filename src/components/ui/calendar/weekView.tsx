@@ -1,5 +1,4 @@
 // src/components/ui/calendar/weekView.tsx
-// sdpf-frontend-nextに準拠した週表示カレンダーコンポーネント
 import { Box, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 
