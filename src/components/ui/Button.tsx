@@ -54,8 +54,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <MuiButton
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        variant='text'
         disableRipple
         disableElevation
+        sx={{
+          // MUIデフォルトスタイルをリセットし、Tailwind CVAに完全委譲
+          minWidth: 'unset',
+          padding: 0,
+          color: 'inherit',
+          backgroundColor: 'transparent',
+          '&:hover': { backgroundColor: 'transparent' },
+        }}
         {...props}
       />
     )
