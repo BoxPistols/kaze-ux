@@ -1,5 +1,4 @@
 // src/components/ui/toast/customToaster.tsx
-// sdpf-frontend-nextに準拠したトーストコンポーネント
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 

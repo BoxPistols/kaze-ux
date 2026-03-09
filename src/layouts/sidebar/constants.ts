@@ -33,7 +33,7 @@ export const defaultMenuItems: MenuItem[] = []
  * メインコンテンツエリアのパディング設定
  * nextと同等のヘッダーレス設計
  */
-export const MAIN_ELEMENT_PADDING_TOP_SPACING = 3
+export const MAIN_ELEMENT_PADDING_TOP_SPACING = 4
 export const MAIN_ELEMENT_PADDING_BOTTOM_SPACING = 3
 
 /**

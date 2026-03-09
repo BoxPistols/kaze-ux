@@ -1,5 +1,4 @@
 // src/components/ui/feedback/notFoundView.tsx
-// sdpf-frontend-nextに準拠した404ページコンポーネント
 import { Home, ArrowBack } from '@mui/icons-material'
 import {
   Box,

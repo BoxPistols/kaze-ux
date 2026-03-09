@@ -335,7 +335,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
 
   const handleDownload = useCallback(() => {
     const lines = [
-      '# SDPF Concierge - チャット履歴',
+      '# Concierge - チャット履歴',
       `> ${new Date().toLocaleDateString('ja-JP')} エクスポート`,
       '',
     ]
@@ -353,7 +353,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `sdpf-concierge-${new Date().toISOString().slice(0, 10)}.md`
+    a.download = `concierge-${new Date().toISOString().slice(0, 10)}.md`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -649,7 +649,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   ? 'AI設定'
                   : currentStory
                     ? currentStory.name
-                    : 'SDPF Concierge'}
+                    : 'Concierge'}
               </Typography>
               {!showSettings && currentStory && (
                 <Typography

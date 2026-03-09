@@ -1,5 +1,4 @@
 // src/components/ui/avatar/userAvatar.tsx
-// sdpf-frontend-nextに準拠したユーザーアバターコンポーネント
 import {
   Avatar,
   type AvatarProps as MuiAvatarProps,

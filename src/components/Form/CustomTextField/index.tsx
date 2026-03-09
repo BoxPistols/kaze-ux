@@ -88,7 +88,7 @@ const CustomTextField = ({
         sx={{
           lineHeight: size === 'small' ? '1.5' : '1.75',
           color: theme.palette.text.primary,
-          marginBottom: 0,
+          marginBottom: '4px',
         }}>
         {required && (
           <RequiredMark
