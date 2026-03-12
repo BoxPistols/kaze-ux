@@ -11,13 +11,18 @@ import {
   containerMaxWidth,
   muiBreakpoints,
 } from './breakpoints'
-import { colorData } from './colorToken'
+import {
+  colorData,
+  createDarkThemeColors,
+  createLightThemeColors,
+} from './colorToken'
 import {
   fontSizesVariant,
   typographyComponentsOverrides,
   typographyOptions,
 } from './typography'
 
+import type { ColorScheme, DarkColorScheme } from './colorToken'
 import type { AppTheme } from '../types/theme'
 
 // Button共通
@@ -336,11 +341,7 @@ const componentStyles = {
       root: ({ theme }: { theme: Theme }) => ({
         backgroundColor: theme.palette.background.paper,
         borderRadius: 12,
-        border: `1px solid ${
-          theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.08)'
-            : 'rgba(255, 255, 255, 0.08)'
-        }`,
+        border: `1px solid ${theme.palette.divider}`,
         boxShadow:
           theme.palette.mode === 'light'
             ? '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)'
@@ -353,10 +354,7 @@ const componentStyles = {
             theme.palette.mode === 'light'
               ? '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)'
               : '0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)',
-          borderColor:
-            theme.palette.mode === 'light'
-              ? 'rgba(0, 0, 0, 0.12)'
-              : 'rgba(255, 255, 255, 0.12)',
+          borderColor: theme.palette.divider,
         },
       }),
     },
@@ -442,23 +440,14 @@ const componentStyles = {
           height: 6,
         },
         '&::-webkit-scrollbar-track': {
-          backgroundColor:
-            theme.palette.mode === 'light'
-              ? 'rgba(0, 0, 0, 0.04)'
-              : 'rgba(255, 255, 255, 0.04)',
+          backgroundColor: theme.palette.action.hover,
           borderRadius: 3,
         },
         '&::-webkit-scrollbar-thumb': {
-          backgroundColor:
-            theme.palette.mode === 'light'
-              ? 'rgba(0, 0, 0, 0.2)'
-              : 'rgba(255, 255, 255, 0.2)',
+          backgroundColor: theme.palette.action.active,
           borderRadius: 3,
           '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light'
-                ? 'rgba(0, 0, 0, 0.3)'
-                : 'rgba(255, 255, 255, 0.3)',
+            backgroundColor: theme.palette.text.secondary,
           },
         },
         // Container Query: tablet(768px)以下でテーブルに最小幅を設定し横スクロールを発生させる
@@ -474,10 +463,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         '& .MuiTableCell-head': {
-          backgroundColor:
-            theme.palette.mode === 'light'
-              ? 'rgba(0, 0, 0, 0.02)'
-              : 'rgba(255, 255, 255, 0.03)',
+          backgroundColor: theme.palette.action.hover,
           fontWeight: 600,
           fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
           color: theme.palette.text.secondary,
@@ -496,10 +482,7 @@ const componentStyles = {
         '& .MuiTableRow-root': {
           transition: 'background-color 0.15s ease',
           '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light'
-                ? 'rgba(0, 0, 0, 0.02)'
-                : 'rgba(255, 255, 255, 0.02)',
+            backgroundColor: theme.palette.action.hover,
           },
         },
       }),
@@ -508,11 +491,7 @@ const componentStyles = {
   MuiTableCell: {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
-        borderBottom: `1px solid ${
-          theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.06)'
-            : 'rgba(255, 255, 255, 0.06)'
-        }`,
+        borderBottom: `1px solid ${theme.palette.divider}`,
         padding: '14px 16px',
         fontSize: fontSizesVariant.sm,
         color: theme.palette.text.primary,
@@ -648,11 +627,7 @@ const componentStyles = {
     styleOverrides: {
       paper: ({ theme }: { theme: Theme }) => ({
         borderRadius: 16,
-        border: `1px solid ${
-          theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.08)'
-            : 'rgba(255, 255, 255, 0.08)'
-        }`,
+        border: `1px solid ${theme.palette.divider}`,
         boxShadow:
           theme.palette.mode === 'light'
             ? '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)'
@@ -809,10 +784,7 @@ const componentStyles = {
   MuiSkeleton: {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
-        backgroundColor:
-          theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.06)'
-            : 'rgba(255, 255, 255, 0.06)',
+        backgroundColor: theme.palette.action.hover,
       }),
       rounded: {
         borderRadius: 8,
@@ -899,7 +871,45 @@ const darkTheme = createTheme({
   components: componentStyles as Components<Theme>,
 })
 
+/** 指定スキームでダークテーマを生成 */
+const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
+  const colors = createDarkThemeColors(scheme)
+  // @ts-expect-error MUI v7の型互換性問題
+  return createTheme({
+    ...commonThemeOptions,
+    palette: {
+      mode: 'dark',
+      ...colors,
+      background: {
+        ...colors.background,
+        default: colors.background.default,
+        paper: colors.background.paper,
+      },
+    },
+    components: componentStyles as Components<Theme>,
+  })
+}
+
+/** 指定スキームでライトテーマを生成 */
+const createLightTheme = (scheme?: ColorScheme): Theme => {
+  const colors = createLightThemeColors(scheme)
+  // @ts-expect-error MUI v7の型互換性問題
+  return createTheme({
+    ...commonThemeOptions,
+    palette: {
+      mode: 'light',
+      ...colors,
+      background: {
+        ...colors.background,
+        default: colors.background.default,
+        paper: colors.background.paper,
+      },
+    },
+    components: componentStyles as Components<Theme>,
+  })
+}
+
 // Theme 型も明示的にエクスポート
 export type { AppTheme }
 
-export { theme, lightTheme, darkTheme }
+export { theme, lightTheme, darkTheme, createDarkTheme, createLightTheme }
