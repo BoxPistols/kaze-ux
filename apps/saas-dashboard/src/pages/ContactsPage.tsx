@@ -170,7 +170,7 @@ export const ContactsPage = () => {
     <Box sx={{ p: 3 }}>
       <PageHeader
         title='Contacts'
-        subtitle='Manage your CRM contacts and leads.'>
+        subtitle='Manage your contacts and leads.'>
         <Button variant='default' onClick={openAdd}>
           <AddIcon sx={{ fontSize: 18, mr: 0.5 }} aria-hidden='true' /> Add
           Contact

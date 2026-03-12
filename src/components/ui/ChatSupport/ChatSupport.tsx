@@ -721,7 +721,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 fontSize: 12,
                 whiteSpace: 'nowrap',
               }}>
-              {config.model}
+              {!config.apiKey ? 'FAQモード' : config.model}
             </Typography>
           )}
         </Stack>
@@ -780,7 +780,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
       {showSettings ? (
         <Box sx={{ p: 3, flexGrow: 1, overflowY: 'auto' }}>
           <Stack spacing={3}>
-            {/* デフォルト設定セクション */}
+            {/* 現在の接続状態セクション */}
             <Box
               sx={{
                 bgcolor:
@@ -793,25 +793,76 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
               <Typography
                 variant='caption'
                 sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
-                デフォルト設定
+                現在の設定
               </Typography>
-              <Typography
-                variant='caption'
-                color='text.secondary'
-                sx={{ display: 'block', lineHeight: 1.6 }}>
-                {DEFAULT_MODEL} を使用中（プロジェクト提供）
-              </Typography>
-              {isUsingDefaultKey && (
-                <Stack
-                  direction='row'
-                  alignItems='center'
-                  spacing={0.5}
-                  sx={{ mt: 0.5 }}>
-                  <CheckCircle2 size={14} color={theme.palette.success.main} />
-                  <Typography variant='caption' color='success.main'>
-                    そのまま利用できます
+              {isUsingDefaultKey ? (
+                DEFAULT_API_KEY ? (
+                  <>
+                    <Typography
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ display: 'block', lineHeight: 1.6 }}>
+                      {DEFAULT_MODEL} を使用中（プロジェクト提供）
+                    </Typography>
+                    <Stack
+                      direction='row'
+                      alignItems='center'
+                      spacing={0.5}
+                      sx={{ mt: 0.5 }}>
+                      <CheckCircle2
+                        size={14}
+                        color={theme.palette.success.main}
+                      />
+                      <Typography variant='caption' color='success.main'>
+                        AI対話モード
+                      </Typography>
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Typography
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ display: 'block', lineHeight: 1.6 }}>
+                      APIキー未設定
+                    </Typography>
+                    <Stack
+                      direction='row'
+                      alignItems='center'
+                      spacing={0.5}
+                      sx={{ mt: 0.5 }}>
+                      <AlertCircle
+                        size={14}
+                        color={theme.palette.warning.main}
+                      />
+                      <Typography variant='caption' color='warning.main'>
+                        FAQモードのみ（AI対話にはAPIキーが必要）
+                      </Typography>
+                    </Stack>
+                  </>
+                )
+              ) : (
+                <>
+                  <Typography
+                    variant='caption'
+                    color='text.secondary'
+                    sx={{ display: 'block', lineHeight: 1.6 }}>
+                    {config.model} を使用中（カスタムAPIキー）
                   </Typography>
-                </Stack>
+                  <Stack
+                    direction='row'
+                    alignItems='center'
+                    spacing={0.5}
+                    sx={{ mt: 0.5 }}>
+                    <CheckCircle2
+                      size={14}
+                      color={theme.palette.success.main}
+                    />
+                    <Typography variant='caption' color='success.main'>
+                      AI対話モード
+                    </Typography>
+                  </Stack>
+                </>
               )}
             </Box>
 

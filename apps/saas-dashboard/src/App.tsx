@@ -63,7 +63,7 @@ const menuItems: SidebarMenuItem[] = [
     icon: <ContactsIcon />,
     href: '/contacts',
     category: 'MAIN',
-    description: 'CRM & contacts',
+    description: 'Contacts & leads',
   },
   {
     id: 'calendar',
@@ -168,7 +168,7 @@ const AppContent = () => {
         sidebarExcludedPaths={[]}
         menuItems={menuItems}
         accountMenu={accountMenu}
-        appName='CRM Dashboard'
+        appName='Kaze Dashboard'
         defaultUrl='/dashboard'>
         <Routes>
           <Route path='/' element={<Navigate to='/dashboard' replace />} />
