@@ -88,7 +88,7 @@ export const CalendarPage = () => {
           title: e.title,
           date: start.format('YYYY-MM-DD'),
           time: start.format('HH:mm'),
-          duration: mins > 0 ? `${hours}h ${mins}m` : `${hours}h`,
+          duration: mins > 0 ? `${Math.max(hours, 1)}h ${mins}m` : `${Math.max(hours, 1)}h`,
           type: e.type,
           assignee: e.attendees?.[0] ?? '',
         }
@@ -102,7 +102,7 @@ export const CalendarPage = () => {
       ...emptyForm,
       date: date ?? dayjs().format('YYYY-MM-DD'),
       startTime: time ?? '09:00',
-      endTime: time ? `${String(Number(time.split(':')[0]) + 1).padStart(2, '0')}:00` : '10:00',
+      endTime: time ? `${String((Number(time.split(':')[0]) + 1) % 24).padStart(2, '0')}:00` : '10:00',
     })
     setFormOpen(true)
   }, [])

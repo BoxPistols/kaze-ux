@@ -42,6 +42,7 @@ const statusFilters: { value: InvoiceStatus | 'all'; label: string }[] = [
   { value: 'pending', label: 'Pending' },
   { value: 'overdue', label: 'Overdue' },
   { value: 'draft', label: 'Draft' },
+  { value: 'cancelled', label: 'Cancelled' },
 ]
 
 const statusOptions: { value: InvoiceStatus; label: string }[] = [
@@ -151,19 +152,24 @@ export const InvoicesPage = () => {
       return
     }
 
+    const number = form.number.trim()
+    const client = form.client.trim()
+
     if (editTarget) {
       setInvoiceList((prev) =>
         prev.map((inv) =>
           inv.id === editTarget.id
-            ? { ...inv, ...form, amount }
+            ? { ...inv, ...form, number, client, amount }
             : inv
         )
       )
-      toast.success(`Updated invoice: ${form.number}`)
+      toast.success(`Updated invoice: ${number}`)
     } else {
       const newInvoice: Invoice = {
         id: `inv${Date.now()}`,
         ...form,
+        number,
+        client,
         amount,
       }
       setInvoiceList((prev) => [newInvoice, ...prev])
