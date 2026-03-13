@@ -721,7 +721,9 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 fontSize: 12,
                 whiteSpace: 'nowrap',
               }}>
-              {!config.apiKey ? 'FAQモード' : config.model}
+              {!config.apiKey && !DEFAULT_API_KEY
+                ? 'FAQモード'
+                : config.model || DEFAULT_MODEL}
             </Typography>
           )}
         </Stack>
