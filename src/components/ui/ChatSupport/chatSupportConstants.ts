@@ -378,7 +378,7 @@ export const DEFAULT_MODELS = [...OPENAI_MODELS, ...GEMINI_MODELS]
 
 export const DEFAULT_CHAT_CONFIG: ChatSupportConfig = {
   apiKey: DEFAULT_API_KEY,
-  model: import.meta.env.VITE_OPENAI_MODEL || DEFAULT_MODEL,
+  model: DEFAULT_MODEL,
   uiMode: 'widget',
   sidebarWidth: 400,
   shortcuts: createDefaultShortcuts(),
@@ -415,10 +415,10 @@ export const loadChatConfig = (): ChatSupportConfig => {
     const config = normalizeChatConfig(JSON.parse(saved))
 
     // デフォルトAPIキー使用時はモデルもデフォルトに統一
-    // （カスタムAPIキーで選択したモデルがキーリセット後に残るのを防ぐ）
+    // （ユーザーはモデル選択UIからいつでも変更可能）
     const isDefaultKey = !config.apiKey || config.apiKey === DEFAULT_API_KEY
-    if (isDefaultKey && config.model !== DEFAULT_CHAT_CONFIG.model) {
-      config.model = DEFAULT_CHAT_CONFIG.model
+    if (isDefaultKey && config.model !== DEFAULT_MODEL) {
+      config.model = DEFAULT_MODEL
     }
 
     return config

@@ -982,99 +982,101 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
               />
             </Box>
 
-            {/* カスタムキー入力時のみモデル選択とテストを表示 */}
+            {/* モデル選択 — 常に表示 */}
+            <Box>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ display: 'block', mb: 0.8, fontWeight: 600 }}>
+                AIモデル
+              </Typography>
+              <TextField
+                select
+                fullWidth
+                size='small'
+                value={config.model}
+                onChange={(e) => {
+                  setConfig({ ...config, model: e.target.value })
+                  setTestResult(null)
+                }}>
+                {(config.model.includes('gemini')
+                  ? GEMINI_MODELS
+                  : OPENAI_MODELS
+                ).map((opt) => (
+                  <MenuItem
+                    key={opt.value}
+                    value={opt.value}
+                    sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                    <Box sx={{ width: '100%' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.75,
+                          mb: 0.25,
+                        }}>
+                        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                          {opt.label}
+                        </Typography>
+                        <Chip
+                          label={
+                            opt.tier === 'premium'
+                              ? 'Premium'
+                              : opt.tier === 'economy'
+                                ? 'Economy'
+                                : 'Standard'
+                          }
+                          size='small'
+                          color={
+                            opt.tier === 'premium'
+                              ? 'primary'
+                              : opt.tier === 'economy'
+                                ? 'default'
+                                : 'info'
+                          }
+                          variant='outlined'
+                          sx={{
+                            height: 18,
+                            fontSize: '0.6rem',
+                            '& .MuiChip-label': { px: 0.75 },
+                          }}
+                        />
+                      </Box>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
+                        {opt.description}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: 0.5,
+                        }}>
+                        {opt.usecases.map((uc) => (
+                          <Typography
+                            key={uc}
+                            variant='caption'
+                            sx={{
+                              fontSize: '0.65rem',
+                              color: 'text.disabled',
+                              lineHeight: 1.2,
+                              '&::before': { content: '"- "' },
+                            }}>
+                            {uc}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+
+            {/* カスタムキー入力時のみテストボタンを表示 */}
             {!!apiKeyDraft && (
               <>
-                <Box>
-                  <Typography
-                    variant='caption'
-                    color='text.secondary'
-                    sx={{ display: 'block', mb: 0.8, fontWeight: 600 }}>
-                    AIモデル
-                  </Typography>
-                  <TextField
-                    select
-                    fullWidth
-                    size='small'
-                    value={config.model}
-                    onChange={(e) => {
-                      setConfig({ ...config, model: e.target.value })
-                      setTestResult(null)
-                    }}>
-                    {(config.model.includes('gemini')
-                      ? GEMINI_MODELS
-                      : OPENAI_MODELS
-                    ).map((opt) => (
-                      <MenuItem
-                        key={opt.value}
-                        value={opt.value}
-                        sx={{ py: 1.5, alignItems: 'flex-start' }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 0.75,
-                              mb: 0.25,
-                            }}>
-                            <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                              {opt.label}
-                            </Typography>
-                            <Chip
-                              label={
-                                opt.tier === 'premium'
-                                  ? 'Premium'
-                                  : opt.tier === 'economy'
-                                    ? 'Economy'
-                                    : 'Standard'
-                              }
-                              size='small'
-                              color={
-                                opt.tier === 'premium'
-                                  ? 'primary'
-                                  : opt.tier === 'economy'
-                                    ? 'default'
-                                    : 'info'
-                              }
-                              variant='outlined'
-                              sx={{
-                                height: 18,
-                                fontSize: '0.6rem',
-                                '& .MuiChip-label': { px: 0.75 },
-                              }}
-                            />
-                          </Box>
-                          <Typography
-                            variant='caption'
-                            color='text.secondary'
-                            sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
-                            {opt.description}
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              gap: 0.5,
-                            }}>
-                            {opt.usecases.map((uc) => (
-                              <Typography
-                                key={uc}
-                                variant='caption'
-                                sx={{
-                                  fontSize: '0.65rem',
-                                  color: 'text.disabled',
-                                  lineHeight: 1.2,
-                                  '&::before': { content: '"- "' },
-                                }}>
-                                {uc}
-                              </Typography>
-                            ))}
-                          </Box>
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Box>
                 <Button
                   fullWidth
                   variant='outlined'

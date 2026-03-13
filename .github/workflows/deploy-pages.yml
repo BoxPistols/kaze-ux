@@ -5,15 +5,25 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'デプロイ対象'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - storybook
+          - dashboard
+          - ubereats
 
-# GitHub Pages deployment permissions
+# GitHub Pages デプロイ用の権限設定
 permissions:
-  actions: write
   contents: read
   pages: write
   id-token: write
 
-# Prevent concurrent deployments
+# 同時実行の制御
 concurrency:
   group: 'pages'
   cancel-in-progress: false
@@ -51,23 +61,42 @@ jobs:
           echo "public-hoist-pattern[]=prop-types" >> .npmrc
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 
-      - name: Build Storybook
-        run: pnpm run build-storybook
-
-      - name: Prepare deployment directory
+      # デプロイ対象の判定
+      - name: Determine deploy target
+        id: target
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "target=${{ github.event.inputs.deploy_target }}" >> $GITHUB_OUTPUT
+          else
+            echo "target=all" >> $GITHUB_OUTPUT
+          fi
+
+      # Storybookのビルド
+      - name: Build Storybook
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'storybook'
+        env:
+          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
+          VITE_OPENAI_MODEL: 'gpt-4.1-nano'
+        run: |
+          pnpm run build-storybook
           mkdir -p gh-pages/storybook
           cp -r storybook-static/* gh-pages/storybook/
 
+      # SaaS Dashboardのビルド
       - name: Build SaaS Dashboard Demo
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'dashboard'
         run: pnpm --filter saas-dashboard build:gh-pages
 
+      # UberEats Cloneのビルド
       - name: Build UberEats Clone Demo
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'ubereats'
         run: pnpm --filter ubereats-clone build:gh-pages
 
+      # ランディングページ
       - name: Create landing page
+        if: steps.target.outputs.target == 'all'
         run: cp scripts/gh-pages-index.html gh-pages/index.html
 
       - name: Setup Pages
@@ -91,12 +120,9 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Output deployment URL
-        env:
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+      - name: Output deployment URLs
         run: |
           echo "Deployment completed!"
-          echo "Landing: ${PAGE_URL}"
-          echo "Storybook: ${PAGE_URL}storybook/"
-          echo "SaaS Dashboard: ${PAGE_URL}demo/saas-dashboard/"
-          echo "UberEats Clone: ${PAGE_URL}demo/ubereats-clone/"
+          echo "Storybook: ${{ steps.deployment.outputs.page_url }}storybook/"
+          echo "SaaS Dashboard: ${{ steps.deployment.outputs.page_url }}demo/saas-dashboard/"
+          echo "UberEats Clone: ${{ steps.deployment.outputs.page_url }}demo/ubereats-clone/"
