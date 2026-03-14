@@ -66,7 +66,7 @@ const config = {
           freshEnv.VITE_OPENAI_API_KEY || ''
         ),
         'import.meta.env.VITE_OPENAI_MODEL': JSON.stringify(
-          freshEnv.VITE_OPENAI_MODEL || 'gpt-5-mini'
+          freshEnv.VITE_OPENAI_MODEL || 'gpt-4.1-nano'
         ),
       },
     })

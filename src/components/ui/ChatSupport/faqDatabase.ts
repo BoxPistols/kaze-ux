@@ -1,6 +1,32 @@
 // ChatSupport FAQ知識ベース
 
+import Fuse from 'fuse.js'
+
+import { STORY_GUIDE_MAP } from './storyGuideMap'
+
 import type { FaqEntry } from './chatSupportTypes'
+
+// ---------------------------------------------------------------------------
+// 同義語マップ: クエリ前処理で同義語をキーワードに展開
+// ---------------------------------------------------------------------------
+
+const SYNONYM_MAP: Record<string, string[]> = {
+  余白: ['スペーシング', 'spacing', 'gap', 'margin', 'padding'],
+  色: ['カラー', 'color', 'パレット'],
+  文字: ['フォント', 'タイポグラフィ', 'font', 'テキスト'],
+  部品: ['コンポーネント', 'component', 'パーツ'],
+  隙間: ['スペーシング', 'spacing'],
+  角丸: ['borderRadius', 'border-radius', 'radius'],
+  影: ['elevation', 'shadow', 'シャドウ'],
+  配置: ['レイアウト', 'layout', 'grid'],
+  間隔: ['スペーシング', 'spacing', 'gap'],
+  大きさ: ['サイズ', 'size', 'width', 'height'],
+  動き: ['アニメーション', 'motion', 'transition'],
+  使い分け: ['比較', 'vs', '違い'],
+  テスト: ['test', 'vitest', 'testing'],
+  型: ['type', 'TypeScript', 'interface'],
+  コマンド: ['pnpm', 'npm', 'スクリプト'],
+}
 
 // ---------------------------------------------------------------------------
 // FAQ: AI無しでも機能するローカル知識ベース
@@ -8,25 +34,50 @@ import type { FaqEntry } from './chatSupportTypes'
 
 export const FAQ_DATABASE: FaqEntry[] = [
   {
-    keywords: ['カラー', 'パレット', '色', 'color', 'primary', 'secondary'],
-    title: 'カラーパレット',
-    answer: `## カラーパレット
+    keywords: [
+      'カラー',
+      'パレット',
+      '色',
+      'color',
+      'primary',
+      'secondary',
+      '拡張',
+      '追加',
+      '変更',
+      'カスタマイズ',
+    ],
+    title: 'カラーパレットの使い方と拡張方法',
+    answer: `## カラーパレットの使い方
 
-| トークン | 値 | 用途 |
-|---|---|---|
-| \`primary.main\` | \`#2642be\` | ボタン、リンク、主要アクション |
-| \`primary.dark\` | \`#1a2c80\` | ホバー状態 |
-| \`primary.light\` | \`#4d68d4\` | 背景のアクセント |
-| \`secondary.main\` | \`#696881\` | 補助的な要素 |
-| \`success.main\` | \`#46ab4a\` | 成功状態 |
-| \`error.main\` | \`#da3737\` | エラー、削除 |
-| \`warning.main\` | \`#eb8117\` | 警告 |
-| \`info.main\` | \`#1dafc2\` | 情報 |
+### 色を使う方法
+\`\`\`tsx
+// MUIコンポーネント: sx propでトークン名を指定
+<Button sx={{ bgcolor: 'primary.main' }}>ボタン</Button>
 
-## やるべきこと
-1. Figmaで色指定する際は **トークン名** を使用（例: \`primary.main\`）
-2. \`#2642be\` のようなハードコードは禁止
-3. Storybook → **Design Tokens > Colors** で全色を確認`,
+// テーマオブジェクト経由
+const theme = useTheme()
+<Box sx={{ color: theme.palette.success.main }}>成功</Box>
+
+// Tailwind CSS
+<div className="text-primary-main bg-error-light">...</div>
+\`\`\`
+
+### 色を拡張・カスタマイズする方法
+1. **トークンファイルを編集**: \`src/themes/colorToken.ts\` でカラーセットを追加・変更
+2. **テーマに反映**: \`src/themes/theme.ts\` の \`createTheme()\` でパレットに追加
+3. **ダークモード対応**: Light/Dark 両方の色を定義する（\`createLightThemeColors\` / \`createDarkThemeColors\`）
+
+### 主要トークン一覧
+| トークン | 用途 |
+|---|---|
+| \`primary.main\` | ボタン、リンク、主要アクション |
+| \`secondary.main\` | 補助的な要素 |
+| \`success/error/warning/info\` | セマンティック（意味ベース）カラー |
+
+### 注意事項
+- \`#2642be\` のような **ハードコードは禁止**。必ずトークン名で指定
+- 新色追加時は **意味ベース命名**（\`brand-blue\` ではなく \`primary\`）
+- Storybook → **Design Tokens > Colors** で全色を確認`,
   },
   {
     keywords: [
@@ -93,8 +144,7 @@ MUI: \`sx={{ p: 2 }}\` = 16px, \`sx={{ m: 3 }}\` = 24px
 | **UI** | Button, Card, Accordion, Alert, Badge/Chip, Tooltip, FAB, Pagination, SplitButton, ThemeToggle |
 | **Form** | CustomTextField, CustomSelect, MultiSelectAutocomplete, DateTimePicker |
 | **Layout** | MainGrid, SettingDrawer |
-| **Map** | Map3D, MapLibre, DIDMap |
-| **UTM** | LayerControlPanel, RestrictionLegend, StatusIndicators, ZoneStatusChip |
+| **Map** | Map3D, MapLibre |
 | **Table** | CustomTable |
 
 ## やるべきこと
@@ -123,7 +173,15 @@ MUI: \`sx={{ p: 2 }}\` = 16px, \`sx={{ m: 3 }}\` = 24px
 3. Storybook → **Components > UI > Button** で全バリエーション確認`,
   },
   {
-    keywords: ['grid', 'グリッド', 'レイアウト', 'layout', 'レスポンシブ'],
+    keywords: [
+      'grid',
+      'グリッド',
+      'レイアウト',
+      'layout',
+      'レスポンシブ',
+      'ブレークポイント',
+      'breakpoint',
+    ],
     title: 'Grid API (MUI v7)',
     answer: `## Grid API (MUI v7)
 
@@ -202,7 +260,7 @@ elevation=0 / 角丸12px / border=1px solid divider
 | **Design Philosophy** | ブランド理念、デザイン原則 |
 | **Design Tokens** | カラー、タイポグラフィ、スペーシング |
 | **Layout** | グリッド、レスポンシブ |
-| **Components** | UI / Form / Map / UTM |
+| **Components** | UI / Form / Map |
 | **Patterns** | 複合UIパターン |
 
 ## やるべきこと
@@ -1020,6 +1078,232 @@ Googleが提唱する設計体系。Kaze UXは **MUI（Material UI）v7** を通
 3. コントラスト比 **4.5:1以上** を検証
 4. 色だけで状態を伝えず **アイコン+テキスト** を併用`,
   },
+  // --- Phase 2: ギャップ分析で追加されたFAQ ---
+
+  {
+    keywords: [
+      'sx',
+      'tailwind',
+      'className',
+      'スタイル',
+      'style',
+      'css',
+      '使い分け',
+      'sx prop',
+    ],
+    title: 'sx prop vs Tailwind CSS 使い分け',
+    answer: `## sx prop vs Tailwind CSS 使い分け
+
+| 場面 | 使うもの | 理由 |
+|---|---|---|
+| MUIコンポーネント | \`sx\` prop | テーマトークンに直接アクセス可能 |
+| 純HTML要素 | Tailwind CSS | className で宣言的にスタイリング |
+| テーマ依存値 | \`sx\` prop | \`sx={{ color: 'primary.main' }}\` |
+| レスポンシブ | どちらでも可 | sx: \`{ xs: 1, md: 2 }\` / Tailwind: \`md:p-2\` |
+
+\`\`\`tsx
+// MUIコンポーネント → sx
+<Button sx={{ px: 3, borderRadius: 2 }}>保存</Button>
+
+// 純HTML → Tailwind
+<div className="flex gap-2 p-4">...</div>
+
+// 混在禁止: MUIコンポーネントにclassNameでレイアウトしない
+\`\`\`
+
+**cn()ユーティリティ**: \`src/utils/className.ts\` の \`cn()\` で条件付きクラス結合`,
+  },
+  {
+    keywords: [
+      'テスト',
+      'test',
+      'vitest',
+      'testing',
+      'テスト規約',
+      'テスト書き方',
+      'ユニットテスト',
+    ],
+    title: 'テスト規約',
+    answer: `## テスト規約
+
+**フレームワーク**: Vitest + React Testing Library
+
+\`\`\`tsx
+import { describe, it, expect } from 'vitest'
+
+describe('MyComponent', () => {
+  it('タイトルが表示される', () => {
+    // Arrange → Act → Assert パターン
+  })
+})
+\`\`\`
+
+| ルール | 内容 |
+|---|---|
+| 配置 | \`__tests__/\` ディレクトリまたは \`.test.ts(x)\` |
+| 命名 | \`describe\` は対象名、\`it\` は振る舞い |
+| コマンド | \`pnpm test\` (実行) / \`pnpm test:watch\` (監視) |
+| カバレッジ | \`pnpm test:coverage\` |
+| モック | \`vi.fn()\`, \`vi.spyOn()\`, \`vi.stubGlobal()\` |`,
+  },
+  {
+    keywords: [
+      'TypeScript',
+      '型定義',
+      'interface',
+      'type',
+      '型ルール',
+      'any',
+      'strict',
+      'generics',
+    ],
+    title: 'TypeScript型定義ルール',
+    answer: `## TypeScript型定義ルール
+
+| ルール | 内容 |
+|---|---|
+| strict mode | 必須。\`tsconfig.json\` で有効 |
+| any禁止 | 使用時は理由をコメントで明記 |
+| Props定義 | \`interface\` で定義 |
+| 配置 | 共通型は \`src/types/\` に集約 |
+
+\`\`\`tsx
+// Props型定義
+interface CardProps {
+  title: string
+  variant?: 'outlined' | 'elevation'
+  onClose?: () => void
+}
+
+const MyCard = ({ title, variant = 'outlined', onClose }: CardProps) => {
+  // ...
+}
+\`\`\`
+
+**優先順位**: \`interface\`(拡張可能) > \`type\`(Union/交差型に使用)`,
+  },
+  {
+    keywords: [
+      'pnpm',
+      'コマンド',
+      'スクリプト',
+      'npm',
+      'ビルド',
+      'build',
+      'dev',
+      '開発サーバー',
+    ],
+    title: 'pnpmコマンドリファレンス',
+    answer: `## pnpmコマンドリファレンス
+
+| コマンド | 用途 |
+|---|---|
+| \`pnpm dev\` | 開発サーバー起動 |
+| \`pnpm storybook\` | Storybook起動 (port 6006) |
+| \`pnpm lint\` | ESLintチェック + 自動修正 |
+| \`pnpm format\` | Prettierフォーマット |
+| \`pnpm fix\` | lint + format 一括実行 |
+| \`pnpm test\` | テスト実行 |
+| \`pnpm test:watch\` | テスト監視モード |
+| \`pnpm test:coverage\` | カバレッジ付きテスト |
+| \`pnpm build\` | 本番ビルド |
+
+**注意**: \`npm\` は使用禁止。必ず \`pnpm\` を使用`,
+  },
+  {
+    keywords: [
+      'アニメーション',
+      'animation',
+      'motion',
+      'transition',
+      'トランジション',
+      'easing',
+      '動き',
+    ],
+    title: 'アニメーション/モーショントークン',
+    answer: `## アニメーション/モーショントークン
+
+| 用途 | 時間 | イージング |
+|---|---|---|
+| マイクロインタラクション | 150-300ms | ease-in-out |
+| ページ遷移 | 300-500ms | cubic-bezier |
+| ホバー/フォーカス | 150ms | ease |
+
+\`\`\`tsx
+// MUI transitions
+sx={{
+  transition: theme.transitions.create(['opacity', 'transform'], {
+    duration: theme.transitions.duration.short, // 250ms
+  }),
+}}
+
+// Tailwind
+className="transition-opacity duration-200 ease-in-out"
+\`\`\`
+
+**注意**: \`prefers-reduced-motion\` への対応必須。アクセシビリティ設定でアニメーション無効化を尊重する`,
+  },
+  {
+    keywords: [
+      'figma',
+      'フィグマ',
+      '連携',
+      'デザインツール',
+      'html.to.design',
+      'プラグイン',
+    ],
+    title: 'Figma連携ワークフロー',
+    answer: `## Figma連携ワークフロー
+
+### StorybookからFigmaへの取り込み
+1. **html.to.design** プラグインでStorybookコンポーネントをFigmaに取り込み可能
+2. トークン値は \`src/themes/colorToken.ts\` に全色定義あり
+3. タイポグラフィは \`src/themes/typography.ts\` に全サイズ定義あり
+
+### FigmaとCodeの対応
+| Figma | Code |
+|---|---|
+| Component Property | Props (interface) |
+| Instance Swap | \`ReactNode\` slot |
+| Boolean Property | \`isOpen?: boolean\` |
+| Variant | \`variant: 'contained' \\| 'outlined'\` |
+| Auto Layout | Flexbox / Stack |
+
+### トークン参照
+Figmaで色指定する際は **トークン名** を使用（例: \`primary.main\`）。ハードコード値（\`#2642be\`）は禁止`,
+  },
+  {
+    keywords: [
+      '提案',
+      '新規コンポーネント',
+      '新しい部品',
+      '作成プロセス',
+      'ワークフロー',
+      '開発フロー',
+    ],
+    title: 'コンポーネント提案プロセス',
+    answer: `## コンポーネント提案プロセス
+
+### 新規コンポーネント作成の手順
+1. **既存確認**: Storybook > Components で類似コンポーネントを探す
+2. **設計検討**: 6原則（間接化、カプセル化、制約、意味の符号化、合成、慣習）に基づく
+3. **Props設計**: Boolean > Enum > Number > String の優先順位
+4. **5状態設計**: Empty / Loading / Error / Partial / Ideal
+5. **実装**: Component.tsx + Component.stories.tsx をセットで作成
+6. **レビュー**: Storybookで全バリエーション確認
+
+### ファイル構成
+\`\`\`
+src/components/ui/
+  MyComponent/
+    MyComponent.tsx          # コンポーネント本体
+    MyComponent.stories.tsx  # Storybookストーリー
+    __tests__/
+      MyComponent.test.tsx   # テスト
+\`\`\`
+
+**React.FC禁止**: \`const MyComponent = ({ title }: Props) => { ... }\` 形式を使う`,
+  },
   {
     keywords: [
       'AI',
@@ -1072,11 +1356,49 @@ Googleが提唱する設計体系。Kaze UXは **MUI（Material UI）v7** を通
 ]
 
 // ---------------------------------------------------------------------------
-// FAQ検索
+// 同義語展開: クエリに同義語を追加してマッチ率を向上
+// ---------------------------------------------------------------------------
+
+export const expandSynonyms = (query: string): string => {
+  let expanded = query
+  for (const [word, synonyms] of Object.entries(SYNONYM_MAP)) {
+    if (query.includes(word)) {
+      expanded += ' ' + synonyms.join(' ')
+    }
+  }
+  return expanded
+}
+
+// ---------------------------------------------------------------------------
+// Fuse.js ファジーマッチ用インスタンス（遅延初期化）
+// ---------------------------------------------------------------------------
+
+let fuseInstance: Fuse<FaqEntry> | null = null
+
+const getFuse = (): Fuse<FaqEntry> => {
+  if (!fuseInstance) {
+    fuseInstance = new Fuse(FAQ_DATABASE, {
+      keys: [
+        { name: 'keywords', weight: 0.7 },
+        { name: 'title', weight: 0.3 },
+      ],
+      threshold: 0.4,
+      includeScore: true,
+    })
+  }
+  return fuseInstance
+}
+
+// ---------------------------------------------------------------------------
+// FAQ検索（同義語展開 → キーワードマッチ → Fuse.jsフォールバック）
 // ---------------------------------------------------------------------------
 
 export const findFaqAnswer = (query: string): string | null => {
-  const q = query.toLowerCase()
+  if (!query.trim()) return null
+
+  // Step 1: 同義語展開 → キーワードマッチ（高速・確定的）
+  const expanded = expandSynonyms(query)
+  const q = expanded.toLowerCase()
   let best: { score: number; answer: string } | null = null
   for (const faq of FAQ_DATABASE) {
     let score = 0
@@ -1087,7 +1409,24 @@ export const findFaqAnswer = (query: string): string | null => {
       best = { score, answer: faq.answer }
     }
   }
-  return best ? best.answer : null
+
+  // キーワードマッチで十分なスコアがあればそれを返す
+  if (best && best.score >= 3) return best.answer
+
+  // Step 2: Fuse.jsファジーマッチ（フォールバック）
+  const fuse = getFuse()
+  const results = fuse.search(query)
+  if (results.length > 0 && results[0].score !== undefined) {
+    // Fuse.jsのスコアは0に近いほど良い
+    if (results[0].score < 0.5) {
+      return results[0].item.answer
+    }
+  }
+
+  // キーワードマッチで低スコアでもあった場合はそれを返す
+  if (best) return best.answer
+
+  return null
 }
 
 // ---------------------------------------------------------------------------
@@ -1107,3 +1446,80 @@ export const QUICK_SUGGESTIONS = [
 
 export const INITIAL_GREETING =
   'Kaze UX コンシェルジュです。トークン・コンポーネント・設計理論について質問できます。下のボタンか自由入力でどうぞ。'
+
+// ---------------------------------------------------------------------------
+// 動的サジェスト生成
+// ---------------------------------------------------------------------------
+
+export interface Suggestion {
+  label: string
+  query: string
+}
+
+const MAX_SUGGESTIONS = 6
+
+// FAQ_DATABASEの小文字バージョンを事前計算（毎回toLowerCase()を呼ばない）
+const FAQ_SEARCH_INDEX = FAQ_DATABASE.map((faq) => ({
+  title: faq.title,
+  titleLower: faq.title.toLowerCase(),
+  keywordsLower: faq.keywords.map((kw) => kw.toLowerCase()),
+}))
+
+/**
+ * 会話コンテキストから動的サジェストを生成(最大6件)
+ * 優先度: レスポンス派生 > ページコンテキスト > 静的フォールバック
+ */
+export const generateSuggestions = (
+  lastBotText: string | null,
+  currentStoryTitle: string | null,
+  usedQueries: Set<string>
+): Suggestion[] => {
+  const results: Suggestion[] = []
+  const seen = new Set<string>()
+
+  const add = (label: string, query: string): boolean => {
+    if (results.length >= MAX_SUGGESTIONS) return false
+    if (usedQueries.has(query) || seen.has(query)) return false
+    seen.add(query)
+    results.push({ label, query })
+    return true
+  }
+
+  // 1. レスポンス派生: 直前のBot回答テキストからFAQタイトルをマッチング
+  if (lastBotText) {
+    const text = lastBotText.toLowerCase()
+    for (const idx of FAQ_SEARCH_INDEX) {
+      if (results.length >= MAX_SUGGESTIONS) break
+      const titleMatch = text.includes(idx.titleLower)
+      const keywordHits = idx.keywordsLower.filter((kw) =>
+        text.includes(kw)
+      ).length
+      if (titleMatch || keywordHits >= 2) {
+        add(idx.title, idx.title)
+      }
+    }
+  }
+
+  // 2. ページコンテキスト: currentStoryTitle の related からサジェスト生成
+  if (currentStoryTitle) {
+    const entry = STORY_GUIDE_MAP[currentStoryTitle]
+    if (entry?.related) {
+      for (const relatedTitle of entry.related) {
+        if (results.length >= MAX_SUGGESTIONS) break
+        // related はストーリータイトル("Guide/Introduction"等)なので短縮ラベルを生成
+        const label = relatedTitle.includes('/')
+          ? (relatedTitle.split('/').pop() ?? relatedTitle)
+          : relatedTitle
+        add(label, `${relatedTitle} について教えて`)
+      }
+    }
+  }
+
+  // 3. 静的フォールバック: QUICK_SUGGESTIONS から未使用分を補充
+  for (const s of QUICK_SUGGESTIONS) {
+    if (results.length >= MAX_SUGGESTIONS) break
+    add(s.label, s.query)
+  }
+
+  return results
+}

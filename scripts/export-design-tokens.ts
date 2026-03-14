@@ -9,8 +9,14 @@
  * 出力先: design-tokens/tokens.json (light + dark)
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
+import {
+  writeFileSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+} from 'node:fs'
+import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 // --- ソースデータの直接読み込み ---
@@ -292,6 +298,191 @@ const buildContainerTokens = (): TokenGroup => {
   return result
 }
 
+// --- コンポーネント Controls 抽出 ---
+
+interface ControlDef {
+  type: 'select' | 'boolean' | 'text' | 'number' | 'radio'
+  options?: string[]
+  description?: string
+}
+
+/**
+ * 開始位置からブレースの対応を数えてブロック全体を抽出する
+ */
+const extractBraceBlock = (text: string, startIdx: number): string | null => {
+  let depth = 0
+  let started = false
+  for (let i = startIdx; i < text.length; i++) {
+    if (text[i] === '{') {
+      depth++
+      started = true
+    } else if (text[i] === '}') {
+      depth--
+      if (started && depth === 0) {
+        return text.slice(startIdx, i + 1)
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * ストーリーファイルから argTypes を抽出する
+ */
+const parseArgTypesFromFile = (
+  filePath: string
+): Record<string, ControlDef> | null => {
+  const content = readFileSync(filePath, 'utf-8')
+
+  const argTypesIdx = content.indexOf('argTypes:')
+  if (argTypesIdx === -1) return null
+
+  const braceStart = content.indexOf('{', argTypesIdx)
+  if (braceStart === -1) return null
+
+  const block = extractBraceBlock(content, braceStart)
+  if (!block) return null
+
+  const controls: Record<string, ControlDef> = {}
+
+  const propStartRegex = /(\w+)\s*:\s*\{/g
+  let match: RegExpExecArray | null
+
+  while ((match = propStartRegex.exec(block)) !== null) {
+    const propName = match[0].startsWith('{') ? null : match[1]
+    if (!propName) continue
+
+    const propBlock = extractBraceBlock(
+      block,
+      match.index + match[0].length - 1
+    )
+    if (!propBlock) continue
+
+    const controlMatch = propBlock.match(/control:\s*['"](\w+)['"]/)
+    if (!controlMatch) continue
+
+    const controlType = controlMatch[1] as ControlDef['type']
+    const def: ControlDef = { type: controlType }
+
+    const optionsMatch = propBlock.match(/options:\s*\[([\s\S]*?)\]/)
+    if (optionsMatch) {
+      def.options = optionsMatch[1]
+        .split(',')
+        .map((s) => s.trim().replace(/['"]/g, ''))
+        .filter(Boolean)
+    }
+
+    const descMatch = propBlock.match(/description:\s*['"]([^'"]+)['"]/)
+    if (descMatch) def.description = descMatch[1]
+
+    controls[propName] = def
+  }
+
+  return Object.keys(controls).length > 0 ? controls : null
+}
+
+/**
+ * ストーリーファイルからコンポーネント名を抽出
+ */
+const extractComponentName = (filePath: string): string => {
+  const content = readFileSync(filePath, 'utf-8')
+  const titleMatch = content.match(/title:\s*['"]([^'"]+)['"]/)
+  if (titleMatch) {
+    const parts = titleMatch[1].split('/')
+    return parts[parts.length - 1]
+  }
+  const fileName = filePath.split('/').pop() ?? ''
+  return fileName.replace('.stories.tsx', '').replace('.stories.ts', '')
+}
+
+/**
+ * ディレクトリを再帰走査して *.stories.tsx を収集
+ */
+const findStoryFiles = (dir: string): string[] => {
+  const results: string[] = []
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) {
+      results.push(...findStoryFiles(full))
+    } else if (
+      entry.endsWith('.stories.tsx') ||
+      entry.endsWith('.stories.ts')
+    ) {
+      results.push(full)
+    }
+  }
+  return results
+}
+
+/**
+ * コンポーネント Controls をトークン形式に変換
+ */
+const buildComponentTokens = (): TokenGroup => {
+  const storiesDir = resolve(__dirname, '..', 'src', 'stories', '04-Components')
+  const storyFiles = findStoryFiles(storiesDir)
+  const result: TokenGroup = {}
+  let totalProps = 0
+
+  for (const file of storyFiles) {
+    const controls = parseArgTypesFromFile(file)
+    if (!controls) continue
+
+    const componentName = extractComponentName(file)
+    const componentKey =
+      componentName.charAt(0).toLowerCase() + componentName.slice(1)
+    const componentGroup: TokenGroup = {}
+
+    for (const [propName, def] of Object.entries(controls)) {
+      if (def.type === 'select' || def.type === 'radio') {
+        if (def.options) {
+          const optionsGroup: TokenGroup = {}
+          for (const opt of def.options) {
+            optionsGroup[opt] = {
+              $value: opt,
+              $type: 'other',
+            }
+          }
+          componentGroup[propName] = {
+            $description: `${def.options.length} options: ${def.options.join(', ')}`,
+            ...optionsGroup,
+          } as TokenGroup
+          totalProps++
+        }
+      } else if (def.type === 'boolean') {
+        componentGroup[propName] = {
+          $value: false,
+          $type: 'boolean',
+          $description: def.description ?? `${componentName}.${propName}`,
+        }
+        totalProps++
+      } else if (def.type === 'text') {
+        componentGroup[propName] = {
+          $value: '',
+          $type: 'string',
+          $description: def.description ?? `${componentName}.${propName}`,
+        }
+        totalProps++
+      } else if (def.type === 'number') {
+        componentGroup[propName] = {
+          $value: 0,
+          $type: 'number',
+          $description: def.description ?? `${componentName}.${propName}`,
+        }
+        totalProps++
+      }
+    }
+
+    if (Object.keys(componentGroup).length > 0) {
+      result[componentKey] = componentGroup
+    }
+  }
+
+  console.log(
+    `  - Components: ${Object.keys(result).length} components, ${totalProps} props`
+  )
+  return result
+}
+
 // --- メイン出力 ---
 
 const tokens = {
@@ -317,6 +508,7 @@ const tokens = {
       enteringScreen: { $value: '200ms', $type: 'duration' },
     },
   },
+  component: buildComponentTokens(),
 }
 
 // 出力

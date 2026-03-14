@@ -34,9 +34,11 @@ export const callAI = async (
   }
 
   if (isNewGenOpenAI) {
-    body.max_completion_tokens = isTest ? 50 : 2000
+    // gpt-5系: nanoは4000で十分、miniは推論トークン消費が多いため余裕を持たせる
+    const isNano = config.model.includes('nano')
+    body.max_completion_tokens = isTest ? 50 : isNano ? 4000 : 16000
   } else {
-    body.max_tokens = isTest ? 50 : 2000
+    body.max_tokens = isTest ? 50 : 4000
     body.temperature = 0.7
   }
 
@@ -70,8 +72,10 @@ export const callAI = async (
       throw new Error(String(errorMsg))
     }
 
+    // choicesまたはoutput（Responses API）の存在を確認
     const choices = data.choices as Record<string, unknown>[] | undefined
-    if (!choices || !choices[0]) {
+    const output = data.output as Record<string, unknown>[] | undefined
+    if ((!choices || !choices[0]) && !output) {
       throw new Error(
         `レスポンス形式が不正です: ${JSON.stringify(Object.keys(data))}`
       )
@@ -89,15 +93,44 @@ export const callAI = async (
 
 export const extractContent = (data: Record<string, unknown>): string => {
   try {
-    // OpenAI標準: data.choices[0].message.content
+    // 1. OpenAI標準: data.choices[0].message.content
     const choices = data.choices as Record<string, unknown>[] | undefined
     if (choices?.[0]) {
       const msg = choices[0].message as Record<string, unknown> | undefined
       if (msg?.content) return String(msg.content)
+      // content が null でも refusal がある場合
+      if (msg?.refusal) return String(msg.refusal)
       // Gemini互換: choices[0].text
       if (choices[0].text) return String(choices[0].text)
+      // 推論モデル: contentが空でfinish_reason=length（推論トークンで上限到達）
+      if (
+        choices[0].finish_reason === 'length' &&
+        msg &&
+        (msg.content === '' || msg.content === null)
+      ) {
+        return '(回答生成中にトークン上限に達しました。もう少し短い質問で再度お試しください)'
+      }
     }
-    // Gemini native: data.candidates[0].content.parts[0].text
+
+    // 2. OpenAI Responses API: data.output[].content[].text
+    const output = data.output as Record<string, unknown>[] | undefined
+    if (output) {
+      for (const item of output) {
+        if (item.type === 'message') {
+          const contentArr = item.content as
+            | Record<string, unknown>[]
+            | undefined
+          if (contentArr) {
+            for (const part of contentArr) {
+              if (part.type === 'output_text' && part.text)
+                return String(part.text)
+            }
+          }
+        }
+      }
+    }
+
+    // 3. Gemini native: data.candidates[0].content.parts[0].text
     const candidates = data.candidates as Record<string, unknown>[] | undefined
     if (candidates?.[0]) {
       const content = candidates[0].content as
@@ -106,7 +139,41 @@ export const extractContent = (data: Record<string, unknown>): string => {
       const parts = content?.parts as Record<string, unknown>[] | undefined
       if (parts?.[0]?.text) return String(parts[0].text)
     }
-    console.error('[Concierge] content抽出失敗。レスポンス:', data)
+
+    // 4. フラットな text フィールド（一部プロバイダー）
+    if (data.text) return String(data.text)
+
+    // 5. 深層探索: レスポンス内の最初の text/content 文字列を探す
+    const deepSearch = (obj: unknown, depth: number): string | null => {
+      if (depth > 4 || !obj || typeof obj !== 'object') return null
+      const record = obj as Record<string, unknown>
+      for (const key of ['text', 'content', 'message']) {
+        if (typeof record[key] === 'string' && record[key]) {
+          return String(record[key])
+        }
+      }
+      for (const val of Object.values(record)) {
+        if (Array.isArray(val)) {
+          for (const item of val) {
+            const found = deepSearch(item, depth + 1)
+            if (found) return found
+          }
+        } else if (typeof val === 'object' && val !== null) {
+          const found = deepSearch(val, depth + 1)
+          if (found) return found
+        }
+      }
+      return null
+    }
+    const fallback = deepSearch(data, 0)
+    if (fallback) return fallback
+
+    console.error(
+      '[Concierge] content抽出失敗。レスポンスキー:',
+      Object.keys(data),
+      'データ:',
+      JSON.stringify(data).slice(0, 500)
+    )
     return `(レスポンス形式を解析できませんでした。DevToolsコンソールを確認してください)`
   } catch (e) {
     console.error('[Concierge] extractContent エラー:', e)

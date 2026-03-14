@@ -98,7 +98,9 @@ export const RestaurantPage = () => {
         <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
           <Badge
             badgeContent={cartCount}
-            sx={{ '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: 'common.white' } }}>
+            sx={{
+              '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: 'common.white' },
+            }}>
             <IconButton
               onClick={() => navigate('/cart')}
               tooltip='View cart'

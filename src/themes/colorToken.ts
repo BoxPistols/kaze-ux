@@ -97,94 +97,381 @@ const greyShades: GreyShades = {
   900: '#292929',
 }
 
-const createThemeColors = (isLight: boolean): ThemeColors => ({
-  // Dracula-inspired dark mode: 青みがかった柔らかいダークテーマ
+// ===== カラースキーム (Light/Dark 共通) =====
+export type ColorScheme = 'dracula' | 'blue' | 'monotone'
+/** 後方互換エイリアス */
+export type DarkColorScheme = ColorScheme
+
+export interface SchemeMeta {
+  id: ColorScheme
+  name: string
+  description: string
+  preview: string // UI表示用プレビュー色
+}
+
+/** Storybook ツールバー等のUI表示用メタ情報 */
+export const SCHEME_META: SchemeMeta[] = [
+  {
+    id: 'dracula',
+    name: 'Dracula',
+    description: '暖色パープル系',
+    preview: '#282A36',
+  },
+  { id: 'blue', name: 'Blue', description: 'クールZinc系', preview: '#18181b' },
+  // monotone: 実装済みだがUI調整中のため非表示。有効化する場合は下記を解除
+  // { id: 'monotone', name: 'Monotone', description: '低彩度ニュートラル', preview: '#1a1a1e' },
+]
+/** 後方互換エイリアス */
+export const DARK_SCHEME_META: SchemeMeta[] = SCHEME_META
+export type DarkSchemeMeta = SchemeMeta
+
+// ===== ライトテーマ色定義 =====
+
+/** スキーム別の環境色(背景/サーフェス/テキスト/divider等)を定義 */
+interface SchemeEnv {
+  lighter: string // semantic色のlighterスロットに使うサーフェス色
+  background: { default: string; paper: string }
+  text: { primary: string; secondary: string; disabled: string }
+  action: { hover: string; selected: string; disabled: string; active: string }
+  surface: {
+    background: string
+    backgroundDark: string
+    backgroundDisabled: string
+  }
+  icon: { light: string; dark: string; disabled: string }
+  divider: string
+}
+
+/** ライトテーマのベースセマンティックカラー(スキーム共通) */
+const lightSemanticColors = {
   primary: createColorSet(
-    isLight ? '#2642be' : '#7c8cf8', // Dracula purple 寄りの青紫
-    isLight ? '#1a2c80' : '#6270d8',
-    isLight ? '#4d68d4' : '#9aa4fc',
-    isLight ? '#a6b4ec' : '#363450',
+    '#2642be',
+    '#1a2c80',
+    '#4d68d4',
+    '@@lighter@@',
     undefined,
     '#ffffff'
   ),
   secondary: createColorSet(
-    isLight ? '#696881' : '#b0b1c8',
-    isLight ? '#424242' : '#7a7a8f',
-    isLight ? '#757575' : '#c5c5d2',
-    isLight ? '#FAFAFA' : '#3d3d50',
+    '#696881',
+    '#424242',
+    '#757575',
+    '@@lighter@@',
     undefined,
     '#ffffff'
   ),
+  // success/info/warning/error は固有のlighterを持つ（スキーム色で上書きしない）
   success: createColorSet(
-    isLight ? '#46ab4a' : '#50fa7b', // Dracula green
-    isLight ? '#3f7f42' : '#3cbe5c',
-    isLight ? '#6db770' : '#7afb9e',
-    isLight ? '#d4e9d4' : '#1e3d2c',
+    '#46ab4a',
+    '#3f7f42',
+    '#6db770',
+    '#e8f5e9',
     undefined,
-    isLight ? '#ffffff' : '#1a2e1a'
+    '#ffffff'
   ),
   info: createColorSet(
-    isLight ? '#1dafc2' : '#8be9fd', // Dracula cyan
-    isLight ? '#277781' : '#5cc8db',
-    isLight ? '#43bfcf' : '#b0f0fc',
-    isLight ? '#bde8ee' : '#1e3540',
+    '#1dafc2',
+    '#277781',
+    '#43bfcf',
+    '#e0f7fa',
     undefined,
-    isLight ? '#ffffff' : '#0d2528'
+    '#ffffff'
   ),
   warning: createColorSet(
-    isLight ? '#eb8117' : '#ffb86c', // Dracula orange
-    isLight ? '#EF6C00' : '#e8a45c',
-    isLight ? '#dd9c3c' : '#ffd099',
-    isLight ? '#FFF3E0' : '#3d3225',
+    '#eb8117',
+    '#EF6C00',
+    '#dd9c3c',
+    '#fff3e0',
     undefined,
-    isLight ? '#ffffff' : '#2d1f0d'
+    '#ffffff'
   ),
   error: createColorSet(
-    isLight ? '#da3737' : '#ff6e6e', // Dracula red 寄り
-    isLight ? '#c63535' : '#e04040',
-    isLight ? '#dc4e4e' : '#ff9a9a',
-    isLight ? '#FFEBEE' : '#3d2530',
+    '#da3737',
+    '#c63535',
+    '#dc4e4e',
+    '#fce4ec',
     undefined,
-    isLight ? '#ffffff' : '#2d1515'
+    '#ffffff'
   ),
-  grey: greyShades,
-  text: {
-    // Dracula foreground ベースのテキスト色
-    primary: isLight ? '#1a1a2e' : '#f8f8f2',
-    secondary: isLight ? '#4a5568' : '#b8bece',
-    disabled: isLight ? greyShades[400] : greyShades[500],
-    white: '#ffffff',
+}
+
+/** ライトスキーム別の環境色 */
+const lightSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
+  // Dracula Light: 暖色パープル系
+  dracula: {
+    lighter: '#e8e0f0',
+    background: { default: '#faf8fc', paper: '#ffffff' },
+    text: {
+      primary: '#2d1f4e',
+      secondary: '#5c4d7a',
+      disabled: greyShades[400],
+    },
+    action: {
+      hover: 'rgba(100, 60, 160, 0.06)',
+      selected: 'rgba(100, 60, 160, 0.10)',
+      disabled: 'rgba(0, 0, 0, 0.26)',
+      active: 'rgba(100, 60, 160, 0.54)',
+    },
+    surface: {
+      background: '#faf8fc',
+      backgroundDark: '#3f3f46',
+      backgroundDisabled: '#f3eef8',
+    },
+    icon: { light: '#7c6c9a', dark: '#3d2d5e', disabled: '#d0c4e0' },
+    divider: 'rgba(100, 60, 160, 0.10)',
   },
-  background: {
-    // Dracula-inspired: 青みのある柔らかいダーク背景
-    default: isLight ? '#f8fafc' : '#282a36',
-    paper: isLight ? '#ffffff' : '#343746',
+  // Blue Light: クールZinc系(現行デフォルト)
+  blue: {
+    lighter: '#a6b4ec',
+    background: { default: '#f8fafc', paper: '#ffffff' },
+    text: {
+      primary: '#1a1a2e',
+      secondary: '#4a5568',
+      disabled: greyShades[400],
+    },
+    action: {
+      hover: 'rgba(0, 0, 0, 0.04)',
+      selected: 'rgba(0, 0, 0, 0.08)',
+      disabled: 'rgba(0, 0, 0, 0.26)',
+      active: 'rgba(0, 0, 0, 0.54)',
+    },
+    surface: {
+      background: '#f8fafc',
+      backgroundDark: '#3f3f46',
+      backgroundDisabled: '#f1f5f9',
+    },
+    icon: { light: '#64748b', dark: '#334155', disabled: '#cbd5e1' },
+    divider: 'rgba(0, 0, 0, 0.08)',
   },
-  action: {
-    hover: isLight ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.08)',
-    selected: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.14)',
-    disabled: isLight ? 'rgba(0, 0, 0, 0.26)' : 'rgba(255, 255, 255, 0.3)',
-    active: isLight ? 'rgba(0, 0, 0, 0.54)' : 'rgba(255, 255, 255, 0.56)',
+  // Monotone Light: 低彩度ニュートラル
+  monotone: {
+    lighter: '#d8d8dc',
+    background: { default: '#f5f5f6', paper: '#fafafa' },
+    text: {
+      primary: '#2a2a2e',
+      secondary: '#606068',
+      disabled: greyShades[400],
+    },
+    action: {
+      hover: 'rgba(0, 0, 0, 0.03)',
+      selected: 'rgba(0, 0, 0, 0.06)',
+      disabled: 'rgba(0, 0, 0, 0.26)',
+      active: 'rgba(0, 0, 0, 0.48)',
+    },
+    surface: {
+      background: '#f5f5f6',
+      backgroundDark: '#3f3f46',
+      backgroundDisabled: '#ededf0',
+    },
+    icon: { light: '#8a8c94', dark: '#48484e', disabled: '#c8c8cc' },
+    divider: 'rgba(0, 0, 0, 0.06)',
   },
-  surface: {
-    background: isLight ? '#f8fafc' : '#2d2f3d',
-    backgroundDark: isLight ? '#3f3f46' : '#44475a',
-    backgroundDisabled: isLight ? '#f1f5f9' : '#44475a',
+}
+
+/** ライトスキームごとの色定義を返す */
+export const createLightThemeColors = (
+  scheme: ColorScheme = 'blue'
+): ThemeColors => {
+  const env = lightSchemeEnvMap[scheme]
+  // スキーム色はprimary/secondaryのlighterのみに適用
+  // success/info/warning/errorは固有のlighterを維持（Alert背景等で使用）
+  const patchLighter = (cs: ColorSet): ColorSet => ({
+    ...cs,
+    lighter: env.lighter,
+  })
+  return {
+    primary: patchLighter(lightSemanticColors.primary),
+    secondary: patchLighter(lightSemanticColors.secondary),
+    success: lightSemanticColors.success,
+    info: lightSemanticColors.info,
+    warning: lightSemanticColors.warning,
+    error: lightSemanticColors.error,
+    grey: greyShades,
+    text: { ...env.text, white: '#ffffff' },
+    background: env.background,
+    action: env.action,
+    surface: env.surface,
+    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    divider: env.divider,
+    common: { black: '#09090b', white: '#ffffff' },
+  }
+}
+
+/** 後方互換: スキーム指定なしのライト色(Blue) */
+const createLightColors = (): ThemeColors => createLightThemeColors('blue')
+
+// ----- M3準拠: ダークテーマの同色相トーナル派生 -----
+// 共通セマンティックカラー（primary以外はスキーム間で共有）
+const darkSemanticBase = {
+  secondary: createColorSet(
+    '#9a9ab4',
+    '#8080a0',
+    '#b4b4c8',
+    '@@lighter@@',
+    undefined,
+    '#ffffff'
+  ),
+  // success/info/warning/error は固有のlighterを持つ（Alert背景等で使用）
+  success: createColorSet(
+    '#6dce72',
+    '#52b856',
+    '#90dd94',
+    '#1a3a1a',
+    undefined,
+    '#1a2e1a'
+  ),
+  info: createColorSet(
+    '#4dd4e6',
+    '#30c0d4',
+    '#78e0ee',
+    '#0d2a30',
+    undefined,
+    '#0d2528'
+  ),
+  warning: createColorSet(
+    '#f0a050',
+    '#e08c38',
+    '#f5b878',
+    '#2d2010',
+    undefined,
+    '#2d1f0d'
+  ),
+  error: createColorSet(
+    '#ef6b6b',
+    '#e05050',
+    '#f59090',
+    '#2d1515',
+    undefined,
+    '#2d1515'
+  ),
+}
+
+// スキーム別プライマリカラー
+// Dracula: 暖色パープル系 (#BD93F9ベース)
+// Blue: 鮮やかなブルー (#60A5FAベース、Tailwind blue-400)
+// Monotone: 低彩度グレーブルー (#7B8FE8ベース)
+const darkSchemePrimaryMap: Record<ColorScheme, ColorSet> = {
+  dracula: createColorSet(
+    '#BD93F9',
+    '#9B6FD7',
+    '#D4B5FF',
+    '@@lighter@@',
+    undefined,
+    '#1a1a2e'
+  ),
+  blue: createColorSet(
+    '#60A5FA',
+    '#3B82F6',
+    '#93C5FD',
+    '@@lighter@@',
+    undefined,
+    '#0c1829'
+  ),
+  monotone: createColorSet(
+    '#7B8FE8',
+    '#5d73d0',
+    '#a0b0f0',
+    '@@lighter@@',
+    undefined,
+    '#ffffff'
+  ),
+}
+
+const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
+  // Dracula: 紫灰がかった暗い背景
+  dracula: {
+    lighter: '#44475A',
+    background: { default: '#282A36', paper: '#343746' },
+    text: { primary: '#F8F8F2', secondary: '#6272A4', disabled: '#6272A4' },
+    action: {
+      hover: 'rgba(248, 248, 242, 0.06)',
+      selected: 'rgba(123, 143, 232, 0.15)',
+      disabled: 'rgba(248, 248, 242, 0.3)',
+      active: 'rgba(248, 248, 242, 0.56)',
+    },
+    surface: {
+      background: '#2d2f3d',
+      backgroundDark: '#44475A',
+      backgroundDisabled: '#44475A',
+    },
+    icon: { light: '#6272A4', dark: '#F8F8F2', disabled: '#44475A' },
+    divider: 'rgba(98, 114, 164, 0.25)',
   },
-  icon: {
-    white: '#ffffff',
-    light: isLight ? '#64748b' : '#b0b8c8',
-    dark: isLight ? '#334155' : '#dce0e8',
-    action: amber[400],
-    disabled: isLight ? '#cbd5e1' : '#565f73',
+  // Blue: Zinc系ニュートラル + 青プライマリ
+  blue: {
+    lighter: '#1e3a5f',
+    background: { default: '#18181b', paper: '#27272a' },
+    text: { primary: '#e4e4e7', secondary: '#a1a1aa', disabled: '#71717a' },
+    action: {
+      hover: 'rgba(255, 255, 255, 0.04)',
+      selected: 'rgba(96, 165, 250, 0.15)',
+      disabled: 'rgba(255, 255, 255, 0.26)',
+      active: 'rgba(255, 255, 255, 0.54)',
+    },
+    surface: {
+      background: '#1e1e22',
+      backgroundDark: '#333338',
+      backgroundDisabled: '#333338',
+    },
+    icon: { light: '#a1a1aa', dark: '#e4e4e7', disabled: '#52525b' },
+    divider: 'rgba(255, 255, 255, 0.08)',
   },
-  // Dracula: やや明るめのボーダーで視認性向上
-  divider: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.10)',
-  common: {
-    black: isLight ? '#09090b' : '#21222c',
-    white: '#ffffff',
+  // Monotone: 低コントラスト・最小彩度
+  monotone: {
+    lighter: '#2a2c36',
+    background: { default: '#1a1a1e', paper: '#26262a' },
+    text: { primary: '#d0d0d4', secondary: '#8a8c94', disabled: '#606068' },
+    action: {
+      hover: 'rgba(255, 255, 255, 0.04)',
+      selected: 'rgba(123, 143, 232, 0.12)',
+      disabled: 'rgba(255, 255, 255, 0.26)',
+      active: 'rgba(255, 255, 255, 0.54)',
+    },
+    surface: {
+      background: '#1e1e22',
+      backgroundDark: '#303034',
+      backgroundDisabled: '#303034',
+    },
+    icon: { light: '#8a8c94', dark: '#d0d0d4', disabled: '#48484e' },
+    divider: 'rgba(255, 255, 255, 0.1)',
   },
-})
+}
+
+/** ダークスキームごとの色定義を返す */
+export const createDarkThemeColors = (
+  scheme: ColorScheme = 'dracula'
+): ThemeColors => {
+  const env = darkSchemeEnvMap[scheme]
+
+  // lighter スロットをスキーム環境色で置換
+  const patchLighter = (cs: ColorSet): ColorSet => ({
+    ...cs,
+    lighter: env.lighter,
+  })
+
+  return {
+    primary: patchLighter(darkSchemePrimaryMap[scheme]),
+    secondary: patchLighter(darkSemanticBase.secondary),
+    // success/info/warning/errorは固有のlighterを維持（Alert背景等で使用）
+    success: darkSemanticBase.success,
+    info: darkSemanticBase.info,
+    warning: darkSemanticBase.warning,
+    error: darkSemanticBase.error,
+    grey: greyShades,
+    text: { ...env.text, white: '#ffffff' },
+    background: env.background,
+    action: env.action,
+    surface: env.surface,
+    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    divider: env.divider,
+    common: { black: '#09090b', white: '#ffffff' },
+  }
+}
+
+/** localStorage キー(Storybook等で使用) */
+export const COLOR_SCHEME_STORAGE_KEY = 'color-scheme'
+/** 後方互換エイリアス */
+export const DARK_SCHEME_STORAGE_KEY = COLOR_SCHEME_STORAGE_KEY
 
 // これは、後にチャートなどの色を設計する時の参考
 export const colorData = {
@@ -192,9 +479,23 @@ export const colorData = {
     blue: { 50: blue[50], 200: blue[200] },
     pink: { 200: pink[200] },
   },
-  ...createThemeColors(true),
-  dark: createThemeColors(false),
+  ...createLightColors(),
+  dark: createDarkThemeColors('dracula'), // デフォルト: Dracula(後方互換)
 }
+
+/** 指定スキームの色データを取得 */
+export const getThemeColorData = (
+  mode: 'light' | 'dark',
+  scheme: ColorScheme
+): ThemeColors =>
+  mode === 'dark'
+    ? createDarkThemeColors(scheme)
+    : createLightThemeColors(scheme)
+
+/** 後方互換: ダーク色データ取得 */
+export const getDarkColorData = (
+  scheme: ColorScheme = 'dracula'
+): ThemeColors => createDarkThemeColors(scheme)
 
 export const getGrey = (shade: keyof GreyShades): string => greyShades[shade]
 

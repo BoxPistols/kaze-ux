@@ -9,38 +9,54 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useGlobals } from 'storybook/preview-api'
 
 import { ChatSupport } from '../src/components/ui/ChatSupport/ChatSupport'
-import { darkTheme, lightTheme } from '../src/themes/theme'
+import { COLOR_SCHEME_STORAGE_KEY } from '../src/themes/colorToken'
+import { lightTheme, createDarkTheme } from '../src/themes/theme'
 
+import type { ColorScheme } from '../src/themes/colorToken'
 import type { Preview, StoryFn, StoryContext } from '@storybook/react-vite'
 
 import '../src/index.css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 // MUIのローカルストレージキーを統一
-const updateLocalStorage = (theme: string) => {
-  // mui-modeのみを使用し、mui-color-schemeは削除
-  localStorage.setItem('mui-mode', theme === 'dark' ? 'dark' : 'light')
-
-  // 競合するキーを削除
+const updateLocalStorage = (mode: string) => {
+  localStorage.setItem('mui-mode', mode === 'dark' ? 'dark' : 'light')
   localStorage.removeItem('mui-color-scheme-dark')
   localStorage.removeItem('mui-color-scheme-light')
 }
 
+/**
+ * テーマセレクタの値からモードとスキームを解析する
+ * 形式: "light" | "dark-dracula" | "dark-blue"
+ */
+const parseThemeValue = (
+  value: string
+): { mode: 'light' | 'dark'; scheme: ColorScheme } => {
+  if (value.startsWith('dark-')) {
+    const scheme = value.replace('dark-', '') as ColorScheme
+    return { mode: 'dark', scheme }
+  }
+  return { mode: 'light', scheme: 'blue' }
+}
+
 const Decorator = (Story: StoryFn, context: StoryContext) => {
   const [globals] = useGlobals()
-  const currentTheme = globals.theme || 'light'
   const currentPadding = globals.padding || 'standard'
 
   // ページパラメータで明示的にダークテーマを強制するかチェック
   const forceDarkTheme = context.parameters?.forceDarkTheme === true
-  const themeToUse = forceDarkTheme ? 'dark' : currentTheme
+  const themeValue = forceDarkTheme ? 'dark-dracula' : globals.theme || 'light'
+  const { mode, scheme } = parseThemeValue(themeValue)
 
   // 初回マウント検知 -- 初回はトランジションなしで即時適用
   const isFirstMount = useRef(true)
 
   const muiTheme = useMemo(() => {
-    return themeToUse === 'dark' ? darkTheme : lightTheme
-  }, [themeToUse])
+    return mode === 'dark' ? createDarkTheme(scheme) : lightTheme
+  }, [mode, scheme])
+
+  // 背景色だけ文字列として取得（useEffectの依存配列にオブジェクト参照を入れない）
+  const bgColor = muiTheme.palette.background.default
 
   useEffect(() => {
     const html = document.documentElement
@@ -55,10 +71,11 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
     }
     isFirstMount.current = false
 
-    updateLocalStorage(themeToUse)
-    html.setAttribute('data-theme', themeToUse)
+    updateLocalStorage(mode)
+    localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, scheme)
+    html.setAttribute('data-theme', mode)
 
-    if (themeToUse === 'dark') {
+    if (mode === 'dark') {
       html.classList.add('dark')
     } else {
       html.classList.remove('dark')
@@ -66,7 +83,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
 
     const root = document.getElementById('root')
     if (root) {
-      root.style.backgroundColor = muiTheme.palette.background.default
+      root.style.backgroundColor = bgColor
     }
 
     return () => {
@@ -75,7 +92,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
         html.removeAttribute('data-theme-transitioning')
       }
     }
-  }, [themeToUse, muiTheme])
+  }, [mode, scheme, bgColor])
 
   const cache = useMemo(
     () =>
@@ -94,6 +111,19 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
     (isFullscreen && context.parameters.fullscreenNoPadding) ||
     currentPadding === 'none'
 
+  // テーマ切替時にcurrentStoryの参照が変わらないようメモ化
+  const storyTitle = context.title
+  const storyName = context.name
+  const storyDescription = context.parameters?.docs?.description?.component
+  const currentStory = useMemo(
+    () => ({
+      title: storyTitle,
+      name: storyName,
+      description: storyDescription,
+    }),
+    [storyTitle, storyName, storyDescription]
+  )
+
   return (
     <EmotionThemeProvider theme={muiTheme}>
       <ThemeProvider theme={muiTheme}>
@@ -103,14 +133,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
             <Story {...context} />
           </div>
           {context.viewMode !== 'docs' && (
-            <ChatSupport
-              key={context.id}
-              currentStory={{
-                title: context.title,
-                name: context.name,
-                description: context.parameters?.docs?.description?.component,
-              }}
-            />
+            <ChatSupport currentStory={currentStory} />
           )}
         </CacheProvider>
       </ThemeProvider>
@@ -137,6 +160,10 @@ const preview: Preview = {
     docs: {
       toc: { headingSelector: 'h2, h3' },
       autodocs: true,
+    },
+    // a11y: ページ遷移のたびにaxeが自動実行されるのを防止（パネルから手動実行は可能）
+    a11y: {
+      test: 'off',
     },
 
     // カテゴリの順序を制御
@@ -182,8 +209,6 @@ const preview: Preview = {
             ['*', ['Docs', '*']],
             'Maps',
             ['*', ['Docs', '*']],
-            'UTM',
-            ['*', ['Docs', '*']],
             '*',
           ],
           'Patterns',
@@ -196,17 +221,24 @@ const preview: Preview = {
 
   decorators: [Decorator],
 
+  // a11y自動実行をデフォルトで無効化（Toolbarから手動切替可能）
+  initialGlobals: {
+    a11y: { manual: true },
+  },
+
   globalTypes: {
     theme: {
       name: 'Theme',
-      description: 'Global theme for components',
+      description: 'Light / Dark モード切替',
       defaultValue: 'light',
       toolbar: {
         icon: 'circlehollow',
         items: [
           { value: 'light', title: 'Light' },
-          { value: 'dark', title: 'Dark' },
+          { value: 'dark-dracula', title: 'Dark (Dracula)' },
+          { value: 'dark-blue', title: 'Dark (Blue)' },
         ],
+        dynamicTitle: true,
       },
     },
     padding: {

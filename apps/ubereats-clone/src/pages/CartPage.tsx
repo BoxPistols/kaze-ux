@@ -16,7 +16,12 @@ import { IconButton } from '@/components/ui/icon-button'
 import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
-import { UE_BLACK, UE_BLACK_HOVER, UE_GREEN, UE_GREEN_DARK } from '~/theme/colors'
+import {
+  UE_BLACK,
+  UE_BLACK_HOVER,
+  UE_GREEN,
+  UE_GREEN_DARK,
+} from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 const paymentOptions = [

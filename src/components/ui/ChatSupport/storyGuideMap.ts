@@ -192,8 +192,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
     references: ['https://mui.com/material-ui/customization/theming/'],
   },
   'Design Tokens/Color Palette': {
-    summary:
-      'カラーパレット。colorToken.ts で定義された実際の色値を表示。',
+    summary: 'カラーパレット。colorToken.ts で定義された実際の色値を表示。',
     codeContext: [
       '定義ファイル: src/themes/colorToken.ts',
       'Light primary: #2642be(main) #1a2c80(dark) #4d68d4(light)',
