@@ -9,7 +9,6 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { UserAvatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
-import { ConnectionStatusChip } from '@/components/ui/chip'
 import { ConfirmDialog, FormDialog } from '@/components/ui/dialog'
 import { IconButton } from '@/components/ui/icon-button'
 import { ActionMenu } from '@/components/ui/menu'
@@ -87,11 +86,7 @@ export const TeamPage = () => {
 
     if (editTarget) {
       setTeamList((prev) =>
-        prev.map((m) =>
-          m.id === editTarget.id
-            ? { ...m, ...form }
-            : m
-        )
+        prev.map((m) => (m.id === editTarget.id ? { ...m, ...form } : m))
       )
       toast.success(`Updated member: ${form.name}`)
     } else {
@@ -185,9 +180,6 @@ export const TeamPage = () => {
                     justifyContent: 'space-between',
                     mb: 1,
                   }}>
-                  <ConnectionStatusChip
-                    connected={member.status === 'online'}
-                  />
                   <StatusTag
                     text={member.status}
                     status={statusMap[member.status]}

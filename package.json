@@ -56,7 +56,7 @@
     "export-tokens": "tsx scripts/export-design-tokens.ts",
     "dev:dashboard": "pnpm --filter saas-dashboard dev",
     "dev:ubereats": "pnpm --filter ubereats-clone dev",
-    "dev:all": "pnpm dev & pnpm dev:dashboard & pnpm dev:ubereats",
+    "dev:all": "turbo run dev --parallel",
     "build:dashboard": "pnpm --filter saas-dashboard build",
     "build:ubereats": "pnpm --filter ubereats-clone build",
     "build:gh-pages:dashboard": "pnpm --filter saas-dashboard build:gh-pages",
@@ -167,6 +167,7 @@
       "pnpm run format"
     ]
   },
+  "packageManager": "pnpm@10.2.1",
   "volta": {
     "node": "22.14.0"
   },

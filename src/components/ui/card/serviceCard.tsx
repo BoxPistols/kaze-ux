@@ -8,8 +8,6 @@ import {
 } from '@mui/material'
 import { type ReactNode } from 'react'
 
-import { ConnectionStatusChip } from '../chip'
-
 export interface ServiceCardProps {
   /** サービス名 */
   title: string
@@ -52,7 +50,7 @@ export const ServiceCard = ({
   title,
   description,
   icon,
-  connected,
+  connected: _connected,
   loading = false,
   error = false,
   onRegisterClick,
@@ -144,12 +142,7 @@ export const ServiceCard = ({
             ))}
           </Box>
         ) : (
-          <>
-            <Box sx={{ mb: 3 }}>
-              <ConnectionStatusChip connected={connected} />
-            </Box>
-            {children}
-          </>
+          <>{children}</>
         )}
 
         {/* 登録ボタン */}
