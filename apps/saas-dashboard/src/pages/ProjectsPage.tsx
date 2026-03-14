@@ -101,11 +101,7 @@ export const ProjectsPage = () => {
 
     if (editTarget) {
       setProjectList((prev) =>
-        prev.map((p) =>
-          p.id === editTarget.id
-            ? { ...p, ...form }
-            : p
-        )
+        prev.map((p) => (p.id === editTarget.id ? { ...p, ...form } : p))
       )
       toast.success(`Updated project: ${form.name}`)
     }
@@ -279,9 +275,7 @@ export const ProjectsPage = () => {
             <CustomTextField
               label='Name'
               value={form.name}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, name: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               required
               fullWidth
             />

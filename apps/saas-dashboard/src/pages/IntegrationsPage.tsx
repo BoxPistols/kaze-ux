@@ -91,8 +91,9 @@ export const IntegrationsPage = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Integration | null>(null)
   const [disconnectOpen, setDisconnectOpen] = useState(false)
-  const [disconnectTarget, setDisconnectTarget] =
-    useState<Integration | null>(null)
+  const [disconnectTarget, setDisconnectTarget] = useState<Integration | null>(
+    null
+  )
   const [form, setForm] = useState<FormState>(emptyForm)
 
   // --- Create ---
@@ -158,9 +159,7 @@ export const IntegrationsPage = () => {
         apiKey: form.apiKey || undefined,
         webhookUrl: form.webhookUrl || undefined,
         lastSync:
-          form.status === 'connected'
-            ? new Date().toISOString()
-            : undefined,
+          form.status === 'connected' ? new Date().toISOString() : undefined,
       }
       setIntegrationList((prev) => [...prev, newIntegration])
       toast.success(`Added integration: ${form.name}`)
@@ -176,9 +175,7 @@ export const IntegrationsPage = () => {
 
   const handleDelete = () => {
     if (deleteTarget) {
-      setIntegrationList((prev) =>
-        prev.filter((i) => i.id !== deleteTarget.id)
-      )
+      setIntegrationList((prev) => prev.filter((i) => i.id !== deleteTarget.id))
       toast.success(`Removed integration: ${deleteTarget.name}`)
     }
     setDeleteOpen(false)
@@ -296,9 +293,7 @@ export const IntegrationsPage = () => {
             <CustomTextField
               label='Name'
               value={form.name}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, name: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               required
               fullWidth
             />
@@ -319,9 +314,7 @@ export const IntegrationsPage = () => {
             <CustomSelect
               label='Icon'
               value={form.icon}
-              onChange={(_e, v) =>
-                setForm((f) => ({ ...f, icon: String(v) }))
-              }
+              onChange={(_e, v) => setForm((f) => ({ ...f, icon: String(v) }))}
               options={iconOptions}
               fullWidth
             />

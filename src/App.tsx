@@ -53,9 +53,7 @@ const appLinks: AppLink[] = [
   {
     title: 'SaaS Dashboard',
     description: 'CRUD操作・データテーブル・フォームパターン',
-    icon: (
-      <SpaceDashboardIcon sx={{ fontSize: 40, color: 'secondary.main' }} />
-    ),
+    icon: <SpaceDashboardIcon sx={{ fontSize: 40, color: 'secondary.main' }} />,
     href: 'http://localhost:3001',
     external: true,
     port: '3001',

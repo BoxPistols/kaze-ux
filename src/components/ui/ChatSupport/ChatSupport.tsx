@@ -476,7 +476,9 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
       // テキスト入力欄にフォーカス中はショートカットを無効化（paste等を妨げない）
       const tag = (e.target as HTMLElement)?.tagName
       const isInputFocused =
-        tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        (e.target as HTMLElement)?.isContentEditable
 
       // チャット開閉（入力欄フォーカス中でも動作させる）
       if (isShortcutMatch(e, config.shortcuts.toggleChat)) {

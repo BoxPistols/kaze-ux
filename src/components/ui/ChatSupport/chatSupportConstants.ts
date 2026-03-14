@@ -336,11 +336,7 @@ export const OPENAI_MODELS: ModelOption[] = [
     value: 'gpt-5-nano',
     label: 'gpt-5-nano',
     description: '次世代の高速モデル。日常的なコード補助に',
-    features: [
-      'GPT-5系の推論能力',
-      '高速レスポンス',
-      'nano価格帯で高品質',
-    ],
+    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
     usecases: [
       'テストコードの生成',
       'TypeScript型定義の補助',
