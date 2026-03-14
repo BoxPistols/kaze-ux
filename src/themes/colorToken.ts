@@ -118,6 +118,7 @@ export const SCHEME_META: SchemeMeta[] = [
     preview: '#282A36',
   },
   { id: 'blue', name: 'Blue', description: 'クールZinc系', preview: '#18181b' },
+  // monotone: 実装済みだがUI調整中のため非表示。有効化する場合は下記を解除
   // { id: 'monotone', name: 'Monotone', description: '低彩度ニュートラル', preview: '#1a1a1e' },
 ]
 /** 後方互換エイリアス */

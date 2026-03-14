@@ -2,6 +2,7 @@
 import {
   type Components,
   type CssVarsTheme,
+  type PaletteOptions,
   type Theme,
   createTheme,
 } from '@mui/material/styles'
@@ -841,7 +842,6 @@ const theme = createTheme({
 })
 
 // 後方互換性のために従来のテーマも提供
-// @ts-expect-error MUI v7の型互換性問題
 const lightTheme = createTheme({
   ...commonThemeOptions,
   palette: {
@@ -852,11 +852,10 @@ const lightTheme = createTheme({
       default: colorData.background.default,
       paper: colorData.background.paper,
     },
-  },
+  } as PaletteOptions,
   components: componentStyles as Components<Theme>,
 })
 
-// @ts-expect-error MUI v7の型互換性問題
 const darkTheme = createTheme({
   ...commonThemeOptions,
   palette: {
@@ -867,14 +866,13 @@ const darkTheme = createTheme({
       default: colorData.dark.background.default,
       paper: colorData.dark.background.paper,
     },
-  },
+  } as PaletteOptions,
   components: componentStyles as Components<Theme>,
 })
 
 /** 指定スキームでダークテーマを生成 */
 const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
   const colors = createDarkThemeColors(scheme)
-  // @ts-expect-error MUI v7の型互換性問題
   return createTheme({
     ...commonThemeOptions,
     palette: {
@@ -885,7 +883,7 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
         default: colors.background.default,
         paper: colors.background.paper,
       },
-    },
+    } as PaletteOptions,
     components: componentStyles as Components<Theme>,
   })
 }
@@ -893,7 +891,6 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
 /** 指定スキームでライトテーマを生成 */
 const createLightTheme = (scheme?: ColorScheme): Theme => {
   const colors = createLightThemeColors(scheme)
-  // @ts-expect-error MUI v7の型互換性問題
   return createTheme({
     ...commonThemeOptions,
     palette: {
@@ -904,7 +901,7 @@ const createLightTheme = (scheme?: ColorScheme): Theme => {
         default: colors.background.default,
         paper: colors.background.paper,
       },
-    },
+    } as PaletteOptions,
     components: componentStyles as Components<Theme>,
   })
 }

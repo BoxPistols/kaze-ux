@@ -61,7 +61,7 @@ jobs:
           echo "public-hoist-pattern[]=prop-types" >> .npmrc
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       # デプロイ対象の判定
       - name: Determine deploy target
