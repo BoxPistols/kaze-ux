@@ -395,7 +395,7 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
       backgroundDisabled: '#44475A',
     },
     icon: { light: '#6272A4', dark: '#F8F8F2', disabled: '#44475A' },
-    divider: 'rgba(98, 114, 164, 0.25)',
+    divider: 'rgba(98, 114, 164, 0.15)',
   },
   // Blue: Zinc系ニュートラル + 青プライマリ
   blue: {
@@ -433,7 +433,7 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
       backgroundDisabled: '#303034',
     },
     icon: { light: '#8a8c94', dark: '#d0d0d4', disabled: '#48484e' },
-    divider: 'rgba(255, 255, 255, 0.1)',
+    divider: 'rgba(255, 255, 255, 0.08)',
   },
 }
 

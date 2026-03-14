@@ -54,6 +54,7 @@
     "build:gh-pages:all": "pnpm run build:gh-pages:storybook && pnpm run build:gh-pages:dashboard && pnpm run build:gh-pages:ubereats",
     "prepare": "husky",
     "export-tokens": "tsx scripts/export-design-tokens.ts",
+    "export-tokens:auto": "npx tsx packages/system-design-export/src/cli.ts --from mui --input src/themes/theme.ts",
     "figma-plugin:build": "esbuild figma-plugin/code.ts --bundle --outfile=figma-plugin/code.js --target=es2017 --format=iife",
     "figma-plugin:watch": "esbuild figma-plugin/code.ts --bundle --outfile=figma-plugin/code.js --target=es2017 --format=iife --watch",
     "dev:dashboard": "pnpm --filter saas-dashboard dev",

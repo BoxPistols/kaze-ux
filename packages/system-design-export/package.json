@@ -1,0 +1,30 @@
+{
+  "name": "system-design-export",
+  "version": "0.1.0",
+  "description": "Extract design tokens from MUI/Tailwind/CSS and export as W3C DTCG JSON",
+  "type": "module",
+  "bin": {
+    "system-design-export": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsx src/cli.ts --help > /dev/null && echo 'CLI OK'",
+    "dev": "tsx src/cli.ts",
+    "test": "echo 'no tests yet'"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "design-tokens",
+    "dtcg",
+    "w3c",
+    "mui",
+    "tailwind",
+    "figma"
+  ],
+  "license": "MIT"
+}
