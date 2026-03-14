@@ -130,8 +130,14 @@
         display: block;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(4px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       /* ---- Form Elements ---- */
@@ -263,9 +269,15 @@
         border-radius: 50%;
         display: inline-block;
       }
-      .btn-styles .dot-t { background: #f59e0b; }
-      .btn-styles .dot-c { background: #5b6af0; }
-      .btn-styles .dot-e { background: #2d9d5c; }
+      .btn-styles .dot-t {
+        background: #f59e0b;
+      }
+      .btn-styles .dot-c {
+        background: #5b6af0;
+      }
+      .btn-styles .dot-e {
+        background: #2d9d5c;
+      }
 
       .btn-danger-outline {
         flex: 1;
@@ -518,11 +530,7 @@
         </button>
       </div>
 
-      <input
-        type="file"
-        id="fileInput"
-        accept=".json"
-        style="display: none" />
+      <input type="file" id="fileInput" accept=".json" style="display: none" />
     </div>
 
     <!-- Generate Tab -->
@@ -553,9 +561,7 @@
       </div>
 
       <div class="manage-actions">
-        <button class="btn-danger-outline" id="clearAllBtn">
-          Delete All
-        </button>
+        <button class="btn-danger-outline" id="clearAllBtn">Delete All</button>
         <button class="btn btn-ghost" id="dedupeBtn">Remove Duplicates</button>
       </div>
     </div>
@@ -578,12 +584,12 @@
       // --- Tabs ---
       document.querySelectorAll('.tab').forEach(function (tab) {
         tab.addEventListener('click', function () {
-          document
-            .querySelectorAll('.tab')
-            .forEach(function (t) { t.classList.remove('active') })
-          document
-            .querySelectorAll('.tab-panel')
-            .forEach(function (p) { p.classList.remove('active') })
+          document.querySelectorAll('.tab').forEach(function (t) {
+            t.classList.remove('active')
+          })
+          document.querySelectorAll('.tab-panel').forEach(function (p) {
+            p.classList.remove('active')
+          })
           tab.classList.add('active')
           document
             .getElementById('panel-' + tab.dataset.tab)
@@ -601,9 +607,11 @@
         stylesBtn.disabled = !has
       })
 
-      document.getElementById('loadFile').addEventListener('click', function () {
-        fileInput.click()
-      })
+      document
+        .getElementById('loadFile')
+        .addEventListener('click', function () {
+          fileInput.click()
+        })
 
       fileInput.addEventListener('change', function (e) {
         var file = e.target.files[0]
@@ -623,7 +631,11 @@
           var tokens = JSON.parse(textarea.value)
           setStatus('info', 'Importing...')
           importBtn.disabled = true
-          postMsg({ type: 'import-tokens', tokens: tokens, scope: scopeEl.value })
+          postMsg({
+            type: 'import-tokens',
+            tokens: tokens,
+            scope: scopeEl.value,
+          })
         } catch (err) {
           setStatus('error', 'JSON parse error: ' + err.message)
         }
@@ -640,17 +652,21 @@
       })
 
       // --- Manage ---
-      document.getElementById('clearAllBtn').addEventListener('click', function () {
-        if (confirm('Delete all collections and variables?')) {
-          setStatus('info', 'Deleting...')
-          postMsg({ type: 'clear-all' })
-        }
-      })
+      document
+        .getElementById('clearAllBtn')
+        .addEventListener('click', function () {
+          if (confirm('Delete all collections and variables?')) {
+            setStatus('info', 'Deleting...')
+            postMsg({ type: 'clear-all' })
+          }
+        })
 
-      document.getElementById('dedupeBtn').addEventListener('click', function () {
-        setStatus('info', 'Checking duplicates...')
-        postMsg({ type: 'remove-duplicates' })
-      })
+      document
+        .getElementById('dedupeBtn')
+        .addEventListener('click', function () {
+          setStatus('info', 'Checking duplicates...')
+          postMsg({ type: 'remove-duplicates' })
+        })
 
       // --- Generate ---
       document.querySelectorAll('.component-btn').forEach(function (btn) {
@@ -682,13 +698,17 @@
           .map(function (c) {
             return (
               '<div class="collection-item">' +
-              '<span><span class="name">' + escapeHtml(c.name) + '</span>' +
-              '<span class="meta">' + c.variableCount + ' vars' +
-              (c.modes.length > 1
-                ? ' / ' + c.modes.join(', ')
-                : '') +
+              '<span><span class="name">' +
+              escapeHtml(c.name) +
+              '</span>' +
+              '<span class="meta">' +
+              c.variableCount +
+              ' vars' +
+              (c.modes.length > 1 ? ' / ' + c.modes.join(', ') : '') +
               '</span></span>' +
-              '<button class="del-btn" data-name="' + escapeAttr(c.name) + '">Delete</button>' +
+              '<button class="del-btn" data-name="' +
+              escapeAttr(c.name) +
+              '">Delete</button>' +
               '</div>'
             )
           })
