@@ -310,6 +310,7 @@ function importColorWithModes(tokens: Record<string, unknown>): {
     }
   }
 
+  invalidateColorVarCache()
   return { created, updated, skipped }
 }
 
@@ -661,8 +662,12 @@ const ELEVATION_2: Effect[] = [
   },
 ]
 
-// COLOR変数キャッシュ（generateButton内で初期化）
+// COLOR変数キャッシュ（変数操作後にリセット）
 let colorVarCache: Map<string, Variable> | null = null
+
+function invalidateColorVarCache(): void {
+  colorVarCache = null
+}
 
 function getColorVarCache(): Map<string, Variable> {
   if (!colorVarCache) {
@@ -863,6 +868,7 @@ function clearAll(): void {
     success: true,
     message: `Deleted all: ${collections.length} collections / ${varCount} variables`,
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
@@ -897,6 +903,7 @@ function clearCollection(name: string): void {
     success: true,
     message: `Deleted "${name}": ${varCount} variables`,
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
@@ -930,6 +937,7 @@ function removeDuplicates(): void {
         ? `Removed ${totalRemoved} duplicate variables`
         : 'No duplicates found',
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
