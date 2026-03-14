@@ -614,7 +614,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
         sx={{
           bgcolor:
             theme.palette.mode === 'dark'
-              ? 'rgba(38,66,190,0.55)'
+              ? 'rgba(14,173,184,0.55)'
               : 'primary.main',
           color: 'primary.contrastText',
           backdropFilter: 'blur(12px)',
@@ -739,7 +739,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             py: 0.75,
             bgcolor:
               theme.palette.mode === 'dark'
-                ? 'rgba(38,66,190,0.3)'
+                ? 'rgba(14,173,184,0.3)'
                 : 'rgba(63,81,181,0.08)',
             borderBottom: '1px solid',
             borderColor: 'divider',
@@ -1293,7 +1293,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                         borderTopRightRadius: isUser ? '2px' : '12px',
                         bgcolor: isUser
                           ? theme.palette.mode === 'dark'
-                            ? 'rgba(38,66,190,0.45)'
+                            ? 'rgba(14,173,184,0.45)'
                             : 'primary.main'
                           : theme.palette.mode === 'dark'
                             ? 'rgba(255,255,255,0.06)'
@@ -1488,7 +1488,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       borderColor:
                         theme.palette.mode === 'dark'
                           ? 'rgba(255,255,255,0.12)'
-                          : 'rgba(38,66,190,0.3)',
+                          : 'rgba(14,173,184,0.3)',
                       color:
                         theme.palette.mode === 'dark'
                           ? 'rgba(255,255,255,0.6)'
@@ -1497,7 +1497,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                         bgcolor:
                           theme.palette.mode === 'dark'
                             ? 'rgba(255,255,255,0.06)'
-                            : 'rgba(38,66,190,0.06)',
+                            : 'rgba(14,173,184,0.06)',
                         borderColor:
                           theme.palette.mode === 'dark'
                             ? 'rgba(255,255,255,0.25)'
@@ -1640,24 +1640,24 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             sx={{
               bgcolor:
                 theme.palette.mode === 'dark'
-                  ? 'rgba(38,66,190,0.5)'
-                  : 'rgba(38,66,190,0.85)',
+                  ? 'rgba(14,173,184,0.5)'
+                  : 'rgba(14,173,184,0.85)',
               color: '#fff',
               backdropFilter: 'blur(16px)',
               boxShadow:
                 theme.palette.mode === 'dark'
                   ? '0 8px 32px rgba(0,0,0,0.4)'
-                  : '0 8px 32px rgba(38,66,190,0.3)',
+                  : '0 8px 32px rgba(14,173,184,0.3)',
               border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.18)'}`,
               '&:hover': {
                 bgcolor:
                   theme.palette.mode === 'dark'
-                    ? 'rgba(38,66,190,0.65)'
-                    : 'rgba(38,66,190,0.95)',
+                    ? 'rgba(14,173,184,0.65)'
+                    : 'rgba(14,173,184,0.95)',
                 boxShadow:
                   theme.palette.mode === 'dark'
                     ? '0 8px 32px rgba(0,0,0,0.5)'
-                    : '0 8px 32px rgba(38,66,190,0.45)',
+                    : '0 8px 32px rgba(14,173,184,0.45)',
               },
             }}>
             <BookConciergeIcon size={24} />

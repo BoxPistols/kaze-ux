@@ -326,7 +326,7 @@ const PrinciplesContent = () => {
       color: 'primary' as const,
       summary: '一箇所を直せば全部直る仕組み',
       detail:
-        'トークンやマスターコンポーネントを介して変更を集約する。色=#2642beではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
+        'トークンやマスターコンポーネントを介して変更を集約する。色=#0EADB8ではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
       example:
         'Figmaの色指定 → トークン名(primary.main)で指定し、カラーコード直書きを避ける',
     },
@@ -1329,8 +1329,8 @@ const VariablesContent = () => {
                         bgcolor:
                           slotIcon === key
                             ? isDark
-                              ? 'rgba(38,66,190,0.15)'
-                              : 'rgba(38,66,190,0.06)'
+                              ? 'rgba(14,173,184,0.15)'
+                              : 'rgba(14,173,184,0.06)'
                             : 'transparent',
                         display: 'flex',
                         justifyContent: 'center',

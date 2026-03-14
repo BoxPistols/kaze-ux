@@ -236,7 +236,7 @@ const preview: Preview = {
         items: [
           { value: 'light', title: 'Light' },
           { value: 'dark-dracula', title: 'Dark (Dracula)' },
-          { value: 'dark-blue', title: 'Dark (Blue)' },
+          { value: 'dark-blue', title: 'Dark (Kaze)' },
         ],
         dynamicTitle: true,
       },

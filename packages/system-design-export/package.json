@@ -6,17 +6,31 @@
   "bin": {
     "system-design-export": "./dist/cli.js"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsx src/cli.ts --help > /dev/null && echo 'CLI OK'",
+    "build": "tsc",
     "dev": "tsx src/cli.ts",
-    "test": "echo 'no tests yet'"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "commander": "^13.1.0"
   },
   "devDependencies": {
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.1"
   },
   "keywords": [
     "design-tokens",
@@ -26,5 +40,8 @@
     "tailwind",
     "figma"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
 }

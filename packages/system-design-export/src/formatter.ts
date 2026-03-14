@@ -7,7 +7,7 @@ import type {
   ExtractedTokens,
   TokenGroup,
   TokenValue,
-} from './types'
+} from './types.js'
 
 const colorToken = (value: string, description?: string): TokenValue => ({
   $value: value,

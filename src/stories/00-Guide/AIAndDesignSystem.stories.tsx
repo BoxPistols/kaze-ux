@@ -275,7 +275,7 @@ const AIDesignSystemContent = () => {
             {`「ServiceCardコンポーネントを作成。
  - variant: outlined
  - padding: spacing(3) = 24px
- - 色: primary.main (#2642be)
+ - 色: primary.main (#0EADB8)
  - size: compact | default | comfortable
  - 状態: Empty, Loading, Error, Ideal
  - MUI v7 Grid size={{ xs: 12, sm: 6 }}

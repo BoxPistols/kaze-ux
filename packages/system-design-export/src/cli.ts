@@ -16,13 +16,15 @@ import { resolve, dirname } from 'node:path'
 
 import { Command } from 'commander'
 
-import { muiExtractor } from './extractors/mui'
-import { formatDTCG } from './formatter'
+import { muiExtractor } from './extractors/mui.js'
+import { tailwindExtractor } from './extractors/tailwind.js'
+import { formatDTCG } from './formatter.js'
 
-import type { Extractor } from './types'
+import type { Extractor } from './types.js'
 
 const extractors: Record<string, Extractor> = {
   mui: muiExtractor,
+  tailwind: tailwindExtractor,
 }
 
 const program = new Command()
@@ -77,10 +79,10 @@ program
         console.error(`Tokens exported to: ${outputPath}`)
 
         // サマリー
-        const colorCount = tokens.color
-          ? Object.keys(tokens.color.light).reduce(
-              (acc, group) =>
-                acc + Object.keys(tokens.color.light[group]).length,
+        const colorLight = tokens.color?.light
+        const colorCount = colorLight
+          ? Object.keys(colorLight).reduce(
+              (acc, group) => acc + Object.keys(colorLight[group]).length,
               0
             )
           : 0

@@ -28,10 +28,10 @@ const OUTPUT_DIR = resolve(__dirname, '..', 'design-tokens')
 // colorToken.ts の createThemeColors 相当
 const lightColors = {
   primary: {
-    main: '#2642be',
-    dark: '#1a2c80',
-    light: '#4d68d4',
-    lighter: '#a6b4ec',
+    main: '#0EADB8',
+    dark: '#0A8A94',
+    light: '#3CC0C8',
+    lighter: '#b0dfe3',
     contrastText: '#ffffff',
   },
   secondary: {
@@ -76,11 +76,11 @@ const lightColors = {
 
 const darkColors = {
   primary: {
-    main: '#5d7ce8',
-    dark: '#4a66c9',
-    light: '#7b94ec',
-    lighter: '#3d4a6d',
-    contrastText: '#ffffff',
+    main: '#4DD8E0',
+    dark: '#2CB8C2',
+    light: '#7AE6EC',
+    lighter: '#1a3a3e',
+    contrastText: '#0c2628',
   },
   secondary: {
     main: '#a0a1b8',

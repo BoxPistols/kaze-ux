@@ -114,10 +114,15 @@ export const SCHEME_META: SchemeMeta[] = [
   {
     id: 'dracula',
     name: 'Dracula',
-    description: '暖色パープル系',
+    description: 'ダーク・紫灰ベース',
     preview: '#282A36',
   },
-  { id: 'blue', name: 'Blue', description: 'クールZinc系', preview: '#18181b' },
+  {
+    id: 'blue',
+    name: 'Kaze',
+    description: 'クールティール系',
+    preview: '#0EADB8',
+  },
   // monotone: 実装済みだがUI調整中のため非表示。有効化する場合は下記を解除
   // { id: 'monotone', name: 'Monotone', description: '低彩度ニュートラル', preview: '#1a1a1e' },
 ]
@@ -145,9 +150,9 @@ interface SchemeEnv {
 /** ライトテーマのベースセマンティックカラー(スキーム共通) */
 const lightSemanticColors = {
   primary: createColorSet(
-    '#2642be',
-    '#1a2c80',
-    '#4d68d4',
+    '#0EADB8',
+    '#0A8A94',
+    '#3CC0C8',
     '@@lighter@@',
     undefined,
     '#ffffff'
@@ -220,9 +225,9 @@ const lightSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#7c6c9a', dark: '#3d2d5e', disabled: '#d0c4e0' },
     divider: 'rgba(100, 60, 160, 0.10)',
   },
-  // Blue Light: クールZinc系(現行デフォルト)
+  // Blue Light: クールティール系(現行デフォルト)
   blue: {
-    lighter: '#a6b4ec',
+    lighter: '#b0dfe3',
     background: { default: '#f8fafc', paper: '#ffffff' },
     text: {
       primary: '#1a1a2e',
@@ -346,46 +351,46 @@ const darkSemanticBase = {
   ),
 }
 
-// スキーム別プライマリカラー
-// Dracula: 暖色パープル系 (#BD93F9ベース)
-// Blue: 鮮やかなブルー (#60A5FAベース、Tailwind blue-400)
-// Monotone: 低彩度グレーブルー (#7B8FE8ベース)
+// スキーム別プライマリカラー（全スキームでティール系を共有）
+// Dracula: 紫灰背景に映えるやや彩度高めのティール
+// Blue(Kaze): Zinc背景に合うスタンダードティール
+// Monotone: 低彩度背景に合う落ち着いたティール
 const darkSchemePrimaryMap: Record<ColorScheme, ColorSet> = {
   dracula: createColorSet(
-    '#BD93F9',
-    '#9B6FD7',
-    '#D4B5FF',
+    '#50D8D8',
+    '#38C0C0',
+    '#7AE8E8',
     '@@lighter@@',
     undefined,
-    '#1a1a2e'
+    '#1a2e2e'
   ),
   blue: createColorSet(
-    '#60A5FA',
-    '#3B82F6',
-    '#93C5FD',
+    '#4DD8E0',
+    '#2CB8C2',
+    '#7AE6EC',
     '@@lighter@@',
     undefined,
-    '#0c1829'
+    '#0c2628'
   ),
   monotone: createColorSet(
-    '#7B8FE8',
-    '#5d73d0',
-    '#a0b0f0',
+    '#68C8CC',
+    '#50B0B4',
+    '#90D8DC',
     '@@lighter@@',
     undefined,
-    '#ffffff'
+    '#1a2e2e'
   ),
 }
 
 const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
-  // Dracula: 紫灰がかった暗い背景
+  // Dracula: 紫灰がかった暗い背景 + ティールアクセント
   dracula: {
     lighter: '#44475A',
     background: { default: '#282A36', paper: '#343746' },
     text: { primary: '#F8F8F2', secondary: '#6272A4', disabled: '#6272A4' },
     action: {
       hover: 'rgba(248, 248, 242, 0.06)',
-      selected: 'rgba(123, 143, 232, 0.15)',
+      selected: 'rgba(80, 216, 216, 0.15)',
       disabled: 'rgba(248, 248, 242, 0.3)',
       active: 'rgba(248, 248, 242, 0.56)',
     },
@@ -397,14 +402,14 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#6272A4', dark: '#F8F8F2', disabled: '#44475A' },
     divider: 'rgba(98, 114, 164, 0.15)',
   },
-  // Blue: Zinc系ニュートラル + 青プライマリ
+  // Blue: Zinc系ニュートラル + ティールプライマリ
   blue: {
-    lighter: '#1e3a5f',
+    lighter: '#1a3a3e',
     background: { default: '#18181b', paper: '#27272a' },
     text: { primary: '#e4e4e7', secondary: '#a1a1aa', disabled: '#71717a' },
     action: {
       hover: 'rgba(255, 255, 255, 0.04)',
-      selected: 'rgba(96, 165, 250, 0.15)',
+      selected: 'rgba(77, 216, 224, 0.15)',
       disabled: 'rgba(255, 255, 255, 0.26)',
       active: 'rgba(255, 255, 255, 0.54)',
     },
@@ -423,7 +428,7 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     text: { primary: '#d0d0d4', secondary: '#8a8c94', disabled: '#606068' },
     action: {
       hover: 'rgba(255, 255, 255, 0.04)',
-      selected: 'rgba(123, 143, 232, 0.12)',
+      selected: 'rgba(104, 200, 204, 0.12)',
       disabled: 'rgba(255, 255, 255, 0.26)',
       active: 'rgba(255, 255, 255, 0.54)',
     },

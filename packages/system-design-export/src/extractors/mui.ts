@@ -9,7 +9,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import type { Extractor, ExtractedTokens } from '../types'
+import type { Extractor, ExtractedTokens } from '../types.js'
 
 // MUI Theme のパレット構造（最小定義）
 interface MuiPaletteColor {
@@ -34,9 +34,25 @@ interface MuiPalette {
   divider: string
 }
 
+// タイポグラフィバリアントのスタイル
+interface TypographyVariantStyle {
+  fontSize?: string | number
+  fontWeight?: number
+  lineHeight?: number | string
+  letterSpacing?: string
+  textTransform?: string
+  fontFamily?: string
+}
+
 interface MuiTypography {
   fontFamily: string
   fontSize: number
+  htmlFontSize?: number
+  fontWeightLight?: number
+  fontWeightRegular?: number
+  fontWeightMedium?: number
+  fontWeightBold?: number
+  [key: string]: unknown
 }
 
 interface MuiTheme {
@@ -51,12 +67,19 @@ interface MuiTheme {
 /**
  * MUI パレットからカラーマップを抽出
  */
-const extractPaletteColors = (
+export const extractPaletteColors = (
   palette: MuiPalette
 ): Record<string, Record<string, string>> => {
   const result: Record<string, Record<string, string>> = {}
 
-  const semanticKeys = ['primary', 'secondary', 'success', 'info', 'warning', 'error'] as const
+  const semanticKeys = [
+    'primary',
+    'secondary',
+    'success',
+    'info',
+    'warning',
+    'error',
+  ] as const
   for (const key of semanticKeys) {
     const color = palette[key] as MuiPaletteColor
     if (!color) continue
@@ -136,43 +159,96 @@ const extractFromMui: Extractor['extract'] = async (inputPath: string) => {
   }
 
   // --- タイポグラフィ ---
-  const themeRef = lightTheme ?? mod.theme as MuiTheme | undefined
+  const themeRef = lightTheme ?? (mod.theme as MuiTheme | undefined)
   if (themeRef?.typography) {
-    const baseFontSize = themeRef.typography.fontSize ?? 14
+    const typo = themeRef.typography
+    const baseFontSize = typo.htmlFontSize ?? typo.fontSize ?? 14
+
+    // rem → px 変換
+    const remToPx = (remStr: string): number => {
+      const match = remStr.match(/^([\d.]+)rem$/)
+      if (!match) return Number.NaN
+      return Math.round(parseFloat(match[1]) * baseFontSize * 100) / 100
+    }
+
     const pxToRem = (px: number) =>
       `${Number.parseFloat((px / baseFontSize).toFixed(2))}rem`
 
+    // メタキー（バリアントではないキー）
+    const META_KEYS = new Set([
+      'fontFamily',
+      'fontSize',
+      'htmlFontSize',
+      'fontWeightLight',
+      'fontWeightRegular',
+      'fontWeightMedium',
+      'fontWeightBold',
+      'allVariants',
+      'pxToRem',
+      'useNextVariants',
+    ])
+
+    // バリアントを動的に探索してサイズを抽出
+    const sizes: Record<string, { px: number; rem: string }> = {}
+    for (const [key, value] of Object.entries(typo)) {
+      if (META_KEYS.has(key)) continue
+      if (typeof value !== 'object' || value === null) continue
+
+      const variant = value as TypographyVariantStyle
+      if (!variant.fontSize) continue
+
+      let pxValue: number
+      if (typeof variant.fontSize === 'number') {
+        pxValue = variant.fontSize
+      } else if (typeof variant.fontSize === 'string') {
+        if (variant.fontSize.endsWith('rem')) {
+          pxValue = remToPx(variant.fontSize)
+        } else if (variant.fontSize.endsWith('px')) {
+          pxValue = parseFloat(variant.fontSize)
+        } else {
+          continue
+        }
+      } else {
+        continue
+      }
+
+      if (!Number.isNaN(pxValue)) {
+        sizes[key] = { px: pxValue, rem: pxToRem(pxValue) }
+      }
+    }
+
+    // fontWeight を動的に抽出
+    const weights: Record<string, number> = {}
+    if (typo.fontWeightLight != null)
+      weights.light = typo.fontWeightLight as number
+    if (typo.fontWeightRegular != null)
+      weights.regular = typo.fontWeightRegular as number
+    if (typo.fontWeightMedium != null)
+      weights.medium = typo.fontWeightMedium as number
+    if (typo.fontWeightBold != null)
+      weights.bold = typo.fontWeightBold as number
+
     tokens.typography = {
-      fontFamily: themeRef.typography.fontFamily ?? 'sans-serif',
+      fontFamily: typo.fontFamily ?? 'sans-serif',
       baseFontSize,
-      sizes: {
-        displayLarge: { px: 32, rem: pxToRem(32) },
-        displayMedium: { px: 28, rem: pxToRem(28) },
-        displaySmall: { px: 24, rem: pxToRem(24) },
-        xxl: { px: 22, rem: pxToRem(22) },
-        xl: { px: 20, rem: pxToRem(20) },
-        lg: { px: 18, rem: pxToRem(18) },
-        ml: { px: 16, rem: pxToRem(16) },
-        md: { px: 14, rem: pxToRem(14) },
-        sm: { px: 12, rem: pxToRem(12) },
-        xs: { px: 10, rem: pxToRem(10) },
-      },
-      weights: { light: 300, regular: 400, medium: 500, bold: 700 },
+      sizes,
+      weights,
     }
   }
 
   // --- スペーシング ---
   if (themeRef?.spacing) {
-    const base = typeof themeRef.spacing === 'function'
-      ? (() => {
-          try {
-            const val = themeRef.spacing(1)
-            return typeof val === 'number' ? val : parseInt(String(val), 10)
-          } catch {
-            return 8
-          }
-        })()
-      : 8
+    const base =
+      typeof themeRef.spacing === 'function'
+        ? (() => {
+            try {
+              const val = themeRef.spacing(1)
+              return typeof val === 'number' ? val : parseInt(String(val), 10)
+            } catch {
+              return 8
+            }
+          })()
+        : 8
 
     const multipliers = [0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24]
     const values: Record<string, number> = {}

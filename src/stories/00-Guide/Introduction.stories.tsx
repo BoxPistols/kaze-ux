@@ -264,7 +264,7 @@ const IntroductionContent = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(38,66,190,0.08)',
+            : 'rgba(14,173,184,0.08)',
         }}>
         <Box
           sx={{
@@ -438,8 +438,8 @@ const IntroductionContent = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   bgcolor: isDark
-                    ? 'rgba(38,66,190,0.15)'
-                    : 'rgba(38,66,190,0.08)',
+                    ? 'rgba(14,173,184,0.15)'
+                    : 'rgba(14,173,184,0.08)',
                   color: 'primary.main',
                   borderRadius: 2,
                   flexShrink: 0,

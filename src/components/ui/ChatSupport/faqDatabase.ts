@@ -75,7 +75,7 @@ const theme = useTheme()
 | \`success/error/warning/info\` | セマンティック（意味ベース）カラー |
 
 ### 注意事項
-- \`#2642be\` のような **ハードコードは禁止**。必ずトークン名で指定
+- \`#0EADB8\` のような **ハードコードは禁止**。必ずトークン名で指定
 - 新色追加時は **意味ベース命名**（\`brand-blue\` ではなく \`primary\`）
 - Storybook → **Design Tokens > Colors** で全色を確認`,
   },
@@ -311,7 +311,7 @@ const MyComponent = ({ title }: Props) => { ... }
 
 | 原則 | 意味 | 実践例 |
 |---|---|---|
-| **間接化** | 直接値を使わず変数・トークン経由 | \`#2642be\`ではなく\`primary.main\` |
+| **間接化** | 直接値を使わず変数・トークン経由 | \`#0EADB8\`ではなく\`primary.main\` |
 | **カプセル化** | 内部実装を隠しAPIで操作 | variant/size/colorだけ公開 |
 | **制約** | 選択肢を意図的に狭める | 自由入力よりEnum(3-7択) |
 | **意味の符号化** | 見た目でなく意味で命名 | \`red\`ではなく\`error\` |
@@ -1270,7 +1270,7 @@ className="transition-opacity duration-200 ease-in-out"
 | Auto Layout | Flexbox / Stack |
 
 ### トークン参照
-Figmaで色指定する際は **トークン名** を使用（例: \`primary.main\`）。ハードコード値（\`#2642be\`）は禁止`,
+Figmaで色指定する際は **トークン名** を使用（例: \`primary.main\`）。ハードコード値（\`#0EADB8\`）は禁止`,
   },
   {
     keywords: [

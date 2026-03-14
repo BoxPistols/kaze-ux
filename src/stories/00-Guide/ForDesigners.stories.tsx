@@ -461,7 +461,7 @@ const ForDesignersContent = () => {
             fill={
               theme.palette.mode === 'dark'
                 ? 'rgba(93,124,232,0.15)'
-                : 'rgba(38,66,190,0.08)'
+                : 'rgba(14,173,184,0.08)'
             }
             stroke={theme.palette.primary.main}
             strokeWidth='2'
@@ -516,7 +516,7 @@ const ForDesignersContent = () => {
             fill={
               theme.palette.mode === 'dark'
                 ? 'rgba(125,148,236,0.12)'
-                : 'rgba(38,66,190,0.04)'
+                : 'rgba(14,173,184,0.04)'
             }
             stroke={theme.palette.divider}
             strokeWidth='1.5'
