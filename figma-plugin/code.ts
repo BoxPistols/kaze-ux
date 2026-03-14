@@ -131,15 +131,28 @@ function getOrCreateCollection(name: string): VariableCollection {
   return figma.variables.createVariableCollection(name)
 }
 
-function getExistingVariable(
-  collection: VariableCollection,
-  name: string
-): Variable | null {
+/**
+ * コレクション内の変数名 → Variable の Map を構築（O(1) 検索用）
+ */
+function buildVariableMap(
+  collection: VariableCollection
+): Map<string, Variable> {
+  const map = new Map<string, Variable>()
   for (const id of collection.variableIds) {
     const v = figma.variables.getVariableById(id)
-    if (v && v.name === name) return v
+    if (v) map.set(v.name, v)
   }
-  return null
+  return map
+}
+
+function getExistingVariable(
+  collection: VariableCollection,
+  name: string,
+  cache?: Map<string, Variable>
+): Variable | null {
+  if (cache) return cache.get(name) ?? null
+  const map = buildVariableMap(collection)
+  return map.get(name) ?? null
 }
 
 /**
@@ -153,13 +166,14 @@ function importEntries(
 
   const collection = getOrCreateCollection(collectionName)
   const modeId = collection.modes[0].modeId
+  const varMap = buildVariableMap(collection)
   let created = 0
   let updated = 0
   let skipped = 0
 
   for (const entry of entries) {
     try {
-      const existing = getExistingVariable(collection, entry.name)
+      const existing = getExistingVariable(collection, entry.name, varMap)
       if (existing) {
         if (existing.resolvedType === entry.resolvedType) {
           existing.setValueForMode(modeId, entry.value)
@@ -178,7 +192,8 @@ function importEntries(
         if (entry.description) variable.description = entry.description
         created++
       }
-    } catch {
+    } catch (e) {
+      console.warn(`[importEntries] skipped: ${entry.name}`, e)
       skipped++
     }
   }
@@ -247,6 +262,7 @@ function importColorWithModes(tokens: Record<string, unknown>): {
     darkMap.set(name, e)
   }
 
+  const varMap = buildVariableMap(collection)
   let created = 0
   let updated = 0
   let skipped = 0
@@ -261,7 +277,7 @@ function importColorWithModes(tokens: Record<string, unknown>): {
     }
 
     try {
-      let variable = getExistingVariable(collection, name)
+      let variable = getExistingVariable(collection, name, varMap)
 
       if (variable) {
         if (variable.resolvedType === resolvedType) {
@@ -288,11 +304,13 @@ function importColorWithModes(tokens: Record<string, unknown>): {
         if (desc) variable.description = desc
         created++
       }
-    } catch {
+    } catch (e) {
+      console.warn(`[importColorWithModes] skipped: ${name}`, e)
       skipped++
     }
   }
 
+  invalidateColorVarCache()
   return { created, updated, skipped }
 }
 
@@ -391,7 +409,11 @@ async function registerTextStyles(): Promise<number> {
 
     try {
       await figma.loadFontAsync({ family: 'Inter', style: fontStyle })
-    } catch {
+    } catch (e) {
+      console.warn(
+        `[registerTextStyles] font load failed: Inter ${fontStyle}`,
+        e
+      )
       continue
     }
 
@@ -419,6 +441,12 @@ function registerColorStyles(tokens: Record<string, unknown>): number {
   const lightNode = colorNode.light as TokenNode | undefined
   if (!lightNode) return 0
 
+  // COLOR 変数の Map をループ外で一度構築
+  const colorVarMap = new Map<string, Variable>()
+  for (const v of figma.variables.getLocalVariables('COLOR')) {
+    colorVarMap.set(v.name, v)
+  }
+
   let count = 0
 
   function walkColors(node: TokenNode, path: string): void {
@@ -432,10 +460,8 @@ function registerColorStyles(tokens: Record<string, unknown>): number {
       style.name = styleName
 
       // Variable バインド試行
-      const varName = path.toLowerCase().replace(/\//g, '/')
-      const colorVar = figma.variables
-        .getLocalVariables('COLOR')
-        .find((v) => v.name === varName)
+      const varName = path.toLowerCase()
+      const colorVar = colorVarMap.get(varName)
 
       if (colorVar) {
         const paint = figma.variables.setBoundVariableForPaint(
@@ -636,6 +662,23 @@ const ELEVATION_2: Effect[] = [
   },
 ]
 
+// COLOR変数キャッシュ（変数操作後にリセット）
+let colorVarCache: Map<string, Variable> | null = null
+
+function invalidateColorVarCache(): void {
+  colorVarCache = null
+}
+
+function getColorVarCache(): Map<string, Variable> {
+  if (!colorVarCache) {
+    colorVarCache = new Map()
+    for (const v of figma.variables.getLocalVariables('COLOR')) {
+      colorVarCache.set(v.name, v)
+    }
+  }
+  return colorVarCache
+}
+
 /**
  * Color Variable を検索し、バインド済み Paint を返す
  * Variable が見つからなければ通常の SolidPaint
@@ -651,9 +694,7 @@ function makePaint(
     ...(opacity !== undefined ? { opacity } : {}),
   }
 
-  const colorVar = figma.variables
-    .getLocalVariables('COLOR')
-    .find((v) => v.name === variableName)
+  const colorVar = getColorVarCache().get(variableName)
 
   if (colorVar) {
     return figma.variables.setBoundVariableForPaint(base, 'color', colorVar)
@@ -827,6 +868,7 @@ function clearAll(): void {
     success: true,
     message: `Deleted all: ${collections.length} collections / ${varCount} variables`,
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
@@ -861,6 +903,7 @@ function clearCollection(name: string): void {
     success: true,
     message: `Deleted "${name}": ${varCount} variables`,
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
@@ -894,6 +937,7 @@ function removeDuplicates(): void {
         ? `Removed ${totalRemoved} duplicate variables`
         : 'No duplicates found',
   })
+  invalidateColorVarCache()
   listCollections()
 }
 
