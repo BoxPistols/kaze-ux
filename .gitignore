@@ -57,3 +57,6 @@ apps/*/dist
 
 # Draft articles
 zenn-storybook-ai-chat.md
+
+# Figma plugin build output
+figma-plugin/code.js

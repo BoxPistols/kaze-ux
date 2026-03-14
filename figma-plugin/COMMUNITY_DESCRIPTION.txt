@@ -1,0 +1,59 @@
+System Design — Import W3C Design Tokens into Figma
+
+Import your design tokens (W3C DTCG format) directly into Figma as Variables, Styles, and Components. Works with any design system — framework-agnostic.
+
+## Features
+
+### Import Variables
+Paste or load a tokens.json file to create Figma Variable Collections:
+- Color (Light/Dark modes in one collection)
+- Typography (font sizes, weights, line heights)
+- Spacing, Border Radius, Breakpoints
+- Component tokens
+
+### Register Styles
+One-click creation of Figma Styles from your tokens:
+- 10 Text Styles (Display, Heading, Body, Caption)
+- Color Styles with Variable binding
+- Effect Styles (CSS box-shadow to Figma effects)
+
+### Generate Components
+Auto-generate MUI-compatible ComponentSets:
+- Button: 54 variants (3 types x 6 colors x 3 sizes)
+- Auto-binds to imported Color Variables
+- More components coming soon
+
+### Manage
+- View all Variable Collections
+- Delete individual collections
+- Remove duplicate variables
+- Bulk delete
+
+## Token Format (W3C DTCG)
+
+```json
+{
+  "color": {
+    "light": {
+      "primary": {
+        "main": { "$value": "#1976d2", "$type": "color" }
+      }
+    },
+    "dark": {
+      "primary": {
+        "main": { "$value": "#90caf9", "$type": "color" }
+      }
+    }
+  },
+  "spacing": {
+    "1": { "$value": "4px", "$type": "dimension" }
+  }
+}
+```
+
+A sample tokens.json is included in the GitHub repository.
+
+## Links
+
+- GitHub: https://github.com/BoxPistols/kaze-ux
+- Sample tokens: figma-plugin/sample-tokens.json

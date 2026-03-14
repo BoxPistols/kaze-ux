@@ -1,0 +1,108 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Sample tokens for System Design plugin",
+  "color": {
+    "light": {
+      "primary": {
+        "main": { "$value": "#1976d2", "$type": "color" },
+        "dark": { "$value": "#115293", "$type": "color" },
+        "light": { "$value": "#4791db", "$type": "color" },
+        "contrastText": { "$value": "#ffffff", "$type": "color" }
+      },
+      "secondary": {
+        "main": { "$value": "#9c27b0", "$type": "color" },
+        "dark": { "$value": "#6d1b7b", "$type": "color" },
+        "light": { "$value": "#ba68c8", "$type": "color" },
+        "contrastText": { "$value": "#ffffff", "$type": "color" }
+      },
+      "success": {
+        "main": { "$value": "#2e7d32", "$type": "color" },
+        "contrastText": { "$value": "#ffffff", "$type": "color" }
+      },
+      "error": {
+        "main": { "$value": "#d32f2f", "$type": "color" },
+        "contrastText": { "$value": "#ffffff", "$type": "color" }
+      },
+      "background": {
+        "default": { "$value": "#fafafa", "$type": "color" },
+        "paper": { "$value": "#ffffff", "$type": "color" }
+      },
+      "text": {
+        "primary": { "$value": "#212121", "$type": "color" },
+        "secondary": { "$value": "#757575", "$type": "color" }
+      }
+    },
+    "dark": {
+      "primary": {
+        "main": { "$value": "#90caf9", "$type": "color" },
+        "dark": { "$value": "#42a5f5", "$type": "color" },
+        "light": { "$value": "#e3f2fd", "$type": "color" },
+        "contrastText": { "$value": "#000000", "$type": "color" }
+      },
+      "secondary": {
+        "main": { "$value": "#ce93d8", "$type": "color" },
+        "dark": { "$value": "#ab47bc", "$type": "color" },
+        "light": { "$value": "#f3e5f5", "$type": "color" },
+        "contrastText": { "$value": "#000000", "$type": "color" }
+      },
+      "success": {
+        "main": { "$value": "#66bb6a", "$type": "color" },
+        "contrastText": { "$value": "#000000", "$type": "color" }
+      },
+      "error": {
+        "main": { "$value": "#f44336", "$type": "color" },
+        "contrastText": { "$value": "#ffffff", "$type": "color" }
+      },
+      "background": {
+        "default": { "$value": "#121212", "$type": "color" },
+        "paper": { "$value": "#1e1e1e", "$type": "color" }
+      },
+      "text": {
+        "primary": { "$value": "#ffffff", "$type": "color" },
+        "secondary": { "$value": "#b0b0b0", "$type": "color" }
+      }
+    }
+  },
+  "typography": {
+    "fontSize": {
+      "xs": { "$value": "12px", "$type": "dimension" },
+      "sm": { "$value": "14px", "$type": "dimension" },
+      "md": { "$value": "16px", "$type": "dimension" },
+      "lg": { "$value": "20px", "$type": "dimension" },
+      "xl": { "$value": "24px", "$type": "dimension" }
+    },
+    "fontWeight": {
+      "regular": { "$value": 400, "$type": "fontWeight" },
+      "medium": { "$value": 500, "$type": "fontWeight" },
+      "bold": { "$value": 700, "$type": "fontWeight" }
+    }
+  },
+  "spacing": {
+    "1": { "$value": "4px", "$type": "dimension" },
+    "2": { "$value": "8px", "$type": "dimension" },
+    "3": { "$value": "12px", "$type": "dimension" },
+    "4": { "$value": "16px", "$type": "dimension" },
+    "6": { "$value": "24px", "$type": "dimension" },
+    "8": { "$value": "32px", "$type": "dimension" }
+  },
+  "borderRadius": {
+    "sm": { "$value": "4px", "$type": "dimension" },
+    "md": { "$value": "8px", "$type": "dimension" },
+    "lg": { "$value": "12px", "$type": "dimension" },
+    "full": { "$value": "9999px", "$type": "dimension" }
+  },
+  "shadow": {
+    "sm": {
+      "$value": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+      "$type": "shadow"
+    },
+    "md": {
+      "$value": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+      "$type": "shadow"
+    },
+    "lg": {
+      "$value": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+      "$type": "shadow"
+    }
+  }
+}
