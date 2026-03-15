@@ -9,11 +9,10 @@ import { useEffect, useRef, useState } from 'react'
 
 import { APP_LINKS } from '@/utils/appLinks'
 
-// 「風」のSVG波形アニメーション
-const WindWaves = () => {
+// ヒーロー背景 — グラデーションメッシュ + グリッドライン
+const HeroBackground = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  const baseColor = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
 
   return (
     <Box
@@ -24,67 +23,62 @@ const WindWaves = () => {
         pointerEvents: 'none',
         zIndex: 0,
       }}>
-      {/* 波形1 */}
-      <svg
-        viewBox='0 0 1440 320'
-        style={{
+      {/* グラデーションオーブ */}
+      <Box
+        sx={{
           position: 'absolute',
-          bottom: 0,
-          width: '200%',
-          height: '40%',
-          animation: 'wave1 12s ease-in-out infinite',
-        }}>
-        <path
-          fill={`${baseColor}${isDark ? '0.06' : '0.04'})`}
-          d='M0,224L60,213.3C120,203,240,181,360,186.7C480,192,600,224,720,234.7C840,245,960,235,1080,213.3C1200,192,1320,160,1380,144L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z'
-        />
-      </svg>
-      {/* 波形2 */}
-      <svg
-        viewBox='0 0 1440 320'
-        style={{
+          width: '60vw',
+          height: '60vw',
+          maxWidth: 800,
+          maxHeight: 800,
+          top: '-15%',
+          right: '-10%',
+          borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(14,173,184,0.08) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(14,173,184,0.06) 0%, transparent 70%)',
+          animation: 'orbPulse 10s ease-in-out infinite',
+        }}
+      />
+      <Box
+        sx={{
           position: 'absolute',
-          bottom: 0,
-          width: '200%',
-          height: '35%',
-          animation: 'wave2 16s ease-in-out infinite',
-        }}>
-        <path
-          fill={`${baseColor}${isDark ? '0.04' : '0.03'})`}
-          d='M0,288L48,272C96,256,192,224,288,213.3C384,203,480,213,576,229.3C672,245,768,267,864,261.3C960,256,1056,224,1152,208C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'
-        />
-      </svg>
-      {/* 浮遊する円 */}
-      {[...Array(5)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            width: 120 + i * 60,
-            height: 120 + i * 60,
-            borderRadius: '50%',
-            border: `1px solid ${baseColor}${isDark ? '0.08' : '0.06'})`,
-            top: `${15 + i * 12}%`,
-            right: `${-5 + i * 8}%`,
-            animation: `float${i} ${8 + i * 3}s ease-in-out infinite`,
-          }}
-        />
-      ))}
+          width: '40vw',
+          height: '40vw',
+          maxWidth: 500,
+          maxHeight: 500,
+          bottom: '-10%',
+          left: '-5%',
+          borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(10,138,148,0.06) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(10,138,148,0.04) 0%, transparent 70%)',
+          animation: 'orbPulse 14s ease-in-out infinite reverse',
+        }}
+      />
+
+      {/* ドットグリッドパターン */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          opacity: isDark ? 0.15 : 0.12,
+          backgroundImage:
+            'radial-gradient(circle, currentColor 0.5px, transparent 0.5px)',
+          backgroundSize: '32px 32px',
+          maskImage:
+            'radial-gradient(ellipse 80% 60% at 70% 30%, black 20%, transparent 70%)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse 80% 60% at 70% 30%, black 20%, transparent 70%)',
+          color: isDark ? 'rgba(14,173,184,0.6)' : 'rgba(14,173,184,0.5)',
+        }}
+      />
 
       <style>{`
-        @keyframes wave1 {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(-25%); }
+        @keyframes orbPulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.08); opacity: 0.7; }
         }
-        @keyframes wave2 {
-          0%, 100% { transform: translateX(-10%); }
-          50% { transform: translateX(-35%); }
-        }
-        @keyframes float0 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-20px, 15px) scale(1.05); } }
-        @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(15px, -20px) scale(0.95); } }
-        @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-10px, 25px); } }
-        @keyframes float3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px, -15px); } }
-        @keyframes float4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-15px, 10px); } }
       `}</style>
     </Box>
   )
@@ -363,7 +357,7 @@ export const LandingPage = () => {
             px: { xs: 3, md: 8, lg: 12 },
             py: 8,
           }}>
-          <WindWaves />
+          <HeroBackground />
 
           <Box sx={{ position: 'relative', zIndex: 1, maxWidth: 900 }}>
             {/* ロゴ + ブランド */}
