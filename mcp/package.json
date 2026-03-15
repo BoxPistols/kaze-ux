@@ -1,0 +1,25 @@
+{
+  "name": "@kaze-ux/mcp-server",
+  "version": "0.1.0",
+  "description": "Kaze Design System MCP Server — AI エージェント向けトークン検索・コンポーネント仕様取得・ルールチェック",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "kaze-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.1"
+  },
+  "license": "MIT"
+}
