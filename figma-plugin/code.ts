@@ -466,7 +466,7 @@ function registerColorStyles(tokens: Record<string, unknown>): number {
       style.name = styleName
 
       // Variable バインド試行
-      const varName = path.toLowerCase()
+      const varName = path
       const colorVar = colorVarMap.get(varName)
 
       if (colorVar) {
