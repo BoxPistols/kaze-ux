@@ -213,22 +213,20 @@ const ProductCard = ({
           display: 'block',
           textDecoration: 'none',
           color: 'inherit',
-          p: { xs: 3.5, md: 5 },
+          p: { xs: 3, md: 4 },
           borderRadius: 3,
           border: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
           bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)',
           backdropFilter: 'blur(8px)',
-          transition: 'all 0.35s cubic-bezier(0.25, 0.1, 0, 1)',
+          transition: 'all 0.3s cubic-bezier(0.25, 0.1, 0, 1)',
           cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
-          minHeight: { md: 220 },
           '&:hover': {
-            transform: 'translateY(-6px)',
             boxShadow: isDark
-              ? '0 20px 60px rgba(14,173,184,0.15)'
-              : '0 20px 60px rgba(14,173,184,0.12)',
+              ? '0 12px 40px rgba(14,173,184,0.15)'
+              : '0 12px 40px rgba(14,173,184,0.12)',
             borderColor: 'primary.main',
             '& .card-label': {
               opacity: 1,
