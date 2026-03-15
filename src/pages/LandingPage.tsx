@@ -213,7 +213,7 @@ const ProductCard = ({
           display: 'block',
           textDecoration: 'none',
           color: 'inherit',
-          p: 4,
+          p: { xs: 3.5, md: 5 },
           borderRadius: 3,
           border: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
@@ -223,6 +223,7 @@ const ProductCard = ({
           cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
+          minHeight: { md: 220 },
           '&:hover': {
             transform: 'translateY(-6px)',
             boxShadow: isDark
@@ -243,8 +244,8 @@ const ProductCard = ({
           className='card-label'
           sx={{
             position: 'absolute',
-            top: 16,
-            right: 16,
+            top: 20,
+            right: 20,
             px: 1.5,
             py: 0.5,
             borderRadius: 2,
@@ -276,7 +277,7 @@ const ProductCard = ({
             fontSize: '1.25rem',
             fontWeight: 700,
             letterSpacing: '-0.02em',
-            mb: 1,
+            mb: 1.5,
           }}>
           {title}
         </Typography>
@@ -284,7 +285,7 @@ const ProductCard = ({
           sx={{
             fontSize: '0.875rem',
             color: 'text.secondary',
-            lineHeight: 1.7,
+            lineHeight: 1.8,
           }}>
           {description}
         </Typography>
