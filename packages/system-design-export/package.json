@@ -19,7 +19,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/cli.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "pnpm run build"
