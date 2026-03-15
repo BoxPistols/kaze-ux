@@ -1,0 +1,30 @@
+---
+description: Kaze Design System ルール
+globs: ["src/**/*.tsx", "src/**/*.ts", "apps/**/*.tsx"]
+---
+
+# Kaze Design System Rules
+
+## コード規約
+- React.FC / FC / FunctionComponent 禁止 → plain function + typed props
+- セミコロン禁止（Prettier）
+- シングルクォート
+- export default 禁止 → export const
+- any 禁止（TypeScript strict mode）
+- arrow function: const fn = () => {}
+
+## MUI v7
+- Grid: `<Grid size={{ xs: 12, sm: 6 }}>` (旧 `<Grid item xs={12}>` は禁止)
+- テーマカラー: `primary.main`, `text.secondary`, `background.paper` (ハードコード色値禁止)
+- スペーシング: `spacing(2)` = 8px (4px 基準)
+
+## ブランドカラー
+- primary: #0EADB8 (ティール)
+- ダーク/ライト全スキーム統一
+
+## 禁止パターン
+- window.confirm / window.alert → ConfirmDialog 使用
+- position: fixed → Fab コンポーネント使用
+- z-index の任意値 → テーマの zIndex
+- IconButton に aria-label なし → 必須
+- 色だけで状態を伝える → アイコン・テキスト併用
