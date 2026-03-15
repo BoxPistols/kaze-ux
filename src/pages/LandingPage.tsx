@@ -9,10 +9,12 @@ import { useEffect, useRef, useState } from 'react'
 
 import { APP_LINKS } from '@/utils/appLinks'
 
-// ヒーロー背景 — グラデーションメッシュ + グリッドライン
+// ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
 const HeroBackground = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
+  const teal = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
+  const teal2 = isDark ? 'rgba(10,138,148,' : 'rgba(60,192,200,'
 
   return (
     <Box
@@ -23,61 +25,147 @@ const HeroBackground = () => {
         pointerEvents: 'none',
         zIndex: 0,
       }}>
-      {/* グラデーションオーブ */}
+      {/* メイングラデーションオーブ — 右上 */}
       <Box
         sx={{
           position: 'absolute',
-          width: '60vw',
-          height: '60vw',
-          maxWidth: 800,
-          maxHeight: 800,
-          top: '-15%',
-          right: '-10%',
+          width: '80vw',
+          height: '80vw',
+          maxWidth: 1000,
+          maxHeight: 1000,
+          top: '-20%',
+          right: '-15%',
           borderRadius: '50%',
-          background: isDark
-            ? 'radial-gradient(circle, rgba(14,173,184,0.08) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(14,173,184,0.06) 0%, transparent 70%)',
-          animation: 'orbPulse 10s ease-in-out infinite',
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          width: '40vw',
-          height: '40vw',
-          maxWidth: 500,
-          maxHeight: 500,
-          bottom: '-10%',
-          left: '-5%',
-          borderRadius: '50%',
-          background: isDark
-            ? 'radial-gradient(circle, rgba(10,138,148,0.06) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(10,138,148,0.04) 0%, transparent 70%)',
-          animation: 'orbPulse 14s ease-in-out infinite reverse',
+          background: `radial-gradient(circle, ${teal}${isDark ? '0.18' : '0.12'}) 0%, ${teal}${isDark ? '0.06' : '0.04'}) 40%, transparent 70%)`,
+          animation: 'orbDrift 16s ease-in-out infinite',
+          filter: 'blur(40px)',
         }}
       />
 
-      {/* ドットグリッドパターン */}
+      {/* サブオーブ — 左下 */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '50vw',
+          height: '50vw',
+          maxWidth: 600,
+          maxHeight: 600,
+          bottom: '-15%',
+          left: '-10%',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${teal2}${isDark ? '0.12' : '0.08'}) 0%, transparent 65%)`,
+          animation: 'orbDrift 20s ease-in-out infinite reverse',
+          filter: 'blur(30px)',
+        }}
+      />
+
+      {/* 第3オーブ — 中央やや上 */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '30vw',
+          height: '30vw',
+          maxWidth: 400,
+          maxHeight: 400,
+          top: '20%',
+          left: '40%',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${teal}${isDark ? '0.08' : '0.05'}) 0%, transparent 60%)`,
+          animation: 'orbFloat 12s ease-in-out infinite',
+          filter: 'blur(50px)',
+        }}
+      />
+
+      {/* グリッドライン */}
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
-          opacity: isDark ? 0.15 : 0.12,
-          backgroundImage:
-            'radial-gradient(circle, currentColor 0.5px, transparent 0.5px)',
-          backgroundSize: '32px 32px',
+          opacity: isDark ? 0.06 : 0.05,
+          backgroundImage: `
+            linear-gradient(${teal}0.3) 1px, transparent 1px),
+            linear-gradient(90deg, ${teal}0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
           maskImage:
-            'radial-gradient(ellipse 80% 60% at 70% 30%, black 20%, transparent 70%)',
+            'radial-gradient(ellipse 90% 70% at 65% 35%, black 10%, transparent 60%)',
           WebkitMaskImage:
-            'radial-gradient(ellipse 80% 60% at 70% 30%, black 20%, transparent 70%)',
-          color: isDark ? 'rgba(14,173,184,0.6)' : 'rgba(14,173,184,0.5)',
+            'radial-gradient(ellipse 90% 70% at 65% 35%, black 10%, transparent 60%)',
+        }}
+      />
+
+      {/* 浮遊パーティクル */}
+      {[...Array(8)].map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            position: 'absolute',
+            width: 3 + (i % 3) * 2,
+            height: 3 + (i % 3) * 2,
+            borderRadius: '50%',
+            bgcolor: `${teal}${isDark ? '0.4' : '0.3'})`,
+            top: `${10 + i * 10}%`,
+            left: `${15 + (i * 11) % 70}%`,
+            animation: `particle ${6 + i * 2}s ease-in-out infinite`,
+            animationDelay: `${i * 0.8}s`,
+          }}
+        />
+      ))}
+
+      {/* 装飾リング */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 300,
+          height: 300,
+          top: '10%',
+          right: '8%',
+          borderRadius: '50%',
+          border: `1px solid ${teal}${isDark ? '0.1' : '0.08'})`,
+          animation: 'ringRotate 30s linear infinite',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: -1,
+            left: '50%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            bgcolor: `${teal}${isDark ? '0.5' : '0.4'})`,
+            transform: 'translateX(-50%)',
+          },
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 200,
+          height: 200,
+          top: '18%',
+          right: '12%',
+          borderRadius: '50%',
+          border: `1px dashed ${teal}${isDark ? '0.06' : '0.05'})`,
+          animation: 'ringRotate 24s linear infinite reverse',
         }}
       />
 
       <style>{`
-        @keyframes orbPulse {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.08); opacity: 0.7; }
+        @keyframes orbDrift {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(20px, -15px) scale(1.05); }
+          66% { transform: translate(-15px, 10px) scale(0.97); }
+        }
+        @keyframes orbFloat {
+          0%, 100% { transform: translate(0, 0); opacity: 1; }
+          50% { transform: translate(30px, -20px); opacity: 0.6; }
+        }
+        @keyframes particle {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+          50% { transform: translateY(-30px) scale(1.5); opacity: 0.8; }
+        }
+        @keyframes ringRotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </Box>
