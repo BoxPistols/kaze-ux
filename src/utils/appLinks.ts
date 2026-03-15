@@ -1,39 +1,20 @@
 /**
  * アプリ間リンクのヘルパー
- * ローカル開発時はポート番号ベース、Vercel デプロイ時は相対パスで解決
+ * 常に相対パスで解決（Vercel / GitHub Pages デプロイ想定）
+ * ローカル開発時は各アプリを個別に起動してブラウザで直接アクセスする
  */
 
-const isLocalDev =
-  typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1')
-
-interface AppRoute {
-  /** Vercel デプロイ時の相対パス */
-  path: string
-  /** ローカル開発時のポート番号 */
-  port: number
-}
-
-const routes: Record<string, AppRoute> = {
-  top: { path: '/', port: 5173 },
-  storybook: { path: '/storybook/', port: 6006 },
-  saas: { path: '/saas/', port: 3001 },
-  ubereats: { path: '/ubereats/', port: 3002 },
-}
+const routes = {
+  top: '/',
+  storybook: '/storybook/',
+  saas: '/saas/',
+  ubereats: '/ubereats/',
+} as const
 
 /**
- * アプリの URL を返す
- * ローカル: http://localhost:{port}
- * 本番: /{path}
+ * アプリの相対パス URL を返す
  */
-export const getAppUrl = (app: keyof typeof routes): string => {
-  const route = routes[app]
-  if (isLocalDev) {
-    return `http://localhost:${route.port}`
-  }
-  return route.path
-}
+export const getAppUrl = (app: keyof typeof routes): string => routes[app]
 
 /**
  * 全アプリリンク一覧

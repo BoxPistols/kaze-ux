@@ -1,7 +1,7 @@
 {
   "$schema": "kaze-ux/metadata/components",
   "version": "1.0.0",
-  "framework": "React 18 + MUI v7 + Tailwind CSS v3",
+  "framework": "React + MUI + Tailwind CSS",
   "components": {
     "button": {
       "name": "Button",

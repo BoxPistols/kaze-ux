@@ -3,7 +3,7 @@
 ## 概要
 
 Kaze Design System は「人間にも AI にも読める」デザインシステムを目指す。
-melta-ui の4層アーキテクチャを参考に、MUI v7 + React ベースで再構成した。
+melta-ui の4層アーキテクチャを参考に、MUI + React ベースで再構成した。
 
 ## 参考: melta-ui (https://github.com/tsubotax/melta-ui)
 
@@ -127,7 +127,7 @@ W3C DTCG 形式。`pnpm export-tokens` で MUI テーマから自動生成。
 
 2ファイル:
 
-- `kaze-design-system.mdc`: コード規約・MUI v7 ルール・禁止パターン要約
+- `kaze-design-system.mdc`: コード規約・MUI ルール・禁止パターン要約
 - `color-system.mdc`: セマンティックカラー一覧・使い方・グレースケール
 
 **設計判断**: melta-ui は3ファイル（全体ルール・カラー・コンポーネントクラス）。
@@ -149,7 +149,7 @@ MCP サーバーとして外部 AI エージェントに公開する構成は未
 
 | 観点               | melta-ui                          | Kaze                         |
 | ------------------ | --------------------------------- | ---------------------------- |
-| フレームワーク     | なし（HTML + Tailwind）           | React 18 + MUI v7            |
+| フレームワーク     | なし（HTML + Tailwind）           | React + MUI                  |
 | コンポーネント定義 | Tailwind クラス + HTML サンプル   | React JSX + MUI sx prop      |
 | トークン           | 独自 JSON (value/tailwind/cssVar) | W3C DTCG 形式                |
 | AI チャット        | なし                              | Storybook 内 ChatSupport     |

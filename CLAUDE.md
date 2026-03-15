@@ -2,16 +2,16 @@
 
 ## Project Overview
 
-Kaze UX is a modern React design system built with MUI v7, Tailwind CSS v3, and Storybook v10. It provides a comprehensive set of UI components with light/dark mode support, design tokens, and accessibility compliance.
+Kaze UX is a modern React design system built with MUI, Tailwind CSS, and Storybook. It provides a comprehensive set of UI components with light/dark mode support, design tokens, and accessibility compliance.
 
 ## Tech Stack
 
-- **UI Framework**: MUI v7 (Material-UI)
-- **Styling**: Tailwind CSS v3
+- **UI Framework**: MUI (Material-UI)
+- **Styling**: Tailwind CSS
 - **Language**: TypeScript (strict mode)
-- **UI Library**: React 18
-- **Documentation**: Storybook v10
-- **Build Tool**: Vite 5
+- **UI Library**: React
+- **Documentation**: Storybook
+- **Build Tool**: Vite
 - **Testing**: Vitest
 - **Package Manager**: pnpm
 

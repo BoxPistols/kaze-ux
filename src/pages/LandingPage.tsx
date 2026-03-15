@@ -105,7 +105,7 @@ const HeroBackground = () => {
             borderRadius: '50%',
             bgcolor: `${teal}${isDark ? '0.4' : '0.3'})`,
             top: `${10 + i * 10}%`,
-            left: `${15 + (i * 11) % 70}%`,
+            left: `${15 + ((i * 11) % 70)}%`,
             animation: `particle ${6 + i * 2}s ease-in-out infinite`,
             animationDelay: `${i * 0.8}s`,
           }}
@@ -400,7 +400,7 @@ export const LandingPage = () => {
     {
       number: '02',
       title: 'Multi-Scheme Theme',
-      desc: 'Light / Dark + 複数カラースキーム対応。MUI v7 のテーマシステムで切替',
+      desc: 'Light / Dark + 複数カラースキーム対応。MUI のテーマシステムで切替',
     },
     {
       number: '03',
@@ -414,8 +414,8 @@ export const LandingPage = () => {
     },
     {
       number: '05',
-      title: '60+ Components',
-      desc: 'MUI v7 + Tailwind CSS で構築。アクセシビリティとレスポンシブ対応',
+      title: 'Components',
+      desc: 'MUI + Tailwind CSS で構築。アクセシビリティとレスポンシブ対応',
     },
     {
       number: '06',
@@ -532,8 +532,7 @@ export const LandingPage = () => {
                   maxWidth: 600,
                   mb: 5,
                 }}>
-                MUI v7 + Tailwind CSS + Storybook v10
-                で構築されたデザインシステム。
+                MUI + Tailwind CSS + Storybook で構築されたデザインシステム。
                 以下のプロダクトはすべてこのコンポーネントを基に開発されています。
               </Typography>
             </motion.div>
