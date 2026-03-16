@@ -126,7 +126,9 @@ const menuItems: SidebarMenuItem[] = [
     id: 'kaze-design',
     label: 'Kaze Design System',
     icon: <AirIcon />,
-    href: '/',
+    href: import.meta.env.DEV
+      ? `${window.location.protocol}//${window.location.hostname}:5173`
+      : '/',
     category: 'SYSTEM',
     description: 'Back to Design System',
     external: true,

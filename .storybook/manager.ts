@@ -1,12 +1,20 @@
 import { create } from '@storybook/theming'
 import { addons } from 'storybook/manager-api'
 
+// TOP ページへの戻りリンク（ローカル/本番共通）
+const topUrl =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1')
+    ? `${window.location.protocol}//${window.location.hostname}:5173`
+    : '/'
+
 const kazeTheme = create({
   base: 'light',
 
-  // ブランド
-  brandTitle: 'Kaze Design',
-  brandUrl: 'https://github.com/BoxPistols/kaze-ux',
+  // ブランド — クリックで TOP に戻る
+  brandTitle: '風 Kaze Design',
+  brandUrl: topUrl,
   brandTarget: '_self',
 
   // カラー
