@@ -1,46 +1,33 @@
 /**
  * アプリ間リンクのヘルパー
- * ローカル開発: ポートベース（各アプリが別ポートで起動）
- * 本番（GH Pages等）: 相対パス（BASE_URL を考慮）
+ *
+ * 本番: BASE_URL ベースの相対パス（GH Pages / Vercel）
+ * ローカル: 環境変数 VITE_*_URL で設定。未設定なら相対パス
+ *
+ * .env.local に以下を設定するとローカルでも回遊可能:
+ *   VITE_STORYBOOK_URL=http://localhost:6006
+ *   VITE_SAAS_URL=http://localhost:3001
+ *   VITE_UBEREATS_URL=http://localhost:3002
+ *   VITE_TOP_URL=http://localhost:5173
  */
-
-const isLocal =
-  typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1')
 
 const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? ''
 
-// ローカルポートは vite.config で定義された値
-const LOCAL_PORTS = {
-  top: 5173,
-  storybook: 6006,
-  saas: 3001,
-  ubereats: 3002,
-} as const
-
-const resolveUrl = (app: keyof typeof LOCAL_PORTS, path: string): string => {
-  if (isLocal) {
-    return `http://localhost:${LOCAL_PORTS[app]}`
-  }
-  return `${base}${path}`
+/**
+ * 環境変数があればそれを使い、なければ相対パスにフォールバック
+ */
+const resolve = (envKey: string, relativePath: string): string => {
+  const envValue = import.meta.env[envKey] as string | undefined
+  if (envValue) return envValue
+  return `${base}${relativePath}`
 }
 
-/**
- * 全アプリリンク一覧
- */
 export const APP_LINKS = {
-  top: () => resolveUrl('top', '/'),
-  storybook: () => resolveUrl('storybook', '/storybook/'),
-  saas: () => resolveUrl('saas', '/saas/'),
-  ubereats: () => resolveUrl('ubereats', '/ubereats/'),
+  top: () => resolve('VITE_TOP_URL', '/'),
+  storybook: () => resolve('VITE_STORYBOOK_URL', '/storybook/'),
+  saas: () => resolve('VITE_SAAS_URL', '/saas/'),
+  ubereats: () => resolve('VITE_UBEREATS_URL', '/ubereats/'),
   github: () => 'https://github.com/BoxPistols/kaze-ux',
 }
 
-/**
- * 単体 URL 取得（互換用）
- */
-export const getAppUrl = (app: keyof typeof LOCAL_PORTS): string => {
-  const pathMap = { top: '/', storybook: '/storybook/', saas: '/saas/', ubereats: '/ubereats/' }
-  return resolveUrl(app, pathMap[app])
-}
+export const getAppUrl = APP_LINKS

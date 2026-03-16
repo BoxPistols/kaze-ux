@@ -243,12 +243,12 @@ const AppContent = ({
 
             {/* Kaze Design System */}
             <IconButton
-              onClick={() => {
-                const isLocal =
-                  window.location.hostname === 'localhost' ||
-                  window.location.hostname === '127.0.0.1'
-                window.open(isLocal ? 'http://localhost:5173' : '/', '_self')
-              }}
+              onClick={() =>
+                window.open(
+                  (import.meta.env.VITE_TOP_URL as string) || '/',
+                  '_self'
+                )
+              }
               tooltip='Kaze Design System'
               aria-label='Back to Kaze Design System'
               size='medium'

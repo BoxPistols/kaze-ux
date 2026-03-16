@@ -126,12 +126,7 @@ const menuItems: SidebarMenuItem[] = [
     id: 'kaze-design',
     label: 'Kaze Design System',
     icon: <AirIcon />,
-    href:
-      typeof window !== 'undefined' &&
-      (window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1')
-        ? 'http://localhost:5173'
-        : '/',
+    href: (import.meta.env.VITE_TOP_URL as string) || '/',
     category: 'SYSTEM',
     description: 'Back to Design System',
     external: true,
