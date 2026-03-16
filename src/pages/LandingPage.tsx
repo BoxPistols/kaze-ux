@@ -7,7 +7,8 @@ import { Box, Typography, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
-import { APP_LINKS } from '@/utils/appLinks'
+import { APP_LINKS, DEFAULT_PORTS, getDevPorts, saveDevPorts } from '@/utils/appLinks'
+import type { DevPorts } from '@/utils/appLinks'
 
 // ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
 const HeroBackground = () => {
@@ -347,6 +348,79 @@ const FeatureItem = ({
         </Box>
       </Box>
     </motion.div>
+  )
+}
+
+// 開発用ポート設定パネル（DEV モードのみ）
+const DevPortSettings = () => {
+  const [ports, setPorts] = useState<DevPorts>(getDevPorts)
+  const [saved, setSaved] = useState(false)
+  const theme = useTheme()
+  const isDark = theme.palette.mode === 'dark'
+
+  const handleSave = () => {
+    saveDevPorts(ports)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+    window.location.reload()
+  }
+
+  return (
+    <Box
+      sx={{
+        mx: { xs: 3, md: 8, lg: 12 },
+        my: 2,
+        p: 2,
+        borderRadius: 2,
+        border: '1px dashed',
+        borderColor: 'warning.main',
+        bgcolor: isDark ? 'rgba(255,152,0,0.05)' : 'rgba(255,152,0,0.04)',
+      }}>
+      <Typography
+        sx={{ fontSize: '0.7rem', fontWeight: 700, color: 'warning.main', mb: 1 }}>
+        DEV — ポート設定（ローカルのみ表示）
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+        {(Object.keys(DEFAULT_PORTS) as Array<keyof DevPorts>).map((key) => (
+          <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', minWidth: 60 }}>
+              {key}:
+            </Typography>
+            <input
+              type='number'
+              value={ports[key]}
+              onChange={(e) =>
+                setPorts((prev) => ({ ...prev, [key]: Number(e.target.value) }))
+              }
+              style={{
+                width: 70,
+                padding: '2px 6px',
+                border: '1px solid #ccc',
+                borderRadius: 4,
+                fontSize: '0.75rem',
+                fontFamily: 'monospace',
+              }}
+            />
+          </Box>
+        ))}
+        <Box
+          component='button'
+          onClick={handleSave}
+          sx={{
+            px: 2,
+            py: 0.5,
+            borderRadius: 1,
+            border: 'none',
+            bgcolor: saved ? 'success.main' : 'warning.main',
+            color: '#fff',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}>
+          {saved ? '✓ Saved' : 'Save & Reload'}
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
@@ -891,8 +965,7 @@ export const LandingPage = () => {
                   }}>
                   {item.step}
                 </Typography>
-                <Typography
-                  sx={{ fontSize: '1rem', fontWeight: 700, mb: 1 }}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: 1 }}>
                   {item.title}
                 </Typography>
                 <Typography
@@ -1017,10 +1090,19 @@ export const LandingPage = () => {
                   : 'rgba(255,255,255,0.5)',
               }}>
               {[
-                { q: 'このコンポーネントは何？', a: 'ページ文脈から自動で回答' },
-                { q: 'Figma でいうとどう作る？', a: 'デザイナー向けに翻訳して説明' },
+                {
+                  q: 'このコンポーネントは何？',
+                  a: 'ページ文脈から自動で回答',
+                },
+                {
+                  q: 'Figma でいうとどう作る？',
+                  a: 'デザイナー向けに翻訳して説明',
+                },
                 { q: 'コード例を見せて', a: 'tsx のサンプルコードを生成' },
-                { q: 'ダークモードの色は？', a: 'テーマトークンから即座に回答' },
+                {
+                  q: 'ダークモードの色は？',
+                  a: 'テーマトークンから即座に回答',
+                },
               ].map((item) => (
                 <Box key={item.q} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
                   <Typography
@@ -1045,6 +1127,9 @@ export const LandingPage = () => {
           </motion.div>
         </Box>
       </Box>
+
+      {/* ===== 開発用ポート設定（DEV のみ表示） ===== */}
+      {import.meta.env.DEV && <DevPortSettings />}
 
       {/* ===== フッター ===== */}
       <Box
