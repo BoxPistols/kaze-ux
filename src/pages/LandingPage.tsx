@@ -394,32 +394,32 @@ export const LandingPage = () => {
     {
       number: '01',
       title: 'Design Tokens',
-      desc: 'カラー・タイポグラフィ・スペーシング・シャドウを W3C DTCG 形式で一元管理',
+      desc: 'カラー・文字・余白・影を JSON で一元管理。テーマ変更が全体に反映されます',
     },
     {
       number: '02',
       title: 'Multi-Scheme Theme',
-      desc: 'Light / Dark + 複数カラースキーム対応。MUI のテーマシステムで切替',
+      desc: 'Light / Dark モードと複数カラースキームをワンクリックで切り替えられます',
     },
     {
       number: '03',
       title: 'AI-Powered Storybook',
-      desc: 'ページ文脈認識 AI チャットが、コンポーネントの用途と設計意図を対話で案内',
+      desc: '今見ているページについて AI に質問できます。使い方や設計意図をその場で確認',
     },
     {
       number: '04',
       title: 'Figma Plugin',
-      desc: 'デザイントークンを Figma Variables / Styles として直接インポート',
+      desc: 'tokens.json を Figma に読み込むと Variables と Styles が自動で作られます',
     },
     {
       number: '05',
       title: 'Components',
-      desc: 'MUI + Tailwind CSS で構築。アクセシビリティとレスポンシブ対応',
+      desc: 'ボタン・フォーム・テーブル・カレンダーなど、実務で使う UI を揃えています',
     },
     {
       number: '06',
       title: 'CLI Export',
-      desc: 'MUI / Tailwind テーマから DTCG トークン JSON を自動生成',
+      desc: 'コマンドひとつでテーマファイルからトークン JSON を書き出せます',
     },
   ]
 
@@ -498,19 +498,17 @@ export const LandingPage = () => {
                   letterSpacing: '-0.04em',
                   mb: 3,
                 }}>
-                Build with
+                コンポーネント、
                 <br />
                 <Box component='span' sx={{ color: 'primary.main' }}>
-                  consistency
+                  トークン
                 </Box>
-                ,
+                、テーマを
                 <br />
-                ship with
                 <Box component='span' sx={{ color: 'primary.main' }}>
-                  {' '}
-                  confidence
+                  ひとつの基盤
                 </Box>
-                .
+                で。
               </Typography>
             </motion.div>
 
@@ -531,8 +529,8 @@ export const LandingPage = () => {
                   maxWidth: 600,
                   mb: 5,
                 }}>
-                MUI + Tailwind CSS + Storybook で構築されたデザインシステム。
-                以下のプロダクトはすべてこのコンポーネントを基に開発されています。
+                MUI + Tailwind CSS + Storybook で構築したデザインシステムです。
+                以下のプロダクトはすべて同じコンポーネントとトークンを使って開発しています。
               </Typography>
             </motion.div>
 
@@ -632,9 +630,9 @@ export const LandingPage = () => {
               mb: 6,
               maxWidth: 500,
             }}>
-            コンポーネントから
+            同じコンポーネントで
             <br />
-            プロダクトへ。
+            つくっています。
           </Typography>
         </motion.div>
 
@@ -687,7 +685,7 @@ export const LandingPage = () => {
                   letterSpacing: '-0.03em',
                   mb: 2,
                 }}>
-                設計の全体像。
+                何ができるか。
               </Typography>
               <Typography
                 sx={{
@@ -696,8 +694,9 @@ export const LandingPage = () => {
                   lineHeight: 1.8,
                   mb: 4,
                 }}>
-                デザイントークンからコンポーネント、テーマ、AI
-                アシスタントまで。一貫した設計言語でプロダクト開発を支援します。
+                カラー・余白・文字サイズをトークンで管理し、
+                コンポーネントとテーマで UI を組み立てます。 Storybook の AI
+                チャットで使い方をその場で聞けます。
               </Typography>
             </motion.div>
           </Box>
@@ -739,7 +738,7 @@ export const LandingPage = () => {
               letterSpacing: '-0.03em',
               mb: 4,
             }}>
-            実戦で選んだ構成。
+            使っている技術。
           </Typography>
         </motion.div>
 
