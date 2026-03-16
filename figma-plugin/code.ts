@@ -30,10 +30,16 @@ interface PluginMessage {
     | 'clear-collection'
     | 'remove-duplicates'
     | 'generate-component'
+    | 'generate-all'
+    | 'set-storybook-url'
+    | 'link-storybook'
+    | 'clear-storybook-links'
+    | 'clear-component-sets'
   tokens?: Record<string, unknown>
   scope?: string
   collectionName?: string
   componentName?: string
+  storybookUrl?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -460,7 +466,7 @@ function registerColorStyles(tokens: Record<string, unknown>): number {
       style.name = styleName
 
       // Variable バインド試行
-      const varName = path.toLowerCase()
+      const varName = path
       const colorVar = colorVarMap.get(varName)
 
       if (colorVar) {
@@ -829,6 +835,466 @@ async function generateButton(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// 汎用コンポーネント自動生成
+// ---------------------------------------------------------------------------
+
+interface ComponentControl {
+  name: string
+  variants: Record<string, string[]>
+  booleans: string[]
+  strings: string[]
+  numbers: string[]
+  storybookId: string | null
+}
+
+/** トークンからコンポーネントのコントロール定義をパース */
+const parseComponentControls = (
+  tokens: Record<string, unknown>
+): ComponentControl[] => {
+  const compNode = tokens.component as Record<string, unknown> | undefined
+  if (!compNode) return []
+
+  const controls: ComponentControl[] = []
+
+  for (const [name, props] of Object.entries(compNode)) {
+    if (typeof props !== 'object' || props === null) continue
+
+    const control: ComponentControl = {
+      name,
+      variants: {},
+      booleans: [],
+      strings: [],
+      numbers: [],
+      storybookId: null,
+    }
+
+    for (const [propName, propVal] of Object.entries(
+      props as Record<string, unknown>
+    )) {
+      if (propName.startsWith('$') && propName !== '$storybookId') continue
+      if (typeof propVal !== 'object' || propVal === null) continue
+
+      const pv = propVal as Record<string, unknown>
+
+      if ('$value' in pv) {
+        const t = pv.$type as string
+        if (propName === '$storybookId') {
+          control.storybookId = String(pv.$value)
+          continue
+        }
+        if (t === 'boolean') control.booleans.push(propName)
+        else if (t === 'string') control.strings.push(propName)
+        else if (t === 'number') control.numbers.push(propName)
+      } else {
+        const options = Object.keys(pv).filter((k) => !k.startsWith('$'))
+        if (options.length > 0) {
+          control.variants[propName] = options
+        }
+      }
+    }
+
+    if (
+      Object.keys(control.variants).length > 0 ||
+      control.booleans.length > 0
+    ) {
+      controls.push(control)
+    }
+  }
+
+  return controls
+}
+
+/** バリアント優先度 */
+const VARIANT_PRIORITY: Record<string, number> = {
+  variant: 0,
+  color: 1,
+  size: 2,
+  severity: 1,
+  orientation: 3,
+  status: 1,
+}
+
+/** カラー名 → RGB マッピング（Kaze ティール系） */
+const COLOR_MAP: Record<string, RGB> = {
+  primary: { r: 0.055, g: 0.678, b: 0.722 },
+  secondary: { r: 0.412, g: 0.408, b: 0.506 },
+  success: { r: 0.275, g: 0.671, b: 0.29 },
+  info: { r: 0.114, g: 0.686, b: 0.761 },
+  warning: { r: 0.922, g: 0.506, b: 0.09 },
+  error: { r: 0.855, g: 0.216, b: 0.216 },
+  default: { r: 0.62, g: 0.62, b: 0.62 },
+  inherit: { r: 0.45, g: 0.45, b: 0.45 },
+  standard: { r: 0.5, g: 0.5, b: 0.5 },
+}
+
+const SIZE_MAP: Record<string, { h: number; fontSize: number; px: number }> = {
+  small: { h: 28, fontSize: 12, px: 8 },
+  medium: { h: 36, fontSize: 14, px: 14 },
+  large: { h: 44, fontSize: 15, px: 20 },
+}
+
+const MAX_VARIANTS = 120
+
+let STORYBOOK_BASE_URL = ''
+
+const toPascalCase = (str: string): string =>
+  str.replace(/(^|[^a-zA-Z0-9])([a-zA-Z])/g, (_, _p, c) => c.toUpperCase())
+
+/**
+ * 汎用 ComponentSet 生成
+ */
+const generateGenericComponentSet = async (
+  control: ComponentControl
+): Promise<{ name: string; count: number }> => {
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Regular' })
+
+  const displayName = toPascalCase(control.name)
+
+  const sortedVariants = Object.entries(control.variants).sort(
+    ([a], [b]) =>
+      (VARIANT_PRIORITY[a] ?? 10) - (VARIANT_PRIORITY[b] ?? 10)
+  )
+
+  const selectedAxes: [string, string[]][] = []
+  let totalCombos = 1
+
+  for (const [axis, options] of sortedVariants) {
+    const newTotal = totalCombos * options.length
+    if (newTotal > MAX_VARIANTS && selectedAxes.length >= 2) break
+    selectedAxes.push([axis, options])
+    totalCombos = newTotal
+  }
+
+  type Combo = Record<string, string>
+  let combos: Combo[] = [{}]
+
+  for (const [axis, options] of selectedAxes) {
+    const next: Combo[] = []
+    for (const combo of combos) {
+      for (const opt of options) {
+        next.push({ ...combo, [axis]: opt })
+      }
+    }
+    combos = next
+  }
+
+  if (combos.length === 0) combos = [{}]
+
+  const components: ComponentNode[] = []
+
+  for (const combo of combos) {
+    const comp = figma.createComponent()
+    const nameParts = selectedAxes.map(([axis]) => `${axis}=${combo[axis]}`)
+    comp.name = nameParts.join(', ') || 'default'
+
+    comp.layoutMode = 'HORIZONTAL'
+    comp.primaryAxisAlignItems = 'CENTER'
+    comp.counterAxisAlignItems = 'CENTER'
+    comp.primaryAxisSizingMode = 'AUTO'
+    comp.counterAxisSizingMode = 'AUTO'
+    comp.itemSpacing = 6
+
+    const sizeVal = combo['size'] ?? 'medium'
+    const sizeSpec = SIZE_MAP[sizeVal] ?? SIZE_MAP['medium']
+    comp.paddingLeft = sizeSpec.px
+    comp.paddingRight = sizeSpec.px
+    comp.paddingTop = 6
+    comp.paddingBottom = 6
+    comp.cornerRadius = 6
+    comp.minHeight = sizeSpec.h
+
+    const colorVal = combo['color'] ?? combo['severity'] ?? combo['status']
+    const baseRGB = colorVal
+      ? COLOR_MAP[colorVal] ?? COLOR_MAP['primary']
+      : COLOR_MAP['primary']
+    const variantVal = combo['variant'] ?? 'contained'
+    const varName = colorVal ? `${colorVal}/main` : 'primary/main'
+
+    if (variantVal === 'contained' || variantVal === 'filled') {
+      comp.fills = [makePaint(baseRGB, varName)]
+      comp.strokes = []
+    } else if (variantVal === 'outlined') {
+      comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+      comp.strokes = [makePaint(baseRGB, varName, 0.5)]
+      comp.strokeWeight = 1
+    } else {
+      comp.fills = []
+      comp.strokes = []
+    }
+
+    const labelParts: string[] = []
+    for (const [axis] of selectedAxes) {
+      if (combo[axis]) labelParts.push(combo[axis])
+    }
+    const labelText = labelParts.length > 0 ? labelParts.join(' / ') : displayName
+
+    const label = figma.createText()
+    label.fontName = { family: 'Inter', style: 'Medium' }
+    label.fontSize = sizeSpec.fontSize
+    label.characters = labelText
+    label.lineHeight = { value: sizeSpec.h - 12, unit: 'PIXELS' }
+
+    if (variantVal === 'contained' || variantVal === 'filled') {
+      label.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+    } else {
+      label.fills = [makePaint(baseRGB, varName)]
+    }
+
+    comp.appendChild(label)
+    components.push(comp)
+  }
+
+  const componentSet = figma.combineAsVariants(components, figma.currentPage)
+  componentSet.name = displayName
+
+  const sbUrl = control.storybookId
+    ? `${STORYBOOK_BASE_URL}/?path=/docs/${control.storybookId}`
+    : null
+  const descLines = [`Source: src/components/ | ${control.name}`]
+  if (sbUrl) descLines.push(`Storybook: ${sbUrl}`)
+  componentSet.description = descLines.join('\n')
+
+  componentSet.layoutMode = 'HORIZONTAL'
+  componentSet.layoutWrap = 'WRAP'
+  componentSet.itemSpacing = 10
+  componentSet.counterAxisSpacing = 10
+  componentSet.paddingLeft = 16
+  componentSet.paddingRight = 16
+  componentSet.paddingTop = 16
+  componentSet.paddingBottom = 16
+  componentSet.primaryAxisSizingMode = 'FIXED'
+  componentSet.counterAxisSizingMode = 'AUTO'
+  const variantCount = components.length
+  if (variantCount <= 6) {
+    componentSet.resize(300, componentSet.height)
+  } else if (variantCount <= 20) {
+    componentSet.resize(450, componentSet.height)
+  } else {
+    componentSet.resize(600, componentSet.height)
+  }
+  componentSet.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  componentSet.cornerRadius = 12
+  componentSet.strokes = [
+    { type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } },
+  ]
+  componentSet.strokeWeight = 1
+
+  for (const boolProp of control.booleans) {
+    try {
+      componentSet.addComponentProperty(boolProp, 'BOOLEAN', true)
+    } catch {
+      /* 重複時は無視 */
+    }
+  }
+
+  for (const strProp of control.strings) {
+    try {
+      componentSet.addComponentProperty(strProp, 'TEXT', strProp)
+    } catch {
+      /* 重複時は無視 */
+    }
+  }
+
+  return { name: displayName, count: components.length }
+}
+
+/**
+ * 全コンポーネントを一括生成
+ */
+const generateAllComponents = async (
+  tokens: Record<string, unknown>
+): Promise<void> => {
+  const controls = parseComponentControls(tokens)
+
+  if (controls.length === 0) {
+    figma.ui.postMessage({
+      type: 'operation-result',
+      success: false,
+      message: 'No component tokens found',
+    })
+    return
+  }
+
+  figma.ui.postMessage({
+    type: 'import-progress',
+    message: `Generating ${controls.length} components...`,
+  })
+
+  const existingNames = new Set(controls.map((c) => toPascalCase(c.name)))
+  for (const child of [...figma.currentPage.children]) {
+    if (child.type === 'COMPONENT_SET' && existingNames.has(child.name)) {
+      child.remove()
+    }
+  }
+
+  const results: { name: string; count: number }[] = []
+  const COL_WIDTH = 640
+  const GRID_COLS = 3
+  const GAP_X = 32
+  const GAP_Y = 32
+  let col = 0
+  let currentY = 0
+  let currentX = 0
+  let rowMaxHeight = 0
+
+  for (let i = 0; i < controls.length; i++) {
+    const control = controls[i]
+    figma.ui.postMessage({
+      type: 'import-progress',
+      message: `[${i + 1}/${controls.length}] ${toPascalCase(control.name)}...`,
+    })
+
+    const result = await generateGenericComponentSet(control)
+    results.push(result)
+
+    const nodes = figma.currentPage.children
+    const lastNode = nodes[nodes.length - 1]
+    if (lastNode) {
+      lastNode.x = currentX
+      lastNode.y = currentY
+
+      if (lastNode.height > rowMaxHeight) rowMaxHeight = lastNode.height
+      col++
+      currentX = col * (COL_WIDTH + GAP_X)
+
+      if (col >= GRID_COLS) {
+        col = 0
+        currentX = 0
+        currentY += rowMaxHeight + GAP_Y
+        rowMaxHeight = 0
+      }
+    }
+  }
+
+  const totalVariants = results.reduce((sum, r) => sum + r.count, 0)
+
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Generated ${results.length} ComponentSets / ${totalVariants} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Storybook リンク
+// ---------------------------------------------------------------------------
+
+const linkStorybookToFrames = async (): Promise<void> => {
+  const page = figma.currentPage
+  let linked = 0
+
+  for (const node of page.children) {
+    if (node.type !== 'FRAME') continue
+    if (!node.name.includes('--docs')) continue
+
+    const storyId = node.name
+    const sbUrl = `${STORYBOOK_BASE_URL}/?path=/docs/${storyId}`
+
+    const parts = storyId
+      .replace('--docs', '')
+      .split('-')
+      .filter(
+        (p: string) => !['components', 'ui', 'form', 'layout', 'maps', 'patterns', 'design', 'tokens'].includes(p)
+      )
+    const displayName = parts
+      .map((p: string) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join(' ')
+
+    for (const child of [...figma.currentPage.children]) {
+      if (child.name === '_storybook-link' &&
+          Math.abs(child.x - node.x) < 50 &&
+          child.y < node.y && child.y > node.y - 50) {
+        child.remove()
+      }
+    }
+    for (const child of [...node.children]) {
+      if (child.name === '_storybook-link') child.remove()
+    }
+
+    try {
+      await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' })
+
+      const text = figma.createText()
+      text.name = '_storybook-link'
+      text.fontName = { family: 'Inter', style: 'Medium' }
+      text.characters = displayName + '  '
+      text.fontSize = 12
+      text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.15 } }]
+
+      const startIdx = text.characters.length
+      text.insertCharacters(startIdx, 'Open in Storybook')
+      text.setRangeFontName(startIdx, startIdx + 17, { family: 'Inter', style: 'Regular' })
+      text.setRangeFontSize(startIdx, startIdx + 17, 11)
+      text.setRangeFills(startIdx, startIdx + 17, [
+        { type: 'SOLID', color: { r: 0.055, g: 0.678, b: 0.722 } },
+      ])
+      text.setRangeHyperlink(startIdx, startIdx + 17, { type: 'URL', value: sbUrl })
+      text.setRangeTextDecoration(startIdx, startIdx + 17, 'UNDERLINE')
+
+      figma.currentPage.appendChild(text)
+      text.x = node.x
+      text.y = node.y - 24
+    } catch (e) {
+      console.warn('[linkStorybook]', e)
+    }
+
+    linked++
+  }
+
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Storybook links added: ${linked} frames`,
+  })
+}
+
+const clearStorybookLinks = (): void => {
+  let removed = 0
+  for (const child of [...figma.currentPage.children]) {
+    if (child.name === '_storybook-link') {
+      child.remove()
+      removed++
+    }
+  }
+  for (const node of [...figma.currentPage.children]) {
+    if (node.type !== 'FRAME') continue
+    for (const child of [...node.children]) {
+      if (child.name === '_storybook-link') {
+        child.remove()
+        removed++
+      }
+    }
+  }
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: removed > 0
+      ? `Storybook links removed: ${removed}`
+      : 'No Storybook links found',
+  })
+}
+
+const clearComponentSets = (): void => {
+  let removed = 0
+  for (const child of [...figma.currentPage.children]) {
+    if (child.type === 'COMPONENT_SET') {
+      child.remove()
+      removed++
+    }
+  }
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: removed > 0
+      ? `ComponentSets removed: ${removed}`
+      : 'No ComponentSets found',
+  })
+}
+
+// ---------------------------------------------------------------------------
 // CRUD操作
 // ---------------------------------------------------------------------------
 
@@ -971,6 +1437,30 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
       if (msg.componentName === 'button') {
         generateButton()
       }
+      return
+
+    case 'generate-all':
+      if (msg.storybookUrl) STORYBOOK_BASE_URL = msg.storybookUrl
+      if (msg.tokens) {
+        generateAllComponents(msg.tokens)
+      }
+      return
+
+    case 'link-storybook':
+      if (msg.storybookUrl) STORYBOOK_BASE_URL = msg.storybookUrl
+      linkStorybookToFrames()
+      return
+
+    case 'clear-storybook-links':
+      clearStorybookLinks()
+      return
+
+    case 'clear-component-sets':
+      clearComponentSets()
+      return
+
+    case 'set-storybook-url':
+      if (msg.storybookUrl) STORYBOOK_BASE_URL = msg.storybookUrl
       return
 
     case 'import-tokens':

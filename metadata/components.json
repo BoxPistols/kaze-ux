@@ -1,0 +1,211 @@
+{
+  "$schema": "kaze-ux/metadata/components",
+  "version": "1.0.0",
+  "framework": "React + MUI + Tailwind CSS",
+  "components": {
+    "button": {
+      "name": "Button",
+      "category": "UI",
+      "path": "src/components/ui/Button.tsx",
+      "description": "CVAベースのボタン。shadcn互換バリアント",
+      "variants": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link"
+      ],
+      "sizes": ["default", "sm", "lg", "icon"],
+      "accessibility": [
+        "focus-visible:ring",
+        "disabled:opacity-50",
+        "aria-disabled"
+      ],
+      "prohibited": ["React.FC使用禁止", "MUI Buttonとの混在禁止"],
+      "sample": "<Button variant='outline' size='sm'>Click</Button>"
+    },
+    "iconButton": {
+      "name": "IconButton",
+      "category": "UI",
+      "path": "src/components/ui/icon-button/iconButton.tsx",
+      "description": "アイコンボタン。tooltip・loading対応",
+      "variants": ["default", "outlined", "filled", "ghost"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-label必須", "aria-busy", "tooltip"],
+      "sample": "<IconButton tooltip='Edit' aria-label='Edit'><EditIcon /></IconButton>"
+    },
+    "loadingButton": {
+      "name": "LoadingButton",
+      "category": "UI",
+      "path": "src/components/ui/button/loadingButton.tsx",
+      "description": "ローディング状態付きボタン",
+      "variants": ["contained", "outlined", "text"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-busy", "aria-disabled"]
+    },
+    "card": {
+      "name": "Card",
+      "category": "UI",
+      "path": "src/components/ui/Card.tsx",
+      "description": "MUIベースのカード。セマンティック構造",
+      "subComponents": [
+        "CardHeader",
+        "CardTitle",
+        "CardDescription",
+        "CardContent",
+        "CardFooter"
+      ],
+      "sample": "<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardContent>Body</CardContent></Card>"
+    },
+    "confirmDialog": {
+      "name": "ConfirmDialog",
+      "category": "Feedback",
+      "path": "src/components/ui/dialog/confirmDialog.tsx",
+      "description": "確認ダイアログ。破壊的操作の確認用",
+      "accessibility": [
+        "role=alertdialog",
+        "aria-labelledby",
+        "aria-describedby"
+      ],
+      "prohibited": ["window.confirm使用禁止"]
+    },
+    "customTextField": {
+      "name": "CustomTextField",
+      "category": "Form",
+      "path": "src/components/Form/CustomTextField/index.tsx",
+      "description": "テキスト入力。ラベル・tooltip・バリデーション対応",
+      "sizes": ["small", "medium"],
+      "accessibility": [
+        "aria-label",
+        "aria-required",
+        "aria-invalid",
+        "aria-describedby"
+      ],
+      "sample": "<CustomTextField label='名前' required placeholder='入力してください' />"
+    },
+    "customSelect": {
+      "name": "CustomSelect",
+      "category": "Form",
+      "path": "src/components/Form/CustomSelect/index.tsx",
+      "description": "セレクト。単一/複数選択・クリア可能",
+      "sizes": ["small", "medium"],
+      "accessibility": ["aria-label", "aria-required", "aria-invalid"],
+      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />"
+    },
+    "multiSelectAutocomplete": {
+      "name": "MultiSelectAutocomplete",
+      "category": "Form",
+      "path": "src/components/Form/MultiSelectAutocomplete/index.tsx",
+      "description": "オートコンプリート付き複数選択",
+      "accessibility": ["aria-label", "aria-required"]
+    },
+    "dateTimePicker": {
+      "name": "DateTimePicker",
+      "category": "Form",
+      "path": "src/components/Form/DateTimePicker/index.tsx",
+      "description": "日時ピッカー。dayjs ベース",
+      "accessibility": ["aria-label", "LocalizationProvider"]
+    },
+    "pagination": {
+      "name": "Pagination",
+      "category": "UI",
+      "path": "src/components/ui/pagination/pagination.tsx",
+      "description": "ページネーション。テーブル/リスト用",
+      "accessibility": ["aria-label", "keyboard navigation"]
+    },
+    "resourceTable": {
+      "name": "ResourceTable",
+      "category": "Data",
+      "path": "src/components/ui/table/resourceTable.tsx",
+      "description": "データテーブル。フィルタリング・ソート対応"
+    },
+    "customAccordion": {
+      "name": "CustomAccordion",
+      "category": "UI",
+      "path": "src/components/ui/accordion/customAccordion.tsx",
+      "description": "アコーディオン。ハイライト・展開制御対応",
+      "accessibility": ["role=button", "aria-expanded", "keyboard navigation"]
+    },
+    "userAvatar": {
+      "name": "UserAvatar",
+      "category": "UI",
+      "path": "src/components/ui/avatar/userAvatar.tsx",
+      "description": "アバター。イニシャル・画像・アイコン対応",
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["alt text", "aria-label"]
+    },
+    "actionMenu": {
+      "name": "ActionMenu",
+      "category": "UI",
+      "path": "src/components/ui/menu/actionMenu.tsx",
+      "description": "コンテキストメニュー",
+      "accessibility": [
+        "aria-label",
+        "aria-controls",
+        "aria-expanded",
+        "aria-haspopup"
+      ]
+    },
+    "fab": {
+      "name": "Fab",
+      "category": "UI",
+      "path": "src/components/ui/fab/fab.tsx",
+      "description": "フローティングアクションボタン",
+      "sizes": ["small", "medium", "large"],
+      "variants": ["circular", "extended"],
+      "accessibility": ["aria-label", "tooltip"]
+    },
+    "splitButton": {
+      "name": "SplitButton",
+      "category": "UI",
+      "path": "src/components/ui/split-button/splitButton.tsx",
+      "description": "ドロップダウン付きボタン",
+      "accessibility": ["aria-controls", "aria-expanded", "aria-haspopup=menu"]
+    },
+    "serviceCard": {
+      "name": "ServiceCard",
+      "category": "UI",
+      "path": "src/components/ui/card/serviceCard.tsx",
+      "description": "サービス連携状態表示カード"
+    },
+    "statusTag": {
+      "name": "StatusTag",
+      "category": "UI",
+      "path": "src/components/ui/tag/statusTag.tsx",
+      "description": "ステータス表示タグ"
+    },
+    "chatSupport": {
+      "name": "ChatSupport",
+      "category": "Feedback",
+      "path": "src/components/ui/ChatSupport/ChatSupport.tsx",
+      "description": "Storybook統合AIチャットアシスタント。ページ文脈認識・ペルソナ適応",
+      "features": [
+        "OpenAI/Gemini対応",
+        "オフラインFAQ",
+        "指示語解決",
+        "ペルソナ検出"
+      ],
+      "accessibility": ["keyboard shortcuts", "aria-live"]
+    },
+    "layoutWithSidebar": {
+      "name": "LayoutWithSidebar",
+      "category": "Layout",
+      "path": "src/layouts/sidebar/layoutWithSidebar.tsx",
+      "description": "サイドバー付きレイアウト。レスポンシブ対応"
+    },
+    "sidebar": {
+      "name": "Sidebar",
+      "category": "Layout",
+      "path": "src/layouts/sidebar/sidebar.tsx",
+      "description": "折り畳み可能なサイドバーナビゲーション"
+    }
+  },
+  "categories": {
+    "UI": "基本UIコンポーネント",
+    "Form": "フォーム入力・制御コンポーネント",
+    "Data": "データ表示・テーブルコンポーネント",
+    "Layout": "レイアウト・構造コンポーネント",
+    "Feedback": "フィードバック・通知コンポーネント"
+  }
+}

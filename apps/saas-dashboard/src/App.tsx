@@ -1,3 +1,4 @@
+import AirIcon from '@mui/icons-material/Air'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ContactsIcon from '@mui/icons-material/Contacts'
 import DashboardIcon from '@mui/icons-material/Dashboard'
@@ -120,6 +121,15 @@ const menuItems: SidebarMenuItem[] = [
     href: '/settings',
     category: 'SYSTEM',
     description: 'App settings',
+  },
+  {
+    id: 'kaze-design',
+    label: 'Kaze Design System',
+    icon: <AirIcon />,
+    href: '/',
+    category: 'SYSTEM',
+    description: 'Back to Design System',
+    external: true,
   },
 ]
 
