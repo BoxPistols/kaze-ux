@@ -709,6 +709,95 @@ export const LandingPage = () => {
         </Box>
       </Box>
 
+      {/* ===== テックスタック ===== */}
+      <Box
+        sx={{
+          px: { xs: 3, md: 8, lg: 12 },
+          py: { xs: 6, md: 10 },
+          borderTop: '1px solid',
+          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+        }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}>
+          <Typography
+            sx={{
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: 'primary.main',
+              mb: 2,
+            }}>
+            Tech Stack
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: { xs: '1.4rem', md: '1.8rem' },
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              mb: 4,
+            }}>
+            実戦で選んだ構成。
+          </Typography>
+        </motion.div>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' },
+            gap: 2,
+          }}>
+          {[
+            { label: 'React', desc: 'UI ライブラリ' },
+            { label: 'MUI', desc: 'コンポーネントフレームワーク' },
+            { label: 'Tailwind CSS', desc: 'ユーティリティ CSS' },
+            { label: 'TypeScript', desc: '型安全' },
+            { label: 'Storybook', desc: 'コンポーネントドキュメント' },
+            { label: 'Vite', desc: 'ビルドツール' },
+            { label: 'Vitest', desc: 'テストフレームワーク' },
+            { label: 'pnpm', desc: 'パッケージマネージャ' },
+          ].map((tech, i) => (
+            <motion.div
+              key={tech.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}>
+              <Box
+                sx={{
+                  p: 2.5,
+                  borderRadius: 2,
+                  border: '1px solid',
+                  borderColor: isDark
+                    ? 'rgba(255,255,255,0.06)'
+                    : 'rgba(0,0,0,0.06)',
+                  bgcolor: isDark
+                    ? 'rgba(255,255,255,0.02)'
+                    : 'rgba(255,255,255,0.5)',
+                }}>
+                <Typography
+                  sx={{
+                    fontSize: '0.85rem',
+                    fontWeight: 700,
+                    mb: 0.5,
+                  }}>
+                  {tech.label}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.secondary',
+                  }}>
+                  {tech.desc}
+                </Typography>
+              </Box>
+            </motion.div>
+          ))}
+        </Box>
+      </Box>
+
       {/* ===== フッター ===== */}
       <Box
         sx={{

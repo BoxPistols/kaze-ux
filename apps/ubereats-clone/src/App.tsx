@@ -1,3 +1,4 @@
+import AirIcon from '@mui/icons-material/Air'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import HomeIcon from '@mui/icons-material/Home'
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -238,6 +239,19 @@ const AppContent = ({
               }
               size='medium'>
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+
+            {/* Kaze Design System */}
+            <IconButton
+              onClick={() => window.open('/', '_self')}
+              tooltip='Kaze Design System'
+              aria-label='Back to Kaze Design System'
+              size='medium'
+              sx={{
+                color: 'text.secondary',
+                '&:hover': { color: '#0EADB8' },
+              }}>
+              <AirIcon />
             </IconButton>
           </Box>
         </Toolbar>
