@@ -15,9 +15,9 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: isGitHubPages ? '/kaze-ux/demo/saas-dashboard/' : '/',
+    base: isGitHubPages ? '/kaze-ux/saas/' : '/',
     build: {
-      outDir: isGitHubPages ? '../../gh-pages/demo/saas-dashboard' : 'dist',
+      outDir: isGitHubPages ? '../../gh-pages/saas' : 'dist',
       emptyOutDir: true,
       sourcemap: !isGitHubPages,
     },

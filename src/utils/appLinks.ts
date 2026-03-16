@@ -1,18 +1,21 @@
 /**
  * アプリ間リンクのヘルパー
- * 常に相対パスで解決（Vercel / GitHub Pages デプロイ想定）
- * ローカル開発時は各アプリを個別に起動してブラウザで直接アクセスする
+ * Vite の BASE_URL を考慮して相対パスを解決
+ * ローカル: / → /storybook/, /saas/, /ubereats/
+ * GH Pages: /kaze-ux/ → /kaze-ux/storybook/, /kaze-ux/saas/, /kaze-ux/ubereats/
  */
 
+const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? ''
+
 const routes = {
-  top: '/',
-  storybook: '/storybook/',
-  saas: '/saas/',
-  ubereats: '/ubereats/',
+  top: `${base}/`,
+  storybook: `${base}/storybook/`,
+  saas: `${base}/saas/`,
+  ubereats: `${base}/ubereats/`,
 } as const
 
 /**
- * アプリの相対パス URL を返す
+ * アプリの URL を返す
  */
 export const getAppUrl = (app: keyof typeof routes): string => routes[app]
 

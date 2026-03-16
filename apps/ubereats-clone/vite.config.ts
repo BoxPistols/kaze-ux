@@ -15,9 +15,9 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: isGitHubPages ? '/kaze-ux/demo/ubereats-clone/' : '/',
+    base: isGitHubPages ? '/kaze-ux/ubereats/' : '/',
     build: {
-      outDir: isGitHubPages ? '../../gh-pages/demo/ubereats-clone' : 'dist',
+      outDir: isGitHubPages ? '../../gh-pages/ubereats' : 'dist',
       emptyOutDir: true,
       sourcemap: !isGitHubPages,
     },

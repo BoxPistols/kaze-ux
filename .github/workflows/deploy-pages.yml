@@ -93,10 +93,12 @@ jobs:
         if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'ubereats'
         run: pnpm --filter ubereats-clone build:gh-pages
 
-      # ランディングページ
-      - name: Create landing page
+      # ランディングページ（Vite ビルド）
+      - name: Build Landing Page
         if: steps.target.outputs.target == 'all'
-        run: cp scripts/gh-pages-index.html gh-pages/index.html
+        run: |
+          VITE_BASE_PATH="/kaze-ux/" pnpm build-sandbox
+          cp -r dist/* gh-pages/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -122,6 +124,7 @@ jobs:
       - name: Output deployment URLs
         run: |
           echo "Deployment completed!"
+          echo "Landing Page: ${{ steps.deployment.outputs.page_url }}"
           echo "Storybook: ${{ steps.deployment.outputs.page_url }}storybook/"
-          echo "SaaS Dashboard: ${{ steps.deployment.outputs.page_url }}demo/saas-dashboard/"
-          echo "UberEats Clone: ${{ steps.deployment.outputs.page_url }}demo/ubereats-clone/"
+          echo "SaaS Dashboard: ${{ steps.deployment.outputs.page_url }}saas/"
+          echo "UberEats Clone: ${{ steps.deployment.outputs.page_url }}ubereats/"
