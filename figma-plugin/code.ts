@@ -32,14 +32,18 @@ interface PluginMessage {
     | 'generate-component'
     | 'generate-all'
     | 'set-storybook-url'
+    | 'get-canvas-position'
+    | 'set-generate-position'
     | 'link-storybook'
     | 'clear-storybook-links'
     | 'clear-component-sets'
   tokens?: Record<string, unknown>
+  storybookUrl?: string
+  x?: number
+  y?: number
   scope?: string
   collectionName?: string
   componentName?: string
-  storybookUrl?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -607,7 +611,7 @@ async function registerAllStyles(
 
 const MUI_COLORS: Record<string, { main: RGB; contrastText: RGB }> = {
   primary: {
-    main: { r: 0.149, g: 0.259, b: 0.745 },
+    main: { r: 0.055, g: 0.678, b: 0.722 },
     contrastText: { r: 1, g: 1, b: 1 },
   },
   secondary: {
@@ -835,6 +839,1023 @@ async function generateButton(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// 生成位置制御
+// ---------------------------------------------------------------------------
+
+let generateX: number | null = null
+let generateY: number | null = null
+let generateOffset = 0
+
+function placeAfterExisting(node: SceneNode): void {
+  if (generateX !== null && generateY !== null) {
+    node.x = generateX + generateOffset
+    node.y = generateY
+    generateOffset += node.width + 40
+    return
+  }
+  let maxRight = 0
+  for (const child of figma.currentPage.children) {
+    if (child === node) continue
+    const right = child.x + child.width
+    if (right > maxRight) maxRight = right
+  }
+  node.x = maxRight + 100
+  node.y = -1000
+}
+
+// ---------------------------------------------------------------------------
+// Alert ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+const ALERT_SEVERITIES: Record<string, { main: RGB; bg: RGB }> = {
+  success: {
+    main: { r: 0.275, g: 0.671, b: 0.29 },
+    bg: { r: 0.831, g: 0.914, b: 0.831 },
+  },
+  error: {
+    main: { r: 0.855, g: 0.216, b: 0.216 },
+    bg: { r: 1, g: 0.922, b: 0.933 },
+  },
+  warning: {
+    main: { r: 0.922, g: 0.506, b: 0.09 },
+    bg: { r: 1, g: 0.953, b: 0.878 },
+  },
+  info: {
+    main: { r: 0.114, g: 0.686, b: 0.761 },
+    bg: { r: 0.898, g: 0.949, b: 1 },
+  },
+}
+
+async function generateAlert(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Alert 生成中...' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Regular' })
+
+  const severities = ['success', 'error', 'warning', 'info'] as const
+  const variants = ['standard', 'outlined', 'filled'] as const
+  const ICONS: Record<string, string> = {
+    success: '\u2713',
+    error: '\u2717',
+    warning: '\u26A0',
+    info: '\u2139',
+  }
+  const components: ComponentNode[] = []
+
+  for (const severity of severities) {
+    for (const variant of variants) {
+      const comp = figma.createComponent()
+      comp.name = `severity=${severity}, variant=${variant}`
+
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'MIN'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.paddingLeft = 16
+      comp.paddingRight = 16
+      comp.paddingTop = 10
+      comp.paddingBottom = 10
+      comp.cornerRadius = 8
+      comp.itemSpacing = 12
+      comp.minWidth = 320
+
+      const colors = ALERT_SEVERITIES[severity]
+      const varName = `${severity}/main`
+      const isWhiteText = variant === 'filled'
+
+      if (variant === 'filled') {
+        comp.fills = [makePaint(colors.main, varName)]
+        comp.strokes = []
+      } else if (variant === 'outlined') {
+        comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        comp.strokes = [makePaint(colors.main, varName, 0.5)]
+        comp.strokeWeight = 1
+      } else {
+        comp.fills = [{ type: 'SOLID', color: colors.bg }]
+        comp.strokes = []
+      }
+
+      const icon = figma.createText()
+      icon.fontName = { family: 'Inter', style: 'Medium' }
+      icon.characters = ICONS[severity]
+      icon.fontSize = 20
+      icon.lineHeight = { value: 24, unit: 'PIXELS' }
+      icon.fills = isWhiteText
+        ? [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        : [makePaint(colors.main, varName)]
+      comp.appendChild(icon)
+
+      const text = figma.createText()
+      text.fontName = { family: 'Inter', style: 'Regular' }
+      text.characters = `This is a ${severity} alert.`
+      text.fontSize = 14
+      text.lineHeight = { value: 22, unit: 'PIXELS' }
+      text.fills = isWhiteText
+        ? [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        : [makePaint(colors.main, varName)]
+      comp.appendChild(text)
+
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Alert'
+  cs.description = 'Source: src/components/ | alert'
+  cs.layoutMode = 'VERTICAL'
+  cs.itemSpacing = 8
+  cs.paddingLeft = 16
+  cs.paddingRight = 16
+  cs.paddingTop = 16
+  cs.paddingBottom = 16
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 12
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Alert generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Chip ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateChip(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Chip 生成中...' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+
+  const colorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'info',
+    'warning',
+    'error',
+  ] as const
+  const chipVariants = ['filled', 'outlined'] as const
+  const sizes = ['small', 'medium'] as const
+  const components: ComponentNode[] = []
+
+  for (const chipVariant of chipVariants) {
+    for (const colorName of colorNames) {
+      for (const size of sizes) {
+        const comp = figma.createComponent()
+        comp.name = `variant=${chipVariant}, color=${colorName}, size=${size}`
+
+        comp.layoutMode = 'HORIZONTAL'
+        comp.primaryAxisAlignItems = 'CENTER'
+        comp.counterAxisAlignItems = 'CENTER'
+        comp.primaryAxisSizingMode = 'AUTO'
+        comp.counterAxisSizingMode = 'AUTO'
+        comp.itemSpacing = 4
+
+        const isSmall = size === 'small'
+        comp.paddingLeft = isSmall ? 8 : 12
+        comp.paddingRight = isSmall ? 8 : 12
+        comp.paddingTop = isSmall ? 2 : 4
+        comp.paddingBottom = isSmall ? 2 : 4
+        comp.cornerRadius = 9999
+
+        const mainColor = MUI_COLORS[colorName].main
+        const varName = `${colorName}/main`
+
+        if (chipVariant === 'filled') {
+          comp.fills = [makePaint(mainColor, varName)]
+          comp.strokes = []
+        } else {
+          comp.fills = []
+          comp.strokes = [makePaint(mainColor, varName, 0.7)]
+          comp.strokeWeight = 1
+        }
+
+        const label = figma.createText()
+        label.fontName = { family: 'Inter', style: 'Medium' }
+        label.characters = 'Chip'
+        label.fontSize = isSmall ? 12 : 13
+        label.lineHeight = { value: isSmall ? 18 : 22, unit: 'PIXELS' }
+
+        if (chipVariant === 'filled') {
+          label.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        } else {
+          label.fills = [makePaint(mainColor, varName)]
+        }
+
+        comp.appendChild(label)
+        components.push(comp)
+      }
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Chip'
+  cs.description = 'Source: src/components/ | chip'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 12
+  cs.counterAxisSpacing = 12
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Chip generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// TextField ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateTextField(): Promise<void> {
+  figma.ui.postMessage({
+    type: 'import-progress',
+    message: 'TextField 生成中...',
+  })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+
+  const tfVariants = ['outlined', 'filled', 'standard'] as const
+  const sizes = ['small', 'medium'] as const
+  const components: ComponentNode[] = []
+
+  const borderGray: RGB = { r: 0.76, g: 0.76, b: 0.76 }
+  const filledBg: RGB = { r: 0.93, g: 0.93, b: 0.93 }
+
+  for (const tfVariant of tfVariants) {
+    for (const size of sizes) {
+      const comp = figma.createComponent()
+      comp.name = `variant=${tfVariant}, size=${size}`
+
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'CENTER'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.itemSpacing = 8
+
+      const isSmall = size === 'small'
+      comp.paddingLeft = 12
+      comp.paddingRight = 12
+      comp.paddingTop = isSmall ? 6 : 10
+      comp.paddingBottom = isSmall ? 6 : 10
+      comp.cornerRadius = tfVariant === 'standard' ? 0 : 6
+
+      if (tfVariant === 'outlined') {
+        comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        comp.strokes = [{ type: 'SOLID', color: borderGray }]
+        comp.strokeWeight = 1
+      } else if (tfVariant === 'filled') {
+        comp.fills = [{ type: 'SOLID', color: filledBg }]
+        comp.strokes = []
+      } else {
+        comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        comp.strokes = [{ type: 'SOLID', color: borderGray }]
+        comp.strokeWeight = 1
+        comp.strokeTopWeight = 0
+        comp.strokeLeftWeight = 0
+        comp.strokeRightWeight = 0
+        comp.strokeBottomWeight = 1
+      }
+
+      const text = figma.createText()
+      text.fontName = { family: 'Inter', style: 'Medium' }
+      text.characters = 'TextField'
+      text.fontSize = isSmall ? 13 : 14
+      text.lineHeight = { value: isSmall ? 20 : 24, unit: 'PIXELS' }
+      text.fills = [{ type: 'SOLID', color: { r: 0.55, g: 0.55, b: 0.55 } }]
+
+      comp.appendChild(text)
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'TextField'
+  cs.description = 'Source: src/components/ | textField'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 16
+  cs.counterAxisSpacing = 16
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `TextField generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Badge ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateBadge(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Badge 生成中...' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+
+  const colorNames = [
+    'primary',
+    'secondary',
+    'error',
+    'info',
+    'success',
+    'warning',
+  ] as const
+  const badgeVariants = ['standard', 'dot'] as const
+  const components: ComponentNode[] = []
+
+  for (const colorName of colorNames) {
+    for (const bv of badgeVariants) {
+      const comp = figma.createComponent()
+      comp.name = `color=${colorName}, variant=${bv}`
+
+      comp.layoutMode = 'NONE'
+      comp.resize(40, 40)
+      comp.fills = []
+
+      const content = figma.createFrame()
+      content.name = 'Content'
+      content.resize(24, 24)
+      content.x = 4
+      content.y = 10
+      content.cornerRadius = 4
+      content.fills = [{ type: 'SOLID', color: { r: 0.62, g: 0.62, b: 0.62 } }]
+      comp.appendChild(content)
+
+      const badge = figma.createFrame()
+      badge.name = 'Badge'
+      const isDot = bv === 'dot'
+      badge.cornerRadius = 9999
+      badge.fills = [makePaint(MUI_COLORS[colorName].main, `${colorName}/main`)]
+
+      if (isDot) {
+        badge.resize(8, 8)
+        badge.x = 26
+        badge.y = 6
+      } else {
+        badge.layoutMode = 'HORIZONTAL'
+        badge.primaryAxisAlignItems = 'CENTER'
+        badge.counterAxisAlignItems = 'CENTER'
+        badge.paddingLeft = 4
+        badge.paddingRight = 4
+        badge.paddingTop = 2
+        badge.paddingBottom = 2
+        badge.primaryAxisSizingMode = 'AUTO'
+        badge.counterAxisSizingMode = 'AUTO'
+        badge.minWidth = 20
+        badge.minHeight = 20
+        badge.x = 18
+        badge.y = -2
+        const num = figma.createText()
+        num.fontName = { family: 'Inter', style: 'Medium' }
+        num.characters = '4'
+        num.fontSize = 11
+        num.lineHeight = { value: 14, unit: 'PIXELS' }
+        num.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        badge.appendChild(num)
+      }
+
+      comp.appendChild(badge)
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Badge'
+  cs.description = 'Source: src/components/ | badge'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 16
+  cs.counterAxisSpacing = 16
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Badge generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Switch ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateSwitch(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Switch 生成中...' })
+
+  const colorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'error',
+    'warning',
+    'info',
+  ] as const
+  const sizes = ['small', 'medium'] as const
+  const states = ['on', 'off'] as const
+  const components: ComponentNode[] = []
+
+  const THUMB_SHADOW: Effect[] = [
+    {
+      type: 'DROP_SHADOW',
+      color: { r: 0, g: 0, b: 0, a: 0.2 },
+      offset: { x: 0, y: 1 },
+      radius: 3,
+      spread: 0,
+      visible: true,
+      blendMode: 'NORMAL',
+    },
+  ]
+
+  for (const colorName of colorNames) {
+    for (const size of sizes) {
+      for (const state of states) {
+        const comp = figma.createComponent()
+        comp.name = `color=${colorName}, size=${size}, checked=${state}`
+
+        const isSmall = size === 'small'
+        const isOn = state === 'on'
+        const trackW = isSmall ? 34 : 38
+        const trackH = isSmall ? 14 : 22
+        const thumbSize = isSmall ? 16 : 20
+
+        comp.layoutMode = 'NONE'
+        comp.resize(trackW + 12, Math.max(trackH, thumbSize) + 4)
+        comp.fills = []
+
+        const track = figma.createFrame()
+        track.name = 'Track'
+        track.resize(trackW, trackH)
+        track.x = 6
+        track.y = Math.round((comp.height - trackH) / 2)
+        track.cornerRadius = 9999
+        if (isOn) {
+          track.fills = [
+            makePaint(MUI_COLORS[colorName].main, `${colorName}/main`, 0.5),
+          ]
+        } else {
+          track.fills = [
+            { type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: 0.38 },
+          ]
+        }
+        comp.appendChild(track)
+
+        const thumb = figma.createFrame()
+        thumb.name = 'Thumb'
+        thumb.resize(thumbSize, thumbSize)
+        thumb.x = isOn ? trackW + 6 - thumbSize + 2 : 4
+        thumb.y = Math.round((comp.height - thumbSize) / 2)
+        thumb.cornerRadius = 9999
+        if (isOn) {
+          thumb.fills = [
+            makePaint(MUI_COLORS[colorName].main, `${colorName}/main`),
+          ]
+        } else {
+          thumb.fills = [
+            { type: 'SOLID', color: { r: 0.98, g: 0.98, b: 0.98 } },
+          ]
+        }
+        thumb.effects = THUMB_SHADOW
+        comp.appendChild(thumb)
+
+        components.push(comp)
+      }
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Switch'
+  cs.description = 'Source: src/components/ | switch'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 16
+  cs.counterAxisSpacing = 12
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Switch generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Progress ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateProgress(): Promise<void> {
+  figma.ui.postMessage({
+    type: 'import-progress',
+    message: 'Progress 生成中...',
+  })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+  const colorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'error',
+    'warning',
+    'info',
+  ] as const
+  const pVariants = ['determinate', 'indeterminate'] as const
+  const components: ComponentNode[] = []
+  for (const colorName of colorNames) {
+    for (const pv of pVariants) {
+      const comp = figma.createComponent()
+      comp.name = `color=${colorName}, variant=${pv}`
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'MIN'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.minWidth = 120
+      comp.minHeight = 4
+      comp.cornerRadius = 2
+      comp.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }]
+      const bar = figma.createFrame()
+      bar.name = 'Bar'
+      bar.resize(pv === 'determinate' ? 72 : 60, 4)
+      bar.cornerRadius = 2
+      bar.fills = [makePaint(MUI_COLORS[colorName].main, `${colorName}/main`)]
+      comp.appendChild(bar)
+      components.push(comp)
+    }
+  }
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Progress'
+  cs.description = 'Source: src/components/ | progress'
+  cs.layoutMode = 'VERTICAL'
+  cs.itemSpacing = 12
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Progress generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// StatusTag ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateStatusTag(): Promise<void> {
+  figma.ui.postMessage({
+    type: 'import-progress',
+    message: 'StatusTag 生成中...',
+  })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+  const statuses: Record<string, { bg: RGB; text: RGB }> = {
+    draft: {
+      bg: { r: 0.95, g: 0.95, b: 0.95 },
+      text: { r: 0.4, g: 0.4, b: 0.4 },
+    },
+    submitted: {
+      bg: { r: 0.9, g: 0.93, b: 1 },
+      text: { r: 0.2, g: 0.35, b: 0.7 },
+    },
+    approved: {
+      bg: { r: 0.9, g: 0.96, b: 0.9 },
+      text: { r: 0.2, g: 0.55, b: 0.25 },
+    },
+    rejected: {
+      bg: { r: 1, g: 0.92, b: 0.92 },
+      text: { r: 0.75, g: 0.2, b: 0.2 },
+    },
+    pending: {
+      bg: { r: 1, g: 0.96, b: 0.88 },
+      text: { r: 0.8, g: 0.5, b: 0.05 },
+    },
+    active: {
+      bg: { r: 0.88, g: 0.95, b: 1 },
+      text: { r: 0.1, g: 0.55, b: 0.7 },
+    },
+    inactive: {
+      bg: { r: 0.94, g: 0.94, b: 0.94 },
+      text: { r: 0.5, g: 0.5, b: 0.5 },
+    },
+  }
+  const components: ComponentNode[] = []
+  for (const [status, colors] of Object.entries(statuses)) {
+    const comp = figma.createComponent()
+    comp.name = `status=${status}`
+    comp.layoutMode = 'HORIZONTAL'
+    comp.primaryAxisAlignItems = 'CENTER'
+    comp.counterAxisAlignItems = 'CENTER'
+    comp.primaryAxisSizingMode = 'AUTO'
+    comp.counterAxisSizingMode = 'AUTO'
+    comp.paddingLeft = 10
+    comp.paddingRight = 10
+    comp.paddingTop = 3
+    comp.paddingBottom = 3
+    comp.cornerRadius = 4
+    comp.fills = [{ type: 'SOLID', color: colors.bg }]
+    const t = figma.createText()
+    t.fontName = { family: 'Inter', style: 'Medium' }
+    t.characters = status.charAt(0).toUpperCase() + status.slice(1)
+    t.fontSize = 12
+    t.fills = [{ type: 'SOLID', color: colors.text }]
+    comp.appendChild(t)
+    components.push(comp)
+  }
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'StatusTag'
+  cs.description = 'Source: src/components/ | statusTag'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 8
+  cs.counterAxisSpacing = 8
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `StatusTag generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Checkbox ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateCheckbox(): Promise<void> {
+  figma.ui.postMessage({
+    type: 'import-progress',
+    message: 'Checkbox 生成中...',
+  })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+
+  const colorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'error',
+    'warning',
+    'info',
+  ] as const
+  const checkStates = ['checked', 'unchecked', 'indeterminate'] as const
+  const components: ComponentNode[] = []
+
+  for (const colorName of colorNames) {
+    for (const state of checkStates) {
+      const comp = figma.createComponent()
+      comp.name = `color=${colorName}, state=${state}`
+
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'CENTER'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.itemSpacing = 8
+      comp.paddingLeft = 4
+      comp.paddingRight = 8
+      comp.paddingTop = 4
+      comp.paddingBottom = 4
+
+      const box = figma.createFrame()
+      box.name = 'Box'
+      box.resize(18, 18)
+      box.cornerRadius = 3
+
+      const mainColor = MUI_COLORS[colorName].main
+      const varName = `${colorName}/main`
+
+      if (state === 'checked' || state === 'indeterminate') {
+        box.fills = [makePaint(mainColor, varName)]
+      } else {
+        box.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        box.strokes = [{ type: 'SOLID', color: { r: 0.62, g: 0.62, b: 0.62 } }]
+        box.strokeWeight = 2
+      }
+
+      if (state !== 'unchecked') {
+        box.layoutMode = 'HORIZONTAL'
+        box.primaryAxisAlignItems = 'CENTER'
+        box.counterAxisAlignItems = 'CENTER'
+        const mark = figma.createText()
+        mark.fontName = { family: 'Inter', style: 'Medium' }
+        mark.characters = state === 'checked' ? '\u2713' : '\u2014'
+        mark.fontSize = 12
+        mark.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        box.appendChild(mark)
+      }
+
+      comp.appendChild(box)
+
+      const label = figma.createText()
+      label.fontName = { family: 'Inter', style: 'Medium' }
+      label.characters = 'Label'
+      label.fontSize = 14
+      label.fills = [{ type: 'SOLID', color: { r: 0.2, g: 0.2, b: 0.2 } }]
+      comp.appendChild(label)
+
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Checkbox'
+  cs.description = 'Source: src/components/ | checkbox'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 8
+  cs.counterAxisSpacing = 8
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Checkbox generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Radio ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateRadio(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Radio 生成中...' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+
+  const colorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'error',
+    'warning',
+    'info',
+  ] as const
+  const radioStates = ['selected', 'unselected'] as const
+  const components: ComponentNode[] = []
+
+  for (const colorName of colorNames) {
+    for (const state of radioStates) {
+      const comp = figma.createComponent()
+      comp.name = `color=${colorName}, state=${state}`
+
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'CENTER'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.itemSpacing = 8
+      comp.paddingLeft = 4
+      comp.paddingRight = 8
+      comp.paddingTop = 4
+      comp.paddingBottom = 4
+
+      const mainColor = MUI_COLORS[colorName].main
+      const varName = `${colorName}/main`
+
+      const outer = figma.createFrame()
+      outer.name = 'Radio'
+      outer.resize(20, 20)
+      outer.cornerRadius = 9999
+      outer.layoutMode = 'HORIZONTAL'
+      outer.primaryAxisAlignItems = 'CENTER'
+      outer.counterAxisAlignItems = 'CENTER'
+
+      if (state === 'selected') {
+        outer.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        outer.strokes = [makePaint(mainColor, varName)]
+        outer.strokeWeight = 2
+        const inner = figma.createFrame()
+        inner.name = 'Dot'
+        inner.resize(10, 10)
+        inner.cornerRadius = 9999
+        inner.fills = [makePaint(mainColor, varName)]
+        outer.appendChild(inner)
+      } else {
+        outer.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        outer.strokes = [
+          { type: 'SOLID', color: { r: 0.62, g: 0.62, b: 0.62 } },
+        ]
+        outer.strokeWeight = 2
+      }
+
+      comp.appendChild(outer)
+
+      const label = figma.createText()
+      label.fontName = { family: 'Inter', style: 'Medium' }
+      label.characters = 'Option'
+      label.fontSize = 14
+      label.fills = [{ type: 'SOLID', color: { r: 0.2, g: 0.2, b: 0.2 } }]
+      comp.appendChild(label)
+
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Radio'
+  cs.description = 'Source: src/components/ | radio'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 8
+  cs.counterAxisSpacing = 8
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Radio generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
+// Select ComponentSet 生成
+// ---------------------------------------------------------------------------
+
+async function generateSelect(): Promise<void> {
+  figma.ui.postMessage({ type: 'import-progress', message: 'Select 生成中...' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Medium' })
+  await figma.loadFontAsync({ family: 'Inter', style: 'Regular' })
+
+  const selectVariants = ['outlined', 'filled', 'standard'] as const
+  const sizes = ['small', 'medium'] as const
+  const components: ComponentNode[] = []
+
+  for (const sv of selectVariants) {
+    for (const size of sizes) {
+      const comp = figma.createComponent()
+      comp.name = `variant=${sv}, size=${size}`
+
+      comp.layoutMode = 'HORIZONTAL'
+      comp.primaryAxisAlignItems = 'CENTER'
+      comp.counterAxisAlignItems = 'CENTER'
+      comp.primaryAxisSizingMode = 'AUTO'
+      comp.counterAxisSizingMode = 'AUTO'
+      comp.itemSpacing = 8
+
+      const isSmall = size === 'small'
+      comp.paddingLeft = 12
+      comp.paddingRight = 8
+      comp.paddingTop = isSmall ? 6 : 10
+      comp.paddingBottom = isSmall ? 6 : 10
+      comp.cornerRadius = sv === 'standard' ? 0 : 6
+      comp.minWidth = 160
+
+      if (sv === 'outlined') {
+        comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        comp.strokes = [{ type: 'SOLID', color: { r: 0.76, g: 0.76, b: 0.76 } }]
+        comp.strokeWeight = 1
+      } else if (sv === 'filled') {
+        comp.fills = [{ type: 'SOLID', color: { r: 0.93, g: 0.93, b: 0.93 } }]
+        comp.strokes = []
+      } else {
+        comp.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+        comp.strokes = [{ type: 'SOLID', color: { r: 0.76, g: 0.76, b: 0.76 } }]
+        comp.strokeWeight = 1
+        comp.strokeTopWeight = 0
+        comp.strokeLeftWeight = 0
+        comp.strokeRightWeight = 0
+        comp.strokeBottomWeight = 1
+      }
+
+      const text = figma.createText()
+      text.fontName = { family: 'Inter', style: 'Regular' }
+      text.characters = 'Select...'
+      text.fontSize = isSmall ? 13 : 14
+      text.fills = [{ type: 'SOLID', color: { r: 0.55, g: 0.55, b: 0.55 } }]
+      comp.appendChild(text)
+
+      const arrow = figma.createText()
+      arrow.fontName = { family: 'Inter', style: 'Medium' }
+      arrow.characters = '\u25BE'
+      arrow.fontSize = 14
+      arrow.fills = [{ type: 'SOLID', color: { r: 0.45, g: 0.45, b: 0.45 } }]
+      comp.appendChild(arrow)
+
+      components.push(comp)
+    }
+  }
+
+  const cs = figma.combineAsVariants(components, figma.currentPage)
+  cs.name = 'Select'
+  cs.description = 'Source: src/components/ | select'
+  cs.layoutMode = 'HORIZONTAL'
+  cs.layoutWrap = 'WRAP'
+  cs.itemSpacing = 16
+  cs.counterAxisSpacing = 16
+  cs.paddingLeft = 24
+  cs.paddingRight = 24
+  cs.paddingTop = 24
+  cs.paddingBottom = 24
+  cs.primaryAxisSizingMode = 'AUTO'
+  cs.counterAxisSizingMode = 'AUTO'
+  cs.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  cs.cornerRadius = 8
+  cs.strokes = [{ type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } }]
+  cs.strokeWeight = 1
+  placeAfterExisting(cs)
+  figma.viewport.scrollAndZoomIntoView([cs])
+  figma.ui.postMessage({
+    type: 'operation-result',
+    success: true,
+    message: `Select generated: ${components.length} variants`,
+  })
+  listCollections()
+}
+
+// ---------------------------------------------------------------------------
 // 汎用コンポーネント自動生成
 // ---------------------------------------------------------------------------
 
@@ -904,7 +1925,7 @@ const parseComponentControls = (
   return controls
 }
 
-/** バリアント優先度 */
+/** バリアント優先度 (低い数値 = 高い優先度) */
 const VARIANT_PRIORITY: Record<string, number> = {
   variant: 0,
   color: 1,
@@ -912,11 +1933,23 @@ const VARIANT_PRIORITY: Record<string, number> = {
   severity: 1,
   orientation: 3,
   status: 1,
+  textColor: 4,
+  indicatorColor: 5,
+  anchor: 3,
+  confirmColor: 4,
+  confirmVariant: 4,
+  maxWidth: 5,
+  loadingPosition: 4,
+  position: 6,
+  placement: 6,
+  baseMap: 3,
+  cameraMode: 3,
+  animation: 3,
 }
 
 /** カラー名 → RGB フォールバック（tokens の Color Variable があればそちらが優先） */
 const COLOR_MAP: Record<string, RGB> = {
-  primary: { r: 0.098, g: 0.463, b: 0.824 },
+  primary: { r: 0.055, g: 0.678, b: 0.722 },
   secondary: { r: 0.412, g: 0.408, b: 0.506 },
   success: { r: 0.275, g: 0.671, b: 0.29 },
   info: { r: 0.114, g: 0.686, b: 0.761 },
@@ -1007,10 +2040,15 @@ const generateGenericComponentSet = async (
     const baseRGB = colorVal
       ? (COLOR_MAP[colorVal] ?? COLOR_MAP['primary'])
       : COLOR_MAP['primary']
-    const variantVal = combo['variant'] ?? 'contained'
+    const variantVal =
+      combo['variant'] ?? combo['confirmVariant'] ?? 'contained'
     const varName = colorVal ? `${colorVal}/main` : 'primary/main'
 
-    if (variantVal === 'contained' || variantVal === 'filled') {
+    if (
+      variantVal === 'contained' ||
+      variantVal === 'filled' ||
+      variantVal === 'elevation'
+    ) {
       comp.fills = [makePaint(baseRGB, varName)]
       comp.strokes = []
     } else if (variantVal === 'outlined') {
@@ -1035,7 +2073,11 @@ const generateGenericComponentSet = async (
     label.characters = labelText
     label.lineHeight = { value: sizeSpec.h - 12, unit: 'PIXELS' }
 
-    if (variantVal === 'contained' || variantVal === 'filled') {
+    if (
+      variantVal === 'contained' ||
+      variantVal === 'filled' ||
+      variantVal === 'elevation'
+    ) {
       label.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
     } else {
       label.fills = [makePaint(baseRGB, varName)]
@@ -1053,6 +2095,14 @@ const generateGenericComponentSet = async (
     : null
   const descLines = [`Source: src/components/ | ${control.name}`]
   if (sbUrl) descLines.push(`Storybook: ${sbUrl}`)
+  const variantSummary = selectedAxes
+    .map(([axis, opts]) => `${axis}: ${opts.join(', ')}`)
+    .join(' | ')
+  if (variantSummary) descLines.push(`Variants: ${variantSummary}`)
+  if (control.booleans.length > 0)
+    descLines.push(`Booleans: ${control.booleans.join(', ')}`)
+  if (control.strings.length > 0)
+    descLines.push(`Text: ${control.strings.join(', ')}`)
   componentSet.description = descLines.join('\n')
 
   componentSet.layoutMode = 'HORIZONTAL'
@@ -1079,20 +2129,29 @@ const generateGenericComponentSet = async (
     { type: 'SOLID', color: { r: 0.878, g: 0.878, b: 0.878 } },
   ]
   componentSet.strokeWeight = 1
+  componentSet.effects = [
+    {
+      type: 'DROP_SHADOW',
+      color: { r: 0, g: 0, b: 0, a: 0.06 },
+      offset: { x: 0, y: 2 },
+      radius: 8,
+      spread: 0,
+      visible: true,
+      blendMode: 'NORMAL',
+    },
+  ]
 
+  // Boolean / String プロパティを ComponentSet に追加（重複はスキップ）
+  const existingProps = componentSet.componentPropertyDefinitions
   for (const boolProp of control.booleans) {
-    try {
+    if (!(boolProp in existingProps)) {
       componentSet.addComponentProperty(boolProp, 'BOOLEAN', true)
-    } catch {
-      /* 重複時は無視 */
     }
   }
 
   for (const strProp of control.strings) {
-    try {
+    if (!(strProp in existingProps)) {
       componentSet.addComponentProperty(strProp, 'TEXT', strProp)
-    } catch {
-      /* 重複時は無視 */
     }
   }
 
@@ -1298,9 +2357,13 @@ const clearStorybookLinks = (): void => {
 }
 
 const clearComponentSets = (): void => {
+  const GENERATED_MARKER = 'Source: src/components/'
   let removed = 0
   for (const child of [...figma.currentPage.children]) {
-    if (child.type === 'COMPONENT_SET') {
+    if (
+      child.type === 'COMPONENT_SET' &&
+      child.description.includes(GENERATED_MARKER)
+    ) {
       child.remove()
       removed++
     }
@@ -1455,8 +2518,23 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
       return
 
     case 'generate-component':
-      if (msg.componentName === 'button') {
-        generateButton()
+      if (msg.componentName === 'button') generateButton()
+      else if (msg.componentName === 'alert') generateAlert()
+      else if (msg.componentName === 'chip') generateChip()
+      else if (msg.componentName === 'textfield') generateTextField()
+      else if (msg.componentName === 'badge') generateBadge()
+      else if (msg.componentName === 'switch') generateSwitch()
+      else if (msg.componentName === 'progress') generateProgress()
+      else if (msg.componentName === 'statustag') generateStatusTag()
+      else if (msg.componentName === 'checkbox') generateCheckbox()
+      else if (msg.componentName === 'radio') generateRadio()
+      else if (msg.componentName === 'select') generateSelect()
+      else {
+        figma.ui.postMessage({
+          type: 'operation-result',
+          success: false,
+          message: `Unknown component: ${msg.componentName || '(none)'}`,
+        })
       }
       return
 
@@ -1482,6 +2560,34 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
 
     case 'set-storybook-url':
       if (msg.storybookUrl) STORYBOOK_BASE_URL = msg.storybookUrl
+      return
+
+    case 'get-canvas-position': {
+      const sel = figma.currentPage.selection
+      if (sel.length > 0) {
+        const node = sel[0]
+        figma.ui.postMessage({
+          type: 'canvas-position',
+          x: Math.round(node.x + node.width + 100),
+          y: Math.round(node.y),
+          source: node.name,
+        })
+      } else {
+        const vp = figma.viewport.center
+        figma.ui.postMessage({
+          type: 'canvas-position',
+          x: Math.round(vp.x),
+          y: Math.round(vp.y),
+          source: 'viewport center',
+        })
+      }
+      return
+    }
+
+    case 'set-generate-position':
+      generateX = typeof msg.x === 'number' ? msg.x : null
+      generateY = typeof msg.y === 'number' ? msg.y : null
+      generateOffset = 0
       return
 
     case 'import-tokens':

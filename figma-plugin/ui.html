@@ -275,6 +275,12 @@
       .btn-action.brand:hover {
         box-shadow: 0 3px 12px rgba(91, 106, 240, 0.3);
       }
+      .btn-action.pink {
+        background: linear-gradient(135deg, #ff4785, #e8367a);
+      }
+      .btn-action.pink:hover {
+        box-shadow: 0 3px 12px rgba(255, 71, 133, 0.3);
+      }
       .btn-action.dark {
         background: linear-gradient(135deg, #1a1d26, #2d3148);
       }
@@ -618,7 +624,7 @@
         </div>
         <div class="btn-row" style="margin-bottom: 0">
           <button
-            class="btn-action brand"
+            class="btn-action pink"
             id="linkStorybookBtn"
             style="flex: 3">
             Link Storybook to Frames
@@ -651,10 +657,44 @@
             line-height: 1.6;
             margin-bottom: 10px;
           ">
-          Generate Figma ComponentSets from Storybook controls
-          (variant/color/size). Import tokens.json first. Color Variables are
-          auto-bound.
+          Generate Figma ComponentSets from Storybook controls. Import
+          tokens.json first. Color Variables are auto-bound.
         </p>
+        <div style="display: flex; gap: 8px; margin-bottom: 10px">
+          <div style="flex: 1">
+            <label class="field-label" for="genX">X</label>
+            <input
+              type="number"
+              id="genX"
+              value="0"
+              style="
+                width: 100%;
+                padding: 6px 8px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                font-family: var(--mono);
+                font-size: 11px;
+              " />
+          </div>
+          <div style="flex: 1">
+            <label class="field-label" for="genY">Y</label>
+            <input
+              type="number"
+              id="genY"
+              value="-1000"
+              style="
+                width: 100%;
+                padding: 6px 8px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                font-family: var(--mono);
+                font-size: 11px;
+              " />
+          </div>
+          <div style="flex: none; display: flex; align-items: flex-end;">
+            <button class="btn btn-ghost" id="getPositionBtn" style="font-size: 10px; padding: 6px 10px; white-space: nowrap;" title="Get position from selected node or viewport center">Pick</button>
+          </div>
+        </div>
       </div>
 
       <div class="component-btn" data-component="button">
@@ -668,9 +708,109 @@
         <span class="component-meta">54 variants</span>
       </div>
 
-      <p class="hint" style="margin-top: 6px">
-        More components (Alert, Chip, TextField, etc.) coming soon.
-      </p>
+      <div class="component-btn" data-component="alert">
+        <span class="component-icon" style="background: #2d9d5c">A</span>
+        <div>
+          <span style="display: block">Alert</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >success/error/warning/info x standard/outlined/filled</span
+          >
+        </div>
+        <span class="component-meta">12 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="chip">
+        <span class="component-icon" style="background: #5b6af0">C</span>
+        <div>
+          <span style="display: block">Chip</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >filled/outlined x 6 colors x 2 sizes</span
+          >
+        </div>
+        <span class="component-meta">24 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="textfield">
+        <span class="component-icon" style="background: #455a64">T</span>
+        <div>
+          <span style="display: block">TextField</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >outlined/filled/standard x 2 sizes</span
+          >
+        </div>
+        <span class="component-meta">6 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="badge">
+        <span class="component-icon" style="background: #e91e63">B</span>
+        <div>
+          <span style="display: block">Badge</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >6 colors x standard/dot</span
+          >
+        </div>
+        <span class="component-meta">12 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="switch">
+        <span class="component-icon" style="background: #4caf50">S</span>
+        <div>
+          <span style="display: block">Switch</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >6 colors x 2 sizes x on/off</span
+          >
+        </div>
+        <span class="component-meta">24 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="progress">
+        <span class="component-icon" style="background: #1976d2">P</span>
+        <div>
+          <span style="display: block">Progress</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >6 colors x determinate/indeterminate</span
+          >
+        </div>
+        <span class="component-meta">12 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="statustag">
+        <span class="component-icon" style="background: #ff9800">S</span>
+        <div>
+          <span style="display: block">StatusTag</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >7 statuses (draft/submitted/approved/...)</span
+          >
+        </div>
+        <span class="component-meta">7 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="checkbox">
+        <span class="component-icon" style="background: #1976d2">C</span>
+        <div>
+          <span style="display: block">Checkbox</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400">6 colors x checked/unchecked/indeterminate</span>
+        </div>
+        <span class="component-meta">18 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="radio">
+        <span class="component-icon" style="background: #9c27b0">R</span>
+        <div>
+          <span style="display: block">Radio</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400">6 colors x selected/unselected</span>
+        </div>
+        <span class="component-meta">12 variants</span>
+      </div>
+
+      <div class="component-btn" data-component="select">
+        <span class="component-icon" style="background: #607d8b">S</span>
+        <div>
+          <span style="display: block">Select</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400">outlined/filled/standard x 2 sizes</span>
+        </div>
+        <span class="component-meta">6 variants</span>
+      </div>
     </div>
 
     <!-- Manage -->
@@ -866,9 +1006,17 @@
       document.querySelectorAll('.component-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var name = btn.getAttribute('data-component')
+          var gx = parseInt(document.getElementById('genX').value) || 0
+          var gy = parseInt(document.getElementById('genY').value) || -1000
+          postMsg({ type: 'set-generate-position', x: gx, y: gy })
           setStatus('info', 'Generating ' + name + '...')
           postMsg({ type: 'generate-component', componentName: name })
         })
+      })
+
+      // Pick position from canvas
+      document.getElementById('getPositionBtn').addEventListener('click', function () {
+        postMsg({ type: 'get-canvas-position' })
       })
 
       // Helpers
@@ -943,6 +1091,13 @@
             setStatus(msg.success ? 'success' : 'error', msg.message)
             var linkBtn = document.getElementById('linkStorybookBtn')
             if (linkBtn) linkBtn.disabled = false
+            var clearLinksBtn = document.getElementById('clearLinksBtn')
+            if (clearLinksBtn) clearLinksBtn.disabled = false
+            break
+          case 'canvas-position':
+            document.getElementById('genX').value = msg.x
+            document.getElementById('genY').value = msg.y
+            setStatus('info', 'Position: (' + msg.x + ', ' + msg.y + ') from ' + (msg.source || 'canvas'))
             break
         }
       }
