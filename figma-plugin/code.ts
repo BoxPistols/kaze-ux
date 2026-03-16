@@ -914,9 +914,9 @@ const VARIANT_PRIORITY: Record<string, number> = {
   status: 1,
 }
 
-/** カラー名 → RGB マッピング（Kaze ティール系） */
+/** カラー名 → RGB フォールバック（tokens の Color Variable があればそちらが優先） */
 const COLOR_MAP: Record<string, RGB> = {
-  primary: { r: 0.055, g: 0.678, b: 0.722 },
+  primary: { r: 0.098, g: 0.463, b: 0.824 },
   secondary: { r: 0.412, g: 0.408, b: 0.506 },
   success: { r: 0.275, g: 0.671, b: 0.29 },
   info: { r: 0.114, g: 0.686, b: 0.761 },
@@ -952,8 +952,7 @@ const generateGenericComponentSet = async (
   const displayName = toPascalCase(control.name)
 
   const sortedVariants = Object.entries(control.variants).sort(
-    ([a], [b]) =>
-      (VARIANT_PRIORITY[a] ?? 10) - (VARIANT_PRIORITY[b] ?? 10)
+    ([a], [b]) => (VARIANT_PRIORITY[a] ?? 10) - (VARIANT_PRIORITY[b] ?? 10)
   )
 
   const selectedAxes: [string, string[]][] = []
@@ -1006,7 +1005,7 @@ const generateGenericComponentSet = async (
 
     const colorVal = combo['color'] ?? combo['severity'] ?? combo['status']
     const baseRGB = colorVal
-      ? COLOR_MAP[colorVal] ?? COLOR_MAP['primary']
+      ? (COLOR_MAP[colorVal] ?? COLOR_MAP['primary'])
       : COLOR_MAP['primary']
     const variantVal = combo['variant'] ?? 'contained'
     const varName = colorVal ? `${colorVal}/main` : 'primary/main'
@@ -1027,7 +1026,8 @@ const generateGenericComponentSet = async (
     for (const [axis] of selectedAxes) {
       if (combo[axis]) labelParts.push(combo[axis])
     }
-    const labelText = labelParts.length > 0 ? labelParts.join(' / ') : displayName
+    const labelText =
+      labelParts.length > 0 ? labelParts.join(' / ') : displayName
 
     const label = figma.createText()
     label.fontName = { family: 'Inter', style: 'Medium' }
@@ -1196,16 +1196,29 @@ const linkStorybookToFrames = async (): Promise<void> => {
       .replace('--docs', '')
       .split('-')
       .filter(
-        (p: string) => !['components', 'ui', 'form', 'layout', 'maps', 'patterns', 'design', 'tokens'].includes(p)
+        (p: string) =>
+          ![
+            'components',
+            'ui',
+            'form',
+            'layout',
+            'maps',
+            'patterns',
+            'design',
+            'tokens',
+          ].includes(p)
       )
     const displayName = parts
       .map((p: string) => p.charAt(0).toUpperCase() + p.slice(1))
       .join(' ')
 
     for (const child of [...figma.currentPage.children]) {
-      if (child.name === '_storybook-link' &&
-          Math.abs(child.x - node.x) < 50 &&
-          child.y < node.y && child.y > node.y - 50) {
+      if (
+        child.name === '_storybook-link' &&
+        Math.abs(child.x - node.x) < 50 &&
+        child.y < node.y &&
+        child.y > node.y - 50
+      ) {
         child.remove()
       }
     }
@@ -1226,12 +1239,18 @@ const linkStorybookToFrames = async (): Promise<void> => {
 
       const startIdx = text.characters.length
       text.insertCharacters(startIdx, 'Open in Storybook')
-      text.setRangeFontName(startIdx, startIdx + 17, { family: 'Inter', style: 'Regular' })
+      text.setRangeFontName(startIdx, startIdx + 17, {
+        family: 'Inter',
+        style: 'Regular',
+      })
       text.setRangeFontSize(startIdx, startIdx + 17, 11)
       text.setRangeFills(startIdx, startIdx + 17, [
-        { type: 'SOLID', color: { r: 0.055, g: 0.678, b: 0.722 } },
+        { type: 'SOLID', color: { r: 1, g: 0.278, b: 0.522 } },
       ])
-      text.setRangeHyperlink(startIdx, startIdx + 17, { type: 'URL', value: sbUrl })
+      text.setRangeHyperlink(startIdx, startIdx + 17, {
+        type: 'URL',
+        value: sbUrl,
+      })
       text.setRangeTextDecoration(startIdx, startIdx + 17, 'UNDERLINE')
 
       figma.currentPage.appendChild(text)
@@ -1271,9 +1290,10 @@ const clearStorybookLinks = (): void => {
   figma.ui.postMessage({
     type: 'operation-result',
     success: true,
-    message: removed > 0
-      ? `Storybook links removed: ${removed}`
-      : 'No Storybook links found',
+    message:
+      removed > 0
+        ? `Storybook links removed: ${removed}`
+        : 'No Storybook links found',
   })
 }
 
@@ -1288,9 +1308,10 @@ const clearComponentSets = (): void => {
   figma.ui.postMessage({
     type: 'operation-result',
     success: true,
-    message: removed > 0
-      ? `ComponentSets removed: ${removed}`
-      : 'No ComponentSets found',
+    message:
+      removed > 0
+        ? `ComponentSets removed: ${removed}`
+        : 'No ComponentSets found',
   })
 }
 
