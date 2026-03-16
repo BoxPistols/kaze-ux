@@ -126,9 +126,19 @@ const menuItems: SidebarMenuItem[] = [
     id: 'kaze-design',
     label: 'Kaze Design System',
     icon: <AirIcon />,
-    href: import.meta.env.DEV
-      ? `${window.location.protocol}//${window.location.hostname}:5173`
-      : '/',
+    href: (() => {
+      if (!import.meta.env.DEV) return '/'
+      const h = window.location.hostname
+      const p = window.location.protocol
+      try {
+        const saved = localStorage.getItem('kaze-dev-ports')
+        if (saved) {
+          const ports = JSON.parse(saved)
+          if (ports.top) return `${p}//${h}:${ports.top}`
+        }
+      } catch { /* ignore */ }
+      return `${p}//${h}:5173`
+    })(),
     category: 'SYSTEM',
     description: 'Back to Design System',
     external: true,
