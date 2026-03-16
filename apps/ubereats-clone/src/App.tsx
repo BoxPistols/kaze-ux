@@ -243,12 +243,7 @@ const AppContent = ({
 
             {/* Kaze Design System */}
             <IconButton
-              onClick={() =>
-                window.open(
-                  (import.meta.env.VITE_TOP_URL as string) || '/',
-                  '_self'
-                )
-              }
+              onClick={() => window.open('/', '_self')}
               tooltip='Kaze Design System'
               aria-label='Back to Kaze Design System'
               size='medium'

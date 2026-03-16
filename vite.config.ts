@@ -96,7 +96,24 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      open: true,
+      open: false,
+      proxy: {
+        '/storybook': {
+          target: 'http://localhost:6006',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/storybook/, ''),
+        },
+        '/saas': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/saas/, ''),
+        },
+        '/ubereats': {
+          target: 'http://localhost:3002',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ubereats/, ''),
+        },
+      },
     },
     css: {
       postcss: './postcss.config.cjs',
