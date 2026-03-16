@@ -35,7 +35,11 @@
         --mono: 'JetBrains Mono', monospace;
       }
 
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
       body {
         font-family: var(--font);
@@ -53,20 +57,35 @@
         gap: 12px;
       }
       .header-icon {
-        width: 34px; height: 34px;
+        width: 34px;
+        height: 34px;
         border-radius: var(--radius);
         background: linear-gradient(135deg, #5b6af0, #7c4dff);
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex: none;
         box-shadow: 0 2px 8px rgba(91, 106, 240, 0.3);
       }
       .header-icon svg {
-        width: 17px; height: 17px;
-        fill: none; stroke: #fff; stroke-width: 2;
-        stroke-linecap: round; stroke-linejoin: round;
+        width: 17px;
+        height: 17px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
-      .header-text h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
-      .header-text p { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+      .header-text h1 {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .header-text p {
+        font-size: 11px;
+        color: var(--text-3);
+        margin-top: 2px;
+      }
 
       /* ---- Tabs ---- */
       .tabs {
@@ -78,181 +97,438 @@
         gap: 2px;
       }
       .tab {
-        flex: 1; padding: 8px 0;
-        font-family: var(--font); font-size: 11.5px; font-weight: 600;
-        cursor: pointer; border: none; background: transparent;
-        color: var(--text-2); border-radius: var(--radius-sm);
-        transition: all 0.2s; letter-spacing: -0.01em;
+        flex: 1;
+        padding: 8px 0;
+        font-family: var(--font);
+        font-size: 11.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: var(--text-2);
+        border-radius: var(--radius-sm);
+        transition: all 0.2s;
+        letter-spacing: -0.01em;
       }
-      .tab:hover:not(.active) { color: var(--text-1); background: rgba(255,255,255,0.5); }
+      .tab:hover:not(.active) {
+        color: var(--text-1);
+        background: rgba(255, 255, 255, 0.5);
+      }
       .tab.active {
-        color: var(--text-1); background: var(--surface);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 1px rgba(0,0,0,0.04);
+        color: var(--text-1);
+        background: var(--surface);
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.08),
+          0 1px 1px rgba(0, 0, 0, 0.04);
       }
 
       /* ---- Panel ---- */
-      .tab-panel { display: none; padding: 0 20px 20px; animation: fadeIn 0.15s ease; }
-      .tab-panel.active { display: block; }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+      .tab-panel {
+        display: none;
+        padding: 0 20px 20px;
+        animation: fadeIn 0.15s ease;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
       /* ---- Form ---- */
       .field-label {
-        font-size: 10px; font-weight: 700; color: var(--text-3);
-        text-transform: uppercase; letter-spacing: 0.05em;
-        margin-bottom: 6px; display: block;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+        display: block;
       }
-      .field-group { margin-bottom: 14px; }
+      .field-group {
+        margin-bottom: 14px;
+      }
 
-      select, input[type="text"] {
-        width: 100%; padding: 9px 12px;
-        border: 1px solid var(--border); border-radius: var(--radius-sm);
-        font-family: var(--font); font-size: 12px;
-        color: var(--text-1); background: var(--surface);
+      select,
+      input[type='text'] {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: var(--font);
+        font-size: 12px;
+        color: var(--text-1);
+        background: var(--surface);
         transition: border-color 0.15s;
       }
       select {
         appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239ca0ae' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 10px center;
+        background-repeat: no-repeat;
+        background-position: right 10px center;
         cursor: pointer;
       }
-      input[type="text"] { font-family: var(--mono); font-size: 11px; }
-      input[type="text"]::placeholder { color: var(--text-3); font-family: var(--font); font-size: 11px; }
-      select:focus, input[type="text"]:focus, textarea:focus {
-        outline: none; border-color: var(--border-focus);
+      input[type='text'] {
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      input[type='text']::placeholder {
+        color: var(--text-3);
+        font-family: var(--font);
+        font-size: 11px;
+      }
+      select:focus,
+      input[type='text']:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--border-focus);
         box-shadow: 0 0 0 3px var(--accent-soft);
       }
 
       textarea {
-        width: 100%; height: 120px;
-        border: 1px solid var(--border); border-radius: var(--radius-sm);
+        width: 100%;
+        height: 120px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
         padding: 10px 12px;
-        font-family: var(--mono); font-size: 10px; line-height: 1.6;
-        color: var(--text-1); background: var(--surface);
-        resize: vertical; transition: border-color 0.15s;
+        font-family: var(--mono);
+        font-size: 10px;
+        line-height: 1.6;
+        color: var(--text-1);
+        background: var(--surface);
+        resize: vertical;
+        transition: border-color 0.15s;
       }
-      textarea::placeholder { color: var(--text-3); }
+      textarea::placeholder {
+        color: var(--text-3);
+      }
 
       /* ---- Buttons ---- */
-      button { font-family: var(--font); font-weight: 600; cursor: pointer; transition: all 0.15s ease; border: none; letter-spacing: -0.01em; }
+      button {
+        font-family: var(--font);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border: none;
+        letter-spacing: -0.01em;
+      }
 
-      .btn-row { display: flex; gap: 8px; margin-bottom: 10px; }
+      .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
 
       .btn {
-        flex: 1; padding: 10px 14px;
-        border-radius: var(--radius-sm); font-size: 12px;
+        flex: 1;
+        padding: 10px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
       }
-      .btn-ghost { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); }
-      .btn-ghost:hover { background: var(--surface-hover); border-color: #d0d3da; }
+      .btn-ghost {
+        background: var(--surface);
+        color: var(--text-2);
+        border: 1px solid var(--border);
+      }
+      .btn-ghost:hover {
+        background: var(--surface-hover);
+        border-color: #d0d3da;
+      }
 
       .btn-action {
-        flex: 1; padding: 12px 14px;
-        border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 700;
-        color: #fff; border: none;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
+        flex: 1;
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
       }
-      .btn-action:hover { transform: translateY(-1px); }
-      .btn-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-      .btn-action.green { background: linear-gradient(135deg, var(--green), var(--green-hover)); }
-      .btn-action.green:hover { box-shadow: 0 3px 12px rgba(45,157,92,0.3); }
-      .btn-action.brand { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); }
-      .btn-action.brand:hover { box-shadow: 0 3px 12px rgba(91,106,240,0.3); }
-      .btn-action.dark { background: linear-gradient(135deg, #1a1d26, #2d3148); }
-      .btn-action.dark:hover { box-shadow: 0 3px 12px rgba(26,29,38,0.3); }
+      .btn-action:hover {
+        transform: translateY(-1px);
+      }
+      .btn-action:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-action.green {
+        background: linear-gradient(135deg, var(--green), var(--green-hover));
+      }
+      .btn-action.green:hover {
+        box-shadow: 0 3px 12px rgba(45, 157, 92, 0.3);
+      }
+      .btn-action.brand {
+        background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      }
+      .btn-action.brand:hover {
+        box-shadow: 0 3px 12px rgba(91, 106, 240, 0.3);
+      }
+      .btn-action.dark {
+        background: linear-gradient(135deg, #1a1d26, #2d3148);
+      }
+      .btn-action.dark:hover {
+        box-shadow: 0 3px 12px rgba(26, 29, 38, 0.3);
+      }
 
-      .btn-action .dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
-      .dot-t { background: #f59e0b; }
-      .dot-c { background: var(--accent); }
-      .dot-e { background: #2d9d5c; }
+      .btn-action .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot-t {
+        background: #f59e0b;
+      }
+      .dot-c {
+        background: var(--accent);
+      }
+      .dot-e {
+        background: #2d9d5c;
+      }
 
       .btn-danger-outline {
-        flex: 1; padding: 9px 12px;
-        border-radius: var(--radius-sm); font-size: 11px;
-        background: transparent; color: var(--danger); border: 1px solid var(--border);
+        flex: 1;
+        padding: 9px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 11px;
+        background: transparent;
+        color: var(--danger);
+        border: 1px solid var(--border);
       }
-      .btn-danger-outline:hover { background: var(--danger-hover); border-color: #fcc; }
+      .btn-danger-outline:hover {
+        background: var(--danger-hover);
+        border-color: #fcc;
+      }
 
       /* ---- Status ---- */
-      .status-bar { padding: 0 20px; margin-bottom: 6px; }
+      .status-bar {
+        padding: 0 20px;
+        margin-bottom: 6px;
+      }
       .status {
-        padding: 10px 12px; border-radius: var(--radius-sm);
-        font-size: 11px; line-height: 1.5; display: none;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 11px;
+        line-height: 1.5;
+        display: none;
         border-left: 3px solid transparent;
       }
-      .status.info { display: block; background: var(--info-bg); color: var(--info); border-left-color: var(--info); }
-      .status.success { display: block; background: var(--success-bg); color: var(--success); border-left-color: var(--success); }
-      .status.error { display: block; background: var(--error-bg); color: var(--error); border-left-color: var(--error); }
+      .status.info {
+        display: block;
+        background: var(--info-bg);
+        color: var(--info);
+        border-left-color: var(--info);
+      }
+      .status.success {
+        display: block;
+        background: var(--success-bg);
+        color: var(--success);
+        border-left-color: var(--success);
+      }
+      .status.error {
+        display: block;
+        background: var(--error-bg);
+        color: var(--error);
+        border-left-color: var(--error);
+      }
       .stats {
-        padding: 0 20px; margin-bottom: 12px;
-        font-size: 10.5px; color: var(--text-3); font-family: var(--mono);
+        padding: 0 20px;
+        margin-bottom: 12px;
+        font-size: 10.5px;
+        color: var(--text-3);
+        font-family: var(--mono);
       }
 
       /* ---- Collections ---- */
-      .section-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-      .collection-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
-      .collection-item {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 10px 12px; background: var(--surface);
-        border: 1px solid var(--border); border-radius: var(--radius-sm);
-        font-size: 11px; transition: border-color 0.15s;
+      .section-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
       }
-      .collection-item:hover { border-color: #d0d3da; }
-      .collection-item .name { font-weight: 600; }
-      .collection-item .meta { color: var(--text-3); margin-left: 8px; font-size: 10px; }
+      .collection-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 14px;
+      }
+      .collection-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 11px;
+        transition: border-color 0.15s;
+      }
+      .collection-item:hover {
+        border-color: #d0d3da;
+      }
+      .collection-item .name {
+        font-weight: 600;
+      }
+      .collection-item .meta {
+        color: var(--text-3);
+        margin-left: 8px;
+        font-size: 10px;
+      }
       .collection-item .del-btn {
-        flex: none; padding: 4px 10px;
-        font-family: var(--font); font-size: 10px; font-weight: 500;
-        border-radius: 5px; background: transparent;
-        border: 1px solid var(--border); color: var(--text-3); cursor: pointer;
+        flex: none;
+        padding: 4px 10px;
+        font-family: var(--font);
+        font-size: 10px;
+        font-weight: 500;
+        border-radius: 5px;
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-3);
+        cursor: pointer;
         transition: all 0.15s;
       }
-      .collection-item .del-btn:hover { color: var(--danger); border-color: #fcc; background: var(--danger-hover); }
-      .empty-msg { color: var(--text-3); font-size: 11px; padding: 24px 0; text-align: center; }
+      .collection-item .del-btn:hover {
+        color: var(--danger);
+        border-color: #fcc;
+        background: var(--danger-hover);
+      }
+      .empty-msg {
+        color: var(--text-3);
+        font-size: 11px;
+        padding: 24px 0;
+        text-align: center;
+      }
 
       /* ---- Component grid ---- */
       .component-btn {
-        display: flex; align-items: center; gap: 10px;
-        padding: 12px; border: 1px solid var(--border);
-        border-radius: var(--radius); background: var(--surface);
-        cursor: pointer; font-family: var(--font); font-size: 12px;
-        font-weight: 600; text-align: left; transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        cursor: pointer;
+        font-family: var(--font);
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+        transition: all 0.15s ease;
         margin-bottom: 10px;
       }
-      .component-btn:hover { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 2px 8px rgba(91,106,240,0.1); transform: translateY(-1px); }
-      .component-icon {
-        width: 32px; height: 32px; border-radius: var(--radius-sm);
-        background: linear-gradient(135deg, var(--accent), var(--brand-dark));
-        color: #fff; font-size: 13px; font-weight: 700;
-        display: flex; align-items: center; justify-content: center; flex: none;
+      .component-btn:hover {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        box-shadow: 0 2px 8px rgba(91, 106, 240, 0.1);
+        transform: translateY(-1px);
       }
-      .component-meta { margin-left: auto; font-size: 10px; color: var(--text-3); font-weight: 400; font-family: var(--mono); }
+      .component-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, var(--accent), var(--brand-dark));
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+      .component-meta {
+        margin-left: auto;
+        font-size: 10px;
+        color: var(--text-3);
+        font-weight: 400;
+        font-family: var(--mono);
+      }
 
-      .hint { font-size: 10.5px; color: var(--text-3); line-height: 1.6; }
-      .divider { height: 1px; background: var(--border); margin: 14px 0; }
-      .manage-actions { display: flex; gap: 8px; }
+      .hint {
+        font-size: 10.5px;
+        color: var(--text-3);
+        line-height: 1.6;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 0;
+      }
+      .manage-actions {
+        display: flex;
+        gap: 8px;
+      }
 
       /* ---- Help ---- */
       .help-card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 10px;
       }
-      .help-card strong { color: var(--accent); font-size: 12px; display: block; margin-bottom: 4px; }
-      .help-card p { font-size: 11.5px; color: var(--text-2); line-height: 1.6; margin: 0; }
-      .help-card code { font-family: var(--mono); font-size: 10px; background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+      .help-card strong {
+        color: var(--accent);
+        font-size: 12px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .help-card p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        line-height: 1.6;
+        margin: 0;
+      }
+      .help-card code {
+        font-family: var(--mono);
+        font-size: 10px;
+        background: var(--bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
       .help-note {
-        padding: 12px; border-radius: var(--radius-sm);
-        font-size: 11px; line-height: 1.6; color: var(--text-2);
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        font-size: 11px;
+        line-height: 1.6;
+        color: var(--text-2);
         margin-top: 12px;
       }
-      .help-note.info { background: var(--info-bg); }
-      .help-note.surface { background: var(--surface); border: 1px solid var(--border); }
-      .help-note strong { display: block; margin-bottom: 3px; color: var(--text-1); }
+      .help-note.info {
+        background: var(--info-bg);
+      }
+      .help-note.surface {
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+      .help-note strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--text-1);
+      }
     </style>
   </head>
   <body>
     <div class="header">
       <div class="header-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
       </div>
       <div class="header-text">
         <h1>System Design</h1>
@@ -282,18 +558,23 @@
 
       <div class="field-group">
         <label class="field-label">Token JSON</label>
-        <textarea id="json" placeholder="Paste tokens.json content, or use Import button below..."></textarea>
+        <textarea
+          id="json"
+          placeholder="Paste tokens.json content, or use Import button below..."></textarea>
       </div>
 
       <div class="btn-row">
-        <button class="btn-action green" id="quickImportBtn">Import tokens.json</button>
+        <button class="btn-action green" id="quickImportBtn">
+          Import tokens.json
+        </button>
       </div>
 
       <div class="divider"></div>
 
       <div class="btn-row">
         <button class="btn-action dark" id="stylesBtn" disabled>
-          <span class="dot dot-t"></span><span class="dot dot-c"></span><span class="dot dot-e"></span>
+          <span class="dot dot-t"></span><span class="dot dot-c"></span
+          ><span class="dot dot-e"></span>
           Register Styles
         </button>
       </div>
@@ -301,36 +582,95 @@
 
     <!-- Generate -->
     <div class="tab-panel" id="panel-generate">
-      <div style="background:var(--accent-soft);border-radius:var(--radius);padding:12px;margin-bottom:14px;">
-        <strong style="font-size:11px;color:var(--accent);display:block;margin-bottom:4px;">Link Storybook</strong>
-        <p style="font-size:11px;color:var(--text-2);line-height:1.6;margin-bottom:10px;">Add clickable Storybook links to captured frames (--docs). No token import needed.</p>
-        <div class="field-group" style="margin-bottom:8px;">
+      <div
+        style="
+          background: var(--accent-soft);
+          border-radius: var(--radius);
+          padding: 12px;
+          margin-bottom: 14px;
+        ">
+        <strong
+          style="
+            font-size: 11px;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 4px;
+          "
+          >Link Storybook</strong
+        >
+        <p
+          style="
+            font-size: 11px;
+            color: var(--text-2);
+            line-height: 1.6;
+            margin-bottom: 10px;
+          ">
+          Add clickable Storybook links to captured frames (--docs). No token
+          import needed.
+        </p>
+        <div class="field-group" style="margin-bottom: 8px">
           <label class="field-label">Storybook Base URL</label>
-          <input type="text" id="storybookUrl" value="" placeholder="https://your-storybook-url.com" />
+          <input
+            type="text"
+            id="storybookUrl"
+            value=""
+            placeholder="https://your-storybook-url.com" />
         </div>
-        <div class="btn-row" style="margin-bottom:0;">
-          <button class="btn-action brand" id="linkStorybookBtn" style="flex:3;">Link Storybook to Frames</button>
-          <button class="btn btn-ghost" id="clearLinksBtn" style="flex:1;font-size:11px;">Clear</button>
+        <div class="btn-row" style="margin-bottom: 0">
+          <button
+            class="btn-action brand"
+            id="linkStorybookBtn"
+            style="flex: 3">
+            Link Storybook to Frames
+          </button>
+          <button
+            class="btn btn-ghost"
+            id="clearLinksBtn"
+            style="flex: 1; font-size: 11px">
+            Clear
+          </button>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <div style="margin-bottom:8px;">
-        <strong style="font-size:11px;color:var(--text-2);display:block;margin-bottom:4px;">ComponentSet Generation</strong>
-        <p style="font-size:10.5px;color:var(--text-3);line-height:1.6;margin-bottom:10px;">Generate Figma ComponentSets from Storybook controls (variant/color/size). Import tokens.json first. Color Variables are auto-bound.</p>
+      <div style="margin-bottom: 8px">
+        <strong
+          style="
+            font-size: 11px;
+            color: var(--text-2);
+            display: block;
+            margin-bottom: 4px;
+          "
+          >ComponentSet Generation</strong
+        >
+        <p
+          style="
+            font-size: 10.5px;
+            color: var(--text-3);
+            line-height: 1.6;
+            margin-bottom: 10px;
+          ">
+          Generate Figma ComponentSets from Storybook controls
+          (variant/color/size). Import tokens.json first. Color Variables are
+          auto-bound.
+        </p>
       </div>
 
       <div class="component-btn" data-component="button">
         <span class="component-icon">B</span>
         <div>
-          <span style="display:block;">Button</span>
-          <span style="font-size:10px;color:var(--text-3);font-weight:400;">contained/outlined/text x 6 colors x 3 sizes</span>
+          <span style="display: block">Button</span>
+          <span style="font-size: 10px; color: var(--text-3); font-weight: 400"
+            >contained/outlined/text x 6 colors x 3 sizes</span
+          >
         </div>
         <span class="component-meta">54 variants</span>
       </div>
 
-      <p class="hint" style="margin-top:6px;">More components (Alert, Chip, TextField, etc.) coming soon.</p>
+      <p class="hint" style="margin-top: 6px">
+        More components (Alert, Chip, TextField, etc.) coming soon.
+      </p>
     </div>
 
     <!-- Manage -->
@@ -340,7 +680,9 @@
         <div class="empty-msg">Loading...</div>
       </div>
       <div class="manage-actions">
-        <button class="btn-danger-outline" id="clearComponentSetsBtn">Delete ComponentSets</button>
+        <button class="btn-danger-outline" id="clearComponentSetsBtn">
+          Delete ComponentSets
+        </button>
         <button class="btn-danger-outline" id="clearAllBtn">Delete All</button>
         <button class="btn btn-ghost" id="dedupeBtn">Remove Duplicates</button>
       </div>
@@ -350,19 +692,31 @@
     <div class="tab-panel" id="panel-help">
       <div class="help-card">
         <strong>Step 1: Link Storybook</strong>
-        <p>Generate > <strong>Link Storybook to Frames</strong><br>Add clickable Storybook links to captured frames. No token import needed.</p>
+        <p>
+          Generate > <strong>Link Storybook to Frames</strong><br />Add
+          clickable Storybook links to captured frames. No token import needed.
+        </p>
       </div>
       <div class="help-card">
         <strong>Step 2: Import Variables</strong>
-        <p>Import > <strong>Import tokens.json</strong><br>Select your tokens.json file to create Figma Variables.</p>
+        <p>
+          Import > <strong>Import tokens.json</strong><br />Select your
+          tokens.json file to create Figma Variables.
+        </p>
       </div>
       <div class="help-card">
         <strong>Step 3: Generate Components</strong>
-        <p>Generate > <strong>Button</strong> (or other components)<br>Auto-generate ComponentSets with variant support.</p>
+        <p>
+          Generate > <strong>Button</strong> (or other components)<br />Auto-generate
+          ComponentSets with variant support.
+        </p>
       </div>
       <div class="help-card">
         <strong>Step 4: Register Styles</strong>
-        <p>Import > <strong>Register Styles</strong><br>Create Text / Color / Effect styles from tokens.</p>
+        <p>
+          Import > <strong>Register Styles</strong><br />Create Text / Color /
+          Effect styles from tokens.
+        </p>
       </div>
       <div class="help-note info">
         <strong>Storybook Base URL</strong>
@@ -370,7 +724,8 @@
       </div>
       <div class="help-note surface">
         <strong>Generate tokens.json</strong>
-        <code>pnpm export-tokens</code> or <code>npx system-design-export --from mui</code>
+        <code>pnpm export-tokens</code> or
+        <code>npx system-design-export --from mui</code>
       </div>
     </div>
 
@@ -390,11 +745,18 @@
       // Tabs
       document.querySelectorAll('.tab').forEach(function (tab) {
         tab.addEventListener('click', function () {
-          document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active') })
-          document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active') })
+          document.querySelectorAll('.tab').forEach(function (t) {
+            t.classList.remove('active')
+          })
+          document.querySelectorAll('.tab-panel').forEach(function (p) {
+            p.classList.remove('active')
+          })
           tab.classList.add('active')
-          document.getElementById('panel-' + tab.dataset.tab).classList.add('active')
-          if (tab.dataset.tab === 'manage') postMsg({ type: 'list-collections' })
+          document
+            .getElementById('panel-' + tab.dataset.tab)
+            .classList.add('active')
+          if (tab.dataset.tab === 'manage')
+            postMsg({ type: 'list-collections' })
         })
       })
 
@@ -408,68 +770,98 @@
           var tokens = JSON.parse(textarea.value)
           setStatus('info', 'Registering styles...')
           postMsg({ type: 'register-styles', tokens: tokens })
-        } catch (err) { setStatus('error', 'JSON parse error: ' + err.message) }
+        } catch (err) {
+          setStatus('error', 'JSON parse error: ' + err.message)
+        }
       })
 
-      document.getElementById('quickImportBtn').addEventListener('click', function () {
-        var btn = this
-        var input = document.createElement('input')
-        input.type = 'file'
-        input.accept = '.json'
-        input.onchange = function (e) {
-          var file = e.target.files[0]
-          if (!file) return
-          var reader = new FileReader()
-          reader.onload = function (ev) {
-            try {
-              var tokens = JSON.parse(ev.target.result)
-              setStatus('info', 'Importing ' + file.name + '...')
-              btn.disabled = true
-              textarea.value = ev.target.result
-              stylesBtn.disabled = false
-              postMsg({ type: 'import-tokens', tokens: tokens, scope: scopeEl.value })
-            } catch (err) { setStatus('error', 'JSON parse error: ' + err.message) }
+      document
+        .getElementById('quickImportBtn')
+        .addEventListener('click', function () {
+          var btn = this
+          var input = document.createElement('input')
+          input.type = 'file'
+          input.accept = '.json'
+          input.onchange = function (e) {
+            var file = e.target.files[0]
+            if (!file) return
+            var reader = new FileReader()
+            reader.onload = function (ev) {
+              try {
+                var tokens = JSON.parse(ev.target.result)
+                setStatus('info', 'Importing ' + file.name + '...')
+                btn.disabled = true
+                textarea.value = ev.target.result
+                stylesBtn.disabled = false
+                postMsg({
+                  type: 'import-tokens',
+                  tokens: tokens,
+                  scope: scopeEl.value,
+                })
+              } catch (err) {
+                setStatus('error', 'JSON parse error: ' + err.message)
+              }
+            }
+            reader.readAsText(file)
           }
-          reader.readAsText(file)
-        }
-        input.click()
-      })
+          input.click()
+        })
 
       // Manage
-      document.getElementById('clearComponentSetsBtn').addEventListener('click', function () {
-        if (confirm('Delete all generated ComponentSets? (Captured frames and Variables will be kept)')) {
-          setStatus('info', 'Deleting ComponentSets...')
-          postMsg({ type: 'clear-component-sets' })
-        }
-      })
+      document
+        .getElementById('clearComponentSetsBtn')
+        .addEventListener('click', function () {
+          if (
+            confirm(
+              'Delete all generated ComponentSets? (Captured frames and Variables will be kept)'
+            )
+          ) {
+            setStatus('info', 'Deleting ComponentSets...')
+            postMsg({ type: 'clear-component-sets' })
+          }
+        })
 
-      document.getElementById('clearAllBtn').addEventListener('click', function () {
-        if (confirm('Delete all collections and variables?')) {
-          setStatus('info', 'Deleting...')
-          postMsg({ type: 'clear-all' })
-        }
-      })
+      document
+        .getElementById('clearAllBtn')
+        .addEventListener('click', function () {
+          if (confirm('Delete all collections and variables?')) {
+            setStatus('info', 'Deleting...')
+            postMsg({ type: 'clear-all' })
+          }
+        })
 
-      document.getElementById('dedupeBtn').addEventListener('click', function () {
-        setStatus('info', 'Checking duplicates...')
-        postMsg({ type: 'remove-duplicates' })
-      })
+      document
+        .getElementById('dedupeBtn')
+        .addEventListener('click', function () {
+          setStatus('info', 'Checking duplicates...')
+          postMsg({ type: 'remove-duplicates' })
+        })
 
       // Generate
-      document.getElementById('linkStorybookBtn').addEventListener('click', function () {
-        var sbUrl = document.getElementById('storybookUrl').value.trim().replace(/\/$/, '')
-        if (!sbUrl) { setStatus('error', 'Please enter Storybook Base URL'); return }
-        setStatus('info', 'Linking Storybook URLs to frames...')
-        this.disabled = true
-        postMsg({ type: 'link-storybook', storybookUrl: sbUrl })
-      })
+      document
+        .getElementById('linkStorybookBtn')
+        .addEventListener('click', function () {
+          var sbUrl = document
+            .getElementById('storybookUrl')
+            .value.trim()
+            .replace(/\/$/, '')
+          if (!sbUrl) {
+            setStatus('error', 'Please enter Storybook Base URL')
+            return
+          }
+          setStatus('info', 'Linking Storybook URLs to frames...')
+          this.disabled = true
+          postMsg({ type: 'link-storybook', storybookUrl: sbUrl })
+        })
 
-      document.getElementById('clearLinksBtn').addEventListener('click', function () {
-        if (confirm('Remove all Storybook links from frames?')) {
-          setStatus('info', 'Clearing links...')
-          postMsg({ type: 'clear-storybook-links' })
-        }
-      })
+      document
+        .getElementById('clearLinksBtn')
+        .addEventListener('click', function () {
+          if (confirm('Remove all Storybook links from frames?')) {
+            setStatus('info', 'Clearing links...')
+            postMsg({ type: 'clear-storybook-links' })
+          }
+        })
 
       document.querySelectorAll('.component-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -480,7 +872,9 @@
       })
 
       // Helpers
-      function postMsg(msg) { parent.postMessage({ pluginMessage: msg }, '*') }
+      function postMsg(msg) {
+        parent.postMessage({ pluginMessage: msg }, '*')
+      }
 
       function setStatus(type, message) {
         statusEl.className = 'status ' + type
@@ -490,12 +884,25 @@
 
       function renderCollections(collections) {
         if (!collections || collections.length === 0) {
-          collectionListEl.innerHTML = '<div class="empty-msg">No collections found</div>'
+          collectionListEl.innerHTML =
+            '<div class="empty-msg">No collections found</div>'
           return
         }
-        collectionListEl.innerHTML = collections.map(function (c) {
-          return '<div class="collection-item"><span><span class="name">' + escapeHtml(c.name) + '</span><span class="meta">' + c.variableCount + ' vars' + (c.modes.length > 1 ? ' / ' + c.modes.join(', ') : '') + '</span></span><button class="del-btn" data-name="' + escapeAttr(c.name) + '">Delete</button></div>'
-        }).join('')
+        collectionListEl.innerHTML = collections
+          .map(function (c) {
+            return (
+              '<div class="collection-item"><span><span class="name">' +
+              escapeHtml(c.name) +
+              '</span><span class="meta">' +
+              c.variableCount +
+              ' vars' +
+              (c.modes.length > 1 ? ' / ' + c.modes.join(', ') : '') +
+              '</span></span><button class="del-btn" data-name="' +
+              escapeAttr(c.name) +
+              '">Delete</button></div>'
+            )
+          })
+          .join('')
         collectionListEl.querySelectorAll('.del-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             var name = btn.getAttribute('data-name')
@@ -507,8 +914,14 @@
         })
       }
 
-      function escapeHtml(str) { var d = document.createElement('div'); d.textContent = str; return d.innerHTML }
-      function escapeAttr(str) { return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;') }
+      function escapeHtml(str) {
+        var d = document.createElement('div')
+        d.textContent = str
+        return d.innerHTML
+      }
+      function escapeAttr(str) {
+        return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+      }
 
       // Messages
       window.onmessage = function (event) {
@@ -520,8 +933,12 @@
             if (msg.stats) statsEl.textContent = msg.stats
             document.getElementById('quickImportBtn').disabled = false
             break
-          case 'import-progress': setStatus('info', msg.message); break
-          case 'collections-list': renderCollections(msg.collections); break
+          case 'import-progress':
+            setStatus('info', msg.message)
+            break
+          case 'collections-list':
+            renderCollections(msg.collections)
+            break
           case 'operation-result':
             setStatus(msg.success ? 'success' : 'error', msg.message)
             var linkBtn = document.getElementById('linkStorybookBtn')
