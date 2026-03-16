@@ -1,21 +1,39 @@
 import { create } from '@storybook/theming'
 import { addons } from 'storybook/manager-api'
 
-// TOP ページへの戻りリンク（ローカル/本番共通）
-const topUrl =
+// TOP ページへの戻りリンク
+// Storybook の manager は Vite の import.meta.env を使えないため window で判定
+const isDev =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1')
-    ? `${window.location.protocol}//${window.location.hostname}:5173`
-    : '/'
+
+// ローカル: hostname を動的取得（localhost 固定しない）。ポートは localStorage から取得
+const getTopUrl = (): string => {
+  if (!isDev) return '/'
+  const hostname =
+    typeof window !== 'undefined' ? window.location.hostname : 'localhost'
+  const protocol =
+    typeof window !== 'undefined' ? window.location.protocol : 'http:'
+  try {
+    const saved = localStorage.getItem('kaze-dev-ports')
+    if (saved) {
+      const ports = JSON.parse(saved)
+      if (ports.top) return `${protocol}//${hostname}:${ports.top}`
+    }
+  } catch {
+    // ignore
+  }
+  return `${protocol}//${hostname}:5173`
+}
 
 const kazeTheme = create({
   base: 'light',
 
-  // ブランド — クリックで TOP に戻る
+  // ブランド — クリックで TOP に戻る（別タブ）
   brandTitle: '風 Kaze Design',
-  brandUrl: topUrl,
-  brandTarget: '_self',
+  brandUrl: getTopUrl(),
+  brandTarget: '_blank',
 
   // カラー
   colorPrimary: '#0EADB8',
