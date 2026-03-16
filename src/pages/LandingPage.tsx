@@ -508,7 +508,7 @@ export const LandingPage = () => {
                 <Box component='span' sx={{ color: 'primary.main' }}>
                   ひとつの基盤
                 </Box>
-                で。
+                で
               </Typography>
             </motion.div>
 
@@ -632,7 +632,7 @@ export const LandingPage = () => {
             }}>
             同じコンポーネントで
             <br />
-            つくっています。
+            つくっています
           </Typography>
         </motion.div>
 
@@ -685,7 +685,7 @@ export const LandingPage = () => {
                   letterSpacing: '-0.03em',
                   mb: 2,
                 }}>
-                何ができるか。
+                何ができるか
               </Typography>
               <Typography
                 sx={{
@@ -738,7 +738,7 @@ export const LandingPage = () => {
               letterSpacing: '-0.03em',
               mb: 4,
             }}>
-            使っている技術。
+            使っている技術
           </Typography>
         </motion.div>
 
@@ -794,6 +794,255 @@ export const LandingPage = () => {
               </Box>
             </motion.div>
           ))}
+        </Box>
+      </Box>
+
+      {/* ===== 使い方 ===== */}
+      <Box
+        sx={{
+          px: { xs: 3, md: 8, lg: 12 },
+          py: { xs: 6, md: 10 },
+          borderTop: '1px solid',
+          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+        }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}>
+          <Typography
+            sx={{
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: 'primary.main',
+              mb: 2,
+            }}>
+            Getting Started
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: { xs: '1.4rem', md: '1.8rem' },
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              mb: 4,
+            }}>
+            はじめ方
+          </Typography>
+        </motion.div>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+            gap: 3,
+          }}>
+          {[
+            {
+              step: '01',
+              title: 'Storybook を見る',
+              desc: 'コンポーネントの見た目と使い方を Storybook で確認。AI チャットで質問もできます。',
+              link: APP_LINKS.storybook(),
+              linkLabel: 'Storybook を開く',
+            },
+            {
+              step: '02',
+              title: 'プロダクトを触る',
+              desc: 'SaaS Dashboard や KazeEats で、同じコンポーネントが実際にどう使われているか体験。',
+              link: APP_LINKS.saas(),
+              linkLabel: 'SaaS Demo を開く',
+            },
+            {
+              step: '03',
+              title: 'コードを書く',
+              desc: 'pnpm install して開発開始。CLAUDE.md を読めば AI エージェントも DS 準拠コードを生成できます。',
+              link: APP_LINKS.github(),
+              linkLabel: 'GitHub',
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={item.step}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}>
+              <Box
+                sx={{
+                  p: { xs: 3, md: 4 },
+                  borderRadius: 3,
+                  border: '1px solid',
+                  borderColor: isDark
+                    ? 'rgba(255,255,255,0.06)'
+                    : 'rgba(0,0,0,0.06)',
+                  bgcolor: isDark
+                    ? 'rgba(255,255,255,0.02)'
+                    : 'rgba(255,255,255,0.5)',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: 'primary.main',
+                    fontFamily: 'monospace',
+                    mb: 1.5,
+                  }}>
+                  {item.step}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: '1rem', fontWeight: 700, mb: 1 }}>
+                  {item.title}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.85rem',
+                    color: 'text.secondary',
+                    lineHeight: 1.8,
+                    mb: 2,
+                    flex: 1,
+                  }}>
+                  {item.desc}
+                </Typography>
+                <Box
+                  component='a'
+                  href={item.link}
+                  {...(item.link.startsWith('http')
+                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                    : {})}
+                  sx={{
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' },
+                  }}>
+                  {item.linkLabel} →
+                </Box>
+              </Box>
+            </motion.div>
+          ))}
+        </Box>
+      </Box>
+
+      {/* ===== AI Chat 紹介 ===== */}
+      <Box
+        sx={{
+          px: { xs: 3, md: 8, lg: 12 },
+          py: { xs: 6, md: 10 },
+          borderTop: '1px solid',
+          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+        }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+            gap: { xs: 4, md: 8 },
+            alignItems: 'center',
+          }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}>
+            <Typography
+              sx={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'primary.main',
+                mb: 2,
+              }}>
+              Storybook AI Chat
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '1.4rem', md: '1.8rem' },
+                fontWeight: 800,
+                letterSpacing: '-0.03em',
+                mb: 2,
+              }}>
+              ページごとに聞ける AI
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '0.9rem',
+                color: 'text.secondary',
+                lineHeight: 1.8,
+                mb: 3,
+              }}>
+              Storybook の各ページに AI チャットを搭載。
+              今見ているコンポーネントの使い方、設計意図、コード例をその場で質問できます。
+              API キーがなくてもオフライン FAQ で基本的な質問に回答します。
+            </Typography>
+            <Box
+              component='a'
+              href={APP_LINKS.storybook()}
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1,
+                px: 3,
+                py: 1.25,
+                borderRadius: 2,
+                bgcolor: 'primary.main',
+                color: '#fff',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  boxShadow: '0 4px 16px rgba(14,173,184,0.25)',
+                },
+              }}>
+              Storybook で試す
+            </Box>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}>
+            <Box
+              sx={{
+                p: 3,
+                borderRadius: 3,
+                border: '1px solid',
+                borderColor: isDark
+                  ? 'rgba(255,255,255,0.06)'
+                  : 'rgba(0,0,0,0.06)',
+                bgcolor: isDark
+                  ? 'rgba(255,255,255,0.02)'
+                  : 'rgba(255,255,255,0.5)',
+              }}>
+              {[
+                { q: 'このコンポーネントは何？', a: 'ページ文脈から自動で回答' },
+                { q: 'Figma でいうとどう作る？', a: 'デザイナー向けに翻訳して説明' },
+                { q: 'コード例を見せて', a: 'tsx のサンプルコードを生成' },
+                { q: 'ダークモードの色は？', a: 'テーマトークンから即座に回答' },
+              ].map((item) => (
+                <Box key={item.q} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: 'primary.main',
+                      mb: 0.5,
+                    }}>
+                    Q: {item.q}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      color: 'text.secondary',
+                    }}>
+                    → {item.a}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </motion.div>
         </Box>
       </Box>
 
