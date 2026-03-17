@@ -285,9 +285,27 @@ export interface ModelOption {
   features: string[]
   usecases: string[]
   tier: 'economy' | 'standard' | 'premium'
+  requiresKey?: boolean
 }
 
 export const OPENAI_MODELS: ModelOption[] = [
+  {
+    value: 'gpt-5.4',
+    label: 'gpt-5.4',
+    description: 'フル性能モデル。最高精度の推論・分析が必要な用途に',
+    features: [
+      '最上位の推論・分析能力',
+      '最大コンテキスト長',
+      '最高品質のコード生成',
+    ],
+    usecases: [
+      '大規模リファクタリング・設計',
+      '高度なバグ原因分析',
+      'システム全体のアーキテクチャレビュー',
+    ],
+    tier: 'premium',
+    requiresKey: true,
+  },
   {
     value: 'gpt-5.4-mini',
     label: 'gpt-5.4-mini (推奨)',

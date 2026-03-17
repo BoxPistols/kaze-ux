@@ -18,6 +18,7 @@ import {
   Slide,
   Link,
   Chip,
+  Tooltip,
 } from '@mui/material'
 import {
   X,
@@ -37,6 +38,7 @@ import {
   Download,
   Keyboard,
   Info,
+  Lock,
 } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -616,7 +618,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             theme.palette.mode === 'dark'
               ? 'rgba(14,173,184,0.55)'
               : 'primary.main',
-          color: 'primary.contrastText',
+          color: '#ffffff',
           backdropFilter: 'blur(12px)',
         }}>
         {/* タイトル行 */}
@@ -765,7 +767,9 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   ? 'rgba(255,255,255,0.2)'
                   : 'primary.light',
               color:
-                theme.palette.mode === 'dark' ? 'grey.300' : 'primary.main',
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255,255,255,0.9)'
+                  : 'primary.main',
               '& .MuiChip-icon': {
                 color: 'inherit',
               },
@@ -1004,11 +1008,14 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 {(config.model.includes('gemini')
                   ? GEMINI_MODELS
                   : OPENAI_MODELS
-                ).map((opt) => (
+                ).map((opt) => {
+                  const isLocked = isUsingDefaultKey && !!opt.requiresKey
+                  return (
                   <MenuItem
                     key={opt.value}
                     value={opt.value}
-                    sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                    disabled={isLocked}
+                    sx={{ py: 1.5, alignItems: 'flex-start', opacity: isLocked ? 0.5 : 1 }}>
                     <Box sx={{ width: '100%' }}>
                       <Box
                         sx={{
@@ -1017,6 +1024,13 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                           gap: 0.75,
                           mb: 0.25,
                         }}>
+                        {isLocked && (
+                          <Tooltip title='自分のAPIキーを設定すると使用できます'>
+                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                              <Lock size={12} />
+                            </span>
+                          </Tooltip>
+                        )}
                         <Typography variant='body2' sx={{ fontWeight: 600 }}>
                           {opt.label}
                         </Typography>
@@ -1072,7 +1086,8 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       </Box>
                     </Box>
                   </MenuItem>
-                ))}
+                  )
+                })}
               </TextField>
             </Box>
 

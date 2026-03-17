@@ -134,7 +134,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
             onClick={(e) => {
               // Story 内のリンククリックで iframe 外に遷移するのを防止
               const target = (e.target as HTMLElement).closest('a')
-              if (target && target.getAttribute('href') && target.getAttribute('href') !== '#') {
+              if (target && target.getAttribute('href')) {
                 e.preventDefault()
               }
             }}>
