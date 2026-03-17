@@ -285,7 +285,8 @@ export interface ModelOption {
   features: string[]
   usecases: string[]
   tier: 'economy' | 'standard' | 'premium'
-  requiresKey?: boolean
+  projectKeyEnabled?: boolean
+  requiresUserKey?: boolean
 }
 
 export const OPENAI_MODELS: ModelOption[] = [
@@ -304,7 +305,7 @@ export const OPENAI_MODELS: ModelOption[] = [
       'システム全体のアーキテクチャレビュー',
     ],
     tier: 'premium',
-    requiresKey: true,
+    requiresUserKey: true,
   },
   {
     value: 'gpt-5.4-mini',
@@ -322,6 +323,7 @@ export const OPENAI_MODELS: ModelOption[] = [
       '複雑なバグの原因分析',
     ],
     tier: 'premium',
+    projectKeyEnabled: true,
   },
   {
     value: 'gpt-5.4-nano',
@@ -339,6 +341,7 @@ export const OPENAI_MODELS: ModelOption[] = [
       'TypeScript型定義の補助',
     ],
     tier: 'standard',
+    projectKeyEnabled: true,
   },
   {
     value: 'gpt-5-mini',
@@ -441,7 +444,7 @@ export const normalizeChatConfig = (value: unknown): ChatSupportConfig => {
   }
   return {
     apiKey:
-      typeof value.apiKey === 'string'
+      typeof value.apiKey === 'string' && value.apiKey
         ? value.apiKey
         : DEFAULT_CHAT_CONFIG.apiKey,
     model:
@@ -462,11 +465,14 @@ export const loadChatConfig = (): ChatSupportConfig => {
   try {
     const config = normalizeChatConfig(JSON.parse(saved))
 
-    // デフォルトAPIキー使用時はモデルもデフォルトに統一
-    // （ユーザーはモデル選択UIからいつでも変更可能）
+    // デフォルトAPIキー使用時、requiresUserKeyなモデルが選択されていたらリセット
     const isDefaultKey = !config.apiKey || config.apiKey === DEFAULT_API_KEY
-    if (isDefaultKey && config.model !== DEFAULT_MODEL) {
-      config.model = DEFAULT_MODEL
+    if (isDefaultKey) {
+      const allModels = [...OPENAI_MODELS, ...GEMINI_MODELS]
+      const selectedModel = allModels.find((m) => m.value === config.model)
+      if (selectedModel?.requiresUserKey) {
+        config.model = DEFAULT_MODEL
+      }
     }
 
     return config
