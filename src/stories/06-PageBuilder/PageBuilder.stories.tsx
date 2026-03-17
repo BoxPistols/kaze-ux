@@ -5,12 +5,12 @@ import { PageBuilder } from '@/components/page-builder/PageBuilder'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /**
- * Storybook 上で動作するビジュアルページ構成ツール。
+ * コンポーネント一覧とコード生成の確認ページ。
  * コンポーネントをクリックで追加し、プロパティを GUI で編集。
  * 生成された JSX コードをそのままコピーできます。
  */
 const meta: Meta = {
-  title: 'Page Builder/Builder',
+  title: 'Tools/Code Playground',
   tags: ['autodocs'],
 }
 export default meta

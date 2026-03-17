@@ -127,17 +127,21 @@ const menuItems: SidebarMenuItem[] = [
     label: 'Kaze Design System',
     icon: <AirIcon />,
     href: (() => {
-      if (!import.meta.env.DEV) return '/'
+      if (typeof window === 'undefined') return '/'
       const h = window.location.hostname
       const p = window.location.protocol
-      try {
-        const saved = localStorage.getItem('kaze-dev-ports')
-        if (saved) {
-          const ports = JSON.parse(saved)
-          if (ports.top) return `${p}//${h}:${ports.top}`
-        }
-      } catch { /* ignore */ }
-      return `${p}//${h}:5173`
+      if (import.meta.env.DEV) {
+        try {
+          const saved = localStorage.getItem('kaze-dev-ports')
+          if (saved) {
+            const ports = JSON.parse(saved)
+            if (ports.top) return `${p}//${h}:${ports.top}`
+          }
+        } catch { /* ignore */ }
+        return `${p}//${h}:5173`
+      }
+      // 本番: origin に戻る（/saas/ → / へ）
+      return window.location.origin + '/'
     })(),
     category: 'SYSTEM',
     description: 'Back to Design System',

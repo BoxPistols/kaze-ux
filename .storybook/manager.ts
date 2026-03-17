@@ -10,7 +10,10 @@ const isDev =
 
 // ローカル: hostname を動的取得（localhost 固定しない）。ポートは localStorage から取得
 const getTopUrl = (): string => {
-  if (!isDev) return '/'
+  if (!isDev) {
+    // 本番: /storybook/ → origin のルートに戻る
+    return typeof window !== 'undefined' ? window.location.origin + '/' : '/'
+  }
   const hostname =
     typeof window !== 'undefined' ? window.location.hostname : 'localhost'
   const protocol =

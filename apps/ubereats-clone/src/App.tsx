@@ -244,9 +244,21 @@ const AppContent = ({
             {/* Kaze Design System */}
             <IconButton
               onClick={() => {
-                const url = import.meta.env.DEV
-                  ? `${window.location.protocol}//${window.location.hostname}:5173`
-                  : '/'
+                let url = window.location.origin + '/'
+                if (import.meta.env.DEV) {
+                  const h = window.location.hostname
+                  const p = window.location.protocol
+                  try {
+                    const saved = localStorage.getItem('kaze-dev-ports')
+                    if (saved) {
+                      const ports = JSON.parse(saved)
+                      if (ports.top) url = `${p}//${h}:${ports.top}`
+                    }
+                  } catch { /* ignore */ }
+                  if (url === window.location.origin + '/') {
+                    url = `${p}//${h}:5173`
+                  }
+                }
                 window.open(url, '_self')
               }}
               tooltip='Kaze Design System'
