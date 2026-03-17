@@ -7,7 +7,12 @@ import { Box, Typography, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
-import { APP_LINKS, DEFAULT_PORTS, getDevPorts, saveDevPorts } from '@/utils/appLinks'
+import {
+  APP_LINKS,
+  DEFAULT_PORTS,
+  getDevPorts,
+  saveDevPorts,
+} from '@/utils/appLinks'
 import type { DevPorts } from '@/utils/appLinks'
 
 // ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
@@ -377,13 +382,31 @@ const DevPortSettings = () => {
         bgcolor: isDark ? 'rgba(255,152,0,0.05)' : 'rgba(255,152,0,0.04)',
       }}>
       <Typography
-        sx={{ fontSize: '0.7rem', fontWeight: 700, color: 'warning.main', mb: 1 }}>
+        sx={{
+          fontSize: '0.7rem',
+          fontWeight: 700,
+          color: 'warning.main',
+          mb: 1,
+        }}>
         DEV — ポート設定（ローカルのみ表示）
       </Typography>
-      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1.5,
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}>
         {(Object.keys(DEFAULT_PORTS) as Array<keyof DevPorts>).map((key) => (
-          <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', minWidth: 60 }}>
+          <Box
+            key={key}
+            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Typography
+              sx={{
+                fontSize: '0.75rem',
+                color: 'text.secondary',
+                minWidth: 60,
+              }}>
               {key}:
             </Typography>
             <input
