@@ -892,7 +892,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
               {/* プロバイダー選択タブ */}
               <Stack direction='row' spacing={1} sx={{ mb: 1.5 }}>
                 {(['openai', 'gemini'] as const).map((provider) => {
-                  const isGemini = config.model.includes('gemini')
+                  const isGemini = (config.model ?? '').includes('gemini')
                   const active =
                     (provider === 'gemini' && isGemini) ||
                     (provider === 'openai' && !isGemini)
@@ -904,10 +904,13 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       variant={active ? 'filled' : 'outlined'}
                       color={active ? 'primary' : 'default'}
                       onClick={() => {
-                        const defaultModel =
+                        const models =
                           provider === 'gemini'
-                            ? GEMINI_MODELS[0].value
-                            : OPENAI_MODELS[0].value
+                            ? GEMINI_MODELS
+                            : OPENAI_MODELS
+                        const defaultModel = (
+                          models.find((m) => !m.requiresUserKey) ?? models[0]
+                        ).value
                         setConfig({ ...config, model: defaultModel })
                         setTestResult(null)
                       }}
@@ -942,7 +945,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   setTestResult(null)
                 }}
                 placeholder={
-                  config.model.includes('gemini') ? 'AIza...' : 'sk-proj-...'
+                  (config.model ?? '').includes('gemini') ? 'AIza...' : 'sk-proj-...'
                 }
                 inputProps={{
                   style:
@@ -1004,7 +1007,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   setConfig({ ...config, model: e.target.value })
                   setTestResult(null)
                 }}>
-                {(config.model.includes('gemini')
+                {((config.model ?? '').includes('gemini')
                   ? GEMINI_MODELS
                   : OPENAI_MODELS
                 ).map((opt) => {
