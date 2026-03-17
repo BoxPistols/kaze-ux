@@ -332,6 +332,19 @@ describe('callAI', () => {
       expect(body.max_tokens).toBeUndefined()
       expect(body.temperature).toBeUndefined()
     })
+
+    it('gpt-5.4はmax_completion_tokens=16000を使用する', async () => {
+      const gpt54Config = { ...baseConfig, model: 'gpt-5.4' }
+      const data = { choices: [{ message: { content: 'ok' } }] }
+      mockFetchSuccess(data)
+
+      await callAI(gpt54Config, mockMessages)
+
+      const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
+      expect(body.max_completion_tokens).toBe(16000)
+      expect(body.max_tokens).toBeUndefined()
+      expect(body.temperature).toBeUndefined()
+    })
   })
 
   describe('認証ヘッダー', () => {

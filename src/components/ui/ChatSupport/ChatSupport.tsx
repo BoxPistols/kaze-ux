@@ -1011,11 +1011,14 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 ).map((opt) => {
                   const isLocked = isUsingDefaultKey && !!opt.requiresKey
                   return (
-                  <MenuItem
+                  <Tooltip
                     key={opt.value}
+                    title={isLocked ? '自分のAPIキーを設定すると使用できます' : ''}
+                    placement='left'>
+                  <MenuItem
                     value={opt.value}
                     disabled={isLocked}
-                    sx={{ py: 1.5, alignItems: 'flex-start', opacity: isLocked ? 0.5 : 1 }}>
+                    sx={{ py: 1.5, alignItems: 'flex-start' }}>
                     <Box sx={{ width: '100%' }}>
                       <Box
                         sx={{
@@ -1025,11 +1028,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                           mb: 0.25,
                         }}>
                         {isLocked && (
-                          <Tooltip title='自分のAPIキーを設定すると使用できます'>
-                            <span style={{ display: 'flex', alignItems: 'center' }}>
-                              <Lock size={12} />
-                            </span>
-                          </Tooltip>
+                          <Lock size={12} />
                         )}
                         <Typography variant='body2' sx={{ fontWeight: 600 }}>
                           {opt.label}
@@ -1086,6 +1085,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       </Box>
                     </Box>
                   </MenuItem>
+                  </Tooltip>
                   )
                 })}
               </TextField>
