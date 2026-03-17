@@ -17,9 +17,10 @@ const logoSvg = `data:image/svg+xml,${encodeURIComponent(
 const kazeTheme = create({
   base: 'light',
 
-  // ブランド
+  // ブランド — クリックで TOP に戻る（本番のみ有効）
   brandTitle: 'Kaze Design',
   brandImage: logoSvg,
+  brandUrl: typeof window !== 'undefined' ? window.location.origin + '/' : '/',
   brandTarget: '_blank',
 
   // カラー
