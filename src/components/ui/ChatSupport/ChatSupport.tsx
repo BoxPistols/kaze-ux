@@ -18,7 +18,6 @@ import {
   Slide,
   Link,
   Chip,
-  Tooltip,
 } from '@mui/material'
 import {
   X,
@@ -1011,13 +1010,11 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 ).map((opt) => {
                   const isLocked = isUsingDefaultKey && !!opt.requiresUserKey
                   return (
-                  <Tooltip
-                    key={opt.value}
-                    title={isLocked ? '自分のAPIキーを設定すると使用できます' : ''}
-                    placement='left'>
                   <MenuItem
+                    key={opt.value}
                     value={opt.value}
                     disabled={isLocked}
+                    title={isLocked ? '自分のAPIキーを設定すると使用できます' : undefined}
                     sx={{ py: 1.5, alignItems: 'flex-start' }}>
                     <Box sx={{ width: '100%' }}>
                       <Box
@@ -1085,7 +1082,6 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       </Box>
                     </Box>
                   </MenuItem>
-                  </Tooltip>
                   )
                 })}
               </TextField>
