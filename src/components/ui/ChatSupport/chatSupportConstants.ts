@@ -311,16 +311,16 @@ export const OPENAI_MODELS: ModelOption[] = [
     value: 'gpt-5.4-mini',
     label: 'gpt-5.4-mini (推奨)',
     description:
-      '最新世代の高精度推論。文脈維持・ガードレール遵守が最も強固',
+      '最新世代の高精度モデル。高度な推論・文脈維持・ガードレール遵守に優れる',
     features: [
-      '最高精度の推論・メタ認知',
-      'システムプロンプト遵守が強固',
-      '意図しない文脈逸脱を防止',
+      '上位モデルに迫る推論力',
+      'システムプロンプトの厳格な遵守',
+      '意図しない文脈での破綻を大幅に低減',
     ],
     usecases: [
-      'デザインシステムの壁打ち・設計レビュー',
       'アーキテクチャ設計・リファクタ提案',
-      '複雑なバグの原因分析',
+      'エビデンスベースのデザイン相談',
+      '求人分析・戦略的インサイト',
     ],
     tier: 'premium',
     projectKeyEnabled: true,
@@ -328,17 +328,16 @@ export const OPENAI_MODELS: ModelOption[] = [
   {
     value: 'gpt-5.4-nano',
     label: 'gpt-5.4-nano (標準)',
-    description:
-      '5.4世代の高速モデル。コスト最小で日常的なQAに最適',
+    description: '最新世代のコスト最適モデル。日常的なQAに十分な品質',
     features: [
       'GPT-5.4系の推論能力',
-      '高速レスポンス・低コスト',
-      'nano価格帯で高品質',
+      '高速レスポンス',
+      '月間1000回でも約140円の低コスト',
     ],
     usecases: [
-      '用語・概念の簡単な質問',
+      'コンポーネントの使い方・概念の質問',
       'コードスニペットの確認',
-      'TypeScript型定義の補助',
+      'デザイントークンの参照',
     ],
     tier: 'standard',
     projectKeyEnabled: true,
