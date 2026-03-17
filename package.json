@@ -46,7 +46,7 @@
     "lint": "eslint --fix ./src",
     "fix": "pnpm run lint && pnpm run format",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
     "build-all": "pnpm run build-storybook",
     "build:gh-pages": "vite build --mode gh-pages",

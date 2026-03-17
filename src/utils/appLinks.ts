@@ -20,7 +20,7 @@ interface DevPorts {
 
 const DEFAULT_PORTS: DevPorts = {
   top: 5173,
-  storybook: 6006,
+  storybook: 6007,
   saas: 3001,
   ubereats: 3002,
 }

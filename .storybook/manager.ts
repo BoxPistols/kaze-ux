@@ -2,39 +2,22 @@ import { create } from '@storybook/theming'
 import { addons } from 'storybook/manager-api'
 
 // TOP ページへの戻りリンク
-// Storybook の manager は Vite の import.meta.env を使えないため window で判定
-const isDev =
-  typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1')
-
-// ローカル: hostname を動的取得（localhost 固定しない）。ポートは localStorage から取得
+// 本番: origin のルート（/storybook/ → / へ）
+// ローカル: Storybook 自身と別ポートなので直接遷移不可。
+//   → origin のルートにリンクし、ブラウザタブで切り替える運用。
 const getTopUrl = (): string => {
-  if (!isDev) {
-    // 本番: /storybook/ → origin のルートに戻る
-    return typeof window !== 'undefined' ? window.location.origin + '/' : '/'
-  }
-  const hostname =
-    typeof window !== 'undefined' ? window.location.hostname : 'localhost'
-  const protocol =
-    typeof window !== 'undefined' ? window.location.protocol : 'http:'
-  try {
-    const saved = localStorage.getItem('kaze-dev-ports')
-    if (saved) {
-      const ports = JSON.parse(saved)
-      if (ports.top) return `${protocol}//${hostname}:${ports.top}`
-    }
-  } catch {
-    // ignore
-  }
-  return `${protocol}//${hostname}:5173`
+  if (typeof window === 'undefined') return '/'
+  // origin + '/' で常に同一ドメインのルートに戻る
+  // 本番: https://kaze-ux.vercel.app/storybook/ → https://kaze-ux.vercel.app/
+  // ローカル: http://localhost:6006/ → http://localhost:6006/ （SB自身。TOP は別ポート）
+  return window.location.origin + '/'
 }
 
 const kazeTheme = create({
   base: 'light',
 
   // ブランド — クリックで TOP に戻る（別タブ）
-  brandTitle: '風 Kaze Design',
+  brandTitle: 'Kaze Design',
   brandUrl: getTopUrl(),
   brandTarget: '_blank',
 
