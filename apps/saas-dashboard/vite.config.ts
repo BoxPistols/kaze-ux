@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: isGitHubPages ? '/kaze-ux/saas/' : '/',
+    base: isGitHubPages ? '/kaze-ux/saas/' : (process.env.VITE_BASE_PATH || '/'),
     build: {
       outDir: isGitHubPages ? '../../gh-pages/saas' : 'dist',
       emptyOutDir: true,

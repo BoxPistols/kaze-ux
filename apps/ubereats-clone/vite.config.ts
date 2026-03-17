@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: isGitHubPages ? '/kaze-ux/ubereats/' : '/',
+    base: isGitHubPages ? '/kaze-ux/ubereats/' : (process.env.VITE_BASE_PATH || '/'),
     build: {
       outDir: isGitHubPages ? '../../gh-pages/ubereats' : 'dist',
       emptyOutDir: true,
