@@ -276,7 +276,7 @@ export const CONFIG_STORAGE_KEY = 'storybook_chat_config'
 
 // デフォルトAPIキー（ビルド時に埋め込み）
 export const DEFAULT_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
-export const DEFAULT_MODEL = 'gpt-4.1-nano'
+export const DEFAULT_MODEL = 'gpt-5.4-nano'
 
 export interface ModelOption {
   value: string
@@ -289,8 +289,41 @@ export interface ModelOption {
 
 export const OPENAI_MODELS: ModelOption[] = [
   {
+    value: 'gpt-5.4-mini',
+    label: 'gpt-5.4-mini (推奨)',
+    description:
+      '最新世代の高精度モデル。高度な推論・文脈維持・ガードレール遵守に優れる',
+    features: [
+      '上位モデルに迫る推論力',
+      'システムプロンプトの厳格な遵守',
+      '意図しない文脈での破綻を大幅に低減',
+    ],
+    usecases: [
+      'アーキテクチャ設計・リファクタ提案',
+      'エビデンスベースのデザイン相談',
+      '求人分析・戦略的インサイト',
+    ],
+    tier: 'premium',
+  },
+  {
+    value: 'gpt-5.4-nano',
+    label: 'gpt-5.4-nano (標準)',
+    description: '最新世代のコスト最適モデル。日常的なQAに十分な品質',
+    features: [
+      'GPT-5.4系の推論能力',
+      '高速レスポンス',
+      '月間1000回でも約140円の低コスト',
+    ],
+    usecases: [
+      'コンポーネントの使い方・概念の質問',
+      'コードスニペットの確認',
+      'デザイントークンの参照',
+    ],
+    tier: 'standard',
+  },
+  {
     value: 'gpt-5-mini',
-    label: 'gpt-5-mini (推奨)',
+    label: 'gpt-5-mini',
     description: '高精度な推論と深い文脈理解。複雑なタスクに最適',
     features: [
       '高度な推論・思考連鎖',
@@ -303,6 +336,18 @@ export const OPENAI_MODELS: ModelOption[] = [
       'コンポーネント設計レビュー',
     ],
     tier: 'premium',
+  },
+  {
+    value: 'gpt-5-nano',
+    label: 'gpt-5-nano',
+    description: '次世代の高速モデル。日常的なコード補助に',
+    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
+    usecases: [
+      'テストコードの生成',
+      'TypeScript型定義の補助',
+      'コードレビュー・改善提案',
+    ],
+    tier: 'standard',
   },
   {
     value: 'gpt-4.1-mini',
@@ -331,18 +376,6 @@ export const OPENAI_MODELS: ModelOption[] = [
       'エラーメッセージの解説',
     ],
     tier: 'economy',
-  },
-  {
-    value: 'gpt-5-nano',
-    label: 'gpt-5-nano',
-    description: '次世代の高速モデル。日常的なコード補助に',
-    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
-    usecases: [
-      'テストコードの生成',
-      'TypeScript型定義の補助',
-      'コードレビュー・改善提案',
-    ],
-    tier: 'standard',
   },
 ]
 
