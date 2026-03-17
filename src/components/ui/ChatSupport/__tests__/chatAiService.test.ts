@@ -306,6 +306,32 @@ describe('callAI', () => {
       const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
       expect(body.max_completion_tokens).toBe(50)
     })
+
+    it('gpt-5.4-miniはmax_completion_tokens=16000を使用する', async () => {
+      const gpt54Config = { ...baseConfig, model: 'gpt-5.4-mini' }
+      const data = { choices: [{ message: { content: 'ok' } }] }
+      mockFetchSuccess(data)
+
+      await callAI(gpt54Config, mockMessages)
+
+      const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
+      expect(body.max_completion_tokens).toBe(16000)
+      expect(body.max_tokens).toBeUndefined()
+      expect(body.temperature).toBeUndefined()
+    })
+
+    it('gpt-5.4-nanoはmax_completion_tokens=4000を使用する', async () => {
+      const gpt54NanoConfig = { ...baseConfig, model: 'gpt-5.4-nano' }
+      const data = { choices: [{ message: { content: 'ok' } }] }
+      mockFetchSuccess(data)
+
+      await callAI(gpt54NanoConfig, mockMessages)
+
+      const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
+      expect(body.max_completion_tokens).toBe(4000)
+      expect(body.max_tokens).toBeUndefined()
+      expect(body.temperature).toBeUndefined()
+    })
   })
 
   describe('認証ヘッダー', () => {

@@ -276,7 +276,7 @@ export const CONFIG_STORAGE_KEY = 'storybook_chat_config'
 
 // デフォルトAPIキー（ビルド時に埋め込み）
 export const DEFAULT_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
-export const DEFAULT_MODEL = 'gpt-4.1-nano'
+export const DEFAULT_MODEL = 'gpt-5.4-nano'
 
 export interface ModelOption {
   value: string
@@ -289,8 +289,42 @@ export interface ModelOption {
 
 export const OPENAI_MODELS: ModelOption[] = [
   {
+    value: 'gpt-5.4-mini',
+    label: 'gpt-5.4-mini (推奨)',
+    description:
+      '最新世代の高精度推論。文脈維持・ガードレール遵守が最も強固',
+    features: [
+      '最高精度の推論・メタ認知',
+      'システムプロンプト遵守が強固',
+      '意図しない文脈逸脱を防止',
+    ],
+    usecases: [
+      'デザインシステムの壁打ち・設計レビュー',
+      'アーキテクチャ設計・リファクタ提案',
+      '複雑なバグの原因分析',
+    ],
+    tier: 'premium',
+  },
+  {
+    value: 'gpt-5.4-nano',
+    label: 'gpt-5.4-nano (標準)',
+    description:
+      '5.4世代の高速モデル。コスト最小で日常的なQAに最適',
+    features: [
+      'GPT-5.4系の推論能力',
+      '高速レスポンス・低コスト',
+      'nano価格帯で高品質',
+    ],
+    usecases: [
+      '用語・概念の簡単な質問',
+      'コードスニペットの確認',
+      'TypeScript型定義の補助',
+    ],
+    tier: 'standard',
+  },
+  {
     value: 'gpt-5-mini',
-    label: 'gpt-5-mini (推奨)',
+    label: 'gpt-5-mini',
     description: '高精度な推論と深い文脈理解。複雑なタスクに最適',
     features: [
       '高度な推論・思考連鎖',
@@ -303,6 +337,18 @@ export const OPENAI_MODELS: ModelOption[] = [
       'コンポーネント設計レビュー',
     ],
     tier: 'premium',
+  },
+  {
+    value: 'gpt-5-nano',
+    label: 'gpt-5-nano',
+    description: '次世代の高速モデル。日常的なコード補助に',
+    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
+    usecases: [
+      'テストコードの生成',
+      'TypeScript型定義の補助',
+      'コードレビュー・改善提案',
+    ],
+    tier: 'standard',
   },
   {
     value: 'gpt-4.1-mini',
@@ -322,27 +368,15 @@ export const OPENAI_MODELS: ModelOption[] = [
   },
   {
     value: 'gpt-4.1-nano',
-    label: 'gpt-4.1-nano (高速)',
-    description: '最速応答・最低コスト。簡単な質問に',
-    features: ['応答速度が最も速い', '低コスト', '軽量タスク向け'],
+    label: 'gpt-4.1-nano (レガシー)',
+    description: '旧世代の高速モデル。最低コスト',
+    features: ['応答速度が最も速い', '最低コスト', '軽量タスク向け'],
     usecases: [
       '用語・概念の簡単な質問',
       'コードスニペットの確認',
       'エラーメッセージの解説',
     ],
     tier: 'economy',
-  },
-  {
-    value: 'gpt-5-nano',
-    label: 'gpt-5-nano',
-    description: '次世代の高速モデル。日常的なコード補助に',
-    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
-    usecases: [
-      'テストコードの生成',
-      'TypeScript型定義の補助',
-      'コードレビュー・改善提案',
-    ],
-    tier: 'standard',
   },
 ]
 
