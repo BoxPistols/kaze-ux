@@ -285,9 +285,28 @@ export interface ModelOption {
   features: string[]
   usecases: string[]
   tier: 'economy' | 'standard' | 'premium'
+  projectKeyEnabled?: boolean
+  requiresUserKey?: boolean
 }
 
 export const OPENAI_MODELS: ModelOption[] = [
+  {
+    value: 'gpt-5.4',
+    label: 'gpt-5.4',
+    description: 'フル性能モデル。最高精度の推論・分析が必要な用途に',
+    features: [
+      '最上位の推論・分析能力',
+      '最大コンテキスト長',
+      '最高品質のコード生成',
+    ],
+    usecases: [
+      '大規模リファクタリング・設計',
+      '高度なバグ原因分析',
+      'システム全体のアーキテクチャレビュー',
+    ],
+    tier: 'premium',
+    requiresUserKey: true,
+  },
   {
     value: 'gpt-5.4-mini',
     label: 'gpt-5.4-mini (推奨)',
@@ -304,6 +323,7 @@ export const OPENAI_MODELS: ModelOption[] = [
       '求人分析・戦略的インサイト',
     ],
     tier: 'premium',
+    projectKeyEnabled: true,
   },
   {
     value: 'gpt-5.4-nano',
@@ -320,6 +340,7 @@ export const OPENAI_MODELS: ModelOption[] = [
       'デザイントークンの参照',
     ],
     tier: 'standard',
+    projectKeyEnabled: true,
   },
   {
     value: 'gpt-5-mini',
@@ -367,9 +388,9 @@ export const OPENAI_MODELS: ModelOption[] = [
   },
   {
     value: 'gpt-4.1-nano',
-    label: 'gpt-4.1-nano (高速)',
-    description: '最速応答・最低コスト。簡単な質問に',
-    features: ['応答速度が最も速い', '低コスト', '軽量タスク向け'],
+    label: 'gpt-4.1-nano (レガシー)',
+    description: '旧世代の高速モデル。最低コスト',
+    features: ['応答速度が最も速い', '最低コスト', '軽量タスク向け'],
     usecases: [
       '用語・概念の簡単な質問',
       'コードスニペットの確認',
@@ -422,7 +443,7 @@ export const normalizeChatConfig = (value: unknown): ChatSupportConfig => {
   }
   return {
     apiKey:
-      typeof value.apiKey === 'string'
+      typeof value.apiKey === 'string' && value.apiKey
         ? value.apiKey
         : DEFAULT_CHAT_CONFIG.apiKey,
     model:
@@ -443,11 +464,14 @@ export const loadChatConfig = (): ChatSupportConfig => {
   try {
     const config = normalizeChatConfig(JSON.parse(saved))
 
-    // デフォルトAPIキー使用時はモデルもデフォルトに統一
-    // （ユーザーはモデル選択UIからいつでも変更可能）
+    // デフォルトAPIキー使用時、requiresUserKeyなモデルが選択されていたらリセット
     const isDefaultKey = !config.apiKey || config.apiKey === DEFAULT_API_KEY
-    if (isDefaultKey && config.model !== DEFAULT_MODEL) {
-      config.model = DEFAULT_MODEL
+    if (isDefaultKey) {
+      const allModels = [...OPENAI_MODELS, ...GEMINI_MODELS]
+      const selectedModel = allModels.find((m) => m.value === config.model)
+      if (selectedModel?.requiresUserKey) {
+        config.model = DEFAULT_MODEL
+      }
     }
 
     return config

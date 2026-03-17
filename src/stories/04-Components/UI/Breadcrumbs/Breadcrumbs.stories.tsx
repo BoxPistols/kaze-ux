@@ -36,13 +36,13 @@ export const Default: Story = {
   },
   render: (args) => (
     <Breadcrumbs {...args} aria-label='パンくずリスト'>
-      <Link underline='hover' color='inherit' href='#'>
+      <Link underline='hover' color='inherit' component='button'>
         ホーム
       </Link>
-      <Link underline='hover' color='inherit' href='#'>
+      <Link underline='hover' color='inherit' component='button'>
         プロジェクト
       </Link>
-      <Link underline='hover' color='inherit' href='#'>
+      <Link underline='hover' color='inherit' component='button'>
         タスク計画
       </Link>
       <Typography color='text.primary'>ルート編集</Typography>

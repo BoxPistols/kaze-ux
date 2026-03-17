@@ -202,12 +202,12 @@ const AppBarWithDrawerContent = () => {
             <Link
               underline='hover'
               color='inherit'
-              href='#'
+              component='button'
               sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <HomeIcon fontSize='small' />
               ホーム
             </Link>
-            <Link underline='hover' color='inherit' href='#'>
+            <Link underline='hover' color='inherit' component='button'>
               タスク管理
             </Link>
             <Typography color='text.primary'>TSK-2024-042</Typography>
@@ -277,10 +277,10 @@ const BreadcrumbPatternsContent = () => (
         <Breadcrumbs
           separator={<NavigateNextIcon fontSize='small' />}
           aria-label='基本パンくずリスト'>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             ホーム
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             プロジェクト
           </Link>
           <Typography color='text.primary'>東京湾岸点検</Typography>
@@ -298,7 +298,7 @@ const BreadcrumbPatternsContent = () => (
           <Link
             underline='hover'
             color='inherit'
-            href='#'
+            component='button'
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <HomeIcon fontSize='small' />
             ホーム
@@ -306,7 +306,7 @@ const BreadcrumbPatternsContent = () => (
           <Link
             underline='hover'
             color='inherit'
-            href='#'
+            component='button'
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <FolderIcon fontSize='small' />
             プロジェクト
@@ -314,7 +314,7 @@ const BreadcrumbPatternsContent = () => (
           <Link
             underline='hover'
             color='inherit'
-            href='#'
+            component='button'
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <AssignmentIcon fontSize='small' />
             タスク管理
@@ -339,19 +339,19 @@ const BreadcrumbPatternsContent = () => (
           itemsAfterCollapse={2}
           separator={<NavigateNextIcon fontSize='small' />}
           aria-label='折りたたみパンくずリスト'>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             ホーム
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             プロジェクト管理
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             東京湾岸プロジェクト
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             タスク計画
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             FL-2024-042
           </Link>
           <Typography color='text.primary'>ルート編集</Typography>
@@ -369,12 +369,12 @@ const BreadcrumbPatternsContent = () => (
           <Link
             underline='hover'
             color='inherit'
-            href='#'
+            component='button'
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <HomeIcon fontSize='small' />
             ホーム
           </Link>
-          <Link underline='hover' color='inherit' href='#'>
+          <Link underline='hover' color='inherit' component='button'>
             タスク管理
           </Link>
           <Chip

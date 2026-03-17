@@ -300,8 +300,20 @@ describe('loadChatConfig', () => {
     expect(config.model).toBe(DEFAULT_CHAT_CONFIG.model)
   })
 
-  it('デフォルトAPIキー使用時はモデルをデフォルトにリセットする', () => {
-    // apiKeyが空（デフォルト）なのにモデルが非デフォルト → リセットされる
+  it('デフォルトAPIキー使用時はrequiresUserKeyモデルをデフォルトにリセットする', () => {
+    // apiKeyが空（デフォルト）なのに gpt-5.4（requiresUserKey: true）が選択済み → リセットされる
+    getItemSpy.mockReturnValue(
+      JSON.stringify({
+        apiKey: '',
+        model: 'gpt-5.4',
+        uiMode: 'widget',
+      })
+    )
+    const config = loadChatConfig()
+    expect(config.model).toBe(DEFAULT_CHAT_CONFIG.model)
+  })
+
+  it('デフォルトAPIキー使用時でもrequiresUserKeyでないモデルはそのまま保持する', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: '',
@@ -310,7 +322,7 @@ describe('loadChatConfig', () => {
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe(DEFAULT_CHAT_CONFIG.model)
+    expect(config.model).toBe('gpt-4.1-mini')
   })
 
   it('カスタムAPIキー使用時はモデルをそのまま保持する', () => {
