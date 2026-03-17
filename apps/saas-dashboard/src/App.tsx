@@ -137,7 +137,9 @@ const menuItems: SidebarMenuItem[] = [
             const ports = JSON.parse(saved)
             if (ports.top) return `${p}//${h}:${ports.top}`
           }
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
         return `${p}//${h}:5173`
       }
       // 本番: origin に戻る（/saas/ → / へ）

@@ -254,7 +254,9 @@ const AppContent = ({
                       const ports = JSON.parse(saved)
                       if (ports.top) url = `${p}//${h}:${ports.top}`
                     }
-                  } catch { /* ignore */ }
+                  } catch {
+                    /* ignore */
+                  }
                   if (url === window.location.origin + '/') {
                     url = `${p}//${h}:5173`
                   }
