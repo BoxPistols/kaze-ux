@@ -129,7 +129,15 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
       <ThemeProvider theme={muiTheme}>
         <CacheProvider value={cache}>
           <CssBaseline />
-          <div style={{ padding: noPadding ? 0 : '1rem' }}>
+          <div
+            style={{ padding: noPadding ? 0 : '1rem' }}
+            onClick={(e) => {
+              // Story 内のリンククリックで iframe 外に遷移するのを防止
+              const target = (e.target as HTMLElement).closest('a')
+              if (target && target.getAttribute('href') && target.getAttribute('href') !== '#') {
+                e.preventDefault()
+              }
+            }}>
             <Story {...context} />
           </div>
           {context.viewMode !== 'docs' && (
