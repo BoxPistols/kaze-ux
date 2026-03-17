@@ -1009,7 +1009,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   ? GEMINI_MODELS
                   : OPENAI_MODELS
                 ).map((opt) => {
-                  const isLocked = isUsingDefaultKey && !!opt.requiresKey
+                  const isLocked = isUsingDefaultKey && !!opt.requiresUserKey
                   return (
                   <Tooltip
                     key={opt.value}
