@@ -30,13 +30,13 @@ run('pnpm build-storybook')
 mkdirSync('dist/storybook', { recursive: true })
 cpSync('storybook-static', 'dist/storybook', { recursive: true })
 
-// 3. SaaS Dashboard → base=/saas/ で dist/saas/ にコピー
-run('VITE_BASE_PATH=/saas/ pnpm --filter saas-dashboard build')
+// 3. SaaS Dashboard → base=/saas/ で vite build のみ（tsc スキップ）
+run('cd apps/saas-dashboard && VITE_BASE_PATH=/saas/ npx vite build')
 mkdirSync('dist/saas', { recursive: true })
 cpSync('apps/saas-dashboard/dist', 'dist/saas', { recursive: true })
 
-// 4. UberEats Clone → base=/ubereats/ で dist/ubereats/ にコピー
-run('VITE_BASE_PATH=/ubereats/ pnpm --filter ubereats-clone build')
+// 4. UberEats Clone → base=/ubereats/ で vite build のみ
+run('cd apps/ubereats-clone && VITE_BASE_PATH=/ubereats/ npx vite build')
 mkdirSync('dist/ubereats', { recursive: true })
 cpSync('apps/ubereats-clone/dist', 'dist/ubereats', { recursive: true })
 
