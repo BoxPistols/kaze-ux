@@ -809,7 +809,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       variant='caption'
                       color='text.secondary'
                       sx={{ display: 'block', lineHeight: 1.6 }}>
-                      {DEFAULT_MODEL} を使用中（プロジェクト提供）
+                      {config.model} を使用中（プロジェクト提供）
                     </Typography>
                     <Stack
                       direction='row'
