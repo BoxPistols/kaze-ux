@@ -64,7 +64,6 @@
     "storybook:capture": "tsx scripts/storybook-capture.ts",
     "dev:dashboard": "pnpm --filter saas-dashboard dev",
     "dev:ubereats": "pnpm --filter ubereats-clone dev",
-    "dev:all": "turbo run dev --parallel",
     "build:dashboard": "pnpm --filter saas-dashboard build",
     "build:ubereats": "pnpm --filter ubereats-clone build",
     "build:gh-pages:dashboard": "pnpm --filter saas-dashboard build:gh-pages",
