@@ -491,7 +491,7 @@ const BauhausDivider = ({
         position: 'relative',
         height: { xs: 80, md: 120 },
         overflow: 'visible',
-        mx: { xs: 3, md: 8, lg: 12 },
+        ...CONTAINER_SX,
       }}>
       {shapes[variant]}
     </Box>
@@ -515,7 +515,7 @@ const DevPortSettings = () => {
   return (
     <Box
       sx={{
-        mx: { xs: 3, md: 8, lg: 12 },
+        ...CONTAINER_SX,
         my: 2,
         p: 2,
         borderRadius: 2,
@@ -588,6 +588,13 @@ const DevPortSettings = () => {
     </Box>
   )
 }
+
+// コンテンツ最大幅 + 左右余白の共通定義
+const CONTAINER_SX = {
+  maxWidth: 1120,
+  mx: 'auto',
+  px: { xs: 2.5, sm: 3, md: 4 },
+} as const
 
 // メインLPコンポーネント
 export const LandingPage = () => {
@@ -680,7 +687,7 @@ export const LandingPage = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            px: { xs: 3, md: 8, lg: 12 },
+            ...CONTAINER_SX,
             py: 8,
           }}>
           <HeroBackground />
@@ -846,7 +853,7 @@ export const LandingPage = () => {
       {/* ===== プロダクト ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: { xs: 8, md: 12 },
         }}>
         <motion.div
@@ -902,7 +909,7 @@ export const LandingPage = () => {
       {/* ===== 特徴 ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: { xs: 10, md: 16 },
         }}>
         <Box
@@ -962,7 +969,7 @@ export const LandingPage = () => {
       {/* ===== テックスタック ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: { xs: 8, md: 14 },
         }}>
         <motion.div
@@ -1061,7 +1068,7 @@ export const LandingPage = () => {
       {/* ===== 使い方 ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: { xs: 8, md: 14 },
         }}>
         <motion.div
@@ -1199,7 +1206,7 @@ export const LandingPage = () => {
       {/* ===== AI Chat 紹介 ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: { xs: 8, md: 14 },
         }}>
         <Box
@@ -1338,7 +1345,7 @@ export const LandingPage = () => {
       {/* ===== フッター ===== */}
       <Box
         sx={{
-          px: { xs: 3, md: 8, lg: 12 },
+          ...CONTAINER_SX,
           py: 4,
           borderTop: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
