@@ -194,7 +194,7 @@ describe('extractContent', () => {
 describe('callAI', () => {
   const baseConfig: ChatSupportConfig = {
     apiKey: 'test-key-123',
-    model: 'gpt-4.1-nano',
+    model: 'gpt-5.4-nano',
     uiMode: 'widget',
     sidebarWidth: 400,
     shortcuts: {} as ChatSupportConfig['shortcuts'],
@@ -248,32 +248,6 @@ describe('callAI', () => {
   })
 
   describe('リクエストボディ', () => {
-    it('gpt-5-miniはmax_completion_tokens=16000を使用する', async () => {
-      const gpt5Config = { ...baseConfig, model: 'gpt-5-mini' }
-      const data = { choices: [{ message: { content: 'ok' } }] }
-      mockFetchSuccess(data)
-
-      await callAI(gpt5Config, mockMessages)
-
-      const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
-      expect(body.max_completion_tokens).toBe(16000)
-      expect(body.max_tokens).toBeUndefined()
-      expect(body.temperature).toBeUndefined()
-    })
-
-    it('gpt-5-nanoはmax_completion_tokens=4000を使用する（コスト最適化）', async () => {
-      const gpt5NanoConfig = { ...baseConfig, model: 'gpt-5-nano' }
-      const data = { choices: [{ message: { content: 'ok' } }] }
-      mockFetchSuccess(data)
-
-      await callAI(gpt5NanoConfig, mockMessages)
-
-      const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
-      expect(body.max_completion_tokens).toBe(4000)
-      expect(body.max_tokens).toBeUndefined()
-      expect(body.temperature).toBeUndefined()
-    })
-
     it('gpt-5.4-miniはmax_completion_tokens=16000を使用する', async () => {
       const gpt54MiniConfig = { ...baseConfig, model: 'gpt-5.4-mini' }
       const data = { choices: [{ message: { content: 'ok' } }] }
@@ -300,11 +274,12 @@ describe('callAI', () => {
       expect(body.temperature).toBeUndefined()
     })
 
-    it('通常モデルはmax_tokensとtemperatureを使用する', async () => {
+    it('非gpt-5系モデルはmax_tokensとtemperatureを使用する', async () => {
+      const geminiConfig = { ...baseConfig, model: 'gemini-2.5-flash' }
       const data = { choices: [{ message: { content: 'ok' } }] }
       mockFetchSuccess(data)
 
-      await callAI(baseConfig, mockMessages)
+      await callAI(geminiConfig, mockMessages)
 
       const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
       expect(body.max_tokens).toBe(4000)
@@ -319,11 +294,11 @@ describe('callAI', () => {
       await callAI(baseConfig, mockMessages, true)
 
       const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
-      expect(body.max_tokens).toBe(50)
+      expect(body.max_completion_tokens).toBe(50)
     })
 
-    it('gpt-5 + isTest=trueでmax_completion_tokens=50', async () => {
-      const gpt5Config = { ...baseConfig, model: 'gpt-5-mini' }
+    it('gpt-5.4 + isTest=trueでmax_completion_tokens=50', async () => {
+      const gpt5Config = { ...baseConfig, model: 'gpt-5.4-mini' }
       const data = { choices: [{ message: { content: 'ok' } }] }
       mockFetchSuccess(data)
 

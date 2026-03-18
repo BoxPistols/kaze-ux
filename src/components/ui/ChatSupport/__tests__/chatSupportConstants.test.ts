@@ -204,14 +204,14 @@ describe('normalizeChatConfig', () => {
   it('有効な入力をそのまま返す', () => {
     const input = {
       apiKey: 'sk-test',
-      model: 'gpt-4.1-nano',
+      model: 'gpt-5.4-nano',
       uiMode: 'sidebar',
       sidebarWidth: 500,
       shortcuts: createDefaultShortcuts(),
     }
     const result = normalizeChatConfig(input)
     expect(result.apiKey).toBe('sk-test')
-    expect(result.model).toBe('gpt-4.1-nano')
+    expect(result.model).toBe('gpt-5.4-nano')
     expect(result.uiMode).toBe('sidebar')
     expect(result.sidebarWidth).toBe(500)
   })
@@ -283,14 +283,14 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'stored-key',
-        model: 'gpt-5-mini',
+        model: 'gpt-5.4-mini',
         uiMode: 'sidebar',
         sidebarWidth: 600,
       })
     )
     const config = loadChatConfig()
     expect(config.apiKey).toBe('stored-key')
-    expect(config.model).toBe('gpt-5-mini')
+    expect(config.model).toBe('gpt-5.4-mini')
     expect(config.uiMode).toBe('sidebar')
   })
 
@@ -317,24 +317,24 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: '',
-        model: 'gpt-4.1-mini',
+        model: 'gpt-5.4-mini',
         uiMode: 'widget',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-4.1-mini')
+    expect(config.model).toBe('gpt-5.4-mini')
   })
 
   it('カスタムAPIキー使用時はモデルをそのまま保持する', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'sk-custom-key',
-        model: 'gpt-5-mini',
+        model: 'gpt-5.4-mini',
         uiMode: 'sidebar',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-5-mini')
+    expect(config.model).toBe('gpt-5.4-mini')
   })
 })
 

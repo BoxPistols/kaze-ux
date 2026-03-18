@@ -342,62 +342,6 @@ export const OPENAI_MODELS: ModelOption[] = [
     tier: 'standard',
     projectKeyEnabled: true,
   },
-  {
-    value: 'gpt-5-mini',
-    label: 'gpt-5-mini',
-    description: '高精度な推論と深い文脈理解。複雑なタスクに最適',
-    features: [
-      '高度な推論・思考連鎖',
-      '長いコンテキスト理解',
-      'コード品質が最も高い',
-    ],
-    usecases: [
-      'アーキテクチャ設計・リファクタ提案',
-      '複雑なバグの原因分析',
-      'コンポーネント設計レビュー',
-    ],
-    tier: 'premium',
-  },
-  {
-    value: 'gpt-5-nano',
-    label: 'gpt-5-nano',
-    description: '次世代の高速モデル。日常的なコード補助に',
-    features: ['GPT-5系の推論能力', '高速レスポンス', 'nano価格帯で高品質'],
-    usecases: [
-      'テストコードの生成',
-      'TypeScript型定義の補助',
-      'コードレビュー・改善提案',
-    ],
-    tier: 'standard',
-  },
-  {
-    value: 'gpt-4.1-mini',
-    label: 'gpt-4.1-mini',
-    description: '精度とコストのバランス型。日常的な開発補助に',
-    features: [
-      '安定した応答品質',
-      'コスト効率が良い',
-      '関数呼び出し・構造化出力に強い',
-    ],
-    usecases: [
-      'コンポーネント実装・コード生成',
-      'props設計・型定義の相談',
-      'MUI/Tailwindのスタイリング相談',
-    ],
-    tier: 'standard',
-  },
-  {
-    value: 'gpt-4.1-nano',
-    label: 'gpt-4.1-nano (レガシー)',
-    description: '旧世代の高速モデル。最低コスト',
-    features: ['応答速度が最も速い', '最低コスト', '軽量タスク向け'],
-    usecases: [
-      '用語・概念の簡単な質問',
-      'コードスニペットの確認',
-      'エラーメッセージの解説',
-    ],
-    tier: 'economy',
-  },
 ]
 
 export const GEMINI_MODELS: ModelOption[] = [
