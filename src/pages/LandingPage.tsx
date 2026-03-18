@@ -859,19 +859,25 @@ export const LandingPage = () => {
               color: 'primary.main',
               mb: 2,
             }}>
-            Products — Built with Kaze
+            Products
           </Typography>
           <Typography
             sx={{
-              fontSize: { xs: '1.8rem', md: '2.4rem' },
+              fontSize: { xs: '2rem', md: '2.8rem' },
               fontWeight: 800,
-              letterSpacing: '-0.03em',
-              mb: 6,
-              maxWidth: 500,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              mb: 1.5,
             }}>
-            同じコンポーネントで
-            <br />
-            つくっています
+            Built with Kaze
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '0.9rem',
+              color: 'text.secondary',
+              mb: 6,
+            }}>
+            同じコンポーネント基盤で構築したプロダクト
           </Typography>
         </motion.div>
 
@@ -920,12 +926,13 @@ export const LandingPage = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontSize: { xs: '1.8rem', md: '2.4rem' },
+                  fontSize: { xs: '2rem', md: '2.8rem' },
                   fontWeight: 800,
-                  letterSpacing: '-0.03em',
-                  mb: 2,
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.1,
+                  mb: 1.5,
                 }}>
-                何ができるか
+                Architecture
               </Typography>
               <Typography
                 sx={{
@@ -934,9 +941,7 @@ export const LandingPage = () => {
                   lineHeight: 1.8,
                   mb: 4,
                 }}>
-                カラー・余白・文字サイズをトークンで管理し、
-                コンポーネントとテーマで UI を組み立てます。 Storybook の AI
-                チャットで使い方をその場で聞けます。
+                トークン・テーマ・AIチャットで構成する設計基盤
               </Typography>
             </motion.div>
           </Box>
@@ -974,12 +979,21 @@ export const LandingPage = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: { xs: '1.4rem', md: '1.8rem' },
+              fontSize: { xs: '2rem', md: '2.8rem' },
               fontWeight: 800,
-              letterSpacing: '-0.03em',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              mb: 1.5,
+            }}>
+            Tech Stack
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '0.9rem',
+              color: 'text.secondary',
               mb: 4,
             }}>
-            使っている技術
+            使用している技術とツール
           </Typography>
         </motion.div>
 
@@ -1064,12 +1078,21 @@ export const LandingPage = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: { xs: '1.4rem', md: '1.8rem' },
+              fontSize: { xs: '2rem', md: '2.8rem' },
               fontWeight: 800,
-              letterSpacing: '-0.03em',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              mb: 1.5,
+            }}>
+            Getting Started
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '0.9rem',
+              color: 'text.secondary',
               mb: 4,
             }}>
-            はじめ方
+            3ステップではじめる
           </Typography>
         </motion.div>
 
@@ -1200,12 +1223,21 @@ export const LandingPage = () => {
             </Typography>
             <Typography
               sx={{
-                fontSize: { xs: '1.4rem', md: '1.8rem' },
+                fontSize: { xs: '2rem', md: '2.8rem' },
                 fontWeight: 800,
-                letterSpacing: '-0.03em',
-                mb: 2,
+                letterSpacing: '-0.04em',
+                lineHeight: 1.1,
+                mb: 1.5,
               }}>
-              ページごとに聞ける AI
+              AI Concierge
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '0.85rem',
+                color: 'text.secondary',
+                mb: 1,
+              }}>
+              各ページに常駐するAIアシスタント
             </Typography>
             <Typography
               sx={{
