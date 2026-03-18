@@ -309,14 +309,14 @@ const FeatureItem = ({
       initial={{ opacity: 0, x: -20 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}>
-      <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', mb: 4 }}>
+      <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', mb: 5 }}>
         <Typography
           sx={{
-            fontSize: '0.75rem',
+            fontSize: '0.9rem',
             fontWeight: 700,
             color: 'primary.main',
             fontFamily: 'monospace',
-            pt: 0.3,
+            pt: 0.5,
             flexShrink: 0,
             letterSpacing: '0.05em',
           }}>
@@ -326,17 +326,17 @@ const FeatureItem = ({
           <Typography
             sx={{
               fontWeight: 700,
-              fontSize: '1rem',
-              mb: 0.5,
+              fontSize: '1.2rem',
+              mb: 0.75,
               letterSpacing: '-0.01em',
             }}>
             {title}
           </Typography>
           <Typography
             sx={{
-              fontSize: '0.85rem',
+              fontSize: '0.95rem',
               color: 'text.secondary',
-              lineHeight: 1.7,
+              lineHeight: 1.8,
             }}>
             {desc}
           </Typography>
