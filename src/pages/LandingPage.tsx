@@ -248,7 +248,7 @@ const ProductCard = ({
             borderRadius: 2,
             bgcolor: 'primary.main',
             color: '#fff',
-            fontSize: '0.65rem',
+            fontSize: '0.95rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
@@ -277,7 +277,7 @@ const ProductCard = ({
         </Typography>
         <Typography
           sx={{
-            fontSize: '0.875rem',
+            fontSize: '1rem',
             color: 'text.secondary',
             lineHeight: 1.8,
           }}>
@@ -525,7 +525,7 @@ const DevPortSettings = () => {
       }}>
       <Typography
         sx={{
-          fontSize: '0.7rem',
+          fontSize: '1rem',
           fontWeight: 700,
           color: 'warning.main',
           mb: 1,
@@ -545,7 +545,7 @@ const DevPortSettings = () => {
             sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Typography
               sx={{
-                fontSize: '0.75rem',
+                fontSize: '0.9rem',
                 color: 'text.secondary',
                 minWidth: 60,
               }}>
@@ -562,7 +562,7 @@ const DevPortSettings = () => {
                 padding: '2px 6px',
                 border: '1px solid #ccc',
                 borderRadius: 4,
-                fontSize: '0.75rem',
+                fontSize: '0.9rem',
                 fontFamily: 'monospace',
               }}
             />
@@ -578,7 +578,7 @@ const DevPortSettings = () => {
             border: 'none',
             bgcolor: saved ? 'success.main' : 'warning.main',
             color: '#fff',
-            fontSize: '0.75rem',
+            fontSize: '0.9rem',
             fontWeight: 600,
             cursor: 'pointer',
           }}>
@@ -716,7 +716,7 @@ export const LandingPage = () => {
                 </Box>
                 <Typography
                   sx={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.95rem',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -860,7 +860,7 @@ export const LandingPage = () => {
           viewport={{ once: true }}>
           <Typography
             sx={{
-              fontSize: '0.7rem',
+              fontSize: '1rem',
               fontWeight: 700,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
@@ -921,7 +921,7 @@ export const LandingPage = () => {
               viewport={{ once: true }}>
               <Typography
                 sx={{
-                  fontSize: '0.7rem',
+                  fontSize: '1rem',
                   fontWeight: 700,
                   letterSpacing: '0.15em',
                   textTransform: 'uppercase',
@@ -972,7 +972,7 @@ export const LandingPage = () => {
           viewport={{ once: true }}>
           <Typography
             sx={{
-              fontSize: '0.7rem',
+              fontSize: '1rem',
               fontWeight: 700,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
@@ -1037,7 +1037,7 @@ export const LandingPage = () => {
                 }}>
                 <Typography
                   sx={{
-                    fontSize: '0.85rem',
+                    fontSize: '1rem',
                     fontWeight: 700,
                     mb: 0.5,
                   }}>
@@ -1045,7 +1045,7 @@ export const LandingPage = () => {
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.9rem',
                     color: 'text.secondary',
                   }}>
                   {tech.desc}
@@ -1069,7 +1069,7 @@ export const LandingPage = () => {
           viewport={{ once: true }}>
           <Typography
             sx={{
-              fontSize: '0.7rem',
+              fontSize: '1rem',
               fontWeight: 700,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
@@ -1150,7 +1150,7 @@ export const LandingPage = () => {
                 }}>
                 <Typography
                   sx={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.9rem',
                     fontWeight: 700,
                     color: 'primary.main',
                     fontFamily: 'monospace',
@@ -1163,7 +1163,7 @@ export const LandingPage = () => {
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: '0.85rem',
+                    fontSize: '1rem',
                     color: 'text.secondary',
                     lineHeight: 1.8,
                     mb: 2,
@@ -1178,7 +1178,7 @@ export const LandingPage = () => {
                     ? { target: '_blank', rel: 'noopener noreferrer' }
                     : {})}
                   sx={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.95rem',
                     fontWeight: 600,
                     color: 'primary.main',
                     textDecoration: 'none',
@@ -1212,7 +1212,7 @@ export const LandingPage = () => {
             viewport={{ once: true }}>
             <Typography
               sx={{
-                fontSize: '0.7rem',
+                fontSize: '1rem',
                 fontWeight: 700,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
@@ -1233,7 +1233,7 @@ export const LandingPage = () => {
             </Typography>
             <Typography
               sx={{
-                fontSize: '0.85rem',
+                fontSize: '1rem',
                 color: 'text.secondary',
                 mb: 1,
               }}>
@@ -1263,7 +1263,7 @@ export const LandingPage = () => {
                 bgcolor: 'primary.main',
                 color: '#fff',
                 fontWeight: 600,
-                fontSize: '0.85rem',
+                fontSize: '1rem',
                 textDecoration: 'none',
                 transition: 'all 0.2s',
                 '&:hover': {
@@ -1308,7 +1308,7 @@ export const LandingPage = () => {
                 <Box key={item.q} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
                   <Typography
                     sx={{
-                      fontSize: '0.8rem',
+                      fontSize: '0.95rem',
                       fontWeight: 600,
                       color: 'primary.main',
                       mb: 0.5,
@@ -1317,7 +1317,7 @@ export const LandingPage = () => {
                   </Typography>
                   <Typography
                     sx={{
-                      fontSize: '0.8rem',
+                      fontSize: '0.95rem',
                       color: 'text.secondary',
                     }}>
                     → {item.a}
@@ -1351,7 +1351,7 @@ export const LandingPage = () => {
         }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <AirIcon sx={{ fontSize: 18, color: 'primary.main' }} />
-          <Typography sx={{ fontSize: '0.8rem', fontWeight: 600 }}>
+          <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
             Kaze Design System
           </Typography>
         </Box>
@@ -1370,7 +1370,7 @@ export const LandingPage = () => {
                 ? { target: '_blank', rel: 'noopener noreferrer' }
                 : {})}
               sx={{
-                fontSize: '0.75rem',
+                fontSize: '0.9rem',
                 color: 'text.secondary',
                 textDecoration: 'none',
                 transition: 'color 0.2s',

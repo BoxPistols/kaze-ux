@@ -21,7 +21,7 @@ const kazeTheme = create({
   brandTitle: 'Kaze Design',
   brandImage: logoSvg,
   brandUrl: typeof window !== 'undefined' ? window.location.origin + '/' : '/',
-  brandTarget: '_blank',
+  brandTarget: '_self',
 
   // カラー
   colorPrimary: '#0EADB8',
