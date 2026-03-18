@@ -735,19 +735,22 @@ export const LandingPage = () => {
                   fontWeight: 800,
                   lineHeight: 1.1,
                   letterSpacing: '-0.04em',
+                  mb: 2,
+                }}>
+                One System,
+                <br />
+                <Box component='span' sx={{ color: 'primary.main' }}>
+                  Infinite
+                </Box>
+                {' '}Interfaces
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: '0.85rem', md: '0.95rem' },
+                  color: 'text.secondary',
                   mb: 3,
                 }}>
-                コンポーネント、
-                <br />
-                <Box component='span' sx={{ color: 'primary.main' }}>
-                  トークン
-                </Box>
-                、テーマを
-                <br />
-                <Box component='span' sx={{ color: 'primary.main' }}>
-                  ひとつの基盤
-                </Box>
-                で
+                コンポーネント・トークン・テーマをひとつの基盤で管理
               </Typography>
             </motion.div>
 
@@ -762,14 +765,14 @@ export const LandingPage = () => {
               }}>
               <Typography
                 sx={{
-                  fontSize: { xs: '1rem', md: '1.15rem' },
+                  fontSize: { xs: '0.95rem', md: '1.05rem' },
                   color: 'text.secondary',
                   lineHeight: 1.8,
-                  maxWidth: 600,
+                  maxWidth: 520,
                   mb: 5,
                 }}>
-                MUI + Tailwind CSS + Storybook で構築したデザインシステムです。
-                以下のプロダクトはすべて同じコンポーネントとトークンを使って開発しています。
+                MUI + Tailwind CSS + Storybook で構築。
+                共通のトークンとコンポーネントから複数プロダクトを展開しています。
               </Typography>
             </motion.div>
 
