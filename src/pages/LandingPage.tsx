@@ -225,7 +225,7 @@ const ProductCard = ({
           borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
           bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)',
           backdropFilter: 'blur(8px)',
-          transition: 'all 0.3s cubic-bezier(0.25, 0.1, 0, 1)',
+          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
           cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
@@ -234,13 +234,6 @@ const ProductCard = ({
               ? '0 12px 40px rgba(14,173,184,0.15)'
               : '0 12px 40px rgba(14,173,184,0.12)',
             borderColor: 'primary.main',
-            '& .card-label': {
-              opacity: 1,
-              transform: 'translateX(0)',
-            },
-            '& .card-icon': {
-              transform: 'scale(1.1)',
-            },
           },
         }}>
         {/* ラベルバッジ */}
@@ -259,9 +252,7 @@ const ProductCard = ({
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            opacity: 0,
-            transform: 'translateX(8px)',
-            transition: 'all 0.3s ease',
+            opacity: 1,
           }}>
           {label}
         </Box>
@@ -270,7 +261,6 @@ const ProductCard = ({
           className='card-icon'
           sx={{
             mb: 3,
-            transition: 'transform 0.35s ease',
             '& .MuiSvgIcon-root': { fontSize: 36 },
           }}>
           {icon}
