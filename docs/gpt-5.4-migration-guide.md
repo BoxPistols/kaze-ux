@@ -1,4 +1,4 @@
-# AI チャット マルチプロバイダー移行ガイド v2
+# AI API マルチプロバイダー移行ガイド
 
 > GPT-5.4 系へのモデル移行 + マルチプロバイダー対応の再現可能な手順書。
 > kaze-ux（フロントエンド完結）と advisea-pro（サーバーサイド + 6プロバイダー）の実体験に基づく。
@@ -283,38 +283,262 @@ const isValidUserApiKey = (key: unknown): boolean => {
 
 ---
 
-## 5. レート制限
+## 5. レート制限（具体実装）
+
+### 設計方針
+
+無料版（サーバーキー）の無制限利用を防ぐために、**IP + Cookie の二重チェック**で制限する。
+MyAPI（ユーザーキー）利用時はスキップ。
+
+### 設定変数
 
 ```ts
-// バックエンド（Vercel KV / インメモリ フォールバック）
-const applyRateLimit = async (req, endpoint, userApiKey, maxRequests = 50) => {
-  // MyAPI キーがあればスキップ
+// 環境変数 or 定数で管理（チューニング可能）
+const RATE_LIMIT_CONFIG = {
+  MAX_REQUESTS: 50, // 1日あたりの上限回数
+  WINDOW_MS: 24 * 60 * 60 * 1000, // 24時間（ミリ秒）
+  WINDOW_SEC: 86400, // 24時間（秒、Redis TTL 用）
+  COOKIE_NAME: 'ai_chat_uid', // フィンガープリント用Cookie名
+  COOKIE_MAX_AGE: 86400, // Cookie有効期間（秒）
+}
+```
+
+### IP 取得（Vercel / Cloudflare / nginx 対応）
+
+```ts
+const getClientIp = (req: Request): string => {
+  // Vercel
+  const xForwarded = req.headers['x-forwarded-for']
+  if (typeof xForwarded === 'string' && xForwarded.length > 0) {
+    return xForwarded.split(',')[0].trim()
+  }
+  // Cloudflare
+  const cfIp = req.headers['cf-connecting-ip']
+  if (typeof cfIp === 'string') return cfIp
+  // フォールバック
+  return req.socket?.remoteAddress || 'unknown'
+}
+```
+
+### Cookie ベースのフィンガープリント
+
+IP だけでは VPN / 共有 WiFi で同一 IP の別ユーザーを区別できない。
+Cookie でユニーク ID を付与して二重カウントを防ぐ。
+
+```ts
+import { randomUUID } from 'crypto'
+
+const getOrCreateFingerprint = (req: Request, res: Response): string => {
+  // 既存 Cookie があればそれを使う
+  const existing = req.cookies?.[RATE_LIMIT_CONFIG.COOKIE_NAME]
+  if (existing) return existing
+
+  // なければ UUID を発行して Set-Cookie
+  const uid = randomUUID()
+  res.cookie(RATE_LIMIT_CONFIG.COOKIE_NAME, uid, {
+    maxAge: RATE_LIMIT_CONFIG.COOKIE_MAX_AGE * 1000,
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+  })
+  return uid
+}
+```
+
+### レート制限キーの構成
+
+```ts
+// IP + Cookie UID の複合キーで制限
+// → 同じ IP でも Cookie が異なれば別カウント
+// → Cookie を消しても IP が同じなら引き続き制限
+const getRateLimitKey = (
+  ip: string,
+  uid: string,
+  endpoint: string
+): string[] => {
+  return [
+    `rate:ip:${ip}:${endpoint}`, // IP ベース（Cookie 削除対策）
+    `rate:uid:${uid}:${endpoint}`, // Cookie ベース（VPN 対策）
+  ]
+}
+```
+
+### バックエンド実装（Vercel KV / インメモリ）
+
+```ts
+// ストレージ抽象化
+interface RateLimitStore {
+  increment(key: string, ttlSec: number): Promise<number>
+}
+
+// --- Vercel KV（本番推奨）---
+class VercelKVStore implements RateLimitStore {
+  async increment(key: string, ttlSec: number): Promise<number> {
+    const { kv } = await import('@vercel/kv')
+    const count = await kv.incr(key)
+    if (count === 1) await kv.expire(key, ttlSec) // 初回のみ TTL 設定
+    return count
+  }
+}
+
+// --- インメモリ（開発 / KV 未設定時のフォールバック）---
+class MemoryStore implements RateLimitStore {
+  private store = new Map<string, { count: number; expiresAt: number }>()
+
+  async increment(key: string, ttlSec: number): Promise<number> {
+    const now = Date.now()
+    const entry = this.store.get(key)
+
+    if (!entry || entry.expiresAt < now) {
+      this.store.set(key, { count: 1, expiresAt: now + ttlSec * 1000 })
+      return 1
+    }
+
+    entry.count++
+    return entry.count
+  }
+
+  // 5分ごとに期限切れエントリを掃除
+  startCleanup() {
+    setInterval(
+      () => {
+        const now = Date.now()
+        for (const [key, entry] of this.store) {
+          if (entry.expiresAt < now) this.store.delete(key)
+        }
+      },
+      5 * 60 * 1000
+    )
+  }
+}
+
+// ストア選択
+const createStore = (): RateLimitStore => {
+  if (process.env.KV_REST_API_URL) return new VercelKVStore()
+  const store = new MemoryStore()
+  store.startCleanup()
+  return store
+}
+
+const store = createStore()
+```
+
+### メインのレート制限関数
+
+```ts
+interface RateLimitResult {
+  allowed: boolean
+  isValidUserKey: boolean
+  remaining?: number
+  resetTime?: Date
+  response?: { error: string; remaining: number; resetTime: Date }
+}
+
+const applyRateLimit = async (
+  req: Request,
+  res: Response,
+  endpoint: string,
+  userApiKey: string | undefined,
+  maxRequests = RATE_LIMIT_CONFIG.MAX_REQUESTS
+): Promise<RateLimitResult> => {
+  // MyAPI キーがあればスキップ（制限なし）
   if (isValidUserApiKey(userApiKey)) {
     return { allowed: true, isValidUserKey: true }
   }
 
-  // IP ベースでカウント（24h ウィンドウ）
-  const ip = getClientIp(req) // X-Forwarded-For 対応
-  const count = await incrementCounter(`${ip}:${endpoint}`, 86400)
+  const ip = getClientIp(req)
+  const uid = getOrCreateFingerprint(req, res)
+  const keys = getRateLimitKey(ip, uid, endpoint)
+  const { WINDOW_SEC } = RATE_LIMIT_CONFIG
 
-  if (count > maxRequests) {
+  // IP と Cookie の両方でカウント、どちらか片方でも超過ならブロック
+  const counts = await Promise.all(
+    keys.map((key) => store.increment(key, WINDOW_SEC))
+  )
+  const maxCount = Math.max(...counts)
+
+  // レスポンスヘッダーに残り回数を付与
+  const remaining = Math.max(0, maxRequests - maxCount)
+  res.setHeader('X-RateLimit-Limit', maxRequests)
+  res.setHeader('X-RateLimit-Remaining', remaining)
+
+  if (maxCount > maxRequests) {
+    const resetTime = getNextMidnight()
+    res.setHeader('X-RateLimit-Reset', Math.floor(resetTime.getTime() / 1000))
+
     return {
       allowed: false,
+      isValidUserKey: false,
       response: {
-        error: '1日のリクエスト上限に達しました。APIキーを設定してください。',
+        error: `1日のリクエスト上限（${maxRequests}回）に達しました。自分のAPIキーを設定すると無制限で利用できます。`,
         remaining: 0,
-        resetTime: getNextMidnight(),
+        resetTime,
       },
     }
   }
 
-  return {
-    allowed: true,
-    isValidUserKey: false,
-    remaining: maxRequests - count,
-  }
+  return { allowed: true, isValidUserKey: false, remaining }
+}
+
+const getNextMidnight = (): Date => {
+  const d = new Date()
+  d.setHours(24, 0, 0, 0) // 翌日 0:00
+  return d
 }
 ```
+
+### API エンドポイントでの使用例
+
+```ts
+// api/chat.ts
+export default async (req: Request, res: Response) => {
+  const userApiKey = getUserApiKey(req)
+  const rateLimit = await applyRateLimit(req, res, 'chat', userApiKey)
+
+  if (!rateLimit.allowed) {
+    return res.status(429).json(rateLimit.response)
+  }
+
+  const client = createLLMClient({
+    userApiKey,
+    provider: req.body.provider,
+    isValidUserKey: rateLimit.isValidUserKey,
+  })
+
+  // ... チャット処理
+}
+```
+
+### フロントエンド側の表示
+
+```ts
+// 残り回数の表示（レスポンスヘッダーから取得）
+const remaining = response.headers.get('X-RateLimit-Remaining')
+if (remaining !== null) {
+  setRemainingCount(parseInt(remaining, 10))
+}
+
+// 429 エラー時
+if (response.status === 429) {
+  const { error, resetTime } = await response.json()
+  showRateLimitMessage(error, new Date(resetTime))
+}
+```
+
+### 回避策への対策まとめ
+
+| 回避手段                 | 対策                                        |
+| ------------------------ | ------------------------------------------- |
+| Cookie 削除              | IP ベースでも制限をかけているため回避不可   |
+| VPN / IP 変更            | Cookie UID でも制限をかけているため回避不可 |
+| Cookie + VPN 同時変更    | 完全には防げないが、コスト的に割に合わない  |
+| ブラウザ複数起動         | Cookie は httpOnly + sameSite で保護        |
+| API 直接叩き             | IP ベース制限が有効                         |
+| Bot による大量リクエスト | 429 + Retry-After ヘッダーで HTTP 標準対応  |
+
+> **設計思想**: 完璧なブロックは不可能だが、「IP + Cookie 二重制限」で
+> 一般ユーザーの 99% をカバーできる。残り 1% の技術的回避は
+> コスト的に MyAPI キーを取得するほうが簡単になるよう設計する。
 
 ---
 
