@@ -687,12 +687,12 @@ export const LandingPage = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            ...CONTAINER_SX,
             py: 8,
           }}>
           <HeroBackground />
 
-          <Box sx={{ position: 'relative', zIndex: 1, maxWidth: 900 }}>
+          <Box sx={{ ...CONTAINER_SX, position: 'relative', zIndex: 1, maxWidth: 1120 }}>
+            <Box sx={{ maxWidth: 900 }}>
             {/* ロゴ + ブランド */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -846,16 +846,14 @@ export const LandingPage = () => {
                 </Box>
               </Box>
             </motion.div>
+            </Box>
           </Box>
         </Box>
       </motion.div>
 
       {/* ===== プロダクト ===== */}
-      <Box
-        sx={{
-          ...CONTAINER_SX,
-          py: { xs: 8, md: 12 },
-        }}>
+      <Box sx={{ py: { xs: 8, md: 12 } }}>
+       <Box sx={{ ...CONTAINER_SX }}>
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -901,17 +899,15 @@ export const LandingPage = () => {
             <ProductCard key={product.title} {...product} index={i} />
           ))}
         </Box>
+       </Box>
       </Box>
 
       {/* セパレーター */}
       <BauhausDivider variant='a' />
 
       {/* ===== 特徴 ===== */}
-      <Box
-        sx={{
-          ...CONTAINER_SX,
-          py: { xs: 10, md: 16 },
-        }}>
+      <Box sx={{ py: { xs: 10, md: 16 } }}>
+       <Box sx={{ ...CONTAINER_SX }}>
         <Box
           sx={{
             display: 'grid',
@@ -961,17 +957,15 @@ export const LandingPage = () => {
             ))}
           </Box>
         </Box>
+       </Box>
       </Box>
 
       {/* セパレーター */}
       <BauhausDivider variant='b' flip />
 
       {/* ===== テックスタック ===== */}
-      <Box
-        sx={{
-          ...CONTAINER_SX,
-          py: { xs: 8, md: 14 },
-        }}>
+      <Box sx={{ py: { xs: 8, md: 14 } }}>
+       <Box sx={{ ...CONTAINER_SX }}>
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -1060,17 +1054,15 @@ export const LandingPage = () => {
             </motion.div>
           ))}
         </Box>
+       </Box>
       </Box>
 
       {/* セパレーター */}
       <BauhausDivider variant='c' />
 
       {/* ===== 使い方 ===== */}
-      <Box
-        sx={{
-          ...CONTAINER_SX,
-          py: { xs: 8, md: 14 },
-        }}>
+      <Box sx={{ py: { xs: 8, md: 14 } }}>
+       <Box sx={{ ...CONTAINER_SX }}>
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -1198,17 +1190,15 @@ export const LandingPage = () => {
             </motion.div>
           ))}
         </Box>
+       </Box>
       </Box>
 
       {/* セパレーター */}
       <BauhausDivider variant='a' flip />
 
       {/* ===== AI Chat 紹介 ===== */}
-      <Box
-        sx={{
-          ...CONTAINER_SX,
-          py: { xs: 8, md: 14 },
-        }}>
+      <Box sx={{ py: { xs: 8, md: 14 } }}>
+       <Box sx={{ ...CONTAINER_SX }}>
         <Box
           sx={{
             display: 'grid',
@@ -1337,6 +1327,7 @@ export const LandingPage = () => {
             </Box>
           </motion.div>
         </Box>
+       </Box>
       </Box>
 
       {/* ===== 開発用ポート設定（DEV のみ表示） ===== */}
@@ -1345,10 +1336,13 @@ export const LandingPage = () => {
       {/* ===== フッター ===== */}
       <Box
         sx={{
-          ...CONTAINER_SX,
-          py: 4,
           borderTop: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+        }}>
+       <Box
+        sx={{
+          ...CONTAINER_SX,
+          py: 4,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -1386,6 +1380,7 @@ export const LandingPage = () => {
             </Box>
           ))}
         </Box>
+       </Box>
       </Box>
     </Box>
   )
