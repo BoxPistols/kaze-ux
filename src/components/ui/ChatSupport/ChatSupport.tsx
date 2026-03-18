@@ -905,9 +905,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       color={active ? 'primary' : 'default'}
                       onClick={() => {
                         const models =
-                          provider === 'gemini'
-                            ? GEMINI_MODELS
-                            : OPENAI_MODELS
+                          provider === 'gemini' ? GEMINI_MODELS : OPENAI_MODELS
                         const defaultModel = (
                           models.find((m) => !m.requiresUserKey) ?? models[0]
                         ).value
@@ -945,7 +943,9 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                   setTestResult(null)
                 }}
                 placeholder={
-                  (config.model ?? '').includes('gemini') ? 'AIza...' : 'sk-proj-...'
+                  (config.model ?? '').includes('gemini')
+                    ? 'AIza...'
+                    : 'sk-proj-...'
                 }
                 inputProps={{
                   style:
@@ -1013,78 +1013,80 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                 ).map((opt) => {
                   const isLocked = isUsingDefaultKey && !!opt.requiresUserKey
                   return (
-                  <MenuItem
-                    key={opt.value}
-                    value={opt.value}
-                    disabled={isLocked}
-                    title={isLocked ? '自分のAPIキーを設定すると使用できます' : undefined}
-                    sx={{ py: 1.5, alignItems: 'flex-start' }}>
-                    <Box sx={{ width: '100%' }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 0.75,
-                          mb: 0.25,
-                        }}>
-                        {isLocked && (
-                          <Lock size={12} />
-                        )}
-                        <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                          {opt.label}
-                        </Typography>
-                        <Chip
-                          label={
-                            opt.tier === 'premium'
-                              ? 'Premium'
-                              : opt.tier === 'economy'
-                                ? 'Economy'
-                                : 'Standard'
-                          }
-                          size='small'
-                          color={
-                            opt.tier === 'premium'
-                              ? 'primary'
-                              : opt.tier === 'economy'
-                                ? 'default'
-                                : 'info'
-                          }
-                          variant='outlined'
+                    <MenuItem
+                      key={opt.value}
+                      value={opt.value}
+                      disabled={isLocked}
+                      title={
+                        isLocked
+                          ? '自分のAPIキーを設定すると使用できます'
+                          : undefined
+                      }
+                      sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                      <Box sx={{ width: '100%' }}>
+                        <Box
                           sx={{
-                            height: 18,
-                            fontSize: '0.6rem',
-                            '& .MuiChip-label': { px: 0.75 },
-                          }}
-                        />
-                      </Box>
-                      <Typography
-                        variant='caption'
-                        color='text.secondary'
-                        sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
-                        {opt.description}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          gap: 0.5,
-                        }}>
-                        {opt.usecases.map((uc) => (
-                          <Typography
-                            key={uc}
-                            variant='caption'
-                            sx={{
-                              fontSize: '0.65rem',
-                              color: 'text.disabled',
-                              lineHeight: 1.2,
-                              '&::before': { content: '"- "' },
-                            }}>
-                            {uc}
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.75,
+                            mb: 0.25,
+                          }}>
+                          {isLocked && <Lock size={12} />}
+                          <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                            {opt.label}
                           </Typography>
-                        ))}
+                          <Chip
+                            label={
+                              opt.tier === 'premium'
+                                ? 'Premium'
+                                : opt.tier === 'economy'
+                                  ? 'Economy'
+                                  : 'Standard'
+                            }
+                            size='small'
+                            color={
+                              opt.tier === 'premium'
+                                ? 'primary'
+                                : opt.tier === 'economy'
+                                  ? 'default'
+                                  : 'info'
+                            }
+                            variant='outlined'
+                            sx={{
+                              height: 18,
+                              fontSize: '0.6rem',
+                              '& .MuiChip-label': { px: 0.75 },
+                            }}
+                          />
+                        </Box>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
+                          {opt.description}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 0.5,
+                          }}>
+                          {opt.usecases.map((uc) => (
+                            <Typography
+                              key={uc}
+                              variant='caption'
+                              sx={{
+                                fontSize: '0.65rem',
+                                color: 'text.disabled',
+                                lineHeight: 1.2,
+                                '&::before': { content: '"- "' },
+                              }}>
+                              {uc}
+                            </Typography>
+                          ))}
+                        </Box>
                       </Box>
-                    </Box>
-                  </MenuItem>
+                    </MenuItem>
                   )
                 })}
               </TextField>
