@@ -346,6 +346,158 @@ const FeatureItem = ({
   )
 }
 
+// バウハウス風の幾何学セパレーター — セクション間に視覚的な呼吸を与える
+const BauhausDivider = ({
+  variant = 'a',
+  flip = false,
+}: {
+  variant?: 'a' | 'b' | 'c'
+  flip?: boolean
+}) => {
+  const theme = useTheme()
+  const isDark = theme.palette.mode === 'dark'
+  const teal = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const x1 = useTransform(scrollYProgress, [0, 1], [flip ? 60 : -60, flip ? -20 : 20])
+  const x2 = useTransform(scrollYProgress, [0, 1], [flip ? -40 : 40, flip ? 20 : -20])
+
+  const shapes: Record<string, React.ReactNode> = {
+    a: (
+      <>
+        <motion.div style={{ x: x1 }}>
+          <Box
+            sx={{
+              width: { xs: 120, md: 200 },
+              height: { xs: 120, md: 200 },
+              border: `2px solid ${teal}${isDark ? '0.12' : '0.08'})`,
+              position: 'absolute',
+              left: flip ? 'auto' : '8%',
+              right: flip ? '8%' : 'auto',
+              top: -40,
+            }}
+          />
+        </motion.div>
+        <motion.div style={{ x: x2 }}>
+          <Box
+            sx={{
+              width: { xs: 60, md: 100 },
+              height: { xs: 60, md: 100 },
+              borderRadius: '50%',
+              bgcolor: `${teal}${isDark ? '0.06' : '0.04'})`,
+              position: 'absolute',
+              left: flip ? 'auto' : '18%',
+              right: flip ? '18%' : 'auto',
+              top: { xs: 30, md: 20 },
+            }}
+          />
+        </motion.div>
+        <Box
+          sx={{
+            position: 'absolute',
+            left: flip ? 'auto' : { xs: '5%', md: '6%' },
+            right: flip ? { xs: '5%', md: '6%' } : 'auto',
+            top: '50%',
+            width: { xs: 80, md: 140 },
+            height: 2,
+            bgcolor: `${teal}${isDark ? '0.1' : '0.06'})`,
+          }}
+        />
+      </>
+    ),
+    b: (
+      <>
+        <motion.div style={{ x: x1 }}>
+          <Box
+            sx={{
+              width: { xs: 80, md: 140 },
+              height: { xs: 80, md: 140 },
+              bgcolor: `${teal}${isDark ? '0.04' : '0.03'})`,
+              position: 'absolute',
+              right: flip ? 'auto' : '12%',
+              left: flip ? '12%' : 'auto',
+              top: -20,
+              transform: 'rotate(45deg)',
+            }}
+          />
+        </motion.div>
+        <motion.div style={{ x: x2 }}>
+          <Box
+            sx={{
+              width: { xs: 40, md: 64 },
+              height: { xs: 40, md: 64 },
+              border: `2px solid ${teal}${isDark ? '0.1' : '0.06'})`,
+              borderRadius: '50%',
+              position: 'absolute',
+              right: flip ? 'auto' : '22%',
+              left: flip ? '22%' : 'auto',
+              top: { xs: 40, md: 50 },
+            }}
+          />
+        </motion.div>
+      </>
+    ),
+    c: (
+      <>
+        <motion.div style={{ x: x1 }}>
+          <Box
+            sx={{
+              width: { xs: 160, md: 280 },
+              height: 2,
+              bgcolor: `${teal}${isDark ? '0.08' : '0.05'})`,
+              position: 'absolute',
+              left: '50%',
+              top: 20,
+              transform: 'translateX(-50%)',
+            }}
+          />
+        </motion.div>
+        <Box
+          sx={{
+            width: { xs: 12, md: 16 },
+            height: { xs: 12, md: 16 },
+            borderRadius: '50%',
+            bgcolor: `${teal}${isDark ? '0.15' : '0.1'})`,
+            position: 'absolute',
+            left: '50%',
+            top: 12,
+            transform: 'translateX(-50%)',
+          }}
+        />
+        <motion.div style={{ x: x2 }}>
+          <Box
+            sx={{
+              width: { xs: 50, md: 80 },
+              height: { xs: 50, md: 80 },
+              border: `1.5px solid ${teal}${isDark ? '0.08' : '0.05'})`,
+              position: 'absolute',
+              left: '50%',
+              top: -10,
+              transform: 'translateX(-50%) rotate(45deg)',
+            }}
+          />
+        </motion.div>
+      </>
+    ),
+  }
+
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        position: 'relative',
+        height: { xs: 80, md: 120 },
+        overflow: 'visible',
+        mx: { xs: 3, md: 8, lg: 12 },
+      }}>
+      {shapes[variant]}
+    </Box>
+  )
+}
+
 // 開発用ポート設定パネル（DEV モードのみ）
 const DevPortSettings = () => {
   const [ports, setPorts] = useState<DevPorts>(getDevPorts)
@@ -735,13 +887,14 @@ export const LandingPage = () => {
         </Box>
       </Box>
 
+      {/* セパレーター */}
+      <BauhausDivider variant='a' />
+
       {/* ===== 特徴 ===== */}
       <Box
         sx={{
           px: { xs: 3, md: 8, lg: 12 },
-          py: { xs: 8, md: 12 },
-          borderTop: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+          py: { xs: 10, md: 16 },
         }}>
         <Box
           sx={{
@@ -795,13 +948,14 @@ export const LandingPage = () => {
         </Box>
       </Box>
 
+      {/* セパレーター */}
+      <BauhausDivider variant='b' flip />
+
       {/* ===== テックスタック ===== */}
       <Box
         sx={{
           px: { xs: 3, md: 8, lg: 12 },
-          py: { xs: 6, md: 10 },
-          borderTop: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+          py: { xs: 8, md: 14 },
         }}>
         <motion.div
           initial={{ opacity: 0 }}
@@ -884,13 +1038,14 @@ export const LandingPage = () => {
         </Box>
       </Box>
 
+      {/* セパレーター */}
+      <BauhausDivider variant='c' />
+
       {/* ===== 使い方 ===== */}
       <Box
         sx={{
           px: { xs: 3, md: 8, lg: 12 },
-          py: { xs: 6, md: 10 },
-          borderTop: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+          py: { xs: 8, md: 14 },
         }}>
         <motion.div
           initial={{ opacity: 0 }}
@@ -1012,13 +1167,14 @@ export const LandingPage = () => {
         </Box>
       </Box>
 
+      {/* セパレーター */}
+      <BauhausDivider variant='a' flip />
+
       {/* ===== AI Chat 紹介 ===== */}
       <Box
         sx={{
           px: { xs: 3, md: 8, lg: 12 },
-          py: { xs: 6, md: 10 },
-          borderTop: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+          py: { xs: 8, md: 14 },
         }}>
         <Box
           sx={{
