@@ -32,6 +32,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:all": "pnpm dev & pnpm storybook & pnpm -F saas-dashboard dev & pnpm -F ubereats-clone dev & wait",
+    "dev:docs": "pnpm dev & pnpm storybook & wait",
     "build": "echo 'Build skipped - using source files directly'",
     "build-sandbox": "vite build --mode sandbox",
     "test": "vitest run",
