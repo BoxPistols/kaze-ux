@@ -6,8 +6,13 @@
  *   初回は各アプリのデフォルトポートを使うが、変更可能
  */
 
+/**
+ * 現在の origin を基準にリンクを生成する。
+ * - 本番（Vercel 等）: window.location.origin + パス
+ * - ローカル開発: ポート別に解決（カスタマイズ可能）
+ */
+
 const isDev = import.meta.env.DEV
-const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? ''
 
 const STORAGE_KEY = 'kaze-dev-ports'
 
@@ -41,17 +46,24 @@ export const saveDevPorts = (ports: Partial<DevPorts>): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...current, ...ports }))
 }
 
-const origin =
+/** 現在のページの origin を取得（protocol + hostname + port） */
+const getOrigin = (): string =>
   typeof window !== 'undefined'
-    ? `${window.location.protocol}//${window.location.hostname}`
-    : 'http://localhost'
+    ? window.location.origin
+    : 'http://localhost:5173'
 
 const resolve = (app: keyof DevPorts, prodPath: string): string => {
   if (isDev) {
+    // ローカル開発: アプリごとに異なるポートで起動
+    const protocol =
+      typeof window !== 'undefined' ? window.location.protocol : 'http:'
+    const hostname =
+      typeof window !== 'undefined' ? window.location.hostname : 'localhost'
     const ports = getDevPorts()
-    return `${origin}:${ports[app]}`
+    return `${protocol}//${hostname}:${ports[app]}`
   }
-  return `${base}${prodPath}`
+  // 本番: 現在の origin からの相対パスで解決
+  return `${getOrigin()}${prodPath}`
 }
 
 export const APP_LINKS = {
