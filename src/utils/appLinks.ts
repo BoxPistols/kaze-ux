@@ -52,17 +52,20 @@ const getOrigin = (): string =>
     ? window.location.origin
     : 'http://localhost:5173'
 
+/** localhost / 127.0.0.1 かどうか */
+const isLocalhost = (): boolean => {
+  if (typeof window === 'undefined') return true
+  const h = window.location.hostname
+  return h === 'localhost' || h === '127.0.0.1'
+}
+
 const resolve = (app: keyof DevPorts, prodPath: string): string => {
-  if (isDev) {
-    // ローカル開発: アプリごとに異なるポートで起動
-    const protocol =
-      typeof window !== 'undefined' ? window.location.protocol : 'http:'
-    const hostname =
-      typeof window !== 'undefined' ? window.location.hostname : 'localhost'
+  if (isDev && isLocalhost()) {
+    // ローカル開発 & localhost: アプリごとに異なるポートで起動
     const ports = getDevPorts()
-    return `${protocol}//${hostname}:${ports[app]}`
+    return `http://${window.location.hostname}:${ports[app]}`
   }
-  // 本番: 現在の origin からの相対パスで解決
+  // Vercel・本番・非localhost: 現在の origin からの相対パスで解決
   return `${getOrigin()}${prodPath}`
 }
 
