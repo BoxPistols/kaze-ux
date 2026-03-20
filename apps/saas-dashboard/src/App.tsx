@@ -1,12 +1,15 @@
 import AirIcon from '@mui/icons-material/Air'
+import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ContactsIcon from '@mui/icons-material/Contacts'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import FolderIcon from '@mui/icons-material/Folder'
 import GroupIcon from '@mui/icons-material/Group'
 import IntegrationInstructionsIcon from '@mui/icons-material/IntegrationInstructions'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import MapIcon from '@mui/icons-material/Map'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import RestaurantIcon from '@mui/icons-material/Restaurant'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SummarizeIcon from '@mui/icons-material/Summarize'
 import {
@@ -27,6 +30,7 @@ import {
   type MenuItem as SidebarMenuItem,
 } from '@/layouts/sidebar'
 import { CalendarSettingsProvider } from '@/providers/CalendarSettingsProvider'
+import { APP_LINKS } from '@/utils/appLinks'
 
 import { CalendarPage } from '~/pages/CalendarPage'
 import { ContactsPage } from '~/pages/ContactsPage'
@@ -126,28 +130,33 @@ const menuItems: SidebarMenuItem[] = [
     id: 'kaze-design',
     label: 'Kaze Design System',
     icon: <AirIcon />,
-    href: (() => {
-      if (typeof window === 'undefined') return '/'
-      const h = window.location.hostname
-      const p = window.location.protocol
-      if (import.meta.env.DEV) {
-        try {
-          const saved = localStorage.getItem('kaze-dev-ports')
-          if (saved) {
-            const ports = JSON.parse(saved)
-            if (ports.top) return `${p}//${h}:${ports.top}`
-          }
-        } catch {
-          /* ignore */
-        }
-        return `${p}//${h}:5173`
-      }
-      // 本番: origin に戻る（/saas/ → / へ）
-      return window.location.origin + '/'
-    })(),
-    category: 'SYSTEM',
-    description: 'Back to Design System',
-    external: true,
+    href: APP_LINKS.top(),
+    category: 'APPS',
+    description: 'トップページ',
+  },
+  {
+    id: 'storybook',
+    label: 'Storybook',
+    icon: <AutoStoriesIcon />,
+    href: APP_LINKS.storybook(),
+    category: 'APPS',
+    description: 'コンポーネント',
+  },
+  {
+    id: 'logistics',
+    label: 'KazeLogistics',
+    icon: <LocalShippingIcon />,
+    href: APP_LINKS.skyKaze(),
+    category: 'APPS',
+    description: '配送監視',
+  },
+  {
+    id: 'ubereats',
+    label: 'KazeEats',
+    icon: <RestaurantIcon />,
+    href: APP_LINKS.ubereats(),
+    category: 'APPS',
+    description: 'フードデリバリー',
   },
 ]
 

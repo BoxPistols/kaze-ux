@@ -1,14 +1,13 @@
 /**
  * ヘッダーナビゲーション — タブ切替 + テーマ
  */
-import AirIcon from '@mui/icons-material/Air'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 
+import { AppSwitcher } from '@/components/ui/AppSwitcher'
 import { IconButton } from '@/components/ui/icon-button'
-import { useDevPorts } from '@/hooks/useDevPorts'
 import { hookUseTheme } from '@/hooks/useTheme'
 
 import { useSimulation } from '~/data/simulation'
@@ -29,7 +28,6 @@ export const HeaderBar = () => {
 
   const viewMode = useSimulation((s) => s.viewMode)
   const setViewMode = useSimulation((s) => s.setViewMode)
-  const { portStatus } = useDevPorts()
 
   return (
     <Box
@@ -157,30 +155,8 @@ export const HeaderBar = () => {
         )}
       </IconButton>
 
-      {/* Kaze Design System へ戻る */}
-      <IconButton
-        onClick={() => {
-          const topInfo = portStatus?.top
-          if (import.meta.env.DEV && topInfo?.alive) {
-            const h = window.location.hostname
-            const p = window.location.protocol
-            window.open(`${p}//${h}:${topInfo.port}`, '_blank')
-          } else {
-            // 本番 or alive でなければ origin にフォールバック
-            window.open(window.location.origin + '/', '_blank')
-          }
-        }}
-        tooltip={
-          import.meta.env.DEV
-            ? portStatus?.top?.alive
-              ? `Kaze Design System (:${portStatus.top.port})`
-              : 'Kaze DS（未起動）'
-            : 'Kaze Design System'
-        }
-        size='small'
-        sx={{ color: 'text.secondary', '&:hover': { color: '#0EADB8' } }}>
-        <AirIcon sx={{ fontSize: 20 }} />
-      </IconButton>
+      {/* アプリ切替 */}
+      <AppSwitcher currentApp='logistics' />
     </Box>
   )
 }

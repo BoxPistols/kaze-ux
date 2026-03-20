@@ -1,4 +1,3 @@
-import AirIcon from '@mui/icons-material/Air'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import HomeIcon from '@mui/icons-material/Home'
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -28,6 +27,7 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
+import { AppSwitcher } from '@/components/ui/AppSwitcher'
 import { IconButton } from '@/components/ui/icon-button'
 import { CustomToaster } from '@/components/ui/toast'
 
@@ -241,37 +241,8 @@ const AppContent = ({
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
 
-            {/* Kaze Design System */}
-            <IconButton
-              onClick={() => {
-                let url = window.location.origin + '/'
-                if (import.meta.env.DEV) {
-                  const h = window.location.hostname
-                  const p = window.location.protocol
-                  try {
-                    const saved = localStorage.getItem('kaze-dev-ports')
-                    if (saved) {
-                      const ports = JSON.parse(saved)
-                      if (ports.top) url = `${p}//${h}:${ports.top}`
-                    }
-                  } catch {
-                    /* ignore */
-                  }
-                  if (url === window.location.origin + '/') {
-                    url = `${p}//${h}:5173`
-                  }
-                }
-                window.open(url, '_self')
-              }}
-              tooltip='Kaze Design System'
-              aria-label='Back to Kaze Design System'
-              size='medium'
-              sx={{
-                color: 'text.secondary',
-                '&:hover': { color: '#0EADB8' },
-              }}>
-              <AirIcon />
-            </IconButton>
+            {/* アプリ切替 */}
+            <AppSwitcher currentApp='ubereats' />
           </Box>
         </Toolbar>
       </AppBar>

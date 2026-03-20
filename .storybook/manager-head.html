@@ -28,4 +28,87 @@
   [class*='Sidebar'] {
     font-family: 'Inter', 'Noto Sans JP', sans-serif !important;
   }
+
+  /* アプリ回遊バー */
+  #app-switcher-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    background: #141e20;
+    border-top: 1px solid #2a4044;
+    z-index: 9999;
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+  }
+  #app-switcher-bar a {
+    color: #7aabaf;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  #app-switcher-bar a:hover {
+    background: rgba(14, 173, 184, 0.12);
+    color: #e2f0f1;
+  }
+  /* サイドバー・コンテンツの下にスペースを確保 */
+  body {
+    padding-bottom: 48px !important;
+  }
 </style>
+
+<script>
+  ;(function () {
+    function createBar() {
+      if (document.getElementById('app-switcher-bar')) return
+
+      var bar = document.createElement('div')
+      bar.id = 'app-switcher-bar'
+
+      var isDev =
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1'
+
+      var apps = [
+        { label: 'TOP', devPort: 5173, prodPath: '/' },
+        { label: 'Logistics', devPort: 3003, prodPath: '/sky-kaze/' },
+        { label: 'KazeEats', devPort: 3002, prodPath: '/ubereats/' },
+        { label: 'SaaS', devPort: 3001, prodPath: '/saas/' },
+      ]
+
+      apps.forEach(function (app) {
+        var a = document.createElement('a')
+        if (isDev) {
+          a.href =
+            window.location.protocol +
+            '//' +
+            window.location.hostname +
+            ':' +
+            app.devPort
+        } else {
+          a.href = window.location.origin + app.prodPath
+        }
+        a.target = '_blank'
+        a.rel = 'noopener'
+        a.textContent = app.label
+        bar.appendChild(a)
+      })
+
+      document.body.appendChild(bar)
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', createBar)
+    } else {
+      setTimeout(createBar, 1000)
+    }
+  })()
+</script>
