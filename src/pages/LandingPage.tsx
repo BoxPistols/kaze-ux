@@ -1,6 +1,7 @@
 import AirIcon from '@mui/icons-material/Air'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import GitHubIcon from '@mui/icons-material/GitHub'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard'
 import { Box, Typography, useTheme } from '@mui/material'
@@ -640,6 +641,13 @@ export const LandingPage = () => {
       description: 'レストラン検索・カート・注文フロー・レビューシステム',
       icon: <RestaurantIcon sx={{ color: 'warning.main' }} />,
       href: APP_LINKS.ubereats(),
+      label: 'Product Demo',
+    },
+    {
+      title: 'KazeLogistics',
+      description: '配送ルート・物流拠点管理・距離/コスト計算・3Dマップ',
+      icon: <LocalShippingIcon sx={{ color: 'info.main' }} />,
+      href: APP_LINKS.skyKaze(),
       label: 'Product Demo',
     },
   ]

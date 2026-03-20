@@ -21,6 +21,7 @@ interface DevPorts {
   storybook: number
   saas: number
   ubereats: number
+  skyKaze: number
 }
 
 const DEFAULT_PORTS: DevPorts = {
@@ -28,6 +29,7 @@ const DEFAULT_PORTS: DevPorts = {
   storybook: 6007,
   saas: 3001,
   ubereats: 3002,
+  skyKaze: 3003,
 }
 
 const getDevPorts = (): DevPorts => {
@@ -74,6 +76,7 @@ export const APP_LINKS = {
   storybook: () => resolve('storybook', '/storybook/'),
   saas: () => resolve('saas', '/saas/'),
   ubereats: () => resolve('ubereats', '/ubereats/'),
+  skyKaze: () => resolve('skyKaze', '/sky-kaze/'),
   github: () => 'https://github.com/BoxPistols/kaze-ux',
 }
 

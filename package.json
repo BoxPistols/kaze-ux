@@ -71,7 +71,11 @@
     "preview:dashboard": "pnpm --filter saas-dashboard preview",
     "preview:ubereats": "pnpm --filter ubereats-clone preview",
     "test:dashboard": "pnpm --filter saas-dashboard test",
-    "test:ubereats": "pnpm --filter ubereats-clone test"
+    "test:ubereats": "pnpm --filter ubereats-clone test",
+    "dev:sky-kaze": "pnpm --filter sky-kaze dev",
+    "build:sky-kaze": "pnpm --filter sky-kaze build",
+    "build:gh-pages:sky-kaze": "pnpm --filter sky-kaze build:gh-pages",
+    "preview:sky-kaze": "pnpm --filter sky-kaze preview"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

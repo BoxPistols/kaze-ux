@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --color-primary: #ea580c;
+  --color-primary-foreground: #ffffff;
+  --color-primary-light: #f97316;
+  --color-primary-dark: #c2410c;
+
+  --color-secondary: #64748b;
+  --color-secondary-foreground: #ffffff;
+
+  --color-success: #0d9488;
+  --color-success-foreground: #ffffff;
+  --color-success-light: #ccfbf1;
+  --color-success-border: #5eead4;
+
+  --color-error: #ef4444;
+  --color-error-foreground: #ffffff;
+  --color-error-light: #fef2f2;
+  --color-error-border: #fca5a5;
+
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-warning-light: #fefce8;
+  --color-warning-border: #fde68a;
+
+  --color-info: #0ea5e9;
+  --color-info-foreground: #ffffff;
+  --color-info-light: #e0f2fe;
+  --color-info-border: #7dd3fc;
+
+  --color-background: #ffffff;
+  --color-background-paper: #ffffff;
+  --color-foreground: #0f172a;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+
+  font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
+  --color-primary: #f97316;
+  --color-primary-foreground: #1e293b;
+  --color-primary-light: #fb923c;
+  --color-primary-dark: #ea580c;
+
+  --color-secondary: #94a3b8;
+  --color-secondary-foreground: #ffffff;
+
+  --color-success: #2dd4bf;
+  --color-success-foreground: #1e293b;
+  --color-success-light: #134e4a;
+  --color-success-border: #5eead4;
+
+  --color-error: #f87171;
+  --color-error-foreground: #ffffff;
+  --color-error-light: #7f1d1d;
+  --color-error-border: #fca5a5;
+
+  --color-warning: #fbbf24;
+  --color-warning-foreground: #1e293b;
+  --color-warning-light: #78350f;
+  --color-warning-border: #fde68a;
+
+  --color-info: #38bdf8;
+  --color-info-foreground: #ffffff;
+  --color-info-light: #0c4a6e;
+  --color-info-border: #7dd3fc;
+
+  --color-background: #1e293b;
+  --color-background-paper: #334155;
+  --color-foreground: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-border: #475569;
+}
+
+body {
+  overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* MapLibre コンテナが確実にサイズを持つように */
+.maplibregl-map {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+html[data-theme-transitioning] body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* 共通アニメーション */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
