@@ -5,7 +5,27 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CloseIcon from '@mui/icons-material/Close'
 import SpeedIcon from '@mui/icons-material/Speed'
-import { Box, Typography, Chip, alpha, useMediaQuery } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Chip,
+  alpha,
+  keyframes,
+  useMediaQuery,
+} from '@mui/material'
+import { useMemo } from 'react'
+
+// インシデント行の赤パルスアニメーション
+const incidentPulse = keyframes`
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(239, 68, 68, 0.08); }
+`
+
+// 進捗バーのシマーアニメーション
+const shimmer = keyframes`
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+`
 
 import { IconButton } from '@/components/ui/icon-button'
 
@@ -22,6 +42,7 @@ import {
   DRIVER_STATUS_COLOR,
 } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
+import { floatingPanelSx, floatingPanelEmphasizedSx } from '~/utils/panelStyles'
 
 const formatEta = (seconds: number | null): string => {
   if (seconds === null) return '--:--'
@@ -31,16 +52,25 @@ const formatEta = (seconds: number | null): string => {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+/** DRIVERS 配列をIDで引ける Map に変換（O(1)ルックアップ） */
+const DRIVER_MAP = new Map(DRIVERS.map((d) => [d.id, d]))
+
 export const DriverPanel = () => {
   const positions = useSimulation((s) => s.positions)
   const selectedDriverId = useSimulation((s) => s.selectedDriverId)
   const selectDriver = useSimulation((s) => s.selectDriver)
   const isMobile = useMediaQuery('(max-width:768px)')
 
+  /** 配送IDで引ける Map（positions 変更時のみ再構築） */
+  const shipmentMap = useMemo(
+    () => new Map(SHIPMENTS.map((s) => [s.id, s])),
+    []
+  )
+
   const selected = positions.find((p) => p.driverId === selectedDriverId)
-  const driver = DRIVERS.find((d) => d.id === selectedDriverId)
+  const driver = selectedDriverId ? DRIVER_MAP.get(selectedDriverId) : undefined
   const shipment = selected?.shipmentId
-    ? SHIPMENTS.find((s) => s.id === selected.shipmentId)
+    ? (shipmentMap.get(selected.shipmentId) ?? null)
     : null
 
   if (!selected || !driver) {
@@ -56,16 +86,7 @@ export const DriverPanel = () => {
           right: 12,
           zIndex: 15,
           width: 270,
-          borderRadius: 2.5,
-          backdropFilter: 'blur(16px)',
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(10, 15, 28, 0.92)'
-              : 'rgba(255,255,255,0.94)',
-          border: '1px solid',
-          borderColor: (theme) => alpha(theme.palette.divider, 0.15),
-          boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
-          overflow: 'hidden',
+          ...floatingPanelSx,
         }}>
         <Box
           sx={{
@@ -97,7 +118,7 @@ export const DriverPanel = () => {
         </Box>
         <Box sx={{ maxHeight: 420, overflow: 'auto' }}>
           {positions.map((dp) => {
-            const d = DRIVERS.find((x) => x.id === dp.driverId)
+            const d = DRIVER_MAP.get(dp.driverId)
             const color = DRIVER_STATUS_COLOR[dp.status]
             return (
               <Box
@@ -123,6 +144,9 @@ export const DriverPanel = () => {
                   borderBottom: '1px solid',
                   borderColor: 'divider',
                   opacity: ['off_duty', 'break'].includes(dp.status) ? 0.55 : 1,
+                  ...(dp.status === 'incident' && {
+                    animation: `${incidentPulse} 1s ease-in-out infinite`,
+                  }),
                 }}>
                 <Box
                   sx={{
@@ -187,16 +211,7 @@ export const DriverPanel = () => {
       sx={{
         position: 'absolute',
         zIndex: 15,
-        borderRadius: 2.5,
-        backdropFilter: 'blur(16px)',
-        bgcolor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(10, 15, 28, 0.94)'
-            : 'rgba(255,255,255,0.96)',
-        border: '1px solid',
-        borderColor: (theme) => alpha(theme.palette.divider, 0.15),
-        boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
-        overflow: 'hidden',
+        ...floatingPanelEmphasizedSx,
         // モバイル: 下からスライドアップ
         ...(isMobile
           ? {
@@ -365,6 +380,19 @@ export const DriverPanel = () => {
                   borderRadius: 3,
                   bgcolor: color,
                   transition: 'width 0.8s ease',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background:
+                      'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+                    animation: `${shimmer} 1.5s ease-in-out infinite`,
+                  },
                 }}
               />
             </Box>

@@ -106,8 +106,22 @@ export const HeaderBar = () => {
                 bgcolor: active ? LOGI_ORANGE : 'transparent',
                 color: active ? '#fff' : 'text.secondary',
                 transition: 'all 0.15s ease',
+                position: 'relative',
                 '&:hover': {
                   bgcolor: active ? LOGI_ORANGE : 'action.hover',
+                },
+                // アクティブタブの下部アクセントライン
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: -2,
+                  left: '10%',
+                  right: '10%',
+                  height: '2px',
+                  borderRadius: 1,
+                  bgcolor: LOGI_ORANGE,
+                  opacity: active ? 1 : 0,
+                  transition: 'opacity 0.15s ease',
                 },
               }}>
               <Typography

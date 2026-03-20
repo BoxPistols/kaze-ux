@@ -29,7 +29,9 @@ export const LOGI_AMBER = '#F59E0B'
 export const LOGI_ROSE = '#FB7185'
 
 // 拠点タイプごとのカラーマップ
-export const HUB_COLORS = {
+import type { Hub } from '~/data/logistics'
+
+export const HUB_COLORS: Record<Hub['type'], string> = {
   center: LOGI_ORANGE,
   warehouse: LOGI_TEAL,
   depot: '#8B5CF6',

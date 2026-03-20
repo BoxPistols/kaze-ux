@@ -9,12 +9,8 @@ import {
   LOG_TYPE_COLOR,
   type LogEventType,
 } from '~/data/simulation'
-
-const formatTime = (seconds: number): string => {
-  const m = Math.floor(seconds / 60)
-  const s = Math.floor(seconds % 60)
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-}
+import { formatShortTime } from '~/utils/format'
+import { floatingPanelSx } from '~/utils/panelStyles'
 
 const TYPE_ICON: Record<LogEventType, string> = {
   delivery_complete: '✓',
@@ -42,16 +38,7 @@ export const EventLog = () => {
         zIndex: 15,
         width: isMobile ? 'calc(100% - 24px)' : 320,
         maxHeight: 300,
-        borderRadius: 2.5,
-        backdropFilter: 'blur(16px)',
-        bgcolor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(10, 15, 28, 0.92)'
-            : 'rgba(255,255,255,0.94)',
-        border: '1px solid',
-        borderColor: (theme) => alpha(theme.palette.divider, 0.15),
-        boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
-        overflow: 'hidden',
+        ...floatingPanelSx,
         display: 'flex',
         flexDirection: 'column',
       }}>
@@ -106,7 +93,7 @@ export const EventLog = () => {
                   mt: 0.25,
                   width: 36,
                 }}>
-                {formatTime(log.timestamp)}
+                {formatShortTime(log.timestamp)}
               </Typography>
               <Box
                 sx={{

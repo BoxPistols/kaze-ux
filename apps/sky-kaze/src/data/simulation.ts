@@ -1,5 +1,5 @@
 /**
- * 配送シミュレーションエンジン v2
+ * 配送シミュレーションエンジン v3
  *
  * P0修正:
  * - 全6ドライバーをマップに表示（待機・休憩含む）
@@ -10,6 +10,13 @@
  * - ETA計算
  * - イベントログシステム
  * - ステータス定数の一元管理
+ *
+ * P2修正（プロドライバー視点）:
+ * - 区間別速度: 市街地→高速→市街地
+ * - 荷下ろし時間: 重量連動
+ * - 法令準拠休憩: 連続走行後に自動休憩
+ * - インシデント復帰: 徐行から段階加速
+ * - ルート: 主要高速ウェイポイント経由
  */
 import { create } from 'zustand'
 
@@ -141,7 +148,98 @@ export const INCIDENT_RESOLUTIONS: Record<IncidentType, string[]> = {
 }
 
 // ────────────────────────────────────────────────────
-// ルート生成
+// 区間別速度計算（プロドライバー基準）
+// ────────────────────────────────────────────────────
+
+// ルート進捗に応じた基本速度を返す
+// 前半(0-0.2): 市街地出発 30-40km/h
+// 中盤(0.2-0.8): 高速道路 70-90km/h
+// 後半(0.8-1.0): 市街地到着 25-35km/h
+const calcSpeedByProgress = (progress: number, elapsed: number): number => {
+  // 微細な揺らぎ（アクセルワーク）
+  const jitter = Math.sin(elapsed * 0.3) * 3 + Math.cos(elapsed * 0.7) * 2
+
+  if (progress < 0.1) {
+    // 出発直後: 20→35km/h に加速
+    const t = progress / 0.1
+    return 20 + t * 15 + jitter
+  }
+  if (progress < 0.2) {
+    // 市街地→高速合流: 35→70km/h に加速
+    const t = (progress - 0.1) / 0.1
+    return 35 + t * 35 + jitter
+  }
+  if (progress < 0.8) {
+    // 高速道路巡航: 70-90km/h
+    const highway = 80 + Math.sin(progress * Math.PI * 4) * 10
+    return highway + jitter
+  }
+  if (progress < 0.9) {
+    // 高速→一般道: 70→40km/h に減速
+    const t = (progress - 0.8) / 0.1
+    return 70 - t * 30 + jitter
+  }
+  // 到着間近: 40→25km/h に減速
+  const t = (progress - 0.9) / 0.1
+  return 40 - t * 15 + jitter
+}
+
+// ────────────────────────────────────────────────────
+// 荷下ろし時間計算（重量連動）
+// ────────────────────────────────────────────────────
+
+// 100kg以下: 10秒、100-500kg: 20秒、500kg以上: 30秒
+const calcUnloadTime = (shipmentId: string | null): number => {
+  if (!shipmentId) return 15
+  const shipment = SHIPMENTS.find((s) => s.id === shipmentId)
+  if (!shipment) return 15
+  if (shipment.weight <= 100) return 10
+  if (shipment.weight <= 500) return 20
+  return 30
+}
+
+// ────────────────────────────────────────────────────
+// ドライバー別内部状態（export型を汚さずに管理）
+// ────────────────────────────────────────────────────
+
+interface DriverInternalState {
+  // 連続走行時間（秒）— 休憩判定用
+  continuousDriving: number
+  // 休憩終了予定時刻（elapsedSeconds）
+  breakResumeAt: number | null
+  // 休憩前のステータスと関連データ
+  preBreakStatus: DriverStatus | null
+  preBreakSpeed: number
+  // インシデント復帰後の段階加速カウンタ（tick数）
+  postIncidentTick: number
+}
+
+// 法令: 4時間（シミュレーション上は240秒）連続走行で30秒（シミュレーション上）休憩
+const CONTINUOUS_DRIVING_LIMIT = 240
+const BREAK_DURATION = 30
+
+let driverStates = new Map<string, DriverInternalState>()
+
+const getDriverState = (driverId: string): DriverInternalState => {
+  if (!driverStates.has(driverId)) {
+    driverStates.set(driverId, {
+      continuousDriving: 0,
+      breakResumeAt: null,
+      preBreakStatus: null,
+      preBreakSpeed: 0,
+      postIncidentTick: 0,
+    })
+  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- 直前のsetで必ず存在する
+  return driverStates.get(driverId)!
+}
+
+const resetDriverStates = () => {
+  driverStates = new Map<string, DriverInternalState>()
+}
+
+// ────────────────────────────────────────────────────
+// ルート生成（主要高速ウェイポイント経由）
 // ────────────────────────────────────────────────────
 
 const hubPos = (code: string): LatLng => {
@@ -149,6 +247,80 @@ const hubPos = (code: string): LatLng => {
   return h ? { lat: h.latitude, lng: h.longitude } : { lat: 35.68, lng: 139.77 }
 }
 
+// 主要高速道路の中間ウェイポイント
+// 完全に正確ではないが、直線より自然なルートを生成する
+const ROUTE_WAYPOINTS: Record<string, LatLng[]> = {
+  // 東京→名古屋: 東名高速（御殿場・静岡経由）
+  'TKY-C→NGY-C': [
+    { lat: 35.31, lng: 138.93 }, // 御殿場付近
+    { lat: 34.97, lng: 138.38 }, // 静岡付近
+  ],
+  'NGY-C→TKY-C': [
+    { lat: 34.97, lng: 138.38 },
+    { lat: 35.31, lng: 138.93 },
+  ],
+  // 東京→仙台: 東北道（宇都宮・郡山経由）
+  'TKY-C→SDI-W': [
+    { lat: 36.56, lng: 139.88 }, // 宇都宮付近
+    { lat: 37.4, lng: 140.36 }, // 郡山付近
+  ],
+  'SDI-W→TKY-C': [
+    { lat: 37.4, lng: 140.36 },
+    { lat: 36.56, lng: 139.88 },
+  ],
+  // 名古屋→大阪: 名神高速（四日市・京都経由）
+  'NGY-C→OSK-C': [
+    { lat: 34.97, lng: 136.62 }, // 四日市付近
+    { lat: 34.98, lng: 135.76 }, // 京都南付近
+  ],
+  'OSK-C→NGY-C': [
+    { lat: 34.98, lng: 135.76 },
+    { lat: 34.97, lng: 136.62 },
+  ],
+  // 大阪→横浜: 名神→東名（京都・静岡経由）
+  'OSK-C→YKH-W': [
+    { lat: 34.98, lng: 135.76 }, // 京都南
+    { lat: 34.97, lng: 138.38 }, // 静岡
+  ],
+  'YKH-W→OSK-C': [
+    { lat: 34.97, lng: 138.38 },
+    { lat: 34.98, lng: 135.76 },
+  ],
+  // 札幌→東京: 長距離（青森・仙台経由）
+  'SPR-W→TKY-C': [
+    { lat: 40.82, lng: 140.74 }, // 青森付近
+    { lat: 38.27, lng: 140.87 }, // 仙台付近
+  ],
+  'TKY-C→SPR-W': [
+    { lat: 38.27, lng: 140.87 },
+    { lat: 40.82, lng: 140.74 },
+  ],
+  // 横浜→福岡: 東名→名神→山陽→九州道（名古屋・広島経由）
+  'YKH-W→FUK-D': [
+    { lat: 35.11, lng: 136.89 }, // 名古屋
+    { lat: 34.4, lng: 132.46 }, // 広島付近
+  ],
+  'FUK-D→YKH-W': [
+    { lat: 34.4, lng: 132.46 },
+    { lat: 35.11, lng: 136.89 },
+  ],
+  // 福岡→札幌: 超長距離（広島・大阪経由）
+  'FUK-D→SPR-W': [
+    { lat: 34.4, lng: 132.46 }, // 広島
+    { lat: 34.61, lng: 135.43 }, // 大阪
+    { lat: 38.27, lng: 140.87 }, // 仙台
+  ],
+  'SPR-W→FUK-D': [
+    { lat: 38.27, lng: 140.87 },
+    { lat: 34.61, lng: 135.43 },
+    { lat: 34.4, lng: 132.46 },
+  ],
+  // 神戸→広島: 山陽道（岡山経由）
+  'KBE-P→HRS-C': [{ lat: 34.66, lng: 133.93 }], // 岡山付近
+  'HRS-C→KBE-P': [{ lat: 34.66, lng: 133.93 }],
+}
+
+// 複数ポイントを順番にベジェ曲線で補間
 const interpolateRoute = (
   from: LatLng,
   to: LatLng,
@@ -175,12 +347,45 @@ const interpolateRoute = (
   return pts
 }
 
+// ウェイポイント経由でルートを生成
 const buildRoute = (originCode: string, destCode: string): LatLng[] => {
-  return interpolateRoute(hubPos(originCode), hubPos(destCode))
+  const key = `${originCode}→${destCode}`
+  const waypoints = ROUTE_WAYPOINTS[key]
+
+  if (!waypoints || waypoints.length === 0) {
+    // ウェイポイント未定義の場合は従来通り
+    return interpolateRoute(hubPos(originCode), hubPos(destCode))
+  }
+
+  // 始点→wp1→wp2→...→終点 を各区間で補間してつなぐ
+  const allPoints: LatLng[] = [
+    hubPos(originCode),
+    ...waypoints,
+    hubPos(destCode),
+  ]
+  const segmentCount = allPoints.length - 1
+  const stepsPerSeg = Math.max(10, Math.floor(30 / segmentCount))
+  const route: LatLng[] = []
+
+  for (let seg = 0; seg < segmentCount; seg++) {
+    const segPts = interpolateRoute(
+      allPoints[seg],
+      allPoints[seg + 1],
+      stepsPerSeg
+    )
+    // 重複するつなぎ目のポイントを除去（最初のセグメント以外）
+    if (seg > 0) segPts.shift()
+    route.push(...segPts)
+  }
+
+  return route
 }
 
 // ルートの総走破時間（秒）
 const ROUTE_DURATION = 120
+
+/** tick() の呼び出し間隔（秒）。setInterval(tick, 500) に対応 */
+export const TICK_INTERVAL_SEC = 0.5
 
 // ────────────────────────────────────────────────────
 // 全ドライバー初期位置（6名全員マップに表示）
@@ -231,7 +436,7 @@ const buildInitialPositions = (): DriverPosition[] => {
           name: d.name,
           position: route[idx],
           bearing: 0,
-          speed: 65 + Math.random() * 25,
+          speed: calcSpeedByProgress(progress, 0),
           shipmentId: shipment.id,
           status: 'moving' as DriverStatus,
           routeProgress: progress,
@@ -303,15 +508,17 @@ const PREDEFINED_INCIDENTS: Incident[] = [
   },
 ]
 
-// ジョブ割当カウンタ
+// ジョブ割当カウンタ・ログIDカウンタ（テスト・HMR安全なモジュール変数）
+// ストアの reset() 時にリセットされる
 let jobCounter = 0
+let logIdCounter = 0
+
 const nextJob = () => {
   const job = JOB_PAIRS[jobCounter % JOB_PAIRS.length]
   jobCounter++
   return job
 }
 
-let logIdCounter = 0
 const createLog = (
   type: LogEventType,
   driverId: string,
@@ -324,6 +531,12 @@ const createLog = (
   message,
   timestamp,
 })
+
+/** テスト用: カウンタリセット（reset() から呼ばれる） */
+export const _resetCounters = () => {
+  jobCounter = 0
+  logIdCounter = 0
+}
 
 // ────────────────────────────────────────────────────
 // ストア
@@ -390,13 +603,40 @@ export const useSimulation = create<SimulationState>((set, get) => ({
     } = get()
     if (!isPlaying) return
 
-    const dt = speed * 0.5 // 500msインターバルなので半分
+    const dt = speed * TICK_INTERVAL_SEC // 500msインターバル × 速度倍率
     const newElapsed = elapsedSeconds + dt
     const newLogs = [...logs]
     let newDeliveryCount = deliveryCount
 
     // ドライバー位置更新
     const newPositions = positions.map((dp) => {
+      const dState = getDriverState(dp.driverId)
+
+      // 休憩中: 復帰時刻チェック
+      if (dp.status === 'break' && dState.breakResumeAt !== null) {
+        if (newElapsed >= dState.breakResumeAt) {
+          // 休憩終了 → 走行再開
+          dState.breakResumeAt = null
+          dState.continuousDriving = 0
+          const resumeStatus = dState.preBreakStatus ?? 'moving'
+          dState.preBreakStatus = null
+          newLogs.push(
+            createLog(
+              'driver_departed',
+              dp.driverId,
+              `${dp.name}: 休憩終了、運行再開`,
+              newElapsed
+            )
+          )
+          return {
+            ...dp,
+            status: resumeStatus as DriverStatus,
+            speed: resumeStatus === 'moving' ? 30 : dState.preBreakSpeed,
+          }
+        }
+        return dp
+      }
+
       // 非走行ステータスはスキップ
       if (
         dp.status === 'idle' ||
@@ -406,7 +646,35 @@ export const useSimulation = create<SimulationState>((set, get) => ({
       )
         return dp
 
-      // 配達中（到着後の荷下ろし） → 15秒後に次のジョブ
+      // 走行系ステータスの連続運転時間を加算
+      if (dp.status === 'moving') {
+        dState.continuousDriving += dt
+      }
+
+      // 法令休憩チェック: 連続走行が上限を超えたら休憩に入る
+      if (
+        dp.status === 'moving' &&
+        dState.continuousDriving >= CONTINUOUS_DRIVING_LIMIT
+      ) {
+        dState.breakResumeAt = newElapsed + BREAK_DURATION
+        dState.preBreakStatus = dp.status
+        dState.preBreakSpeed = dp.speed
+        newLogs.push(
+          createLog(
+            'driver_departed',
+            dp.driverId,
+            `${dp.name}: 連続運転${Math.floor(CONTINUOUS_DRIVING_LIMIT / 60)}分経過、法令休憩開始`,
+            newElapsed
+          )
+        )
+        return {
+          ...dp,
+          status: 'break' as DriverStatus,
+          speed: 0,
+        }
+      }
+
+      // 配達中（到着後の荷下ろし） → 重量に応じた時間経過後に次のジョブ
       if (dp.status === 'delivering') {
         const deliverTime = dp.eta ?? 15
         if (deliverTime <= 0) {
@@ -434,12 +702,13 @@ export const useSimulation = create<SimulationState>((set, get) => ({
             )
           )
 
+          // 出発時は市街地速度から
           return {
             ...dp,
             status: 'moving' as DriverStatus,
             routeProgress: 0,
             route,
-            speed: 70,
+            speed: 25,
             shipmentId: nextShipment.id,
             eta: ROUTE_DURATION,
             position: route[0],
@@ -455,12 +724,13 @@ export const useSimulation = create<SimulationState>((set, get) => ({
       const newProgress = dp.routeProgress + progressPerTick
 
       if (newProgress >= 1) {
-        // 到着 → 配達中フェーズへ
+        // 到着 → 配達中フェーズへ（荷下ろし時間は重量連動）
+        const unloadTime = calcUnloadTime(dp.shipmentId)
         newLogs.push(
           createLog(
             'delivery_complete',
             dp.driverId,
-            `${dp.name}: 目的地到着、荷下ろし中`,
+            `${dp.name}: 目的地到着、荷下ろし中（${unloadTime}秒）`,
             newElapsed
           )
         )
@@ -470,7 +740,7 @@ export const useSimulation = create<SimulationState>((set, get) => ({
           position: dp.route[dp.route.length - 1],
           speed: 0,
           status: 'delivering' as DriverStatus,
-          eta: 15, // 荷下ろし15秒
+          eta: unloadTime,
         }
       }
 
@@ -497,12 +767,27 @@ export const useSimulation = create<SimulationState>((set, get) => ({
       const remainingProgress = 1 - newProgress
       const etaSeconds = Math.round(remainingProgress * ROUTE_DURATION)
 
+      // インシデント復帰後は徐行から段階加速
+      let currentSpeed: number
+      if (dState.postIncidentTick > 0) {
+        // 30km/h から段階的に通常速度まで復帰（10tick で完了）
+        const recoveryRatio = Math.min(dState.postIncidentTick / 10, 1)
+        const normalSpeed = calcSpeedByProgress(newProgress, newElapsed)
+        currentSpeed = 30 + (normalSpeed - 30) * recoveryRatio
+        dState.postIncidentTick++
+        if (dState.postIncidentTick > 10) {
+          dState.postIncidentTick = 0
+        }
+      } else {
+        currentSpeed = calcSpeedByProgress(newProgress, newElapsed)
+      }
+
       return {
         ...dp,
         routeProgress: newProgress,
         position: pos,
         bearing,
-        speed: 60 + Math.sin(newElapsed * 0.1) * 20,
+        speed: currentSpeed,
         eta: etaSeconds,
       }
     })
@@ -570,16 +855,20 @@ export const useSimulation = create<SimulationState>((set, get) => ({
 
     let newPositions = positions
     if (incident) {
-      newPositions = positions.map((p) =>
-        p.driverId === incident.driverId && p.status === 'incident'
-          ? {
-              ...p,
-              status: 'moving' as DriverStatus,
-              speed: 70,
-              eta: Math.round(ROUTE_DURATION * (1 - p.routeProgress)),
-            }
-          : p
-      )
+      // インシデント復帰: 30km/h 徐行から段階加速
+      newPositions = positions.map((p) => {
+        if (p.driverId === incident.driverId && p.status === 'incident') {
+          const dState = getDriverState(p.driverId)
+          dState.postIncidentTick = 1 // 段階加速開始
+          return {
+            ...p,
+            status: 'moving' as DriverStatus,
+            speed: 30, // 徐行開始
+            eta: Math.round(ROUTE_DURATION * (1 - p.routeProgress)),
+          }
+        }
+        return p
+      })
     }
     set({
       incidents: newIncidents,
@@ -592,6 +881,7 @@ export const useSimulation = create<SimulationState>((set, get) => ({
   reset: () => {
     jobCounter = 0
     logIdCounter = 0
+    resetDriverStates()
     set({
       elapsedSeconds: 0,
       isPlaying: false,

@@ -118,8 +118,9 @@ export const CompleteView = () => {
           </Box>
         </Box>
 
-        {/* ── KPIダッシュボード (2行3列) ── */}
-        <Grid container spacing={2} sx={{ mb: 5 }}>
+        {/* ── KPIダッシュボード（主要3枚 大 + 補助3枚 小） ── */}
+        {/* 上段: 主要KPI（大きめ表示） */}
+        <Grid container spacing={2} sx={{ mb: 2 }}>
           {[
             {
               label: '配達完了',
@@ -142,6 +143,38 @@ export const CompleteView = () => {
               color: LOGI_ORANGE,
               sub: `平均 ¥${deliveredShipments.length > 0 ? Math.round(totalRevenue / SHIPMENTS.length).toLocaleString() : 0}/件`,
             },
+          ].map((kpi) => (
+            <Grid key={kpi.label} size={{ xs: 12, md: 4 }}>
+              <Card>
+                <CardContent className='p-6'>
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ mb: 1 }}>
+                    {kpi.label}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: 800,
+                      fontSize: '32px',
+                      color: kpi.color,
+                      lineHeight: 1,
+                      mb: 0.75,
+                    }}>
+                    {kpi.value}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>
+                    {kpi.sub}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        {/* 下段: 補助KPI（コンパクト表示） */}
+        <Grid container spacing={2} sx={{ mb: 5 }}>
+          {[
             {
               label: '平均配送時間',
               value: `${Math.floor(avgDeliveryTime / 60)}分`,
@@ -161,27 +194,26 @@ export const CompleteView = () => {
               sub: `${SHIPMENTS.length}件`,
             },
           ].map((kpi) => (
-            <Grid key={kpi.label} size={{ xs: 6, md: 4 }}>
+            <Grid key={kpi.label} size={{ xs: 4 }}>
               <Card>
-                <CardContent className='p-5'>
+                <CardContent className='p-4'>
                   <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}>
+                    sx={{ fontSize: '12px', color: 'text.secondary', mb: 0.5 }}>
                     {kpi.label}
                   </Typography>
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: 800,
-                      fontSize: '28px',
+                      fontWeight: 700,
+                      fontSize: '20px',
                       color: kpi.color,
                       lineHeight: 1,
-                      mb: 0.5,
+                      mb: 0.25,
                     }}>
                     {kpi.value}
                   </Typography>
-                  <Typography variant='caption' color='text.secondary'>
+                  <Typography
+                    sx={{ fontSize: '12px', color: 'text.secondary' }}>
                     {kpi.sub}
                   </Typography>
                 </CardContent>
@@ -313,7 +345,7 @@ export const CompleteView = () => {
                   <Grid key={inc.id} size={{ xs: 12, md: 6 }}>
                     <Card
                       sx={{
-                        borderLeft: '4px solid',
+                        borderLeft: '3px solid',
                         borderLeftColor: color,
                         opacity: inc.resolved ? 0.75 : 1,
                       }}>
@@ -435,8 +467,25 @@ export const CompleteView = () => {
                     borderBottom: '1px solid',
                     borderColor: 'divider',
                     alignItems: 'center',
+                    position: 'relative',
+                    transition: 'background 0.15s ease',
                     '&:last-child': { borderBottom: 'none' },
-                    '&:hover': { bgcolor: 'action.hover' },
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                      '&::before': { opacity: 1 },
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: '3px',
+                      bgcolor: LOGI_ORANGE,
+                      borderRadius: '0 2px 2px 0',
+                      opacity: 0,
+                      transition: 'opacity 0.15s ease',
+                    },
                   }}>
                   <Typography
                     sx={{
@@ -481,7 +530,9 @@ export const CompleteView = () => {
                         ? '完了'
                         : s.status === 'cancelled'
                           ? '取消'
-                          : '進行中'
+                          : s.status === 'returned'
+                            ? '返送'
+                            : '進行中'
                     }
                     size='small'
                     color={
@@ -489,7 +540,9 @@ export const CompleteView = () => {
                         ? 'success'
                         : s.status === 'cancelled'
                           ? 'error'
-                          : 'warning'
+                          : s.status === 'returned'
+                            ? 'default'
+                            : 'warning'
                     }
                   />
                   <Box sx={{ display: 'flex', gap: 0.5 }}>
@@ -552,7 +605,6 @@ export const CompleteView = () => {
         title='シミュレーションリセット'
         description='全データをリセットして最初からやり直しますか？'
         confirmText='リセット'
-        severity='warning'
       />
     </Box>
   )

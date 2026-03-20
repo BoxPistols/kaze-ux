@@ -21,6 +21,8 @@ export const LiveMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const driverMarkersRef = useRef<Map<string, maplibregl.Marker>>(new Map())
+  // 前回の positions を保持して差分検出に使う
+  const prevPositionsRef = useRef<Map<string, DriverPosition>>(new Map())
 
   // refで最新値を参照（クロージャ問題修正）
   const selectedRef = useRef<string | null>(null)
@@ -161,14 +163,33 @@ export const LiveMap = () => {
   const createDriverEl = useCallback((dp: DriverPosition) => {
     const color = DRIVER_STATUS_COLOR[dp.status] ?? '#64748B'
     const el = document.createElement('div')
-    el.style.cssText = `width:36px;height:36px;cursor:pointer;position:relative;`
-    el.innerHTML = `
-      <svg viewBox="0 0 32 32" width="36" height="36">
-        <circle cx="16" cy="16" r="14" fill="${LOGI_NAVY}" stroke="${color}" stroke-width="2.5" opacity="0.95"/>
-        <path d="M10 19h12M11 19v-3l2-3h6l2 3v3M14 13h4v-2c0-.6-.4-1-1-1h-2c-.6 0-1 .4-1 1v2z"
-          stroke="${color}" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    el.style.cssText = `width:44px;height:44px;cursor:pointer;position:relative;`
+
+    // パルスリングのCSSアニメーション（インシデント用）
+    const pulseStyle = document.createElement('style')
+    pulseStyle.textContent = `
+      @keyframes incident-pulse-ring {
+        0% { r: 16; opacity: 0.6; }
+        100% { r: 22; opacity: 0; }
+      }
+    `
+    el.appendChild(pulseStyle)
+
+    el.innerHTML += `
+      <svg viewBox="0 0 44 44" width="44" height="44" class="driver-svg"
+        style="transition:transform 0.3s ease;">
+        <!-- インシデント時のパルスリング -->
+        <circle class="pulse-ring" cx="22" cy="22" r="16"
+          fill="none" stroke="#EF4444" stroke-width="2"
+          style="display:none;animation:incident-pulse-ring 1.2s ease-out infinite;" />
+        <circle class="driver-circle" cx="22" cy="22" r="14"
+          fill="${LOGI_NAVY}" stroke="${color}" stroke-width="2.5" opacity="0.95"/>
+        <g class="driver-icon" transform="translate(6, 6)">
+          <path d="M10 19h12M11 19v-3l2-3h6l2 3v3M14 13h4v-2c0-.6-.4-1-1-1h-2c-.6 0-1 .4-1 1v2z"
+            stroke="${color}" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
       </svg>
-      <div style="
+      <div class="driver-label" style="
         position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
         background:${LOGI_NAVY};color:#fff;font-size:10px;font-weight:700;
         font-family:'JetBrains Mono',monospace;padding:1px 5px;border-radius:3px;
@@ -183,46 +204,91 @@ export const LiveMap = () => {
     return el
   }, [])
 
-  // マーカー・ルート更新
+  // マーカー・ルート更新（差分検出で変更があったドライバーのみDOM操作）
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
 
     const existing = driverMarkersRef.current
+    const prevMap = prevPositionsRef.current
 
     positions.forEach((dp) => {
+      const prev = prevMap.get(dp.driverId)
       let marker = existing.get(dp.driverId)
-      const color = DRIVER_STATUS_COLOR[dp.status] ?? '#64748B'
       const isSelected = dp.driverId === selectedDriverId
 
       if (!marker) {
+        // 新規マーカー作成
         const el = createDriverEl(dp)
         marker = new maplibregl.Marker({ element: el })
           .setLngLat([dp.position.lng, dp.position.lat])
           .addTo(map)
         existing.set(dp.driverId, marker)
       } else {
-        marker.setLngLat([dp.position.lng, dp.position.lat])
-
-        // SVG色更新
-        const el = marker.getElement()
-        const circle = el.querySelector('circle')
-        const paths = el.querySelectorAll('path')
-        const label = el.querySelector('div')
-        if (circle) {
-          circle.setAttribute('stroke', color)
-          circle.setAttribute('stroke-width', isSelected ? '3.5' : '2.5')
-          circle.setAttribute(
-            'fill',
-            dp.status === 'incident' ? '#1a0000' : LOGI_NAVY
-          )
+        // 位置が変わったドライバーだけ setLngLat
+        const posChanged =
+          !prev ||
+          prev.position.lat !== dp.position.lat ||
+          prev.position.lng !== dp.position.lng
+        if (posChanged) {
+          marker.setLngLat([dp.position.lng, dp.position.lat])
         }
-        paths.forEach((p) => p.setAttribute('stroke', color))
-        if (label) {
-          ;(label as HTMLElement).style.borderColor = color
+
+        // ステータス/選択が変わった場合だけ SVG 色更新
+        const statusChanged = !prev || prev.status !== dp.status
+        const prevSelected = prev ? prev.driverId === selectedDriverId : false
+        const selectionChanged = isSelected !== prevSelected
+
+        if (statusChanged || selectionChanged) {
+          const color = DRIVER_STATUS_COLOR[dp.status] ?? '#64748B'
+          const el = marker.getElement()
+          const circle = el.querySelector('.driver-circle')
+          const paths = el.querySelectorAll('.driver-icon path')
+          const label = el.querySelector('.driver-label')
+          const pulseRing = el.querySelector('.pulse-ring')
+          if (circle) {
+            circle.setAttribute('stroke', color)
+            circle.setAttribute('stroke-width', isSelected ? '3.5' : '2.5')
+            circle.setAttribute(
+              'fill',
+              dp.status === 'incident' ? '#1a0000' : LOGI_NAVY
+            )
+          }
+          paths.forEach((p) => p.setAttribute('stroke', color))
+          if (label) {
+            ;(label as HTMLElement).style.borderColor = color
+          }
+          // インシデント中: パルスリング表示
+          if (pulseRing) {
+            ;(pulseRing as HTMLElement).style.display =
+              dp.status === 'incident' ? 'block' : 'none'
+          }
+        }
+
+        // 走行中: bearing に応じて SVG を回転
+        const bearingChanged = !prev || prev.bearing !== dp.bearing
+        if (bearingChanged && dp.status === 'moving' && dp.bearing !== 0) {
+          const el = marker.getElement()
+          const svg = el.querySelector('.driver-svg') as HTMLElement | null
+          if (svg) {
+            svg.style.transform = `rotate(${Math.round(dp.bearing)}deg)`
+          }
+        } else if (dp.status !== 'moving') {
+          const el = marker.getElement()
+          const svg = el.querySelector('.driver-svg') as HTMLElement | null
+          if (svg) {
+            svg.style.transform = 'rotate(0deg)'
+          }
         }
       }
     })
+
+    // 次回比較用に現在の positions を保持
+    const nextPrevMap = new Map<string, DriverPosition>()
+    for (const dp of positions) {
+      nextPrevMap.set(dp.driverId, dp)
+    }
+    prevPositionsRef.current = nextPrevMap
 
     // ルートライン更新（走行中のドライバーのみ）
     const source = map.getSource('driver-routes') as maplibregl.GeoJSONSource

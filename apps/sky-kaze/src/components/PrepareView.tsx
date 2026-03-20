@@ -3,9 +3,15 @@
  * DSコンポーネント活用: PageTitle, SectionTitle, Card, Button, StatusTag, CustomChip
  */
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import { Box, Grid, Typography, alpha } from '@mui/material'
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  LinearProgress,
+  Typography,
+  alpha,
+} from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -73,7 +79,7 @@ export const PrepareView = () => {
   }
 
   const pendingShipments = SHIPMENTS.filter((s) =>
-    ['pending', 'picked_up'].includes(s.status)
+    ['awaiting_pickup', 'picked_up', 'sorting'].includes(s.status)
   )
   const activeShipments = SHIPMENTS.filter((s) =>
     ['in_transit', 'out_for_delivery', 'at_hub'].includes(s.status)
@@ -92,32 +98,40 @@ export const PrepareView = () => {
           sx={{ fontWeight: 800, mb: 0.5 }}>
           出荷準備
         </Typography>
-        <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 5 }}>
           荷物の確認・伝票発行・車両点検を完了してから配送を開始してください
         </Typography>
 
         {/* ── KPIサマリー ── */}
-        <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid container spacing={2} sx={{ mb: 5 }}>
           {[
             {
               label: '出荷待ち',
               value: pendingShipments.length,
               color: '#F59E0B',
+              current: pendingShipments.length,
+              max: SHIPMENTS.length,
             },
             {
               label: '配送中',
               value: activeShipments.length,
               color: LOGI_ORANGE,
+              current: activeShipments.length,
+              max: SHIPMENTS.length,
             },
             {
               label: '待機ドライバー',
               value: availableDrivers.length,
               color: '#22C55E',
+              current: availableDrivers.length,
+              max: DRIVERS.length,
             },
             {
               label: '点検進捗',
               value: `${checked.size}/${CHECKLIST.length}`,
               color: allChecked ? '#22C55E' : '#3B82F6',
+              current: checked.size,
+              max: CHECKLIST.length,
             },
           ].map((kpi) => (
             <Grid key={kpi.label} size={{ xs: 6, md: 3 }}>
@@ -133,12 +147,31 @@ export const PrepareView = () => {
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
-                      fontSize: '32px',
+                      fontSize: '28px',
                       color: kpi.color,
                       lineHeight: 1,
+                      mb: 1.5,
                     }}>
                     {kpi.value}
                   </Typography>
+                  {/* ミニプログレスバー */}
+                  <LinearProgress
+                    variant='determinate'
+                    value={
+                      kpi.max > 0
+                        ? Math.round((kpi.current / kpi.max) * 100)
+                        : 0
+                    }
+                    sx={{
+                      height: 4,
+                      borderRadius: 2,
+                      bgcolor: alpha(kpi.color, 0.12),
+                      '& .MuiLinearProgress-bar': {
+                        borderRadius: 2,
+                        bgcolor: kpi.color,
+                      },
+                    }}
+                  />
                 </CardContent>
               </Card>
             </Grid>
@@ -147,7 +180,7 @@ export const PrepareView = () => {
 
         {/* ── 出発前チェックリスト ── */}
         <SectionTitle sx={{ mb: 2 }}>出発前チェックリスト</SectionTitle>
-        <Card sx={{ mb: 4 }}>
+        <Card sx={{ mb: 5 }}>
           <CardContent className='p-0'>
             {categories.map((cat, catIdx) => (
               <Box key={cat}>
@@ -192,8 +225,13 @@ export const PrepareView = () => {
                         cursor: 'pointer',
                         borderTop: '1px solid',
                         borderColor: 'divider',
-                        transition: 'background 0.1s',
-                        '&:hover': { bgcolor: 'action.hover' },
+                        transition: 'background 0.2s ease',
+                        bgcolor: done ? alpha('#22C55E', 0.06) : 'transparent',
+                        '&:hover': {
+                          bgcolor: done
+                            ? alpha('#22C55E', 0.1)
+                            : 'action.hover',
+                        },
                       }}>
                       {done ? (
                         <CheckCircleIcon
@@ -243,7 +281,7 @@ export const PrepareView = () => {
             + 新規追加
           </Button>
         </Box>
-        <Card sx={{ mb: 4 }}>
+        <Card sx={{ mb: 5 }}>
           <CardContent className='p-0'>
             {/* ヘッダー行 */}
             <Box
@@ -340,7 +378,7 @@ export const PrepareView = () => {
 
         {/* ── ドライバー割当 ── */}
         <SectionTitle sx={{ mb: 2 }}>ドライバー割当</SectionTitle>
-        <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid container spacing={2} sx={{ mb: 5 }}>
           {DRIVERS.map((d) => (
             <Grid key={d.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card>
@@ -394,7 +432,33 @@ export const PrepareView = () => {
             size='lg'
             disabled={!allChecked}
             className='w-full gap-2 text-base'>
-            <PlayArrowIcon sx={{ fontSize: 22 }} />
+            {/* チェック完了率プログレスリング */}
+            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+              <CircularProgress
+                variant='determinate'
+                value={Math.round((checked.size / CHECKLIST.length) * 100)}
+                size={24}
+                thickness={5}
+                sx={{
+                  color: allChecked ? '#22C55E' : LOGI_ORANGE,
+                  '& .MuiCircularProgress-circle': {
+                    transition: 'stroke-dashoffset 0.4s ease',
+                  },
+                }}
+              />
+              {/* 背景リング */}
+              <CircularProgress
+                variant='determinate'
+                value={100}
+                size={24}
+                thickness={5}
+                sx={{
+                  color: alpha(allChecked ? '#22C55E' : LOGI_ORANGE, 0.15),
+                  position: 'absolute',
+                  left: 0,
+                }}
+              />
+            </Box>
             {allChecked
               ? '全チェック完了 — 配送開始'
               : `チェック未完了（${checked.size}/${CHECKLIST.length}）`}

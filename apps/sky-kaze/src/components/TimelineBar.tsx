@@ -7,20 +7,28 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ReplayIcon from '@mui/icons-material/Replay'
-import { Box, Typography, alpha, useMediaQuery } from '@mui/material'
+import { Box, Typography, alpha, keyframes, useMediaQuery } from '@mui/material'
 
 import { IconButton } from '@/components/ui/icon-button'
 
 import { useSimulation, DRIVER_STATUS_COLOR } from '~/data/simulation'
-
-const formatTime = (seconds: number): string => {
-  const h = Math.floor(seconds / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  const s = Math.floor(seconds % 60)
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-}
+import { floatingPanelSx } from '~/utils/panelStyles'
 
 const SPEEDS = [1, 2, 5, 10]
+
+// コロン点滅アニメーション（再生中のみ使用）
+const colonBlink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`
+
+// 経過時間をHH:MM:SS形式で返す（コロンを独立spanで制御するためパーツ分割）
+const formatTimeParts = (seconds: number) => {
+  const h = String(Math.floor(seconds / 3600)).padStart(2, '0')
+  const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0')
+  const s = String(Math.floor(seconds % 60)).padStart(2, '0')
+  return { h, m, s }
+}
 
 export const TimelineBar = () => {
   const isMobile = useMediaQuery('(max-width:768px)')
@@ -61,22 +69,17 @@ export const TimelineBar = () => {
               left: '50%',
               transform: 'translateX(-50%)',
             }),
+        ...floatingPanelSx,
         borderRadius: 3,
-        backdropFilter: 'blur(16px)',
-        bgcolor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(10, 15, 28, 0.92)'
-            : 'rgba(255,255,255,0.94)',
-        border: '1px solid',
-        borderColor: (theme) => alpha(theme.palette.divider, 0.15),
-        boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
       }}>
-      {/* 再生/停止 */}
+      {/* 再生/停止（medium相当のサイズ） */}
       <IconButton
         onClick={isPlaying ? pause : play}
         tooltip={isPlaying ? '一時停止' : '再生'}
         size='small'
         sx={{
+          width: 36,
+          height: 36,
           bgcolor: isPlaying
             ? alpha(DRIVER_STATUS_COLOR.moving, 0.15)
             : alpha(DRIVER_STATUS_COLOR.delivering, 0.15),
@@ -90,9 +93,9 @@ export const TimelineBar = () => {
           },
         }}>
         {isPlaying ? (
-          <PauseIcon sx={{ fontSize: 20 }} />
+          <PauseIcon sx={{ fontSize: 24 }} />
         ) : (
-          <PlayArrowIcon sx={{ fontSize: 20 }} />
+          <PlayArrowIcon sx={{ fontSize: 24 }} />
         )}
       </IconButton>
 
@@ -100,7 +103,7 @@ export const TimelineBar = () => {
         <ReplayIcon sx={{ fontSize: 18 }} />
       </IconButton>
 
-      {/* 経過時間 */}
+      {/* 経過時間（再生中はコロンが点滅） */}
       <Box
         sx={{
           px: 1.5,
@@ -109,13 +112,34 @@ export const TimelineBar = () => {
           bgcolor: 'action.hover',
         }}>
         <Typography
+          component='span'
           sx={{
             fontFamily: "'JetBrains Mono', monospace",
             fontWeight: 700,
             fontSize: '14px',
             letterSpacing: '0.05em',
+            display: 'inline-flex',
+            alignItems: 'center',
           }}>
-          {formatTime(elapsed)}
+          {(() => {
+            const { h, m, s } = formatTimeParts(elapsed)
+            const colonSx = isPlaying
+              ? { animation: `${colonBlink} 1s step-end infinite` }
+              : {}
+            return (
+              <>
+                {h}
+                <Box component='span' sx={colonSx}>
+                  :
+                </Box>
+                {m}
+                <Box component='span' sx={colonSx}>
+                  :
+                </Box>
+                {s}
+              </>
+            )
+          })()}
         </Typography>
       </Box>
 
@@ -147,9 +171,23 @@ export const TimelineBar = () => {
                   speed === s ? DRIVER_STATUS_COLOR.moving : 'transparent',
                 color: speed === s ? '#fff' : 'text.secondary',
                 transition: 'all 0.15s ease',
+                position: 'relative',
                 '&:hover': {
                   bgcolor:
                     speed === s ? DRIVER_STATUS_COLOR.moving : 'action.hover',
+                },
+                // 選択状態の下線インジケーター
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: -2,
+                  left: '20%',
+                  right: '20%',
+                  height: '2px',
+                  borderRadius: 1,
+                  bgcolor: '#fff',
+                  opacity: speed === s ? 1 : 0,
+                  transition: 'opacity 0.15s ease',
                 },
               }}>
               {s}x

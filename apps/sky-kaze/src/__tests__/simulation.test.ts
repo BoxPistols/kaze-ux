@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 
 import { DRIVERS } from '../data/logistics'
-import { useSimulation } from '../data/simulation'
+import { useSimulation, TICK_INTERVAL_SEC } from '../data/simulation'
 
 // Zustand store のテストは直接 getState/setState を使う
 beforeEach(() => {
@@ -115,7 +115,9 @@ describe('tick', () => {
   })
 
   it('インシデント発生タイミングで incidents に追加される', () => {
-    // 最初のインシデントは occurredAt=45, dt=46*0.5=23 → 2tickで46秒
+    // INC-001 の occurredAt = 45秒
+    // speed=46 のとき dt = 46 * TICK_INTERVAL_SEC(0.5) = 23秒/tick
+    // 2tick で 46秒 ≥ 45秒 → インシデント発生
     useSimulation.getState().play()
     useSimulation.setState({ speed: 46 })
     useSimulation.getState().tick()
@@ -128,8 +130,9 @@ describe('tick', () => {
   })
 
   it('インシデント発生でドライバーが incident ステータスになる', () => {
-    // D001の初期progress=0.75で残り30秒で到着してしまうため、
-    // progressを低くしてインシデント(45秒)より先に到着しないようにする
+    // D001の初期progress=0.75 → 残り ROUTE_DURATION*(1-0.75)=30秒で到着してしまう
+    // INC-001 の occurredAt=45秒より先に到着しないよう progress を 0.1 に低下
+    // speed=46: dt = 46 * TICK_INTERVAL_SEC(0.5) = 23秒/tick → 2tick で 46秒
     const positions = useSimulation
       .getState()
       .positions.map((p) =>
@@ -209,18 +212,18 @@ describe('reset', () => {
 })
 
 describe('speed', () => {
-  it('speed=10 で tick すると elapsedSeconds が10増加する', () => {
+  it('speed=10 で tick すると dt = speed * TICK_INTERVAL_SEC 秒進む', () => {
     useSimulation.getState().play()
     useSimulation.getState().setSpeed(10)
     useSimulation.getState().tick()
 
     const { elapsedSeconds } = useSimulation.getState()
-    // speed=10, dt=speed*0.5=5 → 1回の tick で5秒進む
-    expect(elapsedSeconds).toBe(5)
+    // dt = 10 * TICK_INTERVAL_SEC(0.5) = 5秒/tick
+    expect(elapsedSeconds).toBe(10 * TICK_INTERVAL_SEC)
   })
 
   it('speed=10 で routeProgress が speed=1 の10倍進む', () => {
-    // speed=1 で1回 tick（dt=1*0.5=0.5）
+    // speed=1 で1回 tick: dt = 1 * TICK_INTERVAL_SEC(0.5) = 0.5秒
     useSimulation.getState().play()
     useSimulation.getState().setSpeed(1)
     useSimulation.getState().tick()

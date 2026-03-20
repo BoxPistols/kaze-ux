@@ -173,12 +173,14 @@ describe('CUSTOMERS', () => {
 
 describe('STATUS_LABELS', () => {
   const allStatuses: ShipmentStatus[] = [
-    'pending',
+    'awaiting_pickup',
     'picked_up',
+    'sorting',
     'in_transit',
     'at_hub',
     'out_for_delivery',
     'delivered',
+    'returned',
     'cancelled',
   ]
 
@@ -189,7 +191,7 @@ describe('STATUS_LABELS', () => {
     }
   })
 
-  it('ステータス数が7つである', () => {
-    expect(Object.keys(STATUS_LABELS)).toHaveLength(7)
+  it('ステータス数が9つである', () => {
+    expect(Object.keys(STATUS_LABELS)).toHaveLength(9)
   })
 })
