@@ -6,7 +6,7 @@ import { alpha, type SxProps, type Theme } from '@mui/material'
 
 /** 標準パネル（backdropFilter + bgcolor + border + shadow） */
 export const floatingPanelSx: SxProps<Theme> = {
-  borderRadius: 3,
+  borderRadius: 2,
   backdropFilter: 'blur(16px)',
   bgcolor: (theme: Theme) =>
     theme.palette.mode === 'dark'

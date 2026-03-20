@@ -70,7 +70,7 @@ export const TimelineBar = () => {
               transform: 'translateX(-50%)',
             }),
         ...floatingPanelSx,
-        borderRadius: 3,
+        borderRadius: 2,
       }}>
       {/* 再生/停止（medium相当のサイズ） */}
       <IconButton
@@ -116,7 +116,7 @@ export const TimelineBar = () => {
           sx={{
             fontFamily: "'JetBrains Mono', monospace",
             fontWeight: 700,
-            fontSize: '14px',
+            fontSize: '16px',
             letterSpacing: '0.05em',
             display: 'inline-flex',
             alignItems: 'center',
@@ -163,7 +163,7 @@ export const TimelineBar = () => {
                 px: 0.75,
                 py: 0.25,
                 borderRadius: 1,
-                fontSize: '13px',
+                fontSize: '14px',
                 fontWeight: speed === s ? 800 : 700,
                 fontFamily: "'JetBrains Mono', monospace",
                 cursor: 'pointer',
@@ -208,7 +208,7 @@ export const TimelineBar = () => {
           />
           <Typography
             sx={{
-              fontSize: '13px',
+              fontSize: '14px',
               fontFamily: "'JetBrains Mono', monospace",
               fontWeight: 600,
             }}>
@@ -223,7 +223,7 @@ export const TimelineBar = () => {
           />
           <Typography
             sx={{
-              fontSize: '13px',
+              fontSize: '14px',
               fontFamily: "'JetBrains Mono', monospace",
               fontWeight: 600,
               color: DRIVER_STATUS_COLOR.delivering,
@@ -245,7 +245,7 @@ export const TimelineBar = () => {
             />
             <Typography
               sx={{
-                fontSize: '13px',
+                fontSize: '14px',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
                 color: DRIVER_STATUS_COLOR.incident,

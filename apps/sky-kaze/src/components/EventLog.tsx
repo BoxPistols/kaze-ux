@@ -55,7 +55,7 @@ export const EventLog = () => {
         <Typography
           sx={{
             fontWeight: 700,
-            fontSize: '12px',
+            fontSize: '13px',
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
           }}>
@@ -64,7 +64,7 @@ export const EventLog = () => {
         <Typography
           sx={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '12px',
+            fontSize: '13px',
             color: 'text.secondary',
           }}>
           {logs.length} events
@@ -87,11 +87,11 @@ export const EventLog = () => {
               <Typography
                 sx={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: 'text.disabled',
                   flexShrink: 0,
                   mt: 0.25,
-                  width: 36,
+                  width: 40,
                 }}>
                 {formatShortTime(log.timestamp)}
               </Typography>
@@ -114,7 +114,7 @@ export const EventLog = () => {
               </Box>
               <Typography
                 sx={{
-                  fontSize: '13px',
+                  fontSize: '14px',
                   color: 'text.secondary',
                   lineHeight: 1.5,
                 }}>

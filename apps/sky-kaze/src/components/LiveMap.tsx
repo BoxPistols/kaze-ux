@@ -131,10 +131,10 @@ export const LiveMap = () => {
         closeButton: false,
         maxWidth: '220px',
       }).setHTML(`
-        <div style="font-family:'JetBrains Mono',Inter,sans-serif;font-size:12px;line-height:1.5;">
+        <div style="font-family:'JetBrains Mono',Inter,sans-serif;font-size:14px;line-height:1.5;">
           <div style="font-weight:700;margin-bottom:2px;">${hub.name}</div>
-          <div style="color:#64748B;font-size:12px;">${HUB_TYPE_LABELS[hub.type]} — ${hub.city}</div>
-          <div style="margin-top:4px;font-size:12px;">
+          <div style="color:#64748B;font-size:14px;">${HUB_TYPE_LABELS[hub.type]} — ${hub.city}</div>
+          <div style="margin-top:4px;font-size:14px;">
             処理能力: <strong>${hub.capacity.toLocaleString()}</strong> t/日<br/>
             現在荷物: <strong>${shipmentsHere}</strong> 件
           </div>
@@ -191,7 +191,7 @@ export const LiveMap = () => {
       </svg>
       <div class="driver-label" style="
         position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
-        background:${LOGI_NAVY};color:#fff;font-size:10px;font-weight:700;
+        background:${LOGI_NAVY};color:#fff;font-size:12px;font-weight:700;
         font-family:'JetBrains Mono',monospace;padding:1px 5px;border-radius:3px;
         white-space:nowrap;border:1px solid ${color};pointer-events:none;
       ">${dp.name.split(' ')[0]}</div>

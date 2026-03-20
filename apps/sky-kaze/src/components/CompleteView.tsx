@@ -96,10 +96,13 @@ export const CompleteView = () => {
             <Typography
               variant='xl'
               display='block'
-              sx={{ fontWeight: 800, mb: 0.5 }}>
+              sx={{ fontWeight: 800, fontSize: '26px', mb: 0.5 }}>
               配送結果
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography
+              variant='body2'
+              color='text.secondary'
+              sx={{ fontSize: '15px' }}>
               稼働時間 {elapsed} のシミュレーション結果
             </Typography>
           </Box>
@@ -150,21 +153,24 @@ export const CompleteView = () => {
                   <Typography
                     variant='body2'
                     color='text.secondary'
-                    sx={{ mb: 1 }}>
+                    sx={{ fontSize: '13px', mb: 1 }}>
                     {kpi.label}
                   </Typography>
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
-                      fontSize: '32px',
+                      fontSize: '36px',
                       color: kpi.color,
                       lineHeight: 1,
                       mb: 0.75,
                     }}>
                     {kpi.value}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ fontSize: '15px' }}>
                     {kpi.sub}
                   </Typography>
                 </CardContent>
@@ -198,14 +204,14 @@ export const CompleteView = () => {
               <Card>
                 <CardContent className='p-4'>
                   <Typography
-                    sx={{ fontSize: '12px', color: 'text.secondary', mb: 0.5 }}>
+                    sx={{ fontSize: '13px', color: 'text.secondary', mb: 0.5 }}>
                     {kpi.label}
                   </Typography>
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 700,
-                      fontSize: '20px',
+                      fontSize: '24px',
                       color: kpi.color,
                       lineHeight: 1,
                       mb: 0.25,
@@ -213,7 +219,7 @@ export const CompleteView = () => {
                     {kpi.value}
                   </Typography>
                   <Typography
-                    sx={{ fontSize: '12px', color: 'text.secondary' }}>
+                    sx={{ fontSize: '13px', color: 'text.secondary' }}>
                     {kpi.sub}
                   </Typography>
                 </CardContent>
@@ -244,6 +250,7 @@ export const CompleteView = () => {
                     variant='caption'
                     sx={{
                       fontWeight: 700,
+                      fontSize: '13px',
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
                       color: 'text.secondary',
@@ -274,10 +281,15 @@ export const CompleteView = () => {
                     '&:hover': { bgcolor: 'action.hover' },
                   }}>
                   <Box>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 600, fontSize: '15px' }}>
                       {d.name}
                     </Typography>
-                    <Typography variant='caption' color='text.secondary'>
+                    <Typography
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ fontSize: '13px' }}>
                       {d.licensePlate}
                       {driverIncidents.length > 0 && (
                         <Box
@@ -288,7 +300,9 @@ export const CompleteView = () => {
                       )}
                     </Typography>
                   </Box>
-                  <Typography variant='body2'>{d.vehicle}</Typography>
+                  <Typography variant='body2' sx={{ fontSize: '15px' }}>
+                    {d.vehicle}
+                  </Typography>
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
@@ -380,10 +394,15 @@ export const CompleteView = () => {
                         </Box>
                       </CardHeader>
                       <CardContent>
-                        <Typography variant='body2' sx={{ mb: 0.5 }}>
+                        <Typography
+                          variant='body2'
+                          sx={{ fontSize: '15px', mb: 0.5 }}>
                           {inc.title}
                         </Typography>
-                        <Typography variant='caption' color='text.secondary'>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{ fontSize: '13px' }}>
                           担当: {driver?.name} — {inc.description}
                         </Typography>
                         {inc.resolution && (
@@ -400,7 +419,7 @@ export const CompleteView = () => {
                             }}>
                             <Typography
                               variant='caption'
-                              sx={{ fontWeight: 600 }}>
+                              sx={{ fontWeight: 600, fontSize: '13px' }}>
                               対応: {inc.resolution}
                             </Typography>
                           </Box>
@@ -448,6 +467,7 @@ export const CompleteView = () => {
                   variant='caption'
                   sx={{
                     fontWeight: 700,
+                    fontSize: '13px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
                     color: 'text.secondary',
@@ -495,16 +515,21 @@ export const CompleteView = () => {
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 700,
-                      fontSize: '13px',
+                      fontSize: '14px',
                       color: LOGI_ORANGE,
                     }}>
                     {s.trackingNo}
                   </Typography>
                   <Box>
-                    <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                    <Typography
+                      variant='body2'
+                      sx={{ fontWeight: 500, fontSize: '15px' }}>
                       {s.contents}
                     </Typography>
-                    <Typography variant='caption' color='text.secondary'>
+                    <Typography
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ fontSize: '13px' }}>
                       {s.sender.company} → {s.receiver.company}
                     </Typography>
                     {note && (
@@ -512,6 +537,7 @@ export const CompleteView = () => {
                         variant='caption'
                         sx={{
                           display: 'block',
+                          fontSize: '13px',
                           mt: 0.5,
                           color: 'info.main',
                           fontStyle: 'italic',
@@ -524,7 +550,7 @@ export const CompleteView = () => {
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 600,
-                      fontSize: '13px',
+                      fontSize: '14px',
                     }}>
                     ¥{s.cost.toLocaleString()}
                   </Typography>

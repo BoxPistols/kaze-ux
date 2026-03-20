@@ -170,10 +170,13 @@ export const PrepareView = () => {
         <Typography
           variant='xl'
           display='block'
-          sx={{ fontWeight: 800, mb: 0.5 }}>
+          sx={{ fontWeight: 800, fontSize: '26px', mb: 0.5 }}>
           出荷準備
         </Typography>
-        <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
+        <Typography
+          variant='body2'
+          color='text.secondary'
+          sx={{ fontSize: '15px', mb: 3 }}>
           荷物の確認・伝票発行・車両点検を完了してから配送を開始してください
         </Typography>
 
@@ -215,14 +218,14 @@ export const PrepareView = () => {
                   <Typography
                     variant='body2'
                     color='text.secondary'
-                    sx={{ mb: 1 }}>
+                    sx={{ fontSize: '13px', mb: 1 }}>
                     {kpi.label}
                   </Typography>
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
-                      fontSize: '28px',
+                      fontSize: '36px',
                       color: kpi.color,
                       lineHeight: 1,
                       mb: 1.5,
@@ -258,6 +261,7 @@ export const PrepareView = () => {
           variant='body2'
           sx={{
             fontWeight: 700,
+            fontSize: '15px',
             mb: 2,
             color: 'text.secondary',
           }}>
@@ -297,7 +301,9 @@ export const PrepareView = () => {
             borderColor: (theme) =>
               alpha(LOGI_ORANGE, theme.palette.mode === 'dark' ? 0.3 : 0.2),
           }}>
-          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+          <Typography
+            variant='body2'
+            sx={{ fontSize: '15px', color: 'text.secondary' }}>
             {STEP_DESCRIPTIONS[activeStep]}
           </Typography>
         </Box>
@@ -353,6 +359,7 @@ export const PrepareView = () => {
                       variant='caption'
                       sx={{
                         fontWeight: 700,
+                        fontSize: '13px',
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
                         color: 'text.secondary',
@@ -382,7 +389,7 @@ export const PrepareView = () => {
                         sx={{
                           fontFamily: "'JetBrains Mono', monospace",
                           fontWeight: 700,
-                          fontSize: '13px',
+                          fontSize: '14px',
                           color: LOGI_ORANGE,
                         }}>
                         {s.trackingNo}
@@ -390,24 +397,29 @@ export const PrepareView = () => {
                       <PriorityChip priority={s.priority} />
                     </Box>
                     <Box>
-                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                      <Typography
+                        variant='body2'
+                        sx={{ fontWeight: 500, fontSize: '15px' }}>
                         {s.contents}
                       </Typography>
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography
+                        variant='caption'
+                        sx={{ fontSize: '13px' }}
+                        color='text.secondary'>
                         {s.sender.company} → {s.receiver.company}
                       </Typography>
                     </Box>
                     <Typography
                       sx={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '13px',
+                        fontSize: '14px',
                       }}>
                       {s.originHub} → {s.destinationHub}
                     </Typography>
                     <Typography
                       sx={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '13px',
+                        fontSize: '14px',
                       }}>
                       {s.weight}kg
                     </Typography>
@@ -464,6 +476,7 @@ export const PrepareView = () => {
                         variant='caption'
                         sx={{
                           fontWeight: 700,
+                          fontSize: '13px',
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
                           color: 'text.secondary',
@@ -523,6 +536,7 @@ export const PrepareView = () => {
                           <Typography
                             variant='body1'
                             sx={{
+                              fontSize: '15px',
                               textDecoration: done ? 'line-through' : 'none',
                               color: done ? 'text.secondary' : 'text.primary',
                             }}>
@@ -575,7 +589,7 @@ export const PrepareView = () => {
                       <Typography
                         variant='caption'
                         color='text.secondary'
-                        sx={{ mt: 0.5, display: 'block' }}>
+                        sx={{ fontSize: '13px', mt: 0.5, display: 'block' }}>
                         {d.phone}
                       </Typography>
                     </CardContent>

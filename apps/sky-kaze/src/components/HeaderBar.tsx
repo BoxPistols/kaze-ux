@@ -124,7 +124,7 @@ export const HeaderBar = () => {
               }}>
               <Typography
                 sx={{
-                  fontSize: '14px',
+                  fontSize: '15px',
                   fontWeight: active ? 700 : 500,
                   lineHeight: 1.3,
                 }}>
@@ -133,7 +133,7 @@ export const HeaderBar = () => {
               {!isMobile && (
                 <Typography
                   sx={{
-                    fontSize: '12px',
+                    fontSize: '13px',
                     opacity: active ? 0.85 : 0.6,
                     lineHeight: 1.2,
                   }}>

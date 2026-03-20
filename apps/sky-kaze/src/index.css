@@ -131,7 +131,7 @@ html[data-theme-transitioning] body {
 .MuiStepLabel-label {
   font-family: 'DM Sans', 'Noto Sans JP', sans-serif !important;
   font-weight: 600 !important;
-  font-size: 14px !important;
+  font-size: 15px !important;
 }
 
 .MuiStepIcon-root.Mui-completed {

@@ -51,7 +51,7 @@ export const IncidentPanel = () => {
             transform: 'translate(-50%, -50%)',
             zIndex: 30,
             width: isMobile ? 'calc(100% - 24px)' : 380,
-            borderRadius: 3,
+            borderRadius: 2,
             backdropFilter: 'blur(20px)',
             bgcolor: (theme) =>
               theme.palette.mode === 'dark'
@@ -76,10 +76,10 @@ export const IncidentPanel = () => {
             }}>
             <ErrorOutlineIcon sx={{ color, fontSize: 22 }} aria-hidden='true' />
             <Box>
-              <Typography sx={{ fontWeight: 700, fontSize: '15px', color }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '16px', color }}>
                 {INCIDENT_LABELS[activeIncident.type]}
               </Typography>
-              <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+              <Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
                 {driver?.name} — {driver?.vehicle}
               </Typography>
             </Box>
@@ -87,12 +87,12 @@ export const IncidentPanel = () => {
 
           {/* 詳細 */}
           <Box sx={{ px: 2.5, py: 2 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '14px', mb: 0.5 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '16px', mb: 0.5 }}>
               {activeIncident.title}
             </Typography>
             <Typography
               sx={{
-                fontSize: '13px',
+                fontSize: '15px',
                 color: 'text.secondary',
                 lineHeight: 1.6,
                 mb: 2,
@@ -129,7 +129,7 @@ export const IncidentPanel = () => {
                   sx={{
                     px: 2,
                     py: 1.25,
-                    borderRadius: 2,
+                    borderRadius: 1.5,
                     border: '1px solid',
                     borderColor: 'divider',
                     cursor: 'pointer',
@@ -139,7 +139,7 @@ export const IncidentPanel = () => {
                       bgcolor: alpha(color, 0.05),
                     },
                   }}>
-                  <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+                  <Typography sx={{ fontSize: '15px', fontWeight: 500 }}>
                     {r}
                   </Typography>
                 </Box>
@@ -159,7 +159,7 @@ export const IncidentPanel = () => {
                 }
               }}
               sx={{
-                fontSize: '12px',
+                fontSize: '13px',
                 color: 'text.secondary',
                 textAlign: 'center',
                 mt: 1.5,
@@ -209,7 +209,7 @@ export const IncidentPanel = () => {
               gap: 1,
               px: 1.5,
               py: 1,
-              borderRadius: 2,
+              borderRadius: 1.5,
               backdropFilter: 'blur(14px)',
               bgcolor: (theme) =>
                 theme.palette.mode === 'dark'
@@ -240,10 +240,10 @@ export const IncidentPanel = () => {
               }}
             />
             <Box>
-              <Typography sx={{ fontSize: '12px', fontWeight: 700, color }}>
+              <Typography sx={{ fontSize: '13px', fontWeight: 700, color }}>
                 {INCIDENT_LABELS[incident.type]}
               </Typography>
-              <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+              <Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
                 {driver?.name} — {incident.title}
               </Typography>
             </Box>

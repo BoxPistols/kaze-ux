@@ -101,7 +101,7 @@ export const DriverPanel = () => {
           <Typography
             sx={{
               fontWeight: 700,
-              fontSize: '13px',
+              fontSize: '14px',
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}>
@@ -110,7 +110,7 @@ export const DriverPanel = () => {
           <Typography
             sx={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '12px',
+              fontSize: '13px',
               color: 'text.secondary',
             }}>
             {positions.filter((p) => p.status === 'moving').length} active
@@ -161,11 +161,11 @@ export const DriverPanel = () => {
                   }}
                 />
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: 600 }}>
+                  <Typography sx={{ fontSize: '15px', fontWeight: 600 }}>
                     {d?.name ?? dp.driverId}
                   </Typography>
                   <Typography
-                    sx={{ fontSize: '12px', color: 'text.secondary' }}>
+                    sx={{ fontSize: '14px', color: 'text.secondary' }}>
                     {d?.vehicle}
                   </Typography>
                 </Box>
@@ -174,8 +174,8 @@ export const DriverPanel = () => {
                     label={DRIVER_STATUS_LABEL[dp.status]}
                     size='small'
                     sx={{
-                      height: 18,
-                      fontSize: '12px',
+                      height: 20,
+                      fontSize: '13px',
                       fontWeight: 700,
                       bgcolor: alpha(color, 0.12),
                       color,
@@ -185,7 +185,7 @@ export const DriverPanel = () => {
                     <Typography
                       sx={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '12px',
+                        fontSize: '14px',
                         color: 'text.secondary',
                         mt: 0.25,
                       }}>
@@ -254,7 +254,7 @@ export const DriverPanel = () => {
               bgcolor: color,
             }}
           />
-          <Typography sx={{ fontWeight: 700, fontSize: '14px' }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '15px' }}>
             {driver.name}
           </Typography>
         </Box>
@@ -275,7 +275,7 @@ export const DriverPanel = () => {
             sx={{
               height: 22,
               fontWeight: 700,
-              fontSize: '12px',
+              fontSize: '13px',
               bgcolor: alpha(color, 0.12),
               color,
             }}
@@ -289,7 +289,7 @@ export const DriverPanel = () => {
               <Typography
                 sx={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                 }}>
                 {Math.round(selected.speed)} km/h
@@ -305,7 +305,7 @@ export const DriverPanel = () => {
               <Typography
                 sx={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 700,
                   color: LOGI_ORANGE,
                 }}>
@@ -323,13 +323,13 @@ export const DriverPanel = () => {
             bgcolor: 'action.hover',
             mb: 1.5,
           }}>
-          <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+          <Typography sx={{ fontSize: '14px', color: 'text.secondary' }}>
             {driver.vehicle} — {driver.licensePlate}
           </Typography>
           <Typography
             sx={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '12px',
+              fontSize: '13px',
               color: 'text.disabled',
               mt: 0.25,
             }}>
@@ -349,7 +349,7 @@ export const DriverPanel = () => {
               }}>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   color: 'text.secondary',
                   textTransform: 'uppercase',
@@ -360,7 +360,7 @@ export const DriverPanel = () => {
               <Typography
                 sx={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 700,
                 }}>
                 {Math.round(selected.routeProgress * 100)}%
@@ -412,17 +412,17 @@ export const DriverPanel = () => {
               sx={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 700,
-                fontSize: '12px',
+                fontSize: '14px',
                 color: LOGI_ORANGE,
                 mb: 0.5,
               }}>
               {shipment.trackingNo}
             </Typography>
-            <Typography sx={{ fontSize: '12px', fontWeight: 500 }}>
+            <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
               {shipment.contents}
             </Typography>
             <Typography
-              sx={{ fontSize: '13px', color: 'text.secondary', mt: 0.25 }}>
+              sx={{ fontSize: '14px', color: 'text.secondary', mt: 0.25 }}>
               {shipment.weight}kg — {shipment.dimensions}cm
             </Typography>
 
@@ -438,11 +438,11 @@ export const DriverPanel = () => {
                   sx={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
-                    fontSize: '12px',
+                    fontSize: '13px',
                   }}>
                   {shipment.originHub}
                 </Typography>
-                <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+                <Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
                   {originHub?.city}
                 </Typography>
               </Box>
@@ -471,11 +471,11 @@ export const DriverPanel = () => {
                   sx={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
-                    fontSize: '12px',
+                    fontSize: '13px',
                   }}>
                   {shipment.destinationHub}
                 </Typography>
-                <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+                <Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
                   {destHub?.city}
                 </Typography>
               </Box>
@@ -490,13 +490,13 @@ export const DriverPanel = () => {
               }}>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: 'text.secondary',
                   mb: 0.25,
                 }}>
                 送: {shipment.sender.company}
               </Typography>
-              <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+              <Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
                 届: {shipment.receiver.company}
               </Typography>
             </Box>
@@ -506,8 +506,8 @@ export const DriverPanel = () => {
               size='small'
               sx={{
                 mt: 0.75,
-                height: 18,
-                fontSize: '12px',
+                height: 20,
+                fontSize: '13px',
                 fontWeight: 700,
                 bgcolor: alpha(STATUS_COLORS[shipment.status], 0.12),
                 color: STATUS_COLORS[shipment.status],
