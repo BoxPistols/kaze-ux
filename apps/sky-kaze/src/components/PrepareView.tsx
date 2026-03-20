@@ -291,9 +291,11 @@ export const PrepareView = () => {
             px: 2,
             py: 1.5,
             borderRadius: 1,
-            bgcolor: alpha(LOGI_ORANGE, 0.06),
+            bgcolor: (theme) =>
+              alpha(LOGI_ORANGE, theme.palette.mode === 'dark' ? 0.1 : 0.06),
             border: '1px solid',
-            borderColor: alpha(LOGI_ORANGE, 0.2),
+            borderColor: (theme) =>
+              alpha(LOGI_ORANGE, theme.palette.mode === 'dark' ? 0.3 : 0.2),
           }}>
           <Typography variant='body2' sx={{ color: 'text.secondary' }}>
             {STEP_DESCRIPTIONS[activeStep]}
@@ -492,13 +494,21 @@ export const PrepareView = () => {
                             borderTop: '1px solid',
                             borderColor: 'divider',
                             transition: 'background 0.2s ease',
-                            bgcolor: done
-                              ? alpha('#22C55E', 0.06)
-                              : 'transparent',
+                            bgcolor: (theme) =>
+                              done
+                                ? alpha(
+                                    '#22C55E',
+                                    theme.palette.mode === 'dark' ? 0.12 : 0.06
+                                  )
+                                : 'transparent',
                             '&:hover': {
-                              bgcolor: done
-                                ? alpha('#22C55E', 0.1)
-                                : 'action.hover',
+                              bgcolor: (theme) =>
+                                done
+                                  ? alpha(
+                                      '#22C55E',
+                                      theme.palette.mode === 'dark' ? 0.18 : 0.1
+                                    )
+                                  : 'action.hover',
                             },
                           }}>
                           {done ? (

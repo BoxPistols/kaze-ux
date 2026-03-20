@@ -392,7 +392,11 @@ export const CompleteView = () => {
                               mt: 1.5,
                               p: 1.5,
                               borderRadius: 1,
-                              bgcolor: alpha('#22C55E', 0.06),
+                              bgcolor: (theme) =>
+                                alpha(
+                                  '#22C55E',
+                                  theme.palette.mode === 'dark' ? 0.12 : 0.06
+                                ),
                             }}>
                             <Typography
                               variant='caption'
@@ -509,7 +513,7 @@ export const CompleteView = () => {
                         sx={{
                           display: 'block',
                           mt: 0.5,
-                          color: '#3B82F6',
+                          color: 'info.main',
                           fontStyle: 'italic',
                         }}>
                         メモ: {note.note}
