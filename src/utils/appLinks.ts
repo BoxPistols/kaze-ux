@@ -106,6 +106,24 @@ export const checkPortAlive = async (port: number): Promise<boolean> => {
 }
 
 // ---------------------------------------------------------------------------
+// 近隣ポートスキャン
+// ---------------------------------------------------------------------------
+
+/**
+ * デフォルトポートが応答しない場合、+1〜+5の範囲でスキャンする
+ * 例: 3003 が応答しなければ 3004, 3005... を試す
+ */
+export const findActualPort = async (defaultPort: number): Promise<number> => {
+  // まずデフォルトを試す
+  if (await checkPortAlive(defaultPort)) return defaultPort
+  // +1〜+5をスキャン
+  for (let offset = 1; offset <= 5; offset++) {
+    if (await checkPortAlive(defaultPort + offset)) return defaultPort + offset
+  }
+  return defaultPort // 見つからなければデフォルトを返す
+}
+
+// ---------------------------------------------------------------------------
 // 全ポート一括チェック + キャッシュ
 // ---------------------------------------------------------------------------
 
@@ -121,6 +139,7 @@ const CACHE_TTL = 30_000 // 30秒キャッシュ
 /**
  * 全アプリのポート生存状態を一括チェック
  * 本番環境では全て alive 扱い
+ * デフォルトポートが応答しない場合、近隣ポートを自動スキャンする
  */
 export const checkAllPorts = async (): Promise<Record<string, PortStatus>> => {
   // 本番環境では全て alive
@@ -142,11 +161,14 @@ export const checkAllPorts = async (): Promise<Record<string, PortStatus>> => {
   const ports = getDevPorts()
   const entries = Object.entries(ports) as [string, number][]
   const results = await Promise.all(
-    entries.map(async ([key, port]) => ({
-      key,
-      port,
-      alive: await checkPortAlive(port),
-    }))
+    entries.map(async ([key, port]) => {
+      const alive = await checkPortAlive(port)
+      if (alive) return { key, port, alive: true }
+      // デフォルトポートが死んでいる → 近隣スキャン
+      const actual = await findActualPort(port)
+      const actualAlive = actual !== port
+      return { key, port: actual, alive: actualAlive }
+    })
   )
 
   cachedStatus = Object.fromEntries(

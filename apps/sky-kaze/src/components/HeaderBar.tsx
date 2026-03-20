@@ -8,6 +8,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 
 import { IconButton } from '@/components/ui/icon-button'
+import { useDevPorts } from '@/hooks/useDevPorts'
 import { hookUseTheme } from '@/hooks/useTheme'
 
 import { useSimulation } from '~/data/simulation'
@@ -28,6 +29,7 @@ export const HeaderBar = () => {
 
   const viewMode = useSimulation((s) => s.viewMode)
   const setViewMode = useSimulation((s) => s.setViewMode)
+  const { portStatus } = useDevPorts()
 
   return (
     <Box
@@ -158,38 +160,22 @@ export const HeaderBar = () => {
       {/* Kaze Design System へ戻る */}
       <IconButton
         onClick={() => {
-          let url = window.location.origin + '/'
-          if (import.meta.env.DEV) {
+          const topInfo = portStatus?.top
+          if (import.meta.env.DEV && topInfo?.alive) {
             const h = window.location.hostname
             const p = window.location.protocol
-            try {
-              const saved = localStorage.getItem('kaze-dev-ports')
-              if (saved) {
-                const ports = JSON.parse(saved)
-                if (ports.top) url = `${p}//${h}:${ports.top}`
-              }
-            } catch {
-              /* ignore */
-            }
-            if (url === window.location.origin + '/') {
-              url = `${p}//${h}:5173`
-            }
+            window.open(`${p}//${h}:${topInfo.port}`, '_blank')
+          } else {
+            // 本番 or alive でなければ origin にフォールバック
+            window.open(window.location.origin + '/', '_blank')
           }
-          window.open(url, '_blank')
         }}
         tooltip={
-          (import.meta.env.DEV &&
-            (() => {
-              try {
-                const saved = localStorage.getItem('kaze-dev-ports')
-                return saved && JSON.parse(saved).top
-                  ? 'Kaze Design System'
-                  : 'Kaze DS（未検出）'
-              } catch {
-                return 'Kaze DS（未検出）'
-              }
-            })()) ||
-          'Kaze Design System'
+          import.meta.env.DEV
+            ? portStatus?.top?.alive
+              ? `Kaze Design System (:${portStatus.top.port})`
+              : 'Kaze DS（未起動）'
+            : 'Kaze Design System'
         }
         size='small'
         sx={{ color: 'text.secondary', '&:hover': { color: '#0EADB8' } }}>

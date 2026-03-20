@@ -619,6 +619,7 @@ export const LandingPage = () => {
     setMounted(true)
   }, [])
 
+  // TODO: useDevPorts() でポート検出し、未起動アプリをグレーアウト/バッジ表示する
   const products = [
     {
       title: 'Storybook',
