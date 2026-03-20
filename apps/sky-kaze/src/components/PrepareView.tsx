@@ -2,6 +2,7 @@
  * 出荷準備フェーズ（ステッパー方式）
  * DSコンポーネント活用: PageTitle, SectionTitle, Card, Button, StatusTag, CustomChip
  */
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import {
@@ -9,9 +10,11 @@ import {
   CircularProgress,
   Grid,
   LinearProgress,
+  MenuItem,
   Step,
   StepLabel,
   Stepper,
+  TextField,
   Typography,
   alpha,
 } from '@mui/material'
@@ -27,11 +30,13 @@ import {
   CardDescription,
 } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
+import { FormDialog } from '@/components/ui/dialog'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
 
 import {
   SHIPMENTS,
   DRIVERS,
+  HUBS,
   DRIVER_STATUS_LABELS,
   STATUS_LABELS,
   STATUS_COLORS,
@@ -80,6 +85,17 @@ export const PrepareView = () => {
   const play = useSimulation((s) => s.play)
   const [checked, setChecked] = useState<Set<string>>(new Set())
   const [activeStep, setActiveStep] = useState(0)
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [newShipment, setNewShipment] = useState({
+    contents: '',
+    senderCompany: '',
+    receiverCompany: '',
+    originHub: '',
+    destinationHub: '',
+    weight: '',
+    priority: 'standard' as 'standard' | 'express' | 'same_day',
+    specialInstructions: '',
+  })
 
   const toggleCheck = (id: string) => {
     setChecked((prev) => {
@@ -90,6 +106,39 @@ export const PrepareView = () => {
     })
   }
 
+  const toggleAllChecks = () => {
+    if (allChecked) {
+      setChecked(new Set())
+    } else {
+      setChecked(new Set(CHECKLIST.map((c) => c.id)))
+    }
+  }
+
+  const handleAddShipment = () => {
+    if (
+      !newShipment.contents ||
+      !newShipment.originHub ||
+      !newShipment.destinationHub
+    ) {
+      toast.error('必須項目を入力してください')
+      return
+    }
+    toast.success(`新規配送を追加しました: ${newShipment.contents}`)
+    setAddDialogOpen(false)
+    setNewShipment({
+      contents: '',
+      senderCompany: '',
+      receiverCompany: '',
+      originHub: '',
+      destinationHub: '',
+      weight: '',
+      priority: 'standard',
+      specialInstructions: '',
+    })
+  }
+
+  const allChecked = checked.size === CHECKLIST.length
+
   const pendingShipments = SHIPMENTS.filter((s) =>
     ['awaiting_pickup', 'picked_up', 'sorting'].includes(s.status)
   )
@@ -97,7 +146,6 @@ export const PrepareView = () => {
     ['in_transit', 'out_for_delivery', 'at_hub'].includes(s.status)
   )
   const availableDrivers = DRIVERS.filter((d) => d.status === 'available')
-  const allChecked = checked.size === CHECKLIST.length
   const categories = [...new Set(CHECKLIST.map((c) => c.category))]
 
   // ステップ完了判定
@@ -273,7 +321,7 @@ export const PrepareView = () => {
               <Button
                 variant='outline'
                 size='sm'
-                onClick={() => toast.info('新規配送追加（デモ）')}>
+                onClick={() => setAddDialogOpen(true)}>
                 + 新規追加
               </Button>
             </Box>
@@ -381,7 +429,23 @@ export const PrepareView = () => {
         {/* ── Step 2: 伝票・点検 ── */}
         {activeStep === 1 && (
           <>
-            <SectionTitle sx={{ mb: 2 }}>出発前チェックリスト</SectionTitle>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 2,
+              }}>
+              <SectionTitle>出発前チェックリスト</SectionTitle>
+              <Button
+                variant='ghost'
+                size='sm'
+                onClick={toggleAllChecks}
+                className='gap-1'>
+                <CheckBoxIcon sx={{ fontSize: 16 }} />
+                {allChecked ? '全解除' : '一括チェック'}
+              </Button>
+            </Box>
             <Card sx={{ mb: 4 }}>
               <CardContent className='p-0'>
                 {categories.map((cat, catIdx) => (
@@ -588,6 +652,130 @@ export const PrepareView = () => {
           </Box>
         )}
       </Box>
+
+      {/* 新規配送追加ダイアログ */}
+      <FormDialog
+        open={addDialogOpen}
+        title='新規配送を追加'
+        description='配送する荷物の情報を入力してください'
+        onSubmit={handleAddShipment}
+        onCancel={() => setAddDialogOpen(false)}
+        submitText='追加する'
+        maxWidth='sm'
+        submitDisabled={
+          !newShipment.contents ||
+          !newShipment.originHub ||
+          !newShipment.destinationHub
+        }>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
+          <TextField
+            label='内容物'
+            placeholder='例: 電子部品 型番ABC-1234 500個'
+            fullWidth
+            required
+            value={newShipment.contents}
+            onChange={(e) =>
+              setNewShipment((p) => ({ ...p, contents: e.target.value }))
+            }
+          />
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <TextField
+              label='送り主（会社名）'
+              placeholder='例: 田中電機株式会社'
+              value={newShipment.senderCompany}
+              onChange={(e) =>
+                setNewShipment((p) => ({ ...p, senderCompany: e.target.value }))
+              }
+            />
+            <TextField
+              label='届け先（会社名）'
+              placeholder='例: 鈴木自動車部品'
+              value={newShipment.receiverCompany}
+              onChange={(e) =>
+                setNewShipment((p) => ({
+                  ...p,
+                  receiverCompany: e.target.value,
+                }))
+              }
+            />
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <TextField
+              label='出発拠点'
+              select
+              required
+              value={newShipment.originHub}
+              onChange={(e) =>
+                setNewShipment((p) => ({ ...p, originHub: e.target.value }))
+              }>
+              {HUBS.map((h) => (
+                <MenuItem key={h.code} value={h.code}>
+                  {h.code} — {h.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label='到着拠点'
+              select
+              required
+              value={newShipment.destinationHub}
+              onChange={(e) =>
+                setNewShipment((p) => ({
+                  ...p,
+                  destinationHub: e.target.value,
+                }))
+              }>
+              {HUBS.map((h) => (
+                <MenuItem key={h.code} value={h.code}>
+                  {h.code} — {h.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <TextField
+              label='重量 (kg)'
+              type='number'
+              placeholder='例: 500'
+              value={newShipment.weight}
+              onChange={(e) =>
+                setNewShipment((p) => ({ ...p, weight: e.target.value }))
+              }
+            />
+            <TextField
+              label='優先度'
+              select
+              value={newShipment.priority}
+              onChange={(e) =>
+                setNewShipment((p) => ({
+                  ...p,
+                  priority: e.target.value as
+                    | 'standard'
+                    | 'express'
+                    | 'same_day',
+                }))
+              }>
+              <MenuItem value='standard'>標準</MenuItem>
+              <MenuItem value='express'>速達</MenuItem>
+              <MenuItem value='same_day'>当日</MenuItem>
+            </TextField>
+          </Box>
+          <TextField
+            label='特記事項'
+            placeholder='例: 冷蔵必須、天地無用、時間指定あり'
+            multiline
+            rows={2}
+            fullWidth
+            value={newShipment.specialInstructions}
+            onChange={(e) =>
+              setNewShipment((p) => ({
+                ...p,
+                specialInstructions: e.target.value,
+              }))
+            }
+          />
+        </Box>
+      </FormDialog>
     </Box>
   )
 }

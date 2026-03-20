@@ -101,17 +101,23 @@ export const HeaderBar = () => {
               sx={{
                 px: 2,
                 py: 0.75,
-                borderRadius: 2,
                 cursor: 'pointer',
-                bgcolor: 'transparent',
                 color: active ? 'text.primary' : 'text.secondary',
-                fontWeight: active ? 700 : 500,
-                borderBottom: active
-                  ? `2px solid ${LOGI_ORANGE}`
-                  : '2px solid transparent',
-                transition: 'all 0.15s ease',
+                position: 'relative',
+                transition: 'color 0.15s ease',
                 '&:hover': {
-                  bgcolor: 'action.hover',
+                  color: 'text.primary',
+                },
+                // 下部インジケーター（角丸なしの独立要素）
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: -1,
+                  left: 8,
+                  right: 8,
+                  height: 2,
+                  bgcolor: active ? LOGI_ORANGE : 'transparent',
+                  transition: 'background-color 0.15s ease',
                 },
               }}>
               <Typography

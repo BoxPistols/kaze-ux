@@ -1,75 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
 :root {
-  --color-primary: #ea580c;
+  --color-primary: #1e293b;
   --color-primary-foreground: #ffffff;
-  --color-primary-light: #f97316;
-  --color-primary-dark: #c2410c;
+  --color-primary-light: #334155;
+  --color-primary-dark: #0f172a;
+
+  --color-accent: #ea580c;
+  --color-accent-light: rgba(234, 88, 12, 0.08);
 
   --color-secondary: #64748b;
   --color-secondary-foreground: #ffffff;
 
-  --color-success: #0d9488;
+  --color-success: #059669;
   --color-success-foreground: #ffffff;
-  --color-success-light: #ccfbf1;
-  --color-success-border: #5eead4;
+  --color-success-light: #ecfdf5;
+  --color-success-border: #6ee7b7;
 
-  --color-error: #ef4444;
+  --color-error: #dc2626;
   --color-error-foreground: #ffffff;
   --color-error-light: #fef2f2;
   --color-error-border: #fca5a5;
 
-  --color-warning: #f59e0b;
+  --color-warning: #d97706;
   --color-warning-foreground: #ffffff;
-  --color-warning-light: #fefce8;
+  --color-warning-light: #fffbeb;
   --color-warning-border: #fde68a;
 
-  --color-info: #0ea5e9;
+  --color-info: #0284c7;
   --color-info-foreground: #ffffff;
   --color-info-light: #e0f2fe;
   --color-info-border: #7dd3fc;
 
-  --color-background: #ffffff;
+  --color-background: #fafafa;
   --color-background-paper: #ffffff;
   --color-foreground: #0f172a;
   --color-muted: #64748b;
-  --color-border: #e2e8f0;
+  --color-border: #e5e7eb;
 
-  font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
+  font-family: 'DM Sans', 'Noto Sans JP', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04';
 }
 
 .dark {
-  --color-primary: #f97316;
-  --color-primary-foreground: #1e293b;
-  --color-primary-light: #fb923c;
-  --color-primary-dark: #ea580c;
+  --color-primary: #e2e8f0;
+  --color-primary-foreground: #0f172a;
+  --color-primary-light: #94a3b8;
+  --color-primary-dark: #f1f5f9;
+
+  --color-accent: #f97316;
+  --color-accent-light: rgba(249, 115, 22, 0.1);
 
   --color-secondary: #94a3b8;
   --color-secondary-foreground: #ffffff;
 
-  --color-success: #2dd4bf;
-  --color-success-foreground: #1e293b;
-  --color-success-light: #134e4a;
-  --color-success-border: #5eead4;
+  --color-success: #34d399;
+  --color-success-foreground: #064e3b;
+  --color-success-light: #064e3b;
+  --color-success-border: #6ee7b7;
 
   --color-error: #f87171;
   --color-error-foreground: #ffffff;
-  --color-error-light: #7f1d1d;
+  --color-error-light: #450a0a;
   --color-error-border: #fca5a5;
 
   --color-warning: #fbbf24;
-  --color-warning-foreground: #1e293b;
-  --color-warning-light: #78350f;
+  --color-warning-foreground: #451a03;
+  --color-warning-light: #451a03;
   --color-warning-border: #fde68a;
 
   --color-info: #38bdf8;
@@ -77,11 +84,11 @@
   --color-info-light: #0c4a6e;
   --color-info-border: #7dd3fc;
 
-  --color-background: #1e293b;
-  --color-background-paper: #334155;
+  --color-background: #0f172a;
+  --color-background-paper: #1e293b;
   --color-foreground: #f1f5f9;
   --color-muted: #94a3b8;
-  --color-border: #475569;
+  --color-border: #334155;
 }
 
 body {
@@ -97,7 +104,7 @@ body,
   height: 100%;
 }
 
-/* MapLibre コンテナが確実にサイズを持つように */
+/* MapLibre */
 .maplibregl-map {
   width: 100% !important;
   height: 100% !important;
@@ -118,4 +125,24 @@ html[data-theme-transitioning] body {
   50% {
     opacity: 0.3;
   }
+}
+
+/* MUI Stepper カスタマイズ */
+.MuiStepLabel-label {
+  font-family: 'DM Sans', 'Noto Sans JP', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.MuiStepIcon-root.Mui-completed {
+  color: #059669 !important;
+}
+
+.MuiStepIcon-root.Mui-active {
+  color: #ea580c !important;
+}
+
+/* テーブルのスムーズなホバー */
+[data-table-row]:hover {
+  background-color: var(--color-accent-light);
 }
