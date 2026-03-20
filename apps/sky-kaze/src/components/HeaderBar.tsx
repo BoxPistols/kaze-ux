@@ -1,6 +1,7 @@
 /**
  * ヘッダーナビゲーション — タブ切替 + テーマ
  */
+import AirIcon from '@mui/icons-material/Air'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
@@ -142,6 +143,34 @@ export const HeaderBar = () => {
         ) : (
           <DarkModeIcon sx={{ fontSize: 20 }} />
         )}
+      </IconButton>
+
+      {/* Kaze Design System へ戻る */}
+      <IconButton
+        onClick={() => {
+          let url = window.location.origin + '/'
+          if (import.meta.env.DEV) {
+            const h = window.location.hostname
+            const p = window.location.protocol
+            try {
+              const saved = localStorage.getItem('kaze-dev-ports')
+              if (saved) {
+                const ports = JSON.parse(saved)
+                if (ports.top) url = `${p}//${h}:${ports.top}`
+              }
+            } catch {
+              /* ignore */
+            }
+            if (url === window.location.origin + '/') {
+              url = `${p}//${h}:5173`
+            }
+          }
+          window.open(url, '_self')
+        }}
+        tooltip='Kaze Design System'
+        size='small'
+        sx={{ color: 'text.secondary', '&:hover': { color: '#0EADB8' } }}>
+        <AirIcon sx={{ fontSize: 20 }} />
       </IconButton>
     </Box>
   )

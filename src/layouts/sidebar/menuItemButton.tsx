@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
+import type React from 'react'
 
 import type { MenuItem } from './types'
 
@@ -114,15 +115,36 @@ export const MenuItemButton = ({
       </ListItemButton>
     ) : (
       // 子メニューなし、または閉じた状態のブランチ
-      <Link to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <ListItemButton
-          onClick={onClose}
-          selected={isActive}
-          sx={listItemButtonSx}>
-          <ListItemIcon sx={listItemIconSx}>{item.icon}</ListItemIcon>
-          {isOpen && <ListItemText primary={item.label} />}
-        </ListItemButton>
-      </Link>
+      // 外部リンク（http始まり）は<a>タグ、内部リンクは<Link>を使う
+      (() => {
+        const isExternal = item.href.startsWith('http')
+        const Wrapper = isExternal
+          ? ({ children }: { children: React.ReactNode }) => (
+              <a
+                href={item.href}
+                style={{ textDecoration: 'none', color: 'inherit' }}>
+                {children}
+              </a>
+            )
+          : ({ children }: { children: React.ReactNode }) => (
+              <Link
+                to={item.href}
+                style={{ textDecoration: 'none', color: 'inherit' }}>
+                {children}
+              </Link>
+            )
+        return (
+          <Wrapper>
+            <ListItemButton
+              onClick={onClose}
+              selected={isActive}
+              sx={listItemButtonSx}>
+              <ListItemIcon sx={listItemIconSx}>{item.icon}</ListItemIcon>
+              {isOpen && <ListItemText primary={item.label} />}
+            </ListItemButton>
+          </Wrapper>
+        )
+      })()
     )
 
   return (

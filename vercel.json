@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/storybook/(.*)", "destination": "/storybook/$1" },
     { "source": "/saas/(.*)", "destination": "/saas/$1" },
-    { "source": "/ubereats/(.*)", "destination": "/ubereats/$1" }
+    { "source": "/ubereats/(.*)", "destination": "/ubereats/$1" },
+    { "source": "/sky-kaze/(.*)", "destination": "/sky-kaze/$1" }
   ]
 }

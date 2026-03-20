@@ -32,7 +32,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "dev:all": "pnpm dev & pnpm storybook & pnpm -F saas-dashboard dev & pnpm -F ubereats-clone dev & wait",
+    "dev:all": "pnpm dev & pnpm storybook & pnpm -F saas-dashboard dev & pnpm -F ubereats-clone dev & pnpm -F sky-kaze dev & wait",
     "dev:docs": "pnpm dev & pnpm storybook & wait",
     "build": "echo 'Build skipped - using source files directly'",
     "build-sandbox": "vite build --mode sandbox",
@@ -53,7 +53,7 @@
     "build-all": "pnpm run build-storybook",
     "build:gh-pages": "vite build --mode gh-pages",
     "build:gh-pages:storybook": "storybook build -o gh-pages/storybook",
-    "build:gh-pages:all": "pnpm run build:gh-pages:storybook && pnpm run build:gh-pages:dashboard && pnpm run build:gh-pages:ubereats",
+    "build:gh-pages:all": "pnpm run build:gh-pages:storybook && pnpm run build:gh-pages:dashboard && pnpm run build:gh-pages:ubereats && pnpm run build:gh-pages:sky-kaze",
     "prepare": "husky",
     "export-tokens": "tsx scripts/export-design-tokens.ts",
     "export-tokens:auto": "npx tsx packages/system-design-export/src/cli.ts --from mui --input src/themes/theme.ts",
