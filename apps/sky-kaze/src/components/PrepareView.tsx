@@ -1,5 +1,5 @@
 /**
- * 出荷準備フェーズ
+ * 出荷準備フェーズ（ステッパー方式）
  * DSコンポーネント活用: PageTitle, SectionTitle, Card, Button, StatusTag, CustomChip
  */
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
@@ -9,6 +9,9 @@ import {
   CircularProgress,
   Grid,
   LinearProgress,
+  Step,
+  StepLabel,
+  Stepper,
   Typography,
   alpha,
 } from '@mui/material'
@@ -54,6 +57,14 @@ const CHECKLIST: CheckItem[] = [
   { id: 'c8', label: 'ドライバーのアルコール検査', category: '車両' },
 ]
 
+const STEP_LABELS = ['荷物確認', '伝票・点検', 'ドライバー割当']
+
+const STEP_DESCRIPTIONS = [
+  '出荷予定の荷物を確認してください',
+  '全8項目をチェックすると次に進めます',
+  'ドライバーの割当状況を確認してください',
+]
+
 const PriorityChip = ({ priority }: { priority: Shipment['priority'] }) => {
   const map = {
     same_day: { label: '当日', color: 'error' as const },
@@ -68,6 +79,7 @@ export const PrepareView = () => {
   const setViewMode = useSimulation((s) => s.setViewMode)
   const play = useSimulation((s) => s.play)
   const [checked, setChecked] = useState<Set<string>>(new Set())
+  const [activeStep, setActiveStep] = useState(0)
 
   const toggleCheck = (id: string) => {
     setChecked((prev) => {
@@ -88,6 +100,21 @@ export const PrepareView = () => {
   const allChecked = checked.size === CHECKLIST.length
   const categories = [...new Set(CHECKLIST.map((c) => c.category))]
 
+  // ステップ完了判定
+  const allShipments = [...pendingShipments, ...activeShipments]
+  const step1Complete = allShipments.length > 0
+  const step2Complete = allChecked
+  // Step 3 は常に有効（割当確認のみ）
+  const stepCompleted = [step1Complete, step2Complete, true]
+
+  const handleNext = () => {
+    setActiveStep((prev) => Math.min(prev + 1, STEP_LABELS.length - 1))
+  }
+
+  const handleBack = () => {
+    setActiveStep((prev) => Math.max(prev - 1, 0))
+  }
+
   return (
     <Box sx={{ flex: 1, overflow: 'auto', bgcolor: 'background.default' }}>
       <Box sx={{ maxWidth: 1040, mx: 'auto', px: { xs: 2, md: 4 }, py: 4 }}>
@@ -98,12 +125,12 @@ export const PrepareView = () => {
           sx={{ fontWeight: 800, mb: 0.5 }}>
           出荷準備
         </Typography>
-        <Typography variant='body2' color='text.secondary' sx={{ mb: 5 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
           荷物の確認・伝票発行・車両点検を完了してから配送を開始してください
         </Typography>
 
-        {/* ── KPIサマリー ── */}
-        <Grid container spacing={2} sx={{ mb: 5 }}>
+        {/* ── KPIサマリー（常に表示） ── */}
+        <Grid container spacing={2} sx={{ mb: 4 }}>
           {[
             {
               label: '出荷待ち',
@@ -178,292 +205,388 @@ export const PrepareView = () => {
           ))}
         </Grid>
 
-        {/* ── 出発前チェックリスト ── */}
-        <SectionTitle sx={{ mb: 2 }}>出発前チェックリスト</SectionTitle>
-        <Card sx={{ mb: 5 }}>
-          <CardContent className='p-0'>
-            {categories.map((cat, catIdx) => (
-              <Box key={cat}>
+        {/* ── 進捗テキスト ── */}
+        <Typography
+          variant='body2'
+          sx={{
+            fontWeight: 700,
+            mb: 2,
+            color: 'text.secondary',
+          }}>
+          Step {activeStep + 1}/{STEP_LABELS.length} — {STEP_LABELS[activeStep]}
+        </Typography>
+
+        {/* ── ステッパー ── */}
+        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+          {STEP_LABELS.map((label, idx) => (
+            <Step
+              key={label}
+              completed={stepCompleted[idx] && idx < activeStep}>
+              <StepLabel
+                optional={
+                  stepCompleted[idx] && idx < activeStep ? (
+                    <Typography variant='caption' color='success.main'>
+                      完了
+                    </Typography>
+                  ) : undefined
+                }>
+                {label}
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        {/* ── ステップ説明 ── */}
+        <Box
+          sx={{
+            mb: 3,
+            px: 2,
+            py: 1.5,
+            borderRadius: 1,
+            bgcolor: alpha(LOGI_ORANGE, 0.06),
+            border: '1px solid',
+            borderColor: alpha(LOGI_ORANGE, 0.2),
+          }}>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            {STEP_DESCRIPTIONS[activeStep]}
+          </Typography>
+        </Box>
+
+        {/* ── Step 1: 荷物確認 ── */}
+        {activeStep === 0 && (
+          <>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 2,
+              }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <SectionTitle>出荷予定の荷物</SectionTitle>
+                <CustomChip
+                  label={allShipments.length}
+                  size='small'
+                  color='primary'
+                />
+              </Box>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => toast.info('新規配送追加（デモ）')}>
+                + 新規追加
+              </Button>
+            </Box>
+            <Card sx={{ mb: 4 }}>
+              <CardContent className='p-0'>
+                {/* ヘッダー行 */}
                 <Box
                   sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '160px 1fr 120px 80px 100px',
+                    gap: 2,
                     px: 3,
                     py: 1.5,
                     bgcolor: 'action.hover',
-                    borderTop: catIdx > 0 ? '1px solid' : 'none',
+                    borderBottom: '1px solid',
                     borderColor: 'divider',
                   }}>
-                  <Typography
-                    variant='caption'
-                    sx={{
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      color: 'text.secondary',
-                    }}>
-                    {cat}
-                  </Typography>
-                </Box>
-                {CHECKLIST.filter((c) => c.category === cat).map((item) => {
-                  const done = checked.has(item.id)
-                  return (
-                    <Box
-                      key={item.id}
-                      onClick={() => toggleCheck(item.id)}
-                      role='checkbox'
-                      aria-checked={done}
-                      tabIndex={0}
-                      onKeyDown={(e: React.KeyboardEvent) => {
-                        if (e.key === 'Enter' || e.key === ' ')
-                          toggleCheck(item.id)
-                      }}
+                  {[
+                    '追跡番号',
+                    '内容・送受先',
+                    'ルート',
+                    '重量',
+                    'ステータス',
+                  ].map((h) => (
+                    <Typography
+                      key={h}
+                      variant='caption'
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                        px: 3,
-                        py: 1.5,
-                        cursor: 'pointer',
-                        borderTop: '1px solid',
-                        borderColor: 'divider',
-                        transition: 'background 0.2s ease',
-                        bgcolor: done ? alpha('#22C55E', 0.06) : 'transparent',
-                        '&:hover': {
-                          bgcolor: done
-                            ? alpha('#22C55E', 0.1)
-                            : 'action.hover',
-                        },
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                        color: 'text.secondary',
                       }}>
-                      {done ? (
-                        <CheckCircleIcon
-                          sx={{ fontSize: 22, color: 'success.main' }}
-                        />
-                      ) : (
-                        <RadioButtonUncheckedIcon
-                          sx={{ fontSize: 22, color: 'text.disabled' }}
-                        />
-                      )}
+                      {h}
+                    </Typography>
+                  ))}
+                </Box>
+                {/* データ行 */}
+                {allShipments.map((s) => (
+                  <Box
+                    key={s.id}
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '160px 1fr 120px 80px 100px',
+                      gap: 2,
+                      px: 3,
+                      py: 2,
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                      alignItems: 'center',
+                      '&:hover': { bgcolor: 'action.hover' },
+                      '&:last-child': { borderBottom: 'none' },
+                    }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Typography
-                        variant='body1'
                         sx={{
-                          textDecoration: done ? 'line-through' : 'none',
-                          color: done ? 'text.secondary' : 'text.primary',
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontWeight: 700,
+                          fontSize: '13px',
+                          color: LOGI_ORANGE,
                         }}>
-                        {item.label}
+                        {s.trackingNo}
+                      </Typography>
+                      <PriorityChip priority={s.priority} />
+                    </Box>
+                    <Box>
+                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                        {s.contents}
+                      </Typography>
+                      <Typography variant='caption' color='text.secondary'>
+                        {s.sender.company} → {s.receiver.company}
                       </Typography>
                     </Box>
-                  )
-                })}
-              </Box>
-            ))}
-          </CardContent>
-        </Card>
+                    <Typography
+                      sx={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '13px',
+                      }}>
+                      {s.originHub} → {s.destinationHub}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '13px',
+                      }}>
+                      {s.weight}kg
+                    </Typography>
+                    <CustomChip
+                      label={STATUS_LABELS[s.status]}
+                      size='small'
+                      sx={{
+                        bgcolor: alpha(STATUS_COLORS[s.status], 0.12),
+                        color: STATUS_COLORS[s.status],
+                        fontWeight: 600,
+                        justifySelf: 'start',
+                      }}
+                    />
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        )}
 
-        {/* ── 出荷予定の荷物 ── */}
+        {/* ── Step 2: 伝票・点検 ── */}
+        {activeStep === 1 && (
+          <>
+            <SectionTitle sx={{ mb: 2 }}>出発前チェックリスト</SectionTitle>
+            <Card sx={{ mb: 4 }}>
+              <CardContent className='p-0'>
+                {categories.map((cat, catIdx) => (
+                  <Box key={cat}>
+                    <Box
+                      sx={{
+                        px: 3,
+                        py: 1.5,
+                        bgcolor: 'action.hover',
+                        borderTop: catIdx > 0 ? '1px solid' : 'none',
+                        borderColor: 'divider',
+                      }}>
+                      <Typography
+                        variant='caption'
+                        sx={{
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          color: 'text.secondary',
+                        }}>
+                        {cat}
+                      </Typography>
+                    </Box>
+                    {CHECKLIST.filter((c) => c.category === cat).map((item) => {
+                      const done = checked.has(item.id)
+                      return (
+                        <Box
+                          key={item.id}
+                          onClick={() => toggleCheck(item.id)}
+                          role='checkbox'
+                          aria-checked={done}
+                          tabIndex={0}
+                          onKeyDown={(e: React.KeyboardEvent) => {
+                            if (e.key === 'Enter' || e.key === ' ')
+                              toggleCheck(item.id)
+                          }}
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            px: 3,
+                            py: 1.5,
+                            cursor: 'pointer',
+                            borderTop: '1px solid',
+                            borderColor: 'divider',
+                            transition: 'background 0.2s ease',
+                            bgcolor: done
+                              ? alpha('#22C55E', 0.06)
+                              : 'transparent',
+                            '&:hover': {
+                              bgcolor: done
+                                ? alpha('#22C55E', 0.1)
+                                : 'action.hover',
+                            },
+                          }}>
+                          {done ? (
+                            <CheckCircleIcon
+                              sx={{ fontSize: 22, color: 'success.main' }}
+                            />
+                          ) : (
+                            <RadioButtonUncheckedIcon
+                              sx={{ fontSize: 22, color: 'text.disabled' }}
+                            />
+                          )}
+                          <Typography
+                            variant='body1'
+                            sx={{
+                              textDecoration: done ? 'line-through' : 'none',
+                              color: done ? 'text.secondary' : 'text.primary',
+                            }}>
+                            {item.label}
+                          </Typography>
+                        </Box>
+                      )
+                    })}
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        {/* ── Step 3: ドライバー割当 ── */}
+        {activeStep === 2 && (
+          <>
+            <SectionTitle sx={{ mb: 2 }}>ドライバー割当</SectionTitle>
+            <Grid container spacing={2} sx={{ mb: 4 }}>
+              {DRIVERS.map((d) => (
+                <Grid key={d.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Card>
+                    <CardHeader>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                        }}>
+                        <CardTitle>{d.name}</CardTitle>
+                        <CustomChip
+                          label={DRIVER_STATUS_LABELS[d.status]}
+                          size='small'
+                          color={
+                            d.status === 'available'
+                              ? 'success'
+                              : d.status === 'on_route'
+                                ? 'warning'
+                                : 'default'
+                          }
+                        />
+                      </Box>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription>
+                        {d.vehicle} — {d.licensePlate}
+                      </CardDescription>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{ mt: 0.5, display: 'block' }}>
+                        {d.phone}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        )}
+
+        {/* ── ナビゲーションボタン ── */}
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 2,
           }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <SectionTitle>出荷予定の荷物</SectionTitle>
-            <CustomChip
-              label={pendingShipments.length + activeShipments.length}
-              size='small'
-              color='primary'
-            />
-          </Box>
           <Button
             variant='outline'
-            size='sm'
-            onClick={() => toast.info('新規配送追加（デモ）')}>
-            + 新規追加
+            size='default'
+            onClick={handleBack}
+            disabled={activeStep === 0}>
+            戻る
           </Button>
+
+          {activeStep < STEP_LABELS.length - 1 ? (
+            <Button
+              variant='default'
+              size='default'
+              onClick={handleNext}
+              disabled={!stepCompleted[activeStep]}>
+              次へ
+            </Button>
+          ) : (
+            <Box sx={{ flex: 1 }} />
+          )}
         </Box>
-        <Card sx={{ mb: 5 }}>
-          <CardContent className='p-0'>
-            {/* ヘッダー行 */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: '160px 1fr 120px 80px 100px',
-                gap: 2,
-                px: 3,
-                py: 1.5,
-                bgcolor: 'action.hover',
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-              }}>
-              {['追跡番号', '内容・送受先', 'ルート', '重量', 'ステータス'].map(
-                (h) => (
-                  <Typography
-                    key={h}
-                    variant='caption'
-                    sx={{
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                      color: 'text.secondary',
-                    }}>
-                    {h}
-                  </Typography>
-                )
-              )}
-            </Box>
-            {/* データ行 */}
-            {[...pendingShipments, ...activeShipments].map((s) => (
-              <Box
-                key={s.id}
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: '160px 1fr 120px 80px 100px',
-                  gap: 2,
-                  px: 3,
-                  py: 2,
-                  borderBottom: '1px solid',
-                  borderColor: 'divider',
-                  alignItems: 'center',
-                  '&:hover': { bgcolor: 'action.hover' },
-                  '&:last-child': { borderBottom: 'none' },
-                }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography
-                    sx={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: 700,
-                      fontSize: '13px',
-                      color: LOGI_ORANGE,
-                    }}>
-                    {s.trackingNo}
-                  </Typography>
-                  <PriorityChip priority={s.priority} />
-                </Box>
-                <Box>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
-                    {s.contents}
-                  </Typography>
-                  <Typography variant='caption' color='text.secondary'>
-                    {s.sender.company} → {s.receiver.company}
-                  </Typography>
-                </Box>
-                <Typography
+
+        {/* ── 配送開始ボタン（最終ステップ） ── */}
+        {activeStep === STEP_LABELS.length - 1 && (
+          <Box sx={{ mb: 6 }}>
+            <Button
+              onClick={() => {
+                if (!allChecked) return
+                play()
+                setViewMode('monitor')
+              }}
+              variant={allChecked ? 'default' : 'outline'}
+              size='lg'
+              disabled={!allChecked}
+              className='w-full gap-2 text-base'>
+              {/* チェック完了率プログレスリング */}
+              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress
+                  variant='determinate'
+                  value={Math.round((checked.size / CHECKLIST.length) * 100)}
+                  size={24}
+                  thickness={5}
                   sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '13px',
-                  }}>
-                  {s.originHub} → {s.destinationHub}
-                </Typography>
-                <Typography
+                    color: allChecked ? '#22C55E' : LOGI_ORANGE,
+                    '& .MuiCircularProgress-circle': {
+                      transition: 'stroke-dashoffset 0.4s ease',
+                    },
+                  }}
+                />
+                {/* 背景リング */}
+                <CircularProgress
+                  variant='determinate'
+                  value={100}
+                  size={24}
+                  thickness={5}
                   sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '13px',
-                  }}>
-                  {s.weight}kg
-                </Typography>
-                <CustomChip
-                  label={STATUS_LABELS[s.status]}
-                  size='small'
-                  sx={{
-                    bgcolor: alpha(STATUS_COLORS[s.status], 0.12),
-                    color: STATUS_COLORS[s.status],
-                    fontWeight: 600,
-                    justifySelf: 'start',
+                    color: alpha(allChecked ? '#22C55E' : LOGI_ORANGE, 0.15),
+                    position: 'absolute',
+                    left: 0,
                   }}
                 />
               </Box>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* ── ドライバー割当 ── */}
-        <SectionTitle sx={{ mb: 2 }}>ドライバー割当</SectionTitle>
-        <Grid container spacing={2} sx={{ mb: 5 }}>
-          {DRIVERS.map((d) => (
-            <Grid key={d.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <Card>
-                <CardHeader>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                    }}>
-                    <CardTitle>{d.name}</CardTitle>
-                    <CustomChip
-                      label={DRIVER_STATUS_LABELS[d.status]}
-                      size='small'
-                      color={
-                        d.status === 'available'
-                          ? 'success'
-                          : d.status === 'on_route'
-                            ? 'warning'
-                            : 'default'
-                      }
-                    />
-                  </Box>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    {d.vehicle} — {d.licensePlate}
-                  </CardDescription>
-                  <Typography
-                    variant='caption'
-                    color='text.secondary'
-                    sx={{ mt: 0.5, display: 'block' }}>
-                    {d.phone}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* ── 配送開始ボタン ── */}
-        <Box sx={{ mb: 6 }}>
-          <Button
-            onClick={() => {
-              if (!allChecked) return
-              play()
-              setViewMode('monitor')
-            }}
-            variant={allChecked ? 'default' : 'outline'}
-            size='lg'
-            disabled={!allChecked}
-            className='w-full gap-2 text-base'>
-            {/* チェック完了率プログレスリング */}
-            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-              <CircularProgress
-                variant='determinate'
-                value={Math.round((checked.size / CHECKLIST.length) * 100)}
-                size={24}
-                thickness={5}
-                sx={{
-                  color: allChecked ? '#22C55E' : LOGI_ORANGE,
-                  '& .MuiCircularProgress-circle': {
-                    transition: 'stroke-dashoffset 0.4s ease',
-                  },
-                }}
-              />
-              {/* 背景リング */}
-              <CircularProgress
-                variant='determinate'
-                value={100}
-                size={24}
-                thickness={5}
-                sx={{
-                  color: alpha(allChecked ? '#22C55E' : LOGI_ORANGE, 0.15),
-                  position: 'absolute',
-                  left: 0,
-                }}
-              />
-            </Box>
-            {allChecked
-              ? '全チェック完了 — 配送開始'
-              : `チェック未完了（${checked.size}/${CHECKLIST.length}）`}
-          </Button>
-        </Box>
+              {allChecked
+                ? '全チェック完了 — 配送開始'
+                : `チェック未完了（${checked.size}/${CHECKLIST.length}）`}
+            </Button>
+          </Box>
+        )}
       </Box>
     </Box>
   )

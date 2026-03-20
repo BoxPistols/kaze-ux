@@ -164,30 +164,15 @@ export const TimelineBar = () => {
                 py: 0.25,
                 borderRadius: 1,
                 fontSize: '13px',
-                fontWeight: 700,
+                fontWeight: speed === s ? 800 : 700,
                 fontFamily: "'JetBrains Mono', monospace",
                 cursor: 'pointer',
-                bgcolor:
-                  speed === s ? DRIVER_STATUS_COLOR.moving : 'transparent',
-                color: speed === s ? '#fff' : 'text.secondary',
+                bgcolor: 'transparent',
+                color:
+                  speed === s ? DRIVER_STATUS_COLOR.moving : 'text.secondary',
                 transition: 'all 0.15s ease',
-                position: 'relative',
                 '&:hover': {
-                  bgcolor:
-                    speed === s ? DRIVER_STATUS_COLOR.moving : 'action.hover',
-                },
-                // 選択状態の下線インジケーター
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: -2,
-                  left: '20%',
-                  right: '20%',
-                  height: '2px',
-                  borderRadius: 1,
-                  bgcolor: '#fff',
-                  opacity: speed === s ? 1 : 0,
-                  transition: 'opacity 0.15s ease',
+                  bgcolor: 'action.hover',
                 },
               }}>
               {s}x

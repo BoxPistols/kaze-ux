@@ -330,7 +330,7 @@ export interface Driver {
 export const DRIVERS: Driver[] = [
   {
     id: 'D001',
-    name: '木村 拓也',
+    name: '木村 健太',
     phone: '090-1111-2222',
     vehicle: '4tトラック',
     licensePlate: '品川 300 あ 1234',

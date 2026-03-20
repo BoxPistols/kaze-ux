@@ -103,25 +103,15 @@ export const HeaderBar = () => {
                 py: 0.75,
                 borderRadius: 2,
                 cursor: 'pointer',
-                bgcolor: active ? LOGI_ORANGE : 'transparent',
-                color: active ? '#fff' : 'text.secondary',
+                bgcolor: 'transparent',
+                color: active ? 'text.primary' : 'text.secondary',
+                fontWeight: active ? 700 : 500,
+                borderBottom: active
+                  ? `2px solid ${LOGI_ORANGE}`
+                  : '2px solid transparent',
                 transition: 'all 0.15s ease',
-                position: 'relative',
                 '&:hover': {
-                  bgcolor: active ? LOGI_ORANGE : 'action.hover',
-                },
-                // アクティブタブの下部アクセントライン
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: -2,
-                  left: '10%',
-                  right: '10%',
-                  height: '2px',
-                  borderRadius: 1,
-                  bgcolor: LOGI_ORANGE,
-                  opacity: active ? 1 : 0,
-                  transition: 'opacity 0.15s ease',
+                  bgcolor: 'action.hover',
                 },
               }}>
               <Typography
@@ -179,9 +169,22 @@ export const HeaderBar = () => {
               url = `${p}//${h}:5173`
             }
           }
-          window.open(url, '_self')
+          window.open(url, '_blank')
         }}
-        tooltip='Kaze Design System'
+        tooltip={
+          (import.meta.env.DEV &&
+            (() => {
+              try {
+                const saved = localStorage.getItem('kaze-dev-ports')
+                return saved && JSON.parse(saved).top
+                  ? 'Kaze Design System'
+                  : 'Kaze DS（未検出）'
+              } catch {
+                return 'Kaze DS（未検出）'
+              }
+            })()) ||
+          'Kaze Design System'
+        }
         size='small'
         sx={{ color: 'text.secondary', '&:hover': { color: '#0EADB8' } }}>
         <AirIcon sx={{ fontSize: 20 }} />

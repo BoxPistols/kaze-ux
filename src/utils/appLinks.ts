@@ -80,5 +80,87 @@ export const APP_LINKS = {
   github: () => 'https://github.com/BoxPistols/kaze-ux',
 }
 
+// ---------------------------------------------------------------------------
+// ポート生存チェック
+// ---------------------------------------------------------------------------
+
+/**
+ * 指定ポートでdev serverが起動しているか確認
+ * fetch で HEAD リクエストを送り、応答があれば true
+ */
+export const checkPortAlive = async (port: number): Promise<boolean> => {
+  if (typeof window === 'undefined') return false
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 1500)
+    await fetch(
+      `${window.location.protocol}//${window.location.hostname}:${port}/`,
+      { method: 'HEAD', mode: 'no-cors', signal: controller.signal }
+    )
+    clearTimeout(timeout)
+    // no-cors では opaque response が返るが、接続できれば true
+    return true
+  } catch {
+    return false
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 全ポート一括チェック + キャッシュ
+// ---------------------------------------------------------------------------
+
+export interface PortStatus {
+  port: number
+  alive: boolean
+}
+
+let cachedStatus: Record<string, PortStatus> | null = null
+let cacheTimestamp = 0
+const CACHE_TTL = 30_000 // 30秒キャッシュ
+
+/**
+ * 全アプリのポート生存状態を一括チェック
+ * 本番環境では全て alive 扱い
+ */
+export const checkAllPorts = async (): Promise<Record<string, PortStatus>> => {
+  // 本番環境では全て alive
+  if (!isDev) {
+    const ports = getDevPorts()
+    return Object.fromEntries(
+      (Object.entries(ports) as [string, number][]).map(([key, port]) => [
+        key,
+        { port, alive: true },
+      ])
+    )
+  }
+
+  // キャッシュが有効ならそのまま返す
+  if (cachedStatus && Date.now() - cacheTimestamp < CACHE_TTL) {
+    return cachedStatus
+  }
+
+  const ports = getDevPorts()
+  const entries = Object.entries(ports) as [string, number][]
+  const results = await Promise.all(
+    entries.map(async ([key, port]) => ({
+      key,
+      port,
+      alive: await checkPortAlive(port),
+    }))
+  )
+
+  cachedStatus = Object.fromEntries(
+    results.map((r) => [r.key, { port: r.port, alive: r.alive }])
+  )
+  cacheTimestamp = Date.now()
+  return cachedStatus
+}
+
+/** キャッシュを手動クリアして再チェックさせる */
+export const invalidatePortCache = (): void => {
+  cachedStatus = null
+  cacheTimestamp = 0
+}
+
 export { DEFAULT_PORTS, getDevPorts }
 export type { DevPorts }
