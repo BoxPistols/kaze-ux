@@ -46,6 +46,7 @@ const meta: Meta = {
   parameters: {
     layout: 'fullscreen',
     noPadding: true,
+    blockLinks: true,
     docs: {
       description: {
         component:

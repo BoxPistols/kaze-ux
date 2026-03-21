@@ -67,6 +67,7 @@ const meta: Meta<typeof LayoutDemo> = {
   parameters: {
     layout: 'fullscreen',
     noPadding: true,
+    blockLinks: true,
   },
   decorators: [
     (Story) => (

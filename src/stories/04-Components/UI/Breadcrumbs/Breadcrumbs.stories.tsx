@@ -7,6 +7,7 @@ const meta: Meta<typeof Breadcrumbs> = {
   component: Breadcrumbs,
   parameters: {
     layout: 'padded',
+    blockLinks: true,
   },
   tags: ['autodocs'],
   argTypes: {

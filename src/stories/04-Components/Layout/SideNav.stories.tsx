@@ -15,6 +15,7 @@ const meta: Meta<typeof SideNav> = {
   parameters: {
     layout: 'fullscreen',
     noPadding: true,
+    blockLinks: true,
   },
   decorators: [
     (Story) => (

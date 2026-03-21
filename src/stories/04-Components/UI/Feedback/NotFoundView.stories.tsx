@@ -17,6 +17,7 @@ const meta: Meta<typeof NotFoundView> = {
     },
     layout: 'fullscreen',
     noPadding: true,
+    blockLinks: true,
   },
   argTypes: {
     homePath: { control: 'text' },

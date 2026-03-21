@@ -132,11 +132,10 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
           <div
             style={{ padding: noPadding ? 0 : '1rem' }}
             onClick={(e) => {
-              // Story 内のリンククリックで iframe 外に遷移するのを防止
-              // target="_blank" は新規タブで開くので許可
+              // blockLinks が有効なストーリーのみリンク遷移を防止
+              if (!context.parameters.blockLinks) return
               const target = (e.target as HTMLElement).closest('a')
               if (target && target.getAttribute('href')) {
-                if (target.getAttribute('target') === '_blank') return
                 e.preventDefault()
               }
             }}>
