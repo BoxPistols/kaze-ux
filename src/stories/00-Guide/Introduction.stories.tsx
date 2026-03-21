@@ -1,3 +1,8 @@
+import AirIcon from '@mui/icons-material/Air'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import RestaurantIcon from '@mui/icons-material/Restaurant'
 import {
   Box,
   Chip,
@@ -13,6 +18,8 @@ import {
   Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
+
+import { APP_LINKS } from '@/utils/appLinks'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -641,6 +648,110 @@ const IntroductionContent = () => {
             </TableRow>
           ))}
         </StyledTable>
+      </Box>
+
+      {/* アプリ一覧 */}
+      <Box sx={{ mb: 10, px: { xs: 1, sm: 2 } }}>
+        <SectionLabel>APPS</SectionLabel>
+        <SectionTitle subtitle='Kaze UX で公開している各アプリケーション'>
+          アプリ一覧
+        </SectionTitle>
+        <Grid container spacing={2.5}>
+          {[
+            {
+              label: 'Kaze Design System',
+              desc: 'デザインシステムのトップページ',
+              icon: <AirIcon />,
+              href: APP_LINKS.top(),
+            },
+            {
+              label: 'KazeLogistics',
+              desc: '配送監視ダッシュボード',
+              icon: <LocalShippingIcon />,
+              href: APP_LINKS.skyKaze(),
+            },
+            {
+              label: 'KazeEats',
+              desc: 'フードデリバリーUI',
+              icon: <RestaurantIcon />,
+              href: APP_LINKS.ubereats(),
+            },
+            {
+              label: 'Kaze Dashboard',
+              desc: 'SaaS管理ダッシュボード',
+              icon: <DashboardIcon />,
+              href: APP_LINKS.saas(),
+            },
+          ].map((app) => (
+            <Grid key={app.label} size={{ xs: 12, sm: 6 }}>
+              <Box
+                component='a'
+                href={app.href}
+                target='_blank'
+                rel='noopener noreferrer'
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  px: 3,
+                  py: 2.5,
+                  borderRadius: 2.5,
+                  border: 1,
+                  borderColor: isDark
+                    ? 'rgba(255,255,255,0.08)'
+                    : 'rgba(0,0,0,0.08)',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  transition: 'border-color 0.2s, background 0.2s',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                    bgcolor: isDark
+                      ? 'rgba(14,173,184,0.06)'
+                      : 'rgba(14,173,184,0.03)',
+                  },
+                }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    bgcolor: isDark
+                      ? 'rgba(14,173,184,0.15)'
+                      : 'rgba(14,173,184,0.08)',
+                    color: 'primary.main',
+                    flexShrink: 0,
+                    '& .MuiSvgIcon-root': { fontSize: 22 },
+                  }}>
+                  {app.icon}
+                </Box>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: 14,
+                      color: isDark ? 'grey.100' : 'grey.900',
+                    }}>
+                    {app.label}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      color: 'text.secondary',
+                      lineHeight: 1.4,
+                    }}>
+                    {app.desc}
+                  </Typography>
+                </Box>
+                <OpenInNewIcon
+                  sx={{ fontSize: 16, color: 'text.disabled', flexShrink: 0 }}
+                />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
 
       {/* 参考リンク */}

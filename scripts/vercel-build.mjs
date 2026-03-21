@@ -8,6 +8,7 @@
  *   storybook/         ← Storybook
  *   saas/              ← SaaS Dashboard
  *   ubereats/          ← KazeEats
+ *   sky-kaze/          ← KazeLogistics
  */
 
 import { execSync } from 'node:child_process'
@@ -40,8 +41,14 @@ run('cd apps/ubereats-clone && VITE_BASE_PATH=/ubereats/ npx vite build')
 mkdirSync('dist/ubereats', { recursive: true })
 cpSync('apps/ubereats-clone/dist', 'dist/ubereats', { recursive: true })
 
+// 5. KazeLogistics → base=/sky-kaze/ で vite build のみ
+run('cd apps/sky-kaze && VITE_BASE_PATH=/sky-kaze/ npx vite build')
+mkdirSync('dist/sky-kaze', { recursive: true })
+cpSync('apps/sky-kaze/dist', 'dist/sky-kaze', { recursive: true })
+
 console.log('\n✅ Vercel build complete')
 console.log('  /           → LP')
 console.log('  /storybook/ → Storybook')
 console.log('  /saas/      → SaaS Dashboard')
 console.log('  /ubereats/  → KazeEats')
+console.log('  /sky-kaze/  → KazeLogistics')
