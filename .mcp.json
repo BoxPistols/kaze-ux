@@ -3,6 +3,10 @@
     "kaze": {
       "command": "node",
       "args": ["mcp/dist/index.js"]
+    },
+    "storybook-mcp": {
+      "type": "http",
+      "url": "http://localhost:6007/mcp"
     }
   }
 }
