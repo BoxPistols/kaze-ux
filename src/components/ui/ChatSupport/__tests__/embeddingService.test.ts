@@ -111,8 +111,7 @@ describe('fetchEmbeddings', () => {
     fetchSpy.mockResolvedValue({
       ok: false,
       status: 401,
-      json: () =>
-        Promise.resolve({ error: { message: 'Invalid API key' } }),
+      json: () => Promise.resolve({ error: { message: 'Invalid API key' } }),
     })
 
     await expect(fetchEmbeddings('bad-key', ['test'])).rejects.toThrow(
@@ -211,7 +210,12 @@ describe('VectorIndex', () => {
     const idx = new VectorIndex()
     await idx.build('key', [
       { id: 'a', text: '色について', category: 'faq', sourceKey: '0' },
-      { id: 'b', text: 'レイアウト', category: 'storyGuide', sourceKey: 'Layout/Grid' },
+      {
+        id: 'b',
+        text: 'レイアウト',
+        category: 'storyGuide',
+        sourceKey: 'Layout/Grid',
+      },
     ])
 
     // [1, 0]に近いクエリベクトル → 'a'が上位

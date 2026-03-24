@@ -127,7 +127,12 @@ export class VectorIndex {
    */
   async build(
     apiKey: string,
-    entries: { id: string; text: string; category: EmbeddingVector['category']; sourceKey: string }[]
+    entries: {
+      id: string
+      text: string
+      category: EmbeddingVector['category']
+      sourceKey: string
+    }[]
   ): Promise<void> {
     // 重複ビルド防止
     if (this.initializing) {
@@ -164,7 +169,11 @@ export class VectorIndex {
   /**
    * クエリベクトルとの類似度で上位k件を返す
    */
-  search(queryVector: number[], topK = 5, threshold = 0.3): SemanticSearchResult[] {
+  search(
+    queryVector: number[],
+    topK = 5,
+    threshold = 0.3
+  ): SemanticSearchResult[] {
     if (!this.initialized) return []
 
     const scored = this.vectors.map((v) => ({

@@ -1,9 +1,6 @@
 // セマンティック検索: FAQ・StoryGuide・MUI知識をembeddingベースで検索
 
-import {
-  VectorIndex,
-  fetchSingleEmbedding,
-} from './embeddingService'
+import { VectorIndex, fetchSingleEmbedding } from './embeddingService'
 import { FAQ_DATABASE } from './faqDatabase'
 import { detectMuiTopics } from './muiKnowledge'
 import { STORY_GUIDE_MAP } from './storyGuideMap'
@@ -49,12 +46,14 @@ const buildFaqEntries = (): IndexEntry[] =>
  * StoryGuide → embedding用テキスト
  */
 const buildStoryGuideEntries = (): IndexEntry[] =>
-  Object.entries(STORY_GUIDE_MAP).map(([title, entry]: [string, StoryGuideEntry]) => ({
-    id: `guide-${title}`,
-    text: `${title}\n${entry.summary}\n${entry.codeContext.join('\n')}`,
-    category: 'storyGuide' as const,
-    sourceKey: title,
-  }))
+  Object.entries(STORY_GUIDE_MAP).map(
+    ([title, entry]: [string, StoryGuideEntry]) => ({
+      id: `guide-${title}`,
+      text: `${title}\n${entry.summary}\n${entry.codeContext.join('\n')}`,
+      category: 'storyGuide' as const,
+      sourceKey: title,
+    })
+  )
 
 /**
  * MUI Knowledge → embedding用テキスト
@@ -144,9 +143,13 @@ export const initEmbeddingIndex = async (apiKey: string): Promise<void> => {
       ...buildStoryGuideEntries(),
       ...buildMuiKnowledgeEntries(),
     ]
-    console.log(`[Embedding] ${entries.length}件の知識ベースをインデックス化中...`)
+    console.log(
+      `[Embedding] ${entries.length}件の知識ベースをインデックス化中...`
+    )
     await globalIndex.build(apiKey, entries)
-    console.log(`[Embedding] インデックス構築完了 (${globalIndex.getVectorCount()}件)`)
+    console.log(
+      `[Embedding] インデックス構築完了 (${globalIndex.getVectorCount()}件)`
+    )
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     buildError = msg
@@ -183,7 +186,9 @@ export const semanticSearch = async (
 /**
  * セマンティック検索結果からシステムプロンプト用コンテキストを構築
  */
-export const buildSemanticContext = (results: SemanticSearchResult[]): string => {
+export const buildSemanticContext = (
+  results: SemanticSearchResult[]
+): string => {
   if (results.length === 0) return ''
 
   const sections = results.map((r) => {
@@ -203,7 +208,9 @@ export const buildSemanticContext = (results: SemanticSearchResult[]): string =>
  * セマンティック検索結果からFAQ回答を取得
  * FAQ カテゴリの最上位マッチの元データを返す
  */
-export const findSemanticFaqAnswer = (results: SemanticSearchResult[]): string | null => {
+export const findSemanticFaqAnswer = (
+  results: SemanticSearchResult[]
+): string | null => {
   const faqResult = results.find((r) => r.category === 'faq' && r.score >= 0.5)
   if (!faqResult) return null
 
