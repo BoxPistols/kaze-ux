@@ -64,6 +64,13 @@ import {
 } from './chatSupportConstants'
 import CodeBlock, { CodeBlockPre } from './CodeBlock'
 import {
+  initEmbeddingIndex,
+  semanticSearch,
+  buildSemanticContext,
+  findSemanticFaqAnswer,
+  getEmbeddingIndex,
+} from './embeddingSearch'
+import {
   FAQ_DATABASE,
   findFaqAnswer,
   QUICK_SUGGESTIONS,
@@ -71,6 +78,7 @@ import {
 } from './faqDatabase'
 import { findStoryGuide } from './storyGuideMap'
 import { useWidgetResize, useSidebarResize } from './useResize'
+import { ConfirmDialog } from '../dialog/confirmDialog'
 
 import type {
   Message,
@@ -116,6 +124,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   const [config, setConfig] = useState<ChatSupportConfig>(() =>
     loadChatConfig()
   )
+  const [confirmResetOpen, setConfirmResetOpen] = useState(false)
 
   // APIキー入力欄のローカルstate（paste問題の回避）
   const [apiKeyDraft, setApiKeyDraft] = useState(() => {
@@ -220,6 +229,15 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   useEffect(() => {
     localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config))
   }, [config])
+
+  // Embeddingインデックスの初期化（APIキーがある場合のみ、バックグラウンドで1回実行）
+  useEffect(() => {
+    if (!config.apiKey || config.apiKey === DEFAULT_API_KEY) return
+    if (getEmbeddingIndex()?.isReady()) return
+    initEmbeddingIndex(config.apiKey).catch(() => {
+      // エラーは initEmbeddingIndex 内でログ済み
+    })
+  }, [config.apiKey])
 
   const clearChat = useCallback(() => {
     if (confirm('履歴を削除？'))
@@ -382,8 +400,15 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
     // AI呼び出し
     setIsTyping(true)
     try {
+      // セマンティック検索で関連知識を取得し、システムプロンプトを強化
+      let enrichedPrompt = contextualPrompt
+      const embeddingResults = await semanticSearch(config.apiKey, userText)
+      if (embeddingResults.length > 0) {
+        enrichedPrompt += buildSemanticContext(embeddingResults)
+      }
+
       const payload = [
-        { role: 'system', content: contextualPrompt },
+        { role: 'system', content: enrichedPrompt },
         ...messages.map((m) => ({
           role: m.sender === 'user' ? 'user' : 'assistant',
           content: m.text,
@@ -400,8 +425,12 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             ? 'タイムアウト: 応答に時間がかかりすぎています。'
             : error.message
           : String(error)
-      // AI失敗時もFAQで応答を試みる
-      const faqAnswer = findFaqAnswer(userText)
+      // AI失敗時もFAQで応答を試みる（セマンティック → キーワード の順）
+      const embeddingFaq = await semanticSearch(config.apiKey, userText).catch(
+        () => []
+      )
+      const semanticAnswer = findSemanticFaqAnswer(embeddingFaq)
+      const faqAnswer = semanticAnswer ?? findFaqAnswer(userText)
       if (faqAnswer) {
         addBotMessage(
           `*AI接続エラー: ${errMsg}*\n\n---\n\nFAQから回答します:\n\n${trimFaqAnswer(faqAnswer)}`
@@ -568,18 +597,27 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
       return
     }
 
-    // AI呼び出し
+    // AI呼び出し（セマンティック検索で知識を補強）
     setIsTyping(true)
-    const payload = [
-      { role: 'system', content: contextualPrompt },
-      ...messages.map((m) => ({
-        role: m.sender === 'user' ? 'user' : 'assistant',
-        content: m.text,
-      })),
-      { role: 'user', content: query },
-    ]
 
-    callAI(config, payload)
+    // セマンティック検索 → システムプロンプト強化 → AI呼び出し
+    semanticSearch(config.apiKey, query)
+      .catch(() => [])
+      .then((embeddingResults) => {
+        let enrichedPrompt = contextualPrompt
+        if (embeddingResults.length > 0) {
+          enrichedPrompt += buildSemanticContext(embeddingResults)
+        }
+        const payload = [
+          { role: 'system', content: enrichedPrompt },
+          ...messages.map((m) => ({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text,
+          })),
+          { role: 'user', content: query },
+        ]
+        return callAI(config, payload)
+      })
       .then((data) => {
         addBotMessage(extractContent(data))
       })
@@ -959,22 +997,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       {apiKeyDraft && (
                         <IconButton
                           size='small'
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                'APIキーをリセットしてデフォルト(gpt-4.1-nano)に戻しますか?'
-                              )
-                            ) {
-                              setApiKeyDraft('')
-                              setConfig({
-                                ...config,
-                                apiKey: DEFAULT_API_KEY,
-                                model: DEFAULT_MODEL,
-                              })
-                              setTestResult(null)
-                              setShowApiKey(false)
-                            }
-                          }}
+                          onClick={() => setConfirmResetOpen(true)}
                           title='デフォルトに戻す'>
                           <X size={16} />
                         </IconButton>
@@ -1768,6 +1791,26 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
           </Zoom>
         )}
       </Box>
+      <ConfirmDialog
+        open={confirmResetOpen}
+        title='APIキーのリセット'
+        message='APIキーをリセットしてデフォルト(gpt-4.1-nano)に戻しますか?'
+        confirmText='リセット'
+        confirmColor='warning'
+        onConfirm={() => {
+          setApiKeyDraft('')
+          setConfig({
+            ...config,
+            apiKey: DEFAULT_API_KEY,
+            model: DEFAULT_MODEL,
+          })
+          setTestResult(null)
+          setShowApiKey(false)
+          setConfirmResetOpen(false)
+        }}
+        onCancel={() => setConfirmResetOpen(false)}
+        disableEnforceFocus
+      />
     </>
   )
 }
