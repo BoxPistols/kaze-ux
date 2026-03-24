@@ -16,7 +16,7 @@ const App = () => {
 
   const [scheme] = useState<ColorScheme>(() => {
     return (
-      (localStorage.getItem(COLOR_SCHEME_STORAGE_KEY) as ColorScheme) || 'blue'
+      (localStorage.getItem(COLOR_SCHEME_STORAGE_KEY) as ColorScheme) || 'kaze'
     )
   })
 

@@ -78,6 +78,7 @@ import {
 } from './faqDatabase'
 import { findStoryGuide } from './storyGuideMap'
 import { useWidgetResize, useSidebarResize } from './useResize'
+import { ConfirmDialog } from '../dialog/confirmDialog'
 
 import type {
   Message,
@@ -123,6 +124,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   const [config, setConfig] = useState<ChatSupportConfig>(() =>
     loadChatConfig()
   )
+  const [confirmResetOpen, setConfirmResetOpen] = useState(false)
 
   // APIキー入力欄のローカルstate（paste問題の回避）
   const [apiKeyDraft, setApiKeyDraft] = useState(() => {
@@ -424,7 +426,9 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             : error.message
           : String(error)
       // AI失敗時もFAQで応答を試みる（セマンティック → キーワード の順）
-      const embeddingFaq = await semanticSearch(config.apiKey, userText).catch(() => [])
+      const embeddingFaq = await semanticSearch(config.apiKey, userText).catch(
+        () => []
+      )
       const semanticAnswer = findSemanticFaqAnswer(embeddingFaq)
       const faqAnswer = semanticAnswer ?? findFaqAnswer(userText)
       if (faqAnswer) {
@@ -993,22 +997,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       {apiKeyDraft && (
                         <IconButton
                           size='small'
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                'APIキーをリセットしてデフォルト(gpt-4.1-nano)に戻しますか?'
-                              )
-                            ) {
-                              setApiKeyDraft('')
-                              setConfig({
-                                ...config,
-                                apiKey: DEFAULT_API_KEY,
-                                model: DEFAULT_MODEL,
-                              })
-                              setTestResult(null)
-                              setShowApiKey(false)
-                            }
-                          }}
+                          onClick={() => setConfirmResetOpen(true)}
                           title='デフォルトに戻す'>
                           <X size={16} />
                         </IconButton>
@@ -1802,6 +1791,26 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
           </Zoom>
         )}
       </Box>
+      <ConfirmDialog
+        open={confirmResetOpen}
+        title='APIキーのリセット'
+        message='APIキーをリセットしてデフォルト(gpt-4.1-nano)に戻しますか?'
+        confirmText='リセット'
+        confirmColor='warning'
+        onConfirm={() => {
+          setApiKeyDraft('')
+          setConfig({
+            ...config,
+            apiKey: DEFAULT_API_KEY,
+            model: DEFAULT_MODEL,
+          })
+          setTestResult(null)
+          setShowApiKey(false)
+          setConfirmResetOpen(false)
+        }}
+        onCancel={() => setConfirmResetOpen(false)}
+        disableEnforceFocus
+      />
     </>
   )
 }

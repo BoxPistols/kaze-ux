@@ -54,33 +54,33 @@ const commonThemeOptions = {
   layout: {
     containerMaxWidth,
   },
-  // カスタムシャドウ
+  // Tailwind shadow scale 準拠 — 段階的にブラー・スプレッドを増加
   shadows: [
-    'none',
-    '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-    '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-    '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-    '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    'none', // 0
+    '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // 1
+    '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)', // 2
+    '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)', // 3
+    '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)', // 4
+    '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', // 5
+    '0 25px 50px -12px rgba(0, 0, 0, 0.25)', // 6
+    '0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14)', // 7
+    '0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2)', // 8
+    '0 3px 16px 2px rgba(0, 0, 0, 0.12), 0 5px 6px -3px rgba(0, 0, 0, 0.2)', // 9
+    '0 4px 18px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 10
+    '0 4px 20px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 11
+    '0 5px 22px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 12
+    '0 5px 24px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 13
+    '0 5px 26px 4px rgba(0, 0, 0, 0.12), 0 7px 9px -4px rgba(0, 0, 0, 0.2)', // 14
+    '0 6px 28px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 15
+    '0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 16
+    '0 6px 32px 5px rgba(0, 0, 0, 0.14), 0 8px 11px -5px rgba(0, 0, 0, 0.2)', // 17
+    '0 7px 34px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 18
+    '0 7px 36px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 19
+    '0 8px 38px 7px rgba(0, 0, 0, 0.14), 0 10px 13px -6px rgba(0, 0, 0, 0.22)', // 20
+    '0 8px 40px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 21
+    '0 8px 42px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 22
+    '0 9px 44px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 23
+    '0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 24
   ] as unknown as Theme['shadows'],
 }
 

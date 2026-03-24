@@ -98,7 +98,7 @@ const greyShades: GreyShades = {
 }
 
 // ===== カラースキーム (Light/Dark 共通) =====
-export type ColorScheme = 'dracula' | 'blue' | 'monotone'
+export type ColorScheme = 'dracula' | 'kaze' | 'monotone'
 /** 後方互換エイリアス */
 export type DarkColorScheme = ColorScheme
 
@@ -118,7 +118,7 @@ export const SCHEME_META: SchemeMeta[] = [
     preview: '#282A36',
   },
   {
-    id: 'blue',
+    id: 'kaze',
     name: 'Kaze',
     description: 'クールティール系',
     preview: '#0EADB8',
@@ -225,8 +225,8 @@ const lightSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#7c6c9a', dark: '#3d2d5e', disabled: '#d0c4e0' },
     divider: 'rgba(100, 60, 160, 0.10)',
   },
-  // Blue Light: クールティール系(現行デフォルト)
-  blue: {
+  // Kaze Light: クールティール系(現行デフォルト)
+  kaze: {
     lighter: '#b0dfe3',
     background: { default: '#f8fafc', paper: '#ffffff' },
     text: {
@@ -275,7 +275,7 @@ const lightSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
 
 /** ライトスキームごとの色定義を返す */
 export const createLightThemeColors = (
-  scheme: ColorScheme = 'blue'
+  scheme: ColorScheme = 'kaze'
 ): ThemeColors => {
   const env = lightSchemeEnvMap[scheme]
   // スキーム色はprimary/secondaryのlighterのみに適用
@@ -303,7 +303,7 @@ export const createLightThemeColors = (
 }
 
 /** 後方互換: スキーム指定なしのライト色(Blue) */
-const createLightColors = (): ThemeColors => createLightThemeColors('blue')
+const createLightColors = (): ThemeColors => createLightThemeColors('kaze')
 
 // ----- M3準拠: ダークテーマの同色相トーナル派生 -----
 // 共通セマンティックカラー（primary以外はスキーム間で共有）
@@ -353,7 +353,7 @@ const darkSemanticBase = {
 
 // スキーム別プライマリカラー（全スキームでティール系を共有）
 // Dracula: 紫灰背景に映えるやや彩度高めのティール
-// Blue(Kaze): Zinc背景に合うスタンダードティール
+// Kaze: Zinc背景に合うスタンダードティール
 // Monotone: 低彩度背景に合う落ち着いたティール
 const darkSchemePrimaryMap: Record<ColorScheme, ColorSet> = {
   dracula: createColorSet(
@@ -364,7 +364,7 @@ const darkSchemePrimaryMap: Record<ColorScheme, ColorSet> = {
     undefined,
     '#1a2e2e'
   ),
-  blue: createColorSet(
+  kaze: createColorSet(
     '#4DD8E0',
     '#2CB8C2',
     '#7AE6EC',
@@ -402,8 +402,8 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#6272A4', dark: '#F8F8F2', disabled: '#44475A' },
     divider: 'rgba(98, 114, 164, 0.15)',
   },
-  // Blue: Zinc系ニュートラル + ティールプライマリ
-  blue: {
+  // Kaze: Zinc系ニュートラル + ティールプライマリ
+  kaze: {
     lighter: '#1a3a3e',
     background: { default: '#18181b', paper: '#27272a' },
     text: { primary: '#e4e4e7', secondary: '#a1a1aa', disabled: '#71717a' },

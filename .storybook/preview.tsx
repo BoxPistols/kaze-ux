@@ -27,7 +27,7 @@ const updateLocalStorage = (mode: string) => {
 
 /**
  * テーマセレクタの値からモードとスキームを解析する
- * 形式: "light" | "dark-dracula" | "dark-blue"
+ * 形式: "light" | "dark-dracula" | "dark-kaze"
  */
 const parseThemeValue = (
   value: string
@@ -36,7 +36,7 @@ const parseThemeValue = (
     const scheme = value.replace('dark-', '') as ColorScheme
     return { mode: 'dark', scheme }
   }
-  return { mode: 'light', scheme: 'blue' }
+  return { mode: 'light', scheme: 'kaze' }
 }
 
 const Decorator = (Story: StoryFn, context: StoryContext) => {
@@ -245,7 +245,7 @@ const preview: Preview = {
         items: [
           { value: 'light', title: 'Light' },
           { value: 'dark-dracula', title: 'Dark (Dracula)' },
-          { value: 'dark-blue', title: 'Dark (Kaze)' },
+          { value: 'dark-kaze', title: 'Dark (Kaze)' },
         ],
         dynamicTitle: true,
       },
