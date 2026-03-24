@@ -555,24 +555,28 @@ const DevPortSettings = () => {
             <Typography
               sx={{
                 fontSize: '0.9rem',
-                color: 'text.secondary',
+                color: 'text.primary',
                 minWidth: 60,
               }}>
               {key}:
             </Typography>
-            <input
+            <Box
+              component='input'
               type='number'
               value={ports[key]}
-              onChange={(e) =>
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPorts((prev) => ({ ...prev, [key]: Number(e.target.value) }))
               }
-              style={{
+              sx={{
                 width: 70,
                 padding: '2px 6px',
-                border: '1px solid #ccc',
-                borderRadius: 4,
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
                 fontSize: '0.9rem',
                 fontFamily: 'monospace',
+                bgcolor: 'background.paper',
+                color: 'text.primary',
               }}
             />
           </Box>
