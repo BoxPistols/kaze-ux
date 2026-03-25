@@ -1,7 +1,7 @@
 // 下パネル: プロンプト入力 + プリセット
 
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import { Box, Chip, Stack, TextField, useTheme } from '@mui/material'
-import { Sparkles } from 'lucide-react'
 import { useState, useCallback } from 'react'
 
 import { Button } from '../../../components/ui/Button'
@@ -85,7 +85,7 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
             key={p.label}
             label={p.label}
             size='small'
-            icon={<Sparkles size={12} />}
+            icon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
             onClick={() => handlePreset(p.prompt)}
             disabled={isGenerating}
             sx={{ fontSize: 12 }}
