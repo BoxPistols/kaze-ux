@@ -376,6 +376,9 @@ This project uses both Japanese and English:
 - MAX_DEPTH=10 で再帰レンダリングの安全弁
 - 3パネル: ComponentPalette(左) + LivePreview(中央) + PromptInput(下)
 - プリセット4種: KPI Dashboard / Registration Form / Activity Feed / Settings Page
+- 送信ボタン: MUI IconButton(SendIcon) + Tooltip でショートカット表示（⌘/Ctrl + Enter）
+- ChatSupport FAB との重なり回避: PromptInput に `pr: 7` の右パディング
+- lucide-react の Sparkles は MUI AutoAwesomeIcon に置換（Storybook 環境での安定性）
 - プロトタイプ段階。テストコードなし
 
 ## ブランチ・PR 運用
