@@ -104,8 +104,8 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
         ))}
       </Stack>
 
-      {/* 入力欄 + 送信ボタン */}
-      <Stack direction='row' spacing={1} alignItems='flex-end'>
+      {/* 入力欄 + 送信ボタン（右端に ChatSupport FAB 分の余白） */}
+      <Stack direction='row' spacing={1} alignItems='flex-end' sx={{ pr: 7 }}>
         <TextField
           value={input}
           onChange={(e) => setInput(e.target.value)}
