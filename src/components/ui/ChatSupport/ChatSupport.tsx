@@ -125,6 +125,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
     loadChatConfig()
   )
   const [confirmResetOpen, setConfirmResetOpen] = useState(false)
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false)
 
   // APIキー入力欄のローカルstate（paste問題の回避）
   const [apiKeyDraft, setApiKeyDraft] = useState(() => {
@@ -240,15 +241,19 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   }, [config.apiKey])
 
   const clearChat = useCallback(() => {
-    if (confirm('履歴を削除？'))
-      setMessages([
-        {
-          id: '1',
-          text: INITIAL_GREETING,
-          sender: 'bot',
-          timestamp: new Date(),
-        },
-      ])
+    setConfirmClearOpen(true)
+  }, [])
+
+  const executeClearChat = useCallback(() => {
+    setMessages([
+      {
+        id: '1',
+        text: INITIAL_GREETING,
+        sender: 'bot',
+        timestamp: new Date(),
+      },
+    ])
+    setConfirmClearOpen(false)
   }, [])
 
   const handleTestConnection = async () => {
@@ -1809,6 +1814,16 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
           setConfirmResetOpen(false)
         }}
         onCancel={() => setConfirmResetOpen(false)}
+        disableEnforceFocus
+      />
+      <ConfirmDialog
+        open={confirmClearOpen}
+        title='履歴の削除'
+        message='チャット履歴を削除しますか？'
+        confirmText='削除'
+        confirmColor='error'
+        onConfirm={executeClearChat}
+        onCancel={() => setConfirmClearOpen(false)}
         disableEnforceFocus
       />
     </>
