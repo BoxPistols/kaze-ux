@@ -1,10 +1,18 @@
 // 下パネル: プロンプト入力 + プリセット
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
-import { Box, Chip, Stack, TextField, useTheme } from '@mui/material'
+import SendIcon from '@mui/icons-material/Send'
+import {
+  Box,
+  Chip,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import { useState, useCallback } from 'react'
-
-import { Button } from '../../../components/ui/Button'
 
 // プリセットテンプレート
 const PRESETS = [
@@ -64,6 +72,9 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
     [onGenerate]
   )
 
+  const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent)
+  const modKey = isMac ? '⌘' : 'Ctrl'
+
   return (
     <Box
       sx={{
@@ -93,7 +104,7 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
         ))}
       </Stack>
 
-      {/* 入力欄 */}
+      {/* 入力欄 + 送信ボタン */}
       <Stack direction='row' spacing={1} alignItems='flex-end'>
         <TextField
           value={input}
@@ -109,14 +120,36 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
             input: { sx: { fontSize: 14 } },
           }}
         />
-        <Button
-          variant='default'
-          size='sm'
-          onClick={handleSubmit}
-          disabled={!input.trim() || isGenerating}>
-          {isGenerating ? '生成中...' : '生成'}
-        </Button>
+        <Tooltip title={`生成 (${modKey} + Enter)`} placement='top'>
+          <span>
+            <IconButton
+              onClick={handleSubmit}
+              disabled={!input.trim() || isGenerating}
+              sx={{
+                bgcolor: 'primary.main',
+                color: '#fff',
+                width: 40,
+                height: 40,
+                flexShrink: 0,
+                '&:hover': { bgcolor: 'primary.dark' },
+                '&.Mui-disabled': {
+                  bgcolor: 'action.disabledBackground',
+                  color: 'action.disabled',
+                },
+              }}>
+              <SendIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </span>
+        </Tooltip>
       </Stack>
+
+      {/* ショートカットヒント */}
+      <Typography
+        variant='caption'
+        color='text.secondary'
+        sx={{ mt: 1, display: 'block', fontSize: 11, opacity: 0.7 }}>
+        {modKey} + Enter で送信 / プリセットをクリックで即時生成
+      </Typography>
     </Box>
   )
 }
