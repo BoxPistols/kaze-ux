@@ -1,182 +1,112 @@
-// ChatSupport AI API呼び出しサービス
+// ChatSupport AI API呼び出しサービス（AI SDK v6ベース）
+// - 手動fetch / URL切替 / レスポンス抽出ロジックを AI SDK v6 に一任
+// - OpenAI / Gemini / OpenAI Responses API を SDK 内部で透過的に処理
+// - タイムアウトは AbortSignal.timeout による宣言的制御
+
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createOpenAI } from '@ai-sdk/openai'
+import { generateText, type ModelMessage } from 'ai'
 
 import type { ChatSupportConfig } from './chatSupportTypes'
 
 // ---------------------------------------------------------------------------
-// AI API呼び出し（OpenAI / Gemini 両対応）
+// モデルプロバイダの解決
+// ---------------------------------------------------------------------------
+
+const resolveModel = (config: ChatSupportConfig) => {
+  const isGemini = config.model.includes('gemini')
+  if (isGemini) {
+    const google = createGoogleGenerativeAI({ apiKey: config.apiKey })
+    return google(config.model)
+  }
+  const openai = createOpenAI({ apiKey: config.apiKey })
+  return openai(config.model)
+}
+
+// ---------------------------------------------------------------------------
+// モデル別 maxOutputTokens の決定
+// - nano 系: 4000 で十分
+// - mini/reasoning 系: 推論トークン消費を見込んで 16000
+// - テスト接続: 50 固定
+// ---------------------------------------------------------------------------
+
+const resolveMaxOutputTokens = (model: string, isTest: boolean): number => {
+  if (isTest) return 50
+  if (model.includes('nano')) return 4000
+  if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
+    return 16000
+  }
+  return 4000
+}
+
+// ---------------------------------------------------------------------------
+// メッセージ変換: 独自形式 → AI SDK v6 の ModelMessage 配列
+// ---------------------------------------------------------------------------
+
+const toModelMessages = (
+  payload: { role: string; content: string }[]
+): ModelMessage[] =>
+  payload.map((m) => {
+    if (m.role === 'system') {
+      return { role: 'system', content: m.content }
+    }
+    if (m.role === 'assistant') {
+      return { role: 'assistant', content: m.content }
+    }
+    return { role: 'user', content: m.content }
+  })
+
+// ---------------------------------------------------------------------------
+// AI 呼び出し（OpenAI / Gemini 両対応・AI SDK v6）
+// - 戻り値は生成テキスト文字列
+// - 既存呼び出し側互換のため extractContent もパススルーで維持
 // ---------------------------------------------------------------------------
 
 export const callAI = async (
   config: ChatSupportConfig,
   messagesPayload: { role: string; content: string }[],
   isTest = false
-): Promise<Record<string, unknown>> => {
-  const isGemini = config.model.includes('gemini')
-  const isNewGenOpenAI =
-    config.model.includes('gpt-5') || config.model.includes('o1')
+): Promise<string> => {
+  const model = resolveModel(config)
+  const maxOutputTokens = resolveMaxOutputTokens(config.model, isTest)
 
-  let url = 'https://api.openai.com/v1/chat/completions'
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${config.apiKey}`,
-  }
-
-  if (isGemini) {
-    url =
-      'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
-    // OpenAI互換エンドポイントはBearer認証を使用
-    headers.Authorization = `Bearer ${config.apiKey}`
-  }
-
-  const body: Record<string, unknown> = {
-    model: config.model,
-    messages: messagesPayload,
-  }
-
-  if (isNewGenOpenAI) {
-    // gpt-5系: nanoは4000で十分、miniは推論トークン消費が多いため余裕を持たせる
-    const isNano = config.model.includes('nano')
-    body.max_completion_tokens = isTest ? 50 : isNano ? 4000 : 16000
-  } else {
-    body.max_tokens = isTest ? 50 : 4000
-    body.temperature = 0.7
-  }
-
-  // タイムアウト設定（60秒）
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 60000)
+  // タイムアウト60秒（AI SDK v6のabortSignal経由）
+  const abortSignal = AbortSignal.timeout(60000)
 
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-      signal: controller.signal,
+    const result = await generateText({
+      model,
+      messages: toModelMessages(messagesPayload),
+      maxOutputTokens,
+      abortSignal,
     })
 
-    let data: Record<string, unknown>
-    try {
-      data = await response.json()
-    } catch {
-      throw new Error(
-        `レスポンスの解析に失敗しました (HTTP ${response.status})`
-      )
+    // finish_reason が 'length' でテキストが空の場合はフォールバックメッセージ
+    if (!result.text && result.finishReason === 'length') {
+      return '(回答生成中にトークン上限に達しました。もう少し短い質問で再度お試しください)'
     }
 
-    if (!response.ok) {
-      const err = data.error as Record<string, unknown> | undefined
-      const errorMsg =
-        err?.message ||
-        (data.message as string) ||
-        `API Error: ${response.status}`
-      throw new Error(String(errorMsg))
+    return result.text
+  } catch (error: unknown) {
+    // AbortSignal.timeout は TimeoutError、従来は AbortError
+    if (error instanceof Error) {
+      if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+        throw new Error('リクエストがタイムアウトしました (60秒)')
+      }
+      throw error
     }
-
-    // choicesまたはoutput（Responses API）の存在を確認
-    const choices = data.choices as Record<string, unknown>[] | undefined
-    const output = data.output as Record<string, unknown>[] | undefined
-    if ((!choices || !choices[0]) && !output) {
-      throw new Error(
-        `レスポンス形式が不正です: ${JSON.stringify(Object.keys(data))}`
-      )
-    }
-
-    return data
-  } finally {
-    clearTimeout(timeoutId)
+    throw new Error(`AI呼び出しに失敗しました: ${String(error)}`)
   }
 }
 
 // ---------------------------------------------------------------------------
-// レスポンスからテキストを安全に抽出（OpenAI / Gemini両対応）
+// 後方互換: 旧API extractContent
+// - 新 callAI は文字列を直接返すため、単なるパススルー
+// - 既存の ChatSupport.tsx の `extractContent(data)` 呼び出しを壊さない
 // ---------------------------------------------------------------------------
 
-export const extractContent = (data: Record<string, unknown>): string => {
-  try {
-    // 1. OpenAI標準: data.choices[0].message.content
-    const choices = data.choices as Record<string, unknown>[] | undefined
-    if (choices?.[0]) {
-      const msg = choices[0].message as Record<string, unknown> | undefined
-      if (msg?.content) return String(msg.content)
-      // content が null でも refusal がある場合
-      if (msg?.refusal) return String(msg.refusal)
-      // Gemini互換: choices[0].text
-      if (choices[0].text) return String(choices[0].text)
-      // 推論モデル: contentが空でfinish_reason=length（推論トークンで上限到達）
-      if (
-        choices[0].finish_reason === 'length' &&
-        msg &&
-        (msg.content === '' || msg.content === null)
-      ) {
-        return '(回答生成中にトークン上限に達しました。もう少し短い質問で再度お試しください)'
-      }
-    }
-
-    // 2. OpenAI Responses API: data.output[].content[].text
-    const output = data.output as Record<string, unknown>[] | undefined
-    if (output) {
-      for (const item of output) {
-        if (item.type === 'message') {
-          const contentArr = item.content as
-            | Record<string, unknown>[]
-            | undefined
-          if (contentArr) {
-            for (const part of contentArr) {
-              if (part.type === 'output_text' && part.text)
-                return String(part.text)
-            }
-          }
-        }
-      }
-    }
-
-    // 3. Gemini native: data.candidates[0].content.parts[0].text
-    const candidates = data.candidates as Record<string, unknown>[] | undefined
-    if (candidates?.[0]) {
-      const content = candidates[0].content as
-        | Record<string, unknown>
-        | undefined
-      const parts = content?.parts as Record<string, unknown>[] | undefined
-      if (parts?.[0]?.text) return String(parts[0].text)
-    }
-
-    // 4. フラットな text フィールド（一部プロバイダー）
-    if (data.text) return String(data.text)
-
-    // 5. 深層探索: レスポンス内の最初の text/content 文字列を探す
-    const deepSearch = (obj: unknown, depth: number): string | null => {
-      if (depth > 4 || !obj || typeof obj !== 'object') return null
-      const record = obj as Record<string, unknown>
-      for (const key of ['text', 'content', 'message']) {
-        if (typeof record[key] === 'string' && record[key]) {
-          return String(record[key])
-        }
-      }
-      for (const val of Object.values(record)) {
-        if (Array.isArray(val)) {
-          for (const item of val) {
-            const found = deepSearch(item, depth + 1)
-            if (found) return found
-          }
-        } else if (typeof val === 'object' && val !== null) {
-          const found = deepSearch(val, depth + 1)
-          if (found) return found
-        }
-      }
-      return null
-    }
-    const fallback = deepSearch(data, 0)
-    if (fallback) return fallback
-
-    console.error(
-      '[Concierge] content抽出失敗。レスポンスキー:',
-      Object.keys(data),
-      'データ:',
-      JSON.stringify(data).slice(0, 500)
-    )
-    return `(レスポンス形式を解析できませんでした。DevToolsコンソールを確認してください)`
-  } catch (e) {
-    console.error('[Concierge] extractContent エラー:', e)
-    return '(レスポンスの解析に失敗しました)'
-  }
+export const extractContent = (data: unknown): string => {
+  if (typeof data === 'string') return data
+  console.error('[Concierge] extractContent: unexpected data shape', data)
+  return '(レスポンスの解析に失敗しました)'
 }
