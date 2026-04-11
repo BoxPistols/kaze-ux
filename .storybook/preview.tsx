@@ -115,14 +115,30 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
   const storyTitle = context.title
   const storyName = context.name
   const storyDescription = context.parameters?.docs?.description?.component
+  // argTypes / args は Controls 操作で頻繁に変わるため useMemo の依存配列には含めない。
+  // currentStory の安定性を保ち、ChatSupport 側の不要な再計算を防ぐ。
+  // 実際の AI プロンプト注入は feat/chatsupport-split-hooks PR で実装予定。
+  const argTypesRef = useRef(context.argTypes)
+  const argsRef = useRef(context.args)
+  argTypesRef.current = context.argTypes
+  argsRef.current = context.args
+
   const currentStory = useMemo(
     () => ({
       title: storyTitle,
       name: storyName,
       description: storyDescription,
+      // argTypes / args は ref 経由で渡すことで、Controls 変化による再レンダリングを回避
+      argTypes: argTypesRef.current as Record<string, unknown> | undefined,
+      args: argsRef.current as Record<string, unknown> | undefined,
     }),
     [storyTitle, storyName, storyDescription]
   )
+
+  // 専用 Story (ChatSupport のデモ等) が独自に <ChatSupport /> を描画する場合、
+  // Decorator 側の ChatSupport と二重レンダリングになるのを防ぐオプトアウト。
+  // 使い方: meta の parameters に `disableDecoratorChat: true` を設定する。
+  const disableDecoratorChat = context.parameters?.disableDecoratorChat === true
 
   return (
     <EmotionThemeProvider theme={muiTheme}>
@@ -141,7 +157,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
             }}>
             <Story {...context} />
           </div>
-          {context.viewMode !== 'docs' && (
+          {context.viewMode !== 'docs' && !disableDecoratorChat && (
             <ChatSupport currentStory={currentStory} />
           )}
         </CacheProvider>
