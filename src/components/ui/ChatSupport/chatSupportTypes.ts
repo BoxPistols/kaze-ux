@@ -14,6 +14,19 @@ export interface CurrentStoryContext {
   name: string
   /** meta description（あれば） */
   description?: string
+  /**
+   * Storybook の argTypes（あれば）
+   * 現在ストーリーのコンポーネント props スキーマ。
+   * AI 応答のプロンプトに注入して「このコンポーネントの props は？」型の質問に回答可能にする。
+   * 将来 sdpf-theme / Matlens / kaze-ux の 3 プロジェクト共通型で正式化予定。
+   */
+  argTypes?: Record<string, unknown>
+  /**
+   * Storybook の args（あれば）
+   * 現在ストーリーで使用中の props の値。
+   * 「このボタンの variant は今何？」のような質問に回答可能にする。
+   */
+  args?: Record<string, unknown>
 }
 
 export interface ChatSupportProps {

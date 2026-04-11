@@ -7,12 +7,18 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 /**
  * プロジェクト全体で利用可能なチャットサポートウィジェット。
  * MUIコンポーネントを組み合わせて構築されており、ダークモードにも対応しています。
+ *
+ * この Story は `disableDecoratorChat: true` により、preview.tsx の Decorator 側で
+ * 全 Story に注入される ChatSupport を**この Story でのみ無効化**します。
+ * これにより、Story 自身が描画する `<ChatSupport />` との二重レンダリングを防止します。
  */
 const meta: Meta<typeof ChatSupport> = {
   title: 'Components/UI/ChatSupport',
   component: ChatSupport,
   parameters: {
     layout: 'fullscreen',
+    // Decorator 側の ChatSupport を無効化（二重レンダリング防止）
+    disableDecoratorChat: true,
   },
   tags: ['autodocs'],
 }

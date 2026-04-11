@@ -115,14 +115,24 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
   const storyTitle = context.title
   const storyName = context.name
   const storyDescription = context.parameters?.docs?.description?.component
+  const storyArgTypes = context.argTypes
+  const storyArgs = context.args
   const currentStory = useMemo(
     () => ({
       title: storyTitle,
       name: storyName,
       description: storyDescription,
+      // argTypes / args を注入して AI プロンプトにコンポーネント props 情報を渡せるようにする
+      argTypes: storyArgTypes as Record<string, unknown> | undefined,
+      args: storyArgs as Record<string, unknown> | undefined,
     }),
-    [storyTitle, storyName, storyDescription]
+    [storyTitle, storyName, storyDescription, storyArgTypes, storyArgs]
   )
+
+  // 専用 Story (ChatSupport のデモ等) が独自に <ChatSupport /> を描画する場合、
+  // Decorator 側の ChatSupport と二重レンダリングになるのを防ぐオプトアウト。
+  // 使い方: meta の parameters に `disableDecoratorChat: true` を設定する。
+  const disableDecoratorChat = context.parameters?.disableDecoratorChat === true
 
   return (
     <EmotionThemeProvider theme={muiTheme}>
@@ -141,7 +151,7 @@ const Decorator = (Story: StoryFn, context: StoryContext) => {
             }}>
             <Story {...context} />
           </div>
-          {context.viewMode !== 'docs' && (
+          {context.viewMode !== 'docs' && !disableDecoratorChat && (
             <ChatSupport currentStory={currentStory} />
           )}
         </CacheProvider>
