@@ -1379,10 +1379,12 @@ const getFuse = (): Fuse<FaqEntry> => {
   if (!fuseInstance) {
     fuseInstance = new Fuse(FAQ_DATABASE, {
       keys: [
-        { name: 'keywords', weight: 0.7 },
-        { name: 'title', weight: 0.3 },
+        { name: 'keywords', weight: 2 },
+        { name: 'title', weight: 1.5 },
+        { name: 'answer', weight: 0.5 },
       ],
-      threshold: 0.4,
+      threshold: 0.6,
+      ignoreLocation: true,
       includeScore: true,
     })
   }
@@ -1417,8 +1419,8 @@ export const findFaqAnswer = (query: string): string | null => {
   const fuse = getFuse()
   const results = fuse.search(query)
   if (results.length > 0 && results[0].score !== undefined) {
-    // Fuse.jsのスコアは0に近いほど良い
-    if (results[0].score < 0.5) {
+    // Fuse.jsのスコアは0に近いほど良い（canonical threshold: 0.45）
+    if (results[0].score < 0.45) {
       return results[0].item.answer
     }
   }
