@@ -18,6 +18,7 @@ import { Fab } from '@/components/ui/fab'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
 import { PageHeader } from '@/components/ui/text'
+import { KAZE_DISPLAY, KAZE_EYEBROW } from '@/themes/kazeMixins'
 
 import { activities } from '~/data/activity'
 import { kpiCards } from '~/data/kpi'
@@ -120,12 +121,21 @@ export const DashboardPage = () => {
                       <Typography
                         variant='body2'
                         color='text.secondary'
-                        sx={{ mb: 0.5, fontWeight: 500 }}>
+                        sx={{
+                          ...KAZE_EYEBROW,
+                          mb: 0.75,
+                          fontSize: '0.68rem',
+                          color: 'text.secondary',
+                        }}>
                         {kpi.title}
                       </Typography>
                       <Typography
                         variant='h4'
-                        sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+                        sx={{
+                          ...KAZE_DISPLAY,
+                          fontSize: { xs: '1.9rem', sm: '2.2rem' },
+                          letterSpacing: '-0.025em',
+                        }}>
                         {kpi.value}
                       </Typography>
                       <Box
