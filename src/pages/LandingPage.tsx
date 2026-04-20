@@ -743,13 +743,14 @@ export const LandingPage = () => {
                   </Box>
                   <Typography
                     sx={{
-                      fontSize: '0.95rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
+                      fontFamily: 'var(--kaze-font-mono)',
+                      fontSize: '0.75rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.24em',
                       textTransform: 'uppercase',
                       color: 'primary.main',
                     }}>
-                    Kaze Design System
+                    Kaze Design System · v0
                   </Typography>
                 </Box>
               </motion.div>
@@ -765,23 +766,37 @@ export const LandingPage = () => {
                 }}>
                 <Typography
                   sx={{
-                    fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.2rem' },
-                    fontWeight: 800,
-                    lineHeight: 1.1,
-                    letterSpacing: '-0.04em',
+                    fontFamily: 'var(--kaze-font-display)',
+                    fontSize: { xs: '3rem', sm: '4.5rem', md: '5.5rem' },
+                    fontWeight: 380,
+                    lineHeight: 0.98,
+                    letterSpacing: '-0.035em',
+                    fontVariationSettings:
+                      "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
                     mb: 2,
                   }}>
                   One System,
                   <br />
-                  <Box component='span' sx={{ color: 'primary.main' }}>
+                  <Box
+                    component='span'
+                    sx={{
+                      color: 'primary.main',
+                      fontStyle: 'italic',
+                      fontVariationSettings:
+                        "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
+                    }}>
                     Infinite
                   </Box>{' '}
-                  Interfaces
+                  Interfaces.
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: { xs: '0.85rem', md: '0.95rem' },
+                    fontFamily: 'var(--kaze-font-body)',
+                    fontSize: { xs: '0.9rem', md: '1rem' },
+                    fontWeight: 400,
                     color: 'text.secondary',
+                    letterSpacing: '0.02em',
+                    lineHeight: 1.7,
                     mb: 3,
                   }}>
                   コンポーネント・トークン・テーマをひとつの基盤で管理
@@ -799,9 +814,12 @@ export const LandingPage = () => {
                 }}>
                 <Typography
                   sx={{
+                    fontFamily: 'var(--kaze-font-body)',
                     fontSize: { xs: '0.95rem', md: '1.05rem' },
+                    fontWeight: 400,
                     color: 'text.secondary',
-                    lineHeight: 1.8,
+                    letterSpacing: '0.02em',
+                    lineHeight: 1.75,
                     maxWidth: 520,
                     mb: 5,
                   }}>
