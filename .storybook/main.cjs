@@ -1,6 +1,29 @@
 const path = require('path')
+const { fileURLToPath } = require('node:url')
 
 const { mergeConfig, loadEnv } = require('vite')
+
+/**
+ * preventive: pnpm + Storybook 10 + MDX で addon-docs の MDX loader が
+ * `file:///...@storybook/addon-docs/dist/mdx-react-shim.js` のような
+ * file:// 絶対 URL で import を emit することがあり、Vite の
+ * `vite:import-analysis` がこれを解決できず dev server でクラッシュする
+ * (「Failed to fetch dynamically imported module」/「Failed to resolve import」)。
+ * build は Rollup 経由で通るので CI 緑のまま dev だけ死ぬ latent bug。
+ *
+ * 対処: resolveId フックで file:// prefix を fileURLToPath で通常パスに変換。
+ * 参考: Matlens (aeros-design-system) 並走診断 2026-04-20。
+ */
+const fileUrlResolvePlugin = {
+  name: 'kaze:resolve-file-url',
+  enforce: 'pre',
+  resolveId(source) {
+    if (typeof source === 'string' && source.startsWith('file://')) {
+      return fileURLToPath(source)
+    }
+    return null
+  },
+}
 
 // 環境変数を読み込む（.envファイルとprocess.envの両方から）
 const envFromFile = loadEnv(
@@ -50,6 +73,7 @@ const config = {
     const freshEnv = loadEnv(configType, path.resolve(__dirname, '..'), 'VITE_')
 
     return mergeConfig(config, {
+      plugins: [fileUrlResolvePlugin],
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '../src'),
