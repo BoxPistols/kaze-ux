@@ -808,7 +808,6 @@ const componentStyles = {
 }
 
 // MUI 6のcolorSchemesを使用した統合テーマ
-// @ts-expect-error MUI v7の型互換性問題
 const theme = createTheme({
   ...commonThemeOptions,
   defaultColorScheme: 'light',

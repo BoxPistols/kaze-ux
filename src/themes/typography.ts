@@ -29,9 +29,12 @@ declare module '@mui/material/styles' {
   }
 
   interface TypographyVariantsOptions {
-    displayLarge: React.CSSProperties
-    displayMedium: React.CSSProperties
-    displaySmall: React.CSSProperties
+    // 実行時のフォールバックは MUI デフォルトに委ねるため optional。
+    // 必須 (`:`) にすると createTheme の引数型と typographyOptions が不整合になる
+    // (typographyOptions は display* を定義していない)。
+    displayLarge?: React.CSSProperties
+    displayMedium?: React.CSSProperties
+    displaySmall?: React.CSSProperties
     xxl?: React.CSSProperties
     xl?: React.CSSProperties
     lg?: React.CSSProperties
