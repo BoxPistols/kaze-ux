@@ -609,6 +609,39 @@ const CONTAINER_SX = {
   px: { xs: 2.5, sm: 3, md: 4 },
 } as const
 
+// Kaze 骨格 — section eyebrow (小さい uppercase ラベル、Plex Mono)
+const EYEBROW_SX = {
+  fontFamily: 'var(--kaze-font-mono)',
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  letterSpacing: '0.24em',
+  textTransform: 'uppercase',
+  color: 'primary.main',
+  mb: 2,
+} as const
+
+// Kaze 骨格 — section display (大型見出し、Fraunces Variable)
+const DISPLAY_SX = {
+  fontFamily: 'var(--kaze-font-display)',
+  fontSize: { xs: '2.5rem', md: '3.6rem' },
+  fontWeight: 380,
+  letterSpacing: '-0.03em',
+  lineHeight: 1.02,
+  fontVariationSettings: "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
+  mb: 1.5,
+} as const
+
+// Kaze 骨格 — section sub-copy (日本語 / 英語 lead)
+const SECTION_LEAD_SX = {
+  fontFamily: 'var(--kaze-font-body)',
+  fontSize: { xs: '0.9rem', md: '0.95rem' },
+  fontWeight: 400,
+  color: 'text.secondary',
+  letterSpacing: '0.02em',
+  lineHeight: 1.7,
+  mb: 6,
+} as const
+
 // メインLPコンポーネント
 export const LandingPage = () => {
   const theme = useTheme()
@@ -903,33 +936,9 @@ export const LandingPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}>
-            <Typography
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'primary.main',
-                mb: 2,
-              }}>
-              Products
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: { xs: '2rem', md: '2.8rem' },
-                fontWeight: 800,
-                letterSpacing: '-0.04em',
-                lineHeight: 1.1,
-                mb: 1.5,
-              }}>
-              Built with Kaze
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '0.9rem',
-                color: 'text.secondary',
-                mb: 6,
-              }}>
+            <Typography sx={EYEBROW_SX}>Products</Typography>
+            <Typography sx={DISPLAY_SX}>Built with Kaze</Typography>
+            <Typography sx={SECTION_LEAD_SX}>
               同じコンポーネント基盤で構築したプロダクト
             </Typography>
           </motion.div>
@@ -964,34 +973,9 @@ export const LandingPage = () => {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: 'primary.main',
-                    mb: 2,
-                  }}>
-                  Architecture
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: { xs: '2rem', md: '2.8rem' },
-                    fontWeight: 800,
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.1,
-                    mb: 1.5,
-                  }}>
-                  Architecture
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '0.9rem',
-                    color: 'text.secondary',
-                    lineHeight: 1.8,
-                    mb: 4,
-                  }}>
+                <Typography sx={EYEBROW_SX}>Architecture</Typography>
+                <Typography sx={DISPLAY_SX}>Architecture</Typography>
+                <Typography sx={{ ...SECTION_LEAD_SX, mb: 4 }}>
                   トークン・テーマ・AIチャットで構成する設計基盤
                 </Typography>
               </motion.div>
@@ -1015,33 +999,9 @@ export const LandingPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}>
-            <Typography
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'primary.main',
-                mb: 2,
-              }}>
-              Tech Stack
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: { xs: '2rem', md: '2.8rem' },
-                fontWeight: 800,
-                letterSpacing: '-0.04em',
-                lineHeight: 1.1,
-                mb: 1.5,
-              }}>
-              Tech Stack
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '0.9rem',
-                color: 'text.secondary',
-                mb: 4,
-              }}>
+            <Typography sx={EYEBROW_SX}>Tech Stack</Typography>
+            <Typography sx={DISPLAY_SX}>Tech Stack</Typography>
+            <Typography sx={{ ...SECTION_LEAD_SX, mb: 4 }}>
               使用している技術とツール
             </Typography>
           </motion.div>
@@ -1112,33 +1072,9 @@ export const LandingPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}>
-            <Typography
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'primary.main',
-                mb: 2,
-              }}>
-              Getting Started
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: { xs: '2rem', md: '2.8rem' },
-                fontWeight: 800,
-                letterSpacing: '-0.04em',
-                lineHeight: 1.1,
-                mb: 1.5,
-              }}>
-              Getting Started
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '0.9rem',
-                color: 'text.secondary',
-                mb: 4,
-              }}>
+            <Typography sx={EYEBROW_SX}>Getting Started</Typography>
+            <Typography sx={DISPLAY_SX}>Getting Started</Typography>
+            <Typography sx={{ ...SECTION_LEAD_SX, mb: 4 }}>
               3ステップではじめる
             </Typography>
           </motion.div>
@@ -1255,27 +1191,8 @@ export const LandingPage = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}>
-              <Typography
-                sx={{
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: 'primary.main',
-                  mb: 2,
-                }}>
-                Storybook AI Chat
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: { xs: '2rem', md: '2.8rem' },
-                  fontWeight: 800,
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.1,
-                  mb: 1.5,
-                }}>
-                AI Concierge
-              </Typography>
+              <Typography sx={EYEBROW_SX}>Storybook AI Chat</Typography>
+              <Typography sx={DISPLAY_SX}>AI Concierge</Typography>
               <Typography
                 sx={{
                   fontSize: '1rem',
