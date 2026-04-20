@@ -55,6 +55,11 @@ const config = {
           '@': path.resolve(__dirname, '../src'),
         },
       },
+      // esbuild の target を esnext に上げて、
+      // Storybook が注入する supported overrides (destructuring 強制降格) を回避
+      build: {
+        target: 'esnext',
+      },
       // 環境変数をdefineに追加
       define: {
         'import.meta.env.VITE_APP_PASSWORD': JSON.stringify(
