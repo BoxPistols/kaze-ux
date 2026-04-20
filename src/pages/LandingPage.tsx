@@ -357,7 +357,10 @@ const BauhausDivider = ({
 }) => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  const teal = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
+  // Kaze 骨格 3 色。teal 主役 + asagi/beni をアクセントに（画面 5% 以下）
+  const teal = 'rgba(14,173,184,'
+  const asagi = 'rgba(91,143,185,' // #5B8FB9
+  const beni = 'rgba(227,78,58,' // #E34E3A
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -396,7 +399,7 @@ const BauhausDivider = ({
               width: { xs: 60, md: 100 },
               height: { xs: 60, md: 100 },
               borderRadius: '50%',
-              bgcolor: `${teal}${isDark ? '0.06' : '0.04'})`,
+              bgcolor: `${asagi}${isDark ? '0.12' : '0.1'})`,
               position: 'absolute',
               left: flip ? 'auto' : '18%',
               right: flip ? '18%' : 'auto',
@@ -424,7 +427,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 80, md: 140 },
               height: { xs: 80, md: 140 },
-              bgcolor: `${teal}${isDark ? '0.04' : '0.03'})`,
+              bgcolor: `${asagi}${isDark ? '0.08' : '0.06'})`,
               position: 'absolute',
               right: flip ? 'auto' : '12%',
               left: flip ? '12%' : 'auto',
@@ -438,7 +441,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 40, md: 64 },
               height: { xs: 40, md: 64 },
-              border: `2px solid ${teal}${isDark ? '0.1' : '0.06'})`,
+              border: `2px solid ${teal}${isDark ? '0.14' : '0.1'})`,
               borderRadius: '50%',
               position: 'absolute',
               right: flip ? 'auto' : '22%',
@@ -469,7 +472,7 @@ const BauhausDivider = ({
             width: { xs: 12, md: 16 },
             height: { xs: 12, md: 16 },
             borderRadius: '50%',
-            bgcolor: `${teal}${isDark ? '0.15' : '0.1'})`,
+            bgcolor: `${beni}${isDark ? '0.75' : '0.7'})`,
             position: 'absolute',
             left: '50%',
             top: 12,
