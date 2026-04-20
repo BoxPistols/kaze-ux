@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
+/* Kaze 骨格フォント (v0) — 既存 Inter/Noto と並行ロード。opt-in で使う */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -48,6 +51,44 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* === Kaze 骨格 CSS 変数 (v0) ===
+   * 値の TypeScript ミラー: src/themes/kazeTokens.ts
+   * 既存 --color-* とは独立した additive な namespace。
+   * opt-in で使用: var(--kaze-teal), var(--kaze-r-sharp), etc.
+   */
+  --kaze-teal: #0eadb8;
+  --kaze-sumi: #0a0a0a;
+  --kaze-washi: #f7f4ee;
+  --kaze-asagi: #5b8fb9;
+  --kaze-beni: #e34e3a;
+  --kaze-ink: rgba(10, 10, 10, 0.88);
+  --kaze-ink-muted: rgba(10, 10, 10, 0.54);
+  --kaze-ink-hair: rgba(10, 10, 10, 0.12);
+  --kaze-ink-mist: rgba(10, 10, 10, 0.04);
+  --kaze-r-sharp: 2px;
+  --kaze-r-soft: 8px;
+  --kaze-r-gen: 24px;
+  --kaze-r-full: 9999px;
+  --kaze-ease: cubic-bezier(0.33, 0, 0, 1);
+  --kaze-dur-micro: 120ms;
+  --kaze-dur-macro: 240ms;
+  --kaze-dur-scene: 480ms;
+  --kaze-font-display:
+    'Fraunces', 'Shippori Mincho B1', 'Noto Serif JP', Georgia, serif;
+  --kaze-font-body:
+    'IBM Plex Sans', 'IBM Plex Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --kaze-font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark モードの ink/washi 反転（Kaze 骨格 dark 対応） */
+.dark {
+  --kaze-washi: #0a0a0a;
+  --kaze-sumi: #f7f4ee;
+  --kaze-ink: rgba(247, 244, 238, 0.88);
+  --kaze-ink-muted: rgba(247, 244, 238, 0.54);
+  --kaze-ink-hair: rgba(247, 244, 238, 0.12);
+  --kaze-ink-mist: rgba(247, 244, 238, 0.04);
 }
 
 /* Dark Theme Colors — colorToken.ts (Dracula scheme) と同期 */
