@@ -24,7 +24,14 @@ export const CustomChip = ({
   return (
     <Chip
       size='medium'
-      sx={kaze ? [{ ...KAZE_SHARP_UI, ...KAZE_MONO_LABEL }, sx ?? false] : sx}
+      sx={
+        kaze
+          ? [
+              { ...KAZE_SHARP_UI, ...KAZE_MONO_LABEL },
+              ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+            ]
+          : sx
+      }
       {...props}
     />
   )
