@@ -19,6 +19,8 @@ export default defineConfig(({ mode }) => {
       ? '/kaze-ux/sky-kaze/'
       : process.env.VITE_BASE_PATH || '/',
     build: {
+      // esbuild の destructuring 降格エラーを回避
+      target: 'esnext',
       outDir: isGitHubPages ? '../../gh-pages/sky-kaze' : 'dist',
       emptyOutDir: true,
       sourcemap: !isGitHubPages,

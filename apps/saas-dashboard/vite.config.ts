@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
     ],
     base: isGitHubPages ? '/kaze-ux/saas/' : (process.env.VITE_BASE_PATH || '/'),
     build: {
+      // esbuild の destructuring 降格エラーを回避
+      target: 'esnext',
       outDir: isGitHubPages ? '../../gh-pages/saas' : 'dist',
       emptyOutDir: true,
       sourcemap: !isGitHubPages,
