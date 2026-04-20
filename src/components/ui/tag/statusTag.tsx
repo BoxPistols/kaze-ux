@@ -2,7 +2,7 @@
 // StatusTagコンポーネント
 import { Chip, type SxProps, type Theme } from '@mui/material'
 
-import { KAZE_MONO_LABEL, KAZE_SHARP_UI } from '@/themes/kazeMixins'
+import { KAZE_META, KAZE_STAMP } from '@/themes/kazeMixins'
 
 /** ステータスの種類 */
 export type StatusType =
@@ -95,8 +95,8 @@ export const StatusTag = ({ text, status, sx, kaze = false }: StatusTagProps) =>
         kaze
           ? [
               baseSx,
-              KAZE_SHARP_UI,
-              KAZE_MONO_LABEL,
+              KAZE_STAMP,
+              KAZE_META,
               ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
             ]
           : { ...baseSx, ...sx }
