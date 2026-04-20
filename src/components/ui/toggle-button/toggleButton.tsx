@@ -11,6 +11,8 @@ import {
 } from '@mui/material'
 import { forwardRef, type ReactNode } from 'react'
 
+import { KAZE_SHARP_UI } from '@/themes/kazeMixins'
+
 // ToggleButton Props
 export interface ToggleButtonProps extends Omit<MuiToggleButtonProps, 'color'> {
   /** ボタンの色 */
@@ -28,6 +30,12 @@ export interface ToggleButtonProps extends Omit<MuiToggleButtonProps, 'color'> {
   tooltipPlacement?: 'top' | 'bottom' | 'left' | 'right'
   /** カスタムスタイル */
   sx?: SxProps<Theme>
+  /**
+   * Kaze 骨格を opt-in で適用（token は #38-#39 参照）。
+   * - border-radius: var(--kaze-r-sharp) (2px)
+   * - transition: var(--kaze-dur-micro) var(--kaze-ease)
+   */
+  kaze?: boolean
 }
 
 /**
@@ -57,23 +65,27 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
       tooltipPlacement = 'top',
       children,
       sx,
+      kaze = false,
       ...props
     },
     ref
   ) => {
-    const button = (
-      <MuiToggleButton
-        ref={ref}
-        color={color}
-        sx={{
-          textTransform: 'none',
+    const baseSx = kaze
+      ? { ...KAZE_SHARP_UI, '&.Mui-selected': { fontWeight: 600 } }
+      : {
+          textTransform: 'none' as const,
           borderRadius: 1.5,
           transition: 'all 0.2s ease-in-out',
           '&.Mui-selected': {
             fontWeight: 600,
           },
-          ...sx,
-        }}
+        }
+
+    const button = (
+      <MuiToggleButton
+        ref={ref}
+        color={color}
+        sx={kaze ? [baseSx, sx ?? false] : { ...baseSx, ...sx }}
         {...props}>
         {children}
       </MuiToggleButton>
