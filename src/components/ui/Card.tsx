@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 
+import { KAZE_LEAF, KAZE_PRINT, KAZE_RUN } from '@/themes/kazeMixins'
 import { cn } from '@/utils/className'
 
 // Card 配下の subcomponent (Title/Description/etc) が kaze mode を
@@ -29,12 +30,8 @@ export interface CardProps extends PaperProps {
   kaze?: boolean
 }
 
-const kazeCardStyle: React.CSSProperties = {
-  borderRadius: 'var(--kaze-r-soft)',
-  transitionProperty: 'border-color, box-shadow, transform',
-  transitionDuration: 'var(--kaze-dur-macro)',
-  transitionTimingFunction: 'var(--kaze-ease)',
-}
+// LEAF = 一葉 (soft radius + macro duration)、card/panel 想定
+const kazeCardStyle: React.CSSProperties = KAZE_LEAF
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, kaze = false, style, ...props }, ref) => (
@@ -66,12 +63,8 @@ const CardHeader = React.forwardRef<
 ))
 CardHeader.displayName = 'CardHeader'
 
-const kazeTitleStyle: React.CSSProperties = {
-  fontFamily: 'var(--kaze-font-display)',
-  fontWeight: 380,
-  letterSpacing: '-0.02em',
-  fontVariationSettings: "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
-}
+// PRINT = 活字 (Fraunces Variable 基調)、display 見出し
+const kazeTitleStyle: React.CSSProperties = KAZE_PRINT
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, variant = 'h3', style, ...props }, ref) => {
@@ -92,11 +85,8 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 )
 CardTitle.displayName = 'CardTitle'
 
-const kazeDescStyle: React.CSSProperties = {
-  fontFamily: 'var(--kaze-font-body)',
-  letterSpacing: '0.01em',
-  lineHeight: 1.65,
-}
+// RUN = 本文 (Plex Sans + 呼吸)。CardDescription 用、行高を 1.65 に締める
+const kazeDescStyle: React.CSSProperties = { ...KAZE_RUN, lineHeight: 1.65 }
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, variant = 'body2', style, ...props }, ref) => {

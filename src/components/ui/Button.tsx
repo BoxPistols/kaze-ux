@@ -6,6 +6,7 @@
 import { type VariantProps, cva } from 'class-variance-authority'
 import * as React from 'react'
 
+import { KAZE_META, KAZE_STAMP } from '@/themes/kazeMixins'
 import { cn } from '@/utils/className'
 
 const buttonVariants = cva(
@@ -52,16 +53,9 @@ export interface ButtonProps
   kaze?: boolean
 }
 
-// Kaze opt-in 時のスタイル上書き。CSS vars は :root / .dark で定義済み (#39)
-const kazeStyle: React.CSSProperties = {
-  borderRadius: 'var(--kaze-r-sharp)',
-  fontFamily: 'var(--kaze-font-mono)',
-  transitionProperty: 'background-color, color, border-color, transform',
-  transitionDuration: 'var(--kaze-dur-micro)',
-  transitionTimingFunction: 'var(--kaze-ease)',
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-}
+// Kaze opt-in 時のスタイル上書き。骨格 mixin を合成 (PR #53 領域語彙)。
+// STAMP = 押印の鋭さ (radius + transition)、META = mono label (font)。
+const kazeStyle: React.CSSProperties = { ...KAZE_STAMP, ...KAZE_META }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
