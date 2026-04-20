@@ -10,6 +10,8 @@ import {
 } from '@mui/material'
 import { forwardRef } from 'react'
 
+import { KAZE_SHARP_UI } from '@/themes/kazeMixins'
+
 import {
   BUTTON_BORDER_RADIUS,
   BUTTON_TRANSITION,
@@ -54,6 +56,12 @@ export interface IconButtonProps extends Omit<
   'aria-label'?: string
   /** カスタムスタイル */
   sx?: SxProps<Theme>
+  /**
+   * Kaze 骨格を opt-in で適用（token は #38-#39 参照）。
+   * - border-radius: var(--kaze-r-sharp) (2px)
+   * - transition: var(--kaze-dur-micro) var(--kaze-ease)
+   */
+  kaze?: boolean
 }
 
 /**
@@ -88,6 +96,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       disabled,
       children,
       sx,
+      kaze = false,
       'aria-label': ariaLabel,
       ...props
     },
@@ -168,10 +177,12 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         disabled={disabled || loading}
         aria-label={accessibleLabel}
         sx={[
-          {
-            borderRadius: BUTTON_BORDER_RADIUS,
-            transition: BUTTON_TRANSITION,
-          },
+          kaze
+            ? KAZE_SHARP_UI
+            : {
+                borderRadius: BUTTON_BORDER_RADIUS,
+                transition: BUTTON_TRANSITION,
+              },
           sizeStyles[size],
           getVariantStyles(),
           disabled && {
