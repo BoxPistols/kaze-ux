@@ -91,7 +91,16 @@ export const StatusTag = ({ text, status, sx, kaze = false }: StatusTagProps) =>
       label={text}
       size='small'
       variant='outlined'
-      sx={kaze ? [baseSx, KAZE_SHARP_UI, KAZE_MONO_LABEL, sx ?? false] : { ...baseSx, ...sx }}
+      sx={
+        kaze
+          ? [
+              baseSx,
+              KAZE_SHARP_UI,
+              KAZE_MONO_LABEL,
+              ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+            ]
+          : { ...baseSx, ...sx }
+      }
     />
   )
 }

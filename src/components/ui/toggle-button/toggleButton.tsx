@@ -85,7 +85,11 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
       <MuiToggleButton
         ref={ref}
         color={color}
-        sx={kaze ? [baseSx, sx ?? false] : { ...baseSx, ...sx }}
+        sx={
+          kaze
+            ? [baseSx, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]
+            : { ...baseSx, ...sx }
+        }
         {...props}>
         {children}
       </MuiToggleButton>
