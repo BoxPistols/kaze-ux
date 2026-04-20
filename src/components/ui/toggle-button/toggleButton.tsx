@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { forwardRef, type ReactNode } from 'react'
 
-import { KAZE_SHARP_UI } from '@/themes/kazeMixins'
+import { KAZE_STAMP } from '@/themes/kazeMixins'
 
 // ToggleButton Props
 export interface ToggleButtonProps extends Omit<MuiToggleButtonProps, 'color'> {
@@ -71,7 +71,7 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
     ref
   ) => {
     const baseSx = kaze
-      ? { ...KAZE_SHARP_UI, '&.Mui-selected': { fontWeight: 600 } }
+      ? { ...KAZE_STAMP, '&.Mui-selected': { fontWeight: 600 } }
       : {
           textTransform: 'none' as const,
           borderRadius: 1.5,

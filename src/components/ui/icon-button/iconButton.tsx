@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import { forwardRef } from 'react'
 
-import { KAZE_SHARP_UI } from '@/themes/kazeMixins'
+import { KAZE_STAMP } from '@/themes/kazeMixins'
 
 import {
   BUTTON_BORDER_RADIUS,
@@ -178,7 +178,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         aria-label={accessibleLabel}
         sx={[
           kaze
-            ? KAZE_SHARP_UI
+            ? KAZE_STAMP
             : {
                 borderRadius: BUTTON_BORDER_RADIUS,
                 transition: BUTTON_TRANSITION,
