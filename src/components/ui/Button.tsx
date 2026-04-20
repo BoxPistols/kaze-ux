@@ -42,13 +42,44 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  /**
+   * Kaze 骨格を opt-in で適用（#38-#39 の token を参照）。
+   * - border-radius: var(--kaze-r-sharp) (2px)
+   * - transition: var(--kaze-dur-micro) var(--kaze-ease)
+   * - font-family: var(--kaze-font-mono) + letter-spacing + uppercase
+   * 既存デザインを壊さないため default は false。
+   */
+  kaze?: boolean
+}
+
+// Kaze opt-in 時のスタイル上書き。CSS vars は :root / .dark で定義済み (#39)
+const kazeStyle: React.CSSProperties = {
+  borderRadius: 'var(--kaze-r-sharp)',
+  fontFamily: 'var(--kaze-font-mono)',
+  transitionProperty: 'background-color, color, border-color, transform',
+  transitionDuration: 'var(--kaze-dur-micro)',
+  transitionTimingFunction: 'var(--kaze-ease)',
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild: _asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild: _asChild = false,
+      kaze = false,
+      style,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
+        style={kaze ? { ...kazeStyle, ...style } : style}
         ref={ref}
         {...props}
       />
