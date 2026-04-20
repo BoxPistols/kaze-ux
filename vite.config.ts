@@ -44,6 +44,9 @@ export default defineConfig(({ mode }) => {
     // 環境変数 VITE_BASE_PATH が設定されていればそれを使用、なければリポジトリ名
     base: isGitHubPages ? (process.env.VITE_BASE_PATH || '/kaze-ux/') : '/',
     build: {
+      // esbuild の target を esnext に固定して、
+      // MUI/framer-motion 等の destructuring が降格でエラーになるのを回避
+      target: 'esnext',
       // Webアプリモードとライブラリモードで異なる設定
       ...(isWebApp
         ? {
