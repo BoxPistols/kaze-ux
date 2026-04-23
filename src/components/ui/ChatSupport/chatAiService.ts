@@ -53,12 +53,22 @@ export class AIUserKeyRequiredError extends Error {
 // 共通: モデル別 maxOutputTokens の決定
 // ---------------------------------------------------------------------------
 
+// Gemini 2.5 系は reasoning tokens を maxOutputTokens に消費するため buffer 加算が必須
+// 不足すると finishReason='length' で本文が空になる
+const GEMINI_REASONING_BUFFER = 1200
+
 const resolveMaxOutputTokens = (model: string, isTest: boolean): number => {
-  if (isTest) return 50
+  const isGemini25 = model.includes('gemini-2.5')
+
+  if (isTest) {
+    // Gemini 2.5 は reasoning 消費で 50 では不足、buffer+最低出力 10 を確保
+    return isGemini25 ? GEMINI_REASONING_BUFFER + 10 : 50
+  }
   if (model.includes('nano')) return 4000
   if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
     return 16000
   }
+  if (isGemini25) return 4000 + GEMINI_REASONING_BUFFER
   return 4000
 }
 

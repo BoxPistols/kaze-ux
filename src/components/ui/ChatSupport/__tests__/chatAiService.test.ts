@@ -135,6 +135,25 @@ describe('callAI', () => {
 
       expect(generateTextMock.mock.calls[0][0].maxOutputTokens).toBe(4000)
     })
+
+    // reasoning token 分の buffer 加算を担保（不足すると本文が空になる）
+    it('Gemini 2.5 系は 4000 + buffer 1200', async () => {
+      mockSuccess('ok')
+      const { callAI } = await loadModule()
+
+      await callAI({ ...baseConfig, model: 'gemini-2.5-flash' }, userMessage)
+
+      expect(generateTextMock.mock.calls[0][0].maxOutputTokens).toBe(5200)
+    })
+
+    it('isTest=true かつ Gemini 2.5 系は reasoning buffer + 10', async () => {
+      mockSuccess('ok')
+      const { callAI } = await loadModule()
+
+      await callAI({ ...baseConfig, model: 'gemini-2.5-flash' }, userMessage, true)
+
+      expect(generateTextMock.mock.calls[0][0].maxOutputTokens).toBe(1210)
+    })
   })
 
   describe('finish_reason フォールバック', () => {
