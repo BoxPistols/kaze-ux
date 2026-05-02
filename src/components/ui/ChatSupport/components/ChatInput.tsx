@@ -29,7 +29,10 @@ export const ChatInput = ({
   return (
     <Box
       sx={{
-        pt: '16px', pr: '4px', pb: '10px', pl: '16px',
+        pt: '16px',
+        pr: '4px',
+        pb: '10px',
+        pl: '16px',
         bgcolor:
           theme.palette.mode === 'dark'
             ? 'rgba(30,30,30,0.6)'

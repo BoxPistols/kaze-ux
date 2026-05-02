@@ -71,7 +71,12 @@ const statusStyles: Record<
   },
 }
 
-export const StatusTag = ({ text, status, sx, kaze = false }: StatusTagProps) => {
+export const StatusTag = ({
+  text,
+  status,
+  sx,
+  kaze = false,
+}: StatusTagProps) => {
   const style = statusStyles[status] || statusStyles.draft
 
   const baseSx = {

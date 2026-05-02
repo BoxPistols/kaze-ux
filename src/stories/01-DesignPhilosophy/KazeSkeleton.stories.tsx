@@ -112,8 +112,7 @@ const Section = ({
     style={{
       padding: '96px clamp(24px, 6vw, 96px)',
       borderTop: `1px solid ${tokens.washiHair}`,
-    }}
-  >
+    }}>
     <div
       style={{
         display: 'grid',
@@ -121,8 +120,7 @@ const Section = ({
         gap: 'clamp(24px, 4vw, 64px)',
         alignItems: 'baseline',
         marginBottom: 48,
-      }}
-    >
+      }}>
       <div
         className='mono'
         style={{
@@ -131,8 +129,7 @@ const Section = ({
           textTransform: 'uppercase',
           color: tokens.washiMute,
           paddingTop: 10,
-        }}
-      >
+        }}>
         {eyebrow}
       </div>
       <h2
@@ -144,8 +141,7 @@ const Section = ({
           lineHeight: 1.05,
           margin: 0,
           fontVariationSettings: "'opsz' 144, 'SOFT' 30, 'WONK' 0",
-        }}
-      >
+        }}>
         {title}
       </h2>
     </div>
@@ -154,8 +150,7 @@ const Section = ({
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 180px) minmax(0, 1fr)',
         gap: 'clamp(24px, 4vw, 64px)',
-      }}
-    >
+      }}>
       <div />
       <div>{children}</div>
     </div>
@@ -169,8 +164,7 @@ const Hero = () => (
       minHeight: '92vh',
       padding: '10vh clamp(24px, 6vw, 96px) 6vh',
       overflow: 'hidden',
-    }}
-  >
+    }}>
     <div
       aria-hidden
       style={{
@@ -199,8 +193,7 @@ const Hero = () => (
         opacity: 0.08,
         userSelect: 'none',
         animation: 'kazeDrift 24s var(--ease-kaze) infinite alternate',
-      }}
-    >
+      }}>
       風
     </div>
     <div
@@ -209,8 +202,7 @@ const Hero = () => (
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 180px) minmax(0, 1fr)',
         gap: 'clamp(24px, 4vw, 64px)',
-      }}
-    >
+      }}>
       <div
         className='mono'
         style={{
@@ -220,8 +212,7 @@ const Hero = () => (
           color: tokens.washiMute,
           paddingTop: 10,
           animation: 'kazeRise 480ms var(--ease-kaze) 0ms both',
-        }}
-      >
+        }}>
         Skeleton / v0 / 2026
       </div>
       <div>
@@ -235,9 +226,10 @@ const Hero = () => (
             margin: '0 0 32px',
             animation:
               'kazeRise 720ms var(--ease-kaze) 120ms both, kazeBreath 9s var(--ease-kaze) 1200ms infinite',
-          }}
-        >
-          墨で書かれ、<br />風で運ばれる。
+          }}>
+          墨で書かれ、
+          <br />
+          風で運ばれる。
         </h1>
         <p
           style={{
@@ -247,8 +239,7 @@ const Hero = () => (
             color: tokens.washiMute,
             margin: '0 0 48px',
             animation: 'kazeRise 720ms var(--ease-kaze) 240ms both',
-          }}
-        >
+          }}>
           Written in ink. Carried by wind. Kaze{' '}
           <span className='mono' style={{ color: tokens.kazeTeal }}>
             (/kaze/)
@@ -262,8 +253,7 @@ const Hero = () => (
             gap: 12,
             flexWrap: 'wrap',
             animation: 'kazeRise 720ms var(--ease-kaze) 360ms both',
-          }}
-        >
+          }}>
           {['Fraunces × IBM Plex', '5 colors', '4 radii', '1 ease'].map(
             (label) => (
               <span
@@ -278,8 +268,7 @@ const Hero = () => (
                   borderRadius: 2,
                   color: tokens.sumi,
                   background: 'transparent',
-                }}
-              >
+                }}>
                 {label}
               </span>
             )
@@ -298,8 +287,7 @@ const TypographySection = () => (
         gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: 48,
         marginBottom: 64,
-      }}
-    >
+      }}>
       <div>
         <div
           className='mono'
@@ -309,8 +297,7 @@ const TypographySection = () => (
             textTransform: 'uppercase',
             color: tokens.washiMute,
             marginBottom: 16,
-          }}
-        >
+          }}>
           Display / Fraunces Variable
         </div>
         <p
@@ -320,9 +307,9 @@ const TypographySection = () => (
             lineHeight: 0.95,
             letterSpacing: '-0.025em',
             margin: 0,
-            fontVariationSettings: "'opsz' 144, 'wght' 340, 'SOFT' 30, 'WONK' 0",
-          }}
-        >
+            fontVariationSettings:
+              "'opsz' 144, 'wght' 340, 'SOFT' 30, 'WONK' 0",
+          }}>
           風の骨
         </p>
         <p
@@ -333,9 +320,9 @@ const TypographySection = () => (
             letterSpacing: '-0.02em',
             margin: '12px 0 0',
             fontStyle: 'italic',
-            fontVariationSettings: "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
-          }}
-        >
+            fontVariationSettings:
+              "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
+          }}>
           Bone of Wind
         </p>
         <div
@@ -345,8 +332,7 @@ const TypographySection = () => (
             color: tokens.washiMute,
             marginTop: 16,
             lineHeight: 1.8,
-          }}
-        >
+          }}>
           opsz 144 · wght 340–420 · SOFT 30–70 · WONK 0–1
         </div>
       </div>
@@ -360,8 +346,7 @@ const TypographySection = () => (
             textTransform: 'uppercase',
             color: tokens.washiMute,
             marginBottom: 16,
-          }}
-        >
+          }}>
           Body / IBM Plex Sans + JP
         </div>
         <p
@@ -371,8 +356,7 @@ const TypographySection = () => (
             lineHeight: 1.2,
             margin: 0,
             letterSpacing: '-0.01em',
-          }}
-        >
+          }}>
           骨のある活字
         </p>
         <p
@@ -381,8 +365,7 @@ const TypographySection = () => (
             fontWeight: 400,
             lineHeight: 1.35,
             margin: '8px 0 0',
-          }}
-        >
+          }}>
           Body with Bone
         </p>
         <p
@@ -393,8 +376,7 @@ const TypographySection = () => (
             margin: '20px 0 0',
             maxWidth: '40ch',
             color: tokens.washiInk,
-          }}
-        >
+          }}>
           Plex は Inter よりも微かに slab の気配があり、日本語の Plex Sans JP
           と自然に並ぶ。line-height 1.7 で editorial な呼吸を作る。
         </p>
@@ -408,8 +390,7 @@ const TypographySection = () => (
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
         gap: 32,
-      }}
-    >
+      }}>
       {[
         { label: 'Caption', size: 11, weight: 500 },
         { label: 'Body-S', size: 13, weight: 400 },
@@ -426,8 +407,7 @@ const TypographySection = () => (
               textTransform: 'uppercase',
               color: tokens.washiMute,
               marginBottom: 6,
-            }}
-          >
+            }}>
             {row.label} · {row.size}
           </div>
           <div
@@ -435,8 +415,7 @@ const TypographySection = () => (
               fontSize: row.size,
               fontWeight: row.weight,
               lineHeight: 1.5,
-            }}
-          >
+            }}>
             風が通る
           </div>
         </div>
@@ -497,8 +476,7 @@ const ColorSection = () => {
           gap: 2,
           height: 320,
           marginBottom: 32,
-        }}
-      >
+        }}>
         {swatches.map((s) => (
           <div
             key={s.name}
@@ -519,8 +497,7 @@ const ColorSection = () => {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)'
-            }}
-          >
+            }}>
             <div
               className='display'
               style={{
@@ -528,8 +505,7 @@ const ColorSection = () => {
                 lineHeight: 1,
                 letterSpacing: '-0.02em',
                 fontVariationSettings: "'opsz' 144, 'SOFT' 30",
-              }}
-            >
+              }}>
               {s.jp}
             </div>
             <div>
@@ -538,8 +514,7 @@ const ColorSection = () => {
               </div>
               <div
                 className='mono'
-                style={{ fontSize: 11, opacity: 0.75, marginBottom: 8 }}
-              >
+                style={{ fontSize: 11, opacity: 0.75, marginBottom: 8 }}>
                 {s.hex.toUpperCase()}
               </div>
               <div
@@ -549,8 +524,7 @@ const ColorSection = () => {
                   letterSpacing: '0.16em',
                   textTransform: 'uppercase',
                   opacity: 0.7,
-                }}
-              >
+                }}>
                 {s.role}
               </div>
             </div>
@@ -564,8 +538,7 @@ const ColorSection = () => {
           color: tokens.washiMute,
           margin: 0,
           maxWidth: '58ch',
-        }}
-      >
+        }}>
         主役は Kaze Teal。面積比でヒエラルキーを担保する（Teal {'>'} Sumi{' >'}{' '}
         Asagi ≒ Beni）。Asagi と Beni は画面内 5% 未満に厳格に制限。 Dark
         モードでは Sumi が支配面、彩度は teal/asagi で +10 補正する。
@@ -593,8 +566,7 @@ const RadiusSection = () => {
             fontWeight: 500,
             cursor: 'pointer',
             letterSpacing: '0.02em',
-          }}
-        >
+          }}>
           Request demo
         </button>
       ),
@@ -613,8 +585,7 @@ const RadiusSection = () => {
             fontSize: 12,
             lineHeight: 1.6,
             width: 160,
-          }}
-        >
+          }}>
           <div style={{ fontWeight: 500, marginBottom: 4 }}>Card</div>
           <div style={{ color: tokens.washiMute, fontSize: 11 }}>
             Soft corner, soft voice.
@@ -635,8 +606,7 @@ const RadiusSection = () => {
             padding: '24px 28px',
             fontSize: 13,
             width: 200,
-          }}
-        >
+          }}>
           <div className='display' style={{ fontSize: 22, marginBottom: 4 }}>
             Welcome
           </div>
@@ -662,8 +632,7 @@ const RadiusSection = () => {
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 18,
-            }}
-          >
+            }}>
             K
           </div>
           <span
@@ -675,8 +644,7 @@ const RadiusSection = () => {
               padding: '6px 12px',
               background: tokens.washiMist,
               borderRadius: 9999,
-            }}
-          >
+            }}>
             tag
           </span>
         </div>
@@ -690,8 +658,7 @@ const RadiusSection = () => {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: 24,
-        }}
-      >
+        }}>
         {rows.map((r) => (
           <div
             key={r.label}
@@ -705,8 +672,7 @@ const RadiusSection = () => {
               justifyContent: 'space-between',
               gap: 24,
               border: `1px solid ${tokens.washiHair}`,
-            }}
-          >
+            }}>
             <div>
               <div
                 className='mono'
@@ -716,8 +682,7 @@ const RadiusSection = () => {
                   textTransform: 'uppercase',
                   color: tokens.washiMute,
                   marginBottom: 6,
-                }}
-              >
+                }}>
                 {r.label}
               </div>
               <div
@@ -726,8 +691,7 @@ const RadiusSection = () => {
                   fontSize: 36,
                   letterSpacing: '-0.02em',
                   lineHeight: 1,
-                }}
-              >
+                }}>
                 {r.value}
               </div>
               <div
@@ -736,8 +700,7 @@ const RadiusSection = () => {
                   color: tokens.washiMute,
                   marginTop: 8,
                   lineHeight: 1.5,
-                }}
-              >
+                }}>
                 {r.usage}
               </div>
             </div>
@@ -752,8 +715,7 @@ const RadiusSection = () => {
           color: tokens.washiMute,
           margin: '32px 0 0',
           maxWidth: '58ch',
-        }}
-      >
+        }}>
         現行 7 段（4/6/8/10/12/16/full）は識別不能なノイズを生むので廃止。
         段差が大きいほど階層は明瞭になる。Braun・Rams の流儀。
       </p>
@@ -769,8 +731,7 @@ const MotionSection = () => (
         gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: 24,
         marginBottom: 40,
-      }}
-    >
+      }}>
       {[
         { label: 'Micro', dur: '120ms', use: 'hover · focus · toggle' },
         { label: 'Macro', dur: '240ms', use: 'panel · tab · drawer' },
@@ -783,8 +744,7 @@ const MotionSection = () => (
             borderRadius: 8,
             border: `1px solid ${tokens.washiHair}`,
             background: tokens.washi,
-          }}
-        >
+          }}>
           <div
             className='mono'
             style={{
@@ -793,8 +753,7 @@ const MotionSection = () => (
               textTransform: 'uppercase',
               color: tokens.washiMute,
               marginBottom: 6,
-            }}
-          >
+            }}>
             {m.label}
           </div>
           <div
@@ -803,8 +762,7 @@ const MotionSection = () => (
               fontSize: 40,
               letterSpacing: '-0.02em',
               lineHeight: 1,
-            }}
-          >
+            }}>
             {m.dur}
           </div>
           <div
@@ -812,8 +770,7 @@ const MotionSection = () => (
               fontSize: 12,
               color: tokens.washiMute,
               marginTop: 8,
-            }}
-          >
+            }}>
             {m.use}
           </div>
         </div>
@@ -826,8 +783,7 @@ const MotionSection = () => (
         color: tokens.washi,
         borderRadius: 8,
         padding: 'clamp(32px, 5vw, 56px)',
-      }}
-    >
+      }}>
       <div
         className='mono'
         style={{
@@ -836,8 +792,7 @@ const MotionSection = () => (
           textTransform: 'uppercase',
           opacity: 0.55,
           marginBottom: 16,
-        }}
-      >
+        }}>
         Try — hover the block
       </div>
       <div
@@ -845,8 +800,7 @@ const MotionSection = () => (
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: 16,
-        }}
-      >
+        }}>
         {[
           { label: 'Kaze', ease: 'cubic-bezier(0.33, 0, 0, 1)', good: true },
           {
@@ -877,8 +831,7 @@ const MotionSection = () => (
             }}
             onMouseLeave={(ev) => {
               ev.currentTarget.style.transform = 'translateX(0)'
-            }}
-          >
+            }}>
             <div style={{ fontWeight: 500, marginBottom: 6 }}>
               {e.label} {e.good ? '✓' : '✕'}
             </div>
@@ -895,10 +848,10 @@ const MotionSection = () => (
           opacity: 0.7,
           margin: '24px 0 0',
           maxWidth: '58ch',
-        }}
-      >
+        }}>
         採用：<code className='mono'>cubic-bezier(0.33, 0, 0, 1)</code>。
-        風は加速して、静かに止む。Spring の bounce は強すぎて、Linear は感情が無い。
+        風は加速して、静かに止む。Spring の bounce は強すぎて、Linear
+        は感情が無い。
       </p>
     </div>
   </Section>
@@ -940,8 +893,7 @@ const CommitmentSection = () => {
           gap: 1,
           background: tokens.washiHair,
           border: `1px solid ${tokens.washiHair}`,
-        }}
-      >
+        }}>
         {commits.map((c) => (
           <div
             key={c.num}
@@ -952,16 +904,14 @@ const CommitmentSection = () => {
               gridTemplateColumns: '60px 1fr 1fr',
               gap: 32,
               alignItems: 'baseline',
-            }}
-          >
+            }}>
             <div
               className='display'
               style={{
                 fontSize: 32,
                 color: tokens.kazeTeal,
                 letterSpacing: '-0.02em',
-              }}
-            >
+              }}>
               {c.num}
             </div>
             <div>
@@ -973,8 +923,7 @@ const CommitmentSection = () => {
                   textTransform: 'uppercase',
                   color: tokens.kazeTeal,
                   marginBottom: 6,
-                }}
-              >
+                }}>
                 Keep
               </div>
               <div style={{ fontSize: 16, lineHeight: 1.5 }}>{c.keep}</div>
@@ -988,8 +937,7 @@ const CommitmentSection = () => {
                   textTransform: 'uppercase',
                   color: tokens.beni,
                   marginBottom: 6,
-                }}
-              >
+                }}>
                 Drop
               </div>
               <div
@@ -1000,8 +948,7 @@ const CommitmentSection = () => {
                   textDecoration: 'line-through',
                   textDecorationColor: tokens.beni,
                   textDecorationThickness: '1px',
-                }}
-              >
+                }}>
                 {c.drop}
               </div>
             </div>
@@ -1017,16 +964,14 @@ const Footer = () => (
     style={{
       padding: '96px clamp(24px, 6vw, 96px) 120px',
       borderTop: `1px solid ${tokens.washiHair}`,
-    }}
-  >
+    }}>
     <div
       style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 180px) minmax(0, 1fr)',
         gap: 'clamp(24px, 4vw, 64px)',
         alignItems: 'end',
-      }}
-    >
+      }}>
       <div
         className='mono'
         style={{
@@ -1034,8 +979,7 @@ const Footer = () => (
           letterSpacing: '0.24em',
           textTransform: 'uppercase',
           color: tokens.washiMute,
-        }}
-      >
+        }}>
         Kaze / Skeleton
       </div>
       <div
@@ -1045,8 +989,7 @@ const Footer = () => (
           letterSpacing: '-0.025em',
           lineHeight: 1,
           fontVariationSettings: "'opsz' 144, 'SOFT' 40, 'WONK' 1",
-        }}
-      >
+        }}>
         合意なら、次は token 層。
       </div>
     </div>

@@ -3,15 +3,31 @@
 // - ツールバー（UI切替 / 設定 / ダウンロード / クリア / 閉じる）
 // - モデル名表示
 
-import { Avatar, Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import {
-  X, Bot, ChevronLeft, PanelRight, MessageSquare,
-  Settings, Download, Trash2,
+  Avatar,
+  Box,
+  IconButton,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import {
+  X,
+  Bot,
+  ChevronLeft,
+  PanelRight,
+  MessageSquare,
+  Settings,
+  Download,
+  Trash2,
 } from 'lucide-react'
 
 import { DEFAULT_API_KEY, DEFAULT_MODEL } from '../chatSupportConstants'
 
-import type { ChatSupportConfig, CurrentStoryContext } from '../chatSupportTypes'
+import type {
+  ChatSupportConfig,
+  CurrentStoryContext,
+} from '../chatSupportTypes'
 
 interface ChatHeaderProps {
   showSettings: boolean
@@ -60,12 +76,15 @@ export const ChatHeader = ({
               <ChevronLeft size={20} />
             </IconButton>
           ) : (
-            <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 32, height: 32 }}>
+            <Avatar
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 32, height: 32 }}>
               <Bot size={20} />
             </Avatar>
           )}
           <Box>
-            <Typography variant='subtitle2' sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+            <Typography
+              variant='subtitle2'
+              sx={{ fontWeight: 600, lineHeight: 1.2 }}>
               {showSettings
                 ? 'AI設定'
                 : currentStory
@@ -96,14 +115,21 @@ export const ChatHeader = ({
                 size='small'
                 color='inherit'
                 onClick={onToggleUiMode}
-                title={config.uiMode === 'widget' ? 'サイドバーに切替' : 'ウィジェットに切替'}>
+                title={
+                  config.uiMode === 'widget'
+                    ? 'サイドバーに切替'
+                    : 'ウィジェットに切替'
+                }>
                 {config.uiMode === 'widget' ? (
                   <PanelRight size={18} />
                 ) : (
                   <MessageSquare size={18} />
                 )}
               </IconButton>
-              <IconButton size='small' color='inherit' onClick={onToggleSettings}>
+              <IconButton
+                size='small'
+                color='inherit'
+                onClick={onToggleSettings}>
                 <Settings size={18} />
               </IconButton>
               <IconButton
@@ -113,7 +139,11 @@ export const ChatHeader = ({
                 title='Markdownでダウンロード'>
                 <Download size={18} />
               </IconButton>
-              <IconButton size='small' color='inherit' onClick={onClearChat} title='履歴クリア'>
+              <IconButton
+                size='small'
+                color='inherit'
+                onClick={onClearChat}
+                title='履歴クリア'>
                 <Trash2 size={18} />
               </IconButton>
             </>

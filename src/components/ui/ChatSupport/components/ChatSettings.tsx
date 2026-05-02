@@ -6,11 +6,28 @@
 // - キーボードショートカット設定テーブル
 
 import {
-  Alert, Box, Button, Chip, CircularProgress, Divider,
-  InputAdornment, Link, MenuItem, Stack, TextField, Typography, useTheme,
+  Alert,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Divider,
+  InputAdornment,
+  Link,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
 } from '@mui/material'
 import {
-  AlertCircle, CheckCircle2, Eye, EyeOff, Keyboard, Lock, Sparkles,
+  AlertCircle,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Keyboard,
+  Lock,
+  Sparkles,
 } from 'lucide-react'
 
 import {
@@ -22,10 +39,7 @@ import {
   formatShortcutLabel,
 } from '../chatSupportConstants'
 
-import type {
-  ChatSupportConfig,
-  ShortcutActionId,
-} from '../chatSupportTypes'
+import type { ChatSupportConfig, ShortcutActionId } from '../chatSupportTypes'
 
 interface ChatSettingsProps {
   config: ChatSupportConfig
@@ -40,7 +54,9 @@ interface ChatSettingsProps {
   isTesting: boolean
   onTestConnection: () => void
   onResetShortcuts: () => void
-  onShortcutInputKeyDown: (id: ShortcutActionId) => (e: React.KeyboardEvent<HTMLElement>) => void
+  onShortcutInputKeyDown: (
+    id: ShortcutActionId
+  ) => (e: React.KeyboardEvent<HTMLElement>) => void
   onResetApiKey: () => void
 }
 
@@ -75,26 +91,44 @@ export const ChatSettings = ({
             borderRadius: 1,
             p: 2,
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+          <Typography
+            variant='caption'
+            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
             現在の設定
           </Typography>
           {isUsingDefaultKey ? (
             DEFAULT_API_KEY ? (
               <>
-                <Typography variant='caption' color='text.secondary' sx={{ display: 'block', lineHeight: 1.6 }}>
+                <Typography
+                  variant='caption'
+                  color='text.secondary'
+                  sx={{ display: 'block', lineHeight: 1.6 }}>
                   {config.model} を使用中（プロジェクト提供）
                 </Typography>
-                <Stack direction='row' alignItems='center' spacing={0.5} sx={{ mt: 0.5 }}>
+                <Stack
+                  direction='row'
+                  alignItems='center'
+                  spacing={0.5}
+                  sx={{ mt: 0.5 }}>
                   <CheckCircle2 size={14} color={theme.palette.success.main} />
-                  <Typography variant='caption' color='success.main'>AI対話モード</Typography>
+                  <Typography variant='caption' color='success.main'>
+                    AI対話モード
+                  </Typography>
                 </Stack>
               </>
             ) : (
               <>
-                <Typography variant='caption' color='text.secondary' sx={{ display: 'block', lineHeight: 1.6 }}>
+                <Typography
+                  variant='caption'
+                  color='text.secondary'
+                  sx={{ display: 'block', lineHeight: 1.6 }}>
                   APIキー未設定
                 </Typography>
-                <Stack direction='row' alignItems='center' spacing={0.5} sx={{ mt: 0.5 }}>
+                <Stack
+                  direction='row'
+                  alignItems='center'
+                  spacing={0.5}
+                  sx={{ mt: 0.5 }}>
                   <AlertCircle size={14} color={theme.palette.warning.main} />
                   <Typography variant='caption' color='warning.main'>
                     FAQモードのみ（AI対話にはAPIキーが必要）
@@ -104,12 +138,21 @@ export const ChatSettings = ({
             )
           ) : (
             <>
-              <Typography variant='caption' color='text.secondary' sx={{ display: 'block', lineHeight: 1.6 }}>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ display: 'block', lineHeight: 1.6 }}>
                 {config.model} を使用中（カスタムAPIキー）
               </Typography>
-              <Stack direction='row' alignItems='center' spacing={0.5} sx={{ mt: 0.5 }}>
+              <Stack
+                direction='row'
+                alignItems='center'
+                spacing={0.5}
+                sx={{ mt: 0.5 }}>
                 <CheckCircle2 size={14} color={theme.palette.success.main} />
-                <Typography variant='caption' color='success.main'>AI対話モード</Typography>
+                <Typography variant='caption' color='success.main'>
+                  AI対話モード
+                </Typography>
               </Stack>
             </>
           )}
@@ -119,10 +162,15 @@ export const ChatSettings = ({
 
         {/* カスタム API 設定 */}
         <Box>
-          <Typography variant='caption' sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+          <Typography
+            variant='caption'
+            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
             カスタムAPI設定（任意）
           </Typography>
-          <Typography variant='caption' color='text.secondary' sx={{ display: 'block', mb: 1.5, lineHeight: 1.6 }}>
+          <Typography
+            variant='caption'
+            color='text.secondary'
+            sx={{ display: 'block', mb: 1.5, lineHeight: 1.6 }}>
             自分のAPIキーを使うと、より高性能なモデルを選択できます。
           </Typography>
 
@@ -141,14 +189,19 @@ export const ChatSettings = ({
                   variant={active ? 'filled' : 'outlined'}
                   color={active ? 'primary' : 'default'}
                   onClick={() => {
-                    const models = provider === 'gemini' ? GEMINI_MODELS : OPENAI_MODELS
+                    const models =
+                      provider === 'gemini' ? GEMINI_MODELS : OPENAI_MODELS
                     const defaultModel = (
                       models.find((m) => !m.requiresUserKey) ?? models[0]
                     ).value
                     setConfig({ ...config, model: defaultModel })
                     setTestResult(null)
                   }}
-                  sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '0.75rem' }}
+                  sx={{
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    fontSize: '0.75rem',
+                  }}
                 />
               )
             })}
@@ -166,11 +219,19 @@ export const ChatSettings = ({
               if (v) {
                 setConfig({ ...config, apiKey: v })
               } else {
-                setConfig({ ...config, apiKey: DEFAULT_API_KEY, model: DEFAULT_MODEL })
+                setConfig({
+                  ...config,
+                  apiKey: DEFAULT_API_KEY,
+                  model: DEFAULT_MODEL,
+                })
               }
               setTestResult(null)
             }}
-            placeholder={(config.model ?? '').includes('gemini') ? 'AIza...' : 'sk-proj-...'}
+            placeholder={
+              (config.model ?? '').includes('gemini')
+                ? 'AIza...'
+                : 'sk-proj-...'
+            }
             type={showApiKey ? 'text' : 'password'}
             inputProps={{
               style: {
@@ -207,7 +268,10 @@ export const ChatSettings = ({
 
         {/* モデル選択 */}
         <Box>
-          <Typography variant='caption' color='text.secondary' sx={{ display: 'block', mb: 0.8, fontWeight: 600 }}>
+          <Typography
+            variant='caption'
+            color='text.secondary'
+            sx={{ display: 'block', mb: 0.8, fontWeight: 600 }}>
             AIモデル
           </Typography>
           <TextField
@@ -219,32 +283,62 @@ export const ChatSettings = ({
               setConfig({ ...config, model: e.target.value })
               setTestResult(null)
             }}>
-            {((config.model ?? '').includes('gemini') ? GEMINI_MODELS : OPENAI_MODELS).map((opt) => {
+            {((config.model ?? '').includes('gemini')
+              ? GEMINI_MODELS
+              : OPENAI_MODELS
+            ).map((opt) => {
               const isLocked = isUsingDefaultKey && !!opt.requiresUserKey
               return (
                 <MenuItem
                   key={opt.value}
                   value={opt.value}
                   disabled={isLocked}
-                  title={isLocked ? '自分のAPIキーを設定すると使用できます' : undefined}
+                  title={
+                    isLocked
+                      ? '自分のAPIキーを設定すると使用できます'
+                      : undefined
+                  }
                   sx={{ py: 1.5, alignItems: 'flex-start' }}>
                   <Box sx={{ width: '100%' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.25 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.75,
+                        mb: 0.25,
+                      }}>
                       {isLocked && <Lock size={12} />}
-                      <Typography variant='body2' sx={{ fontWeight: 600 }}>{opt.label}</Typography>
+                      <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                        {opt.label}
+                      </Typography>
                       <Chip
                         label={
-                          opt.tier === 'premium' ? 'Premium'
-                            : opt.tier === 'economy' ? 'Economy'
-                            : 'Standard'
+                          opt.tier === 'premium'
+                            ? 'Premium'
+                            : opt.tier === 'economy'
+                              ? 'Economy'
+                              : 'Standard'
                         }
                         size='small'
-                        color={opt.tier === 'premium' ? 'primary' : opt.tier === 'economy' ? 'default' : 'info'}
+                        color={
+                          opt.tier === 'premium'
+                            ? 'primary'
+                            : opt.tier === 'economy'
+                              ? 'default'
+                              : 'info'
+                        }
                         variant='outlined'
-                        sx={{ height: 18, fontSize: '0.6rem', '& .MuiChip-label': { px: 0.75 } }}
+                        sx={{
+                          height: 18,
+                          fontSize: '0.6rem',
+                          '& .MuiChip-label': { px: 0.75 },
+                        }}
                       />
                     </Box>
-                    <Typography variant='caption' color='text.secondary' sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
+                    <Typography
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ display: 'block', lineHeight: 1.4, mb: 0.5 }}>
                       {opt.description}
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -252,7 +346,12 @@ export const ChatSettings = ({
                         <Typography
                           key={uc}
                           variant='caption'
-                          sx={{ fontSize: '0.65rem', color: 'text.disabled', lineHeight: 1.2, '&::before': { content: '"- "' } }}>
+                          sx={{
+                            fontSize: '0.65rem',
+                            color: 'text.disabled',
+                            lineHeight: 1.2,
+                            '&::before': { content: '"- "' },
+                          }}>
                           {uc}
                         </Typography>
                       ))}
@@ -275,14 +374,24 @@ export const ChatSettings = ({
               disabled={isTesting || !config.apiKey}
               sx={{ py: 1 }}
               startIcon={
-                isTesting ? <CircularProgress size={16} color='inherit' /> : <Sparkles size={16} />
+                isTesting ? (
+                  <CircularProgress size={16} color='inherit' />
+                ) : (
+                  <Sparkles size={16} />
+                )
               }>
               {isTesting ? 'テスト中...' : 'API接続テスト'}
             </Button>
             {testResult && (
               <Alert
                 severity={testResult.success ? 'success' : 'error'}
-                icon={testResult.success ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}>
+                icon={
+                  testResult.success ? (
+                    <CheckCircle2 size={18} />
+                  ) : (
+                    <AlertCircle size={18} />
+                  )
+                }>
                 <Typography variant='caption'>{testResult.message}</Typography>
               </Alert>
             )}
@@ -298,24 +407,41 @@ export const ChatSettings = ({
         <Box
           sx={{
             bgcolor:
-              theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-            borderRadius: 1, p: 1.5,
+              theme.palette.mode === 'dark'
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(0,0,0,0.03)',
+            borderRadius: 1,
+            p: 1.5,
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+          <Typography
+            variant='caption'
+            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
             APIキーの取得方法
           </Typography>
-          <Typography variant='caption' color='text.secondary' component='div' sx={{ lineHeight: 1.7 }}>
+          <Typography
+            variant='caption'
+            color='text.secondary'
+            component='div'
+            sx={{ lineHeight: 1.7 }}>
             <Box component='ul' sx={{ pl: 2, m: 0, '& li': { mb: 0.5 } }}>
               <li>
                 <strong>OpenAI</strong>:{' '}
-                <Link href='https://platform.openai.com/api-keys' target='_blank' rel='noopener noreferrer' sx={{ fontSize: 'inherit' }}>
+                <Link
+                  href='https://platform.openai.com/api-keys'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  sx={{ fontSize: 'inherit' }}>
                   platform.openai.com
                 </Link>{' '}
                 でアカウント作成後、API Keysページでキーを発行（従量課金制）
               </li>
               <li>
                 <strong>Google Gemini</strong>:{' '}
-                <Link href='https://aistudio.google.com/apikey' target='_blank' rel='noopener noreferrer' sx={{ fontSize: 'inherit' }}>
+                <Link
+                  href='https://aistudio.google.com/apikey'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  sx={{ fontSize: 'inherit' }}>
                   aistudio.google.com
                 </Link>{' '}
                 でGoogleアカウントでログイン後、APIキーを発行（無料枠あり）
@@ -328,7 +454,12 @@ export const ChatSettings = ({
 
         {/* ショートカット設定 */}
         <Box>
-          <Stack direction='row' justifyContent='space-between' spacing={1} alignItems='center' sx={{ mb: 1 }}>
+          <Stack
+            direction='row'
+            justifyContent='space-between'
+            spacing={1}
+            alignItems='center'
+            sx={{ mb: 1 }}>
             <Stack direction='row' spacing={1} alignItems='center'>
               <Keyboard size={14} />
               <Typography variant='caption' sx={{ fontWeight: 600 }}>
@@ -339,7 +470,10 @@ export const ChatSettings = ({
               既定値に戻す
             </Button>
           </Stack>
-          <Typography variant='caption' color='text.secondary' sx={{ display: 'block', mb: 1.2 }}>
+          <Typography
+            variant='caption'
+            color='text.secondary'
+            sx={{ display: 'block', mb: 1.2 }}>
             入力欄にフォーカスして希望のキーを押すと更新されます。
           </Typography>
           <Box
@@ -362,13 +496,21 @@ export const ChatSettings = ({
                         readOnly: true,
                         inputProps: {
                           'aria-label': `${s.desc} のショートカット`,
-                          style: { fontFamily: 'monospace', fontSize: 10, textAlign: 'center', paddingTop: 4, paddingBottom: 4 },
+                          style: {
+                            fontFamily: 'monospace',
+                            fontSize: 10,
+                            textAlign: 'center',
+                            paddingTop: 4,
+                            paddingBottom: 4,
+                          },
                         },
                       }}
                     />
                   </td>
                   <td>
-                    <Typography variant='caption' color='text.secondary'>{s.desc}</Typography>
+                    <Typography variant='caption' color='text.secondary'>
+                      {s.desc}
+                    </Typography>
                   </td>
                 </tr>
               ))}

@@ -150,7 +150,11 @@ describe('callAI', () => {
       mockSuccess('ok')
       const { callAI } = await loadModule()
 
-      await callAI({ ...baseConfig, model: 'gemini-2.5-flash' }, userMessage, true)
+      await callAI(
+        { ...baseConfig, model: 'gemini-2.5-flash' },
+        userMessage,
+        true
+      )
 
       expect(generateTextMock.mock.calls[0][0].maxOutputTokens).toBe(1210)
     })

@@ -51,7 +51,10 @@ export const useChatState = () => {
           timestamp: new Date(m.timestamp),
         }))
         // 初回メッセージが古い挨拶文なら新しいものに差し替え
-        if (restored[0]?.sender === 'bot' && restored[0]?.text !== INITIAL_GREETING) {
+        if (
+          restored[0]?.sender === 'bot' &&
+          restored[0]?.text !== INITIAL_GREETING
+        ) {
           restored[0] = { ...restored[0], text: INITIAL_GREETING }
         }
         return restored

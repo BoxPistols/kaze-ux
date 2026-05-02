@@ -16,11 +16,7 @@ export interface CustomChipProps extends ChipProps {
  * カスタムチップコンポーネント
  * テーマスタイルを適用したシンプルなChipラッパー
  */
-export const CustomChip = ({
-  kaze = false,
-  sx,
-  ...props
-}: CustomChipProps) => {
+export const CustomChip = ({ kaze = false, sx, ...props }: CustomChipProps) => {
   return (
     <Chip
       size='medium'

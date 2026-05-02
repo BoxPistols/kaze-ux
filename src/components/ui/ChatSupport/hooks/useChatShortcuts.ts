@@ -94,10 +94,7 @@ export const useChatShortcuts = ({
   ])
 
   // TextField レベルのキーダウン（送信ショートカット）
-  const handleKeyDown = (
-    e: React.KeyboardEvent,
-    handleSendFn: () => void
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent, handleSendFn: () => void) => {
     if (e.nativeEvent.isComposing) return
     if (isShortcutMatch(e.nativeEvent, config.shortcuts.sendMessage)) {
       e.preventDefault()

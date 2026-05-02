@@ -1,7 +1,12 @@
 // メッセージリスト + クイックサジェスト + タイピングインジケーター
 
 import {
-  Avatar, Box, Chip, CircularProgress, Typography, useTheme,
+  Avatar,
+  Box,
+  Chip,
+  CircularProgress,
+  Typography,
+  useTheme,
 } from '@mui/material'
 import { Bot, User } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
@@ -54,7 +59,10 @@ export const ChatMessageList = ({
         return (
           <Box
             key={msg.id}
-            sx={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
+            sx={{
+              display: 'flex',
+              justifyContent: isUser ? 'flex-end' : 'flex-start',
+            }}>
             <Box
               sx={{
                 display: 'flex',
@@ -65,7 +73,10 @@ export const ChatMessageList = ({
               }}>
               <Avatar
                 sx={{
-                  width: 28, height: 28, mt: 0.5, flexShrink: 0,
+                  width: 28,
+                  height: 28,
+                  mt: 0.5,
+                  flexShrink: 0,
                   bgcolor: isUser ? 'secondary.main' : 'primary.light',
                   fontSize: 12,
                 }}>
@@ -73,8 +84,11 @@ export const ChatMessageList = ({
               </Avatar>
               <Box
                 sx={{
-                  px: 2, pt: '5px', pb: '4px',
-                  minWidth: 0, overflow: 'hidden',
+                  px: 2,
+                  pt: '5px',
+                  pb: '4px',
+                  minWidth: 0,
+                  overflow: 'hidden',
                   borderRadius: '12px',
                   borderTopLeftRadius: isUser ? '12px' : '2px',
                   borderTopRightRadius: isUser ? '2px' : '12px',
@@ -91,16 +105,25 @@ export const ChatMessageList = ({
                 {isUser ? (
                   <Typography
                     variant='body2'
-                    sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.7, fontSize: 14 }}>
+                    sx={{
+                      whiteSpace: 'pre-wrap',
+                      lineHeight: 1.7,
+                      fontSize: 14,
+                    }}>
                     {msg.text}
                   </Typography>
                 ) : (
                   <Box
                     sx={{
-                      fontSize: 14, lineHeight: 1.7, wordBreak: 'break-word',
+                      fontSize: 14,
+                      lineHeight: 1.7,
+                      wordBreak: 'break-word',
                       '& p': { m: 0, mb: 1, '&:last-child': { mb: 0 } },
                       '& h1, & h2, & h3, & h4, & h5, & h6': {
-                        mt: 2, mb: 1, lineHeight: 1.5, fontWeight: 600,
+                        mt: 2,
+                        mb: 1,
+                        lineHeight: 1.5,
+                        fontWeight: 600,
                       },
                       '& h1': { fontSize: 18 },
                       '& h2': { fontSize: 16 },
@@ -112,8 +135,11 @@ export const ChatMessageList = ({
                           theme.palette.mode === 'dark'
                             ? 'rgba(255,255,255,0.07)'
                             : 'rgba(0,0,0,0.06)',
-                        px: 0.5, py: 0.25, border: 'none',
-                        borderRadius: 0.5, fontSize: 12,
+                        px: 0.5,
+                        py: 0.25,
+                        border: 'none',
+                        borderRadius: 0.5,
+                        fontSize: 12,
                         fontFamily: '"Fira Code", "Consolas", monospace',
                         lineHeight: 1.75,
                       },
@@ -122,20 +148,40 @@ export const ChatMessageList = ({
                           theme.palette.mode === 'dark'
                             ? 'rgba(0,0,0,0.2)'
                             : 'rgba(0,0,0,0.04)',
-                        p: 1.5, border: 'none', borderRadius: 1,
-                        overflowX: 'auto', my: 1,
-                        '& code': { bgcolor: 'transparent', border: 'none', px: 0, py: 0 },
+                        p: 1.5,
+                        border: 'none',
+                        borderRadius: 1,
+                        overflowX: 'auto',
+                        my: 1,
+                        '& code': {
+                          bgcolor: 'transparent',
+                          border: 'none',
+                          px: 0,
+                          py: 0,
+                        },
                       },
                       '& blockquote': {
-                        borderLeft: '3px solid', borderColor: 'divider',
-                        pl: 1.5, ml: 0, my: 1, opacity: 0.85,
+                        borderLeft: '3px solid',
+                        borderColor: 'divider',
+                        pl: 1.5,
+                        ml: 0,
+                        my: 1,
+                        opacity: 0.85,
                       },
-                      '& a': { color: 'primary.main', textDecoration: 'underline' },
+                      '& a': {
+                        color: 'primary.main',
+                        textDecoration: 'underline',
+                      },
                       '& table': {
-                        borderCollapse: 'collapse', my: 1, width: '100%',
+                        borderCollapse: 'collapse',
+                        my: 1,
+                        width: '100%',
                         '& th, & td': {
-                          border: '1px solid', borderColor: 'divider',
-                          px: 1, py: 0.5, fontSize: 12,
+                          border: '1px solid',
+                          borderColor: 'divider',
+                          px: 1,
+                          py: 0.5,
+                          fontSize: 12,
                         },
                         '& th': {
                           fontWeight: 600,
@@ -152,7 +198,10 @@ export const ChatMessageList = ({
                         code: CodeBlock,
                         pre: CodeBlockPre,
                         a: ({ href, children: linkChildren }) => (
-                          <a href={href} target='_blank' rel='noopener noreferrer'>
+                          <a
+                            href={href}
+                            target='_blank'
+                            rel='noopener noreferrer'>
                             {linkChildren}
                           </a>
                         ),
@@ -169,17 +218,28 @@ export const ChatMessageList = ({
 
       {/* クイックサジェスト（初回 + 非タイピング時） */}
       {!hasUserMessages && !isTyping && (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mt: 0.5, ml: 4.5 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 0.75,
+            mt: 0.5,
+            ml: 4.5,
+          }}>
           {storyGuide && (
             <>
               <Chip
                 label='現在のページの解説'
                 size='small'
                 variant='outlined'
-                onClick={() => onSuggestionClick('この画面の解説をお願いします')}
+                onClick={() =>
+                  onSuggestionClick('この画面の解説をお願いします')
+                }
                 sx={{
-                  cursor: 'pointer', fontSize: 12,
-                  borderColor: 'success.main', color: 'success.main',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  borderColor: 'success.main',
+                  color: 'success.main',
                   '&:hover': {
                     bgcolor:
                       theme.palette.mode === 'dark'
@@ -193,10 +253,14 @@ export const ChatMessageList = ({
                 label='実装のポイント'
                 size='small'
                 variant='outlined'
-                onClick={() => onSuggestionClick('この画面の実装のポイントを教えて')}
+                onClick={() =>
+                  onSuggestionClick('この画面の実装のポイントを教えて')
+                }
                 sx={{
-                  cursor: 'pointer', fontSize: 12,
-                  borderColor: 'info.main', color: 'info.main',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  borderColor: 'info.main',
+                  color: 'info.main',
                   '&:hover': {
                     bgcolor:
                       theme.palette.mode === 'dark'
@@ -216,7 +280,8 @@ export const ChatMessageList = ({
               variant='outlined'
               onClick={() => onSuggestionClick(s.query)}
               sx={{
-                cursor: 'pointer', fontSize: 12,
+                cursor: 'pointer',
+                fontSize: 12,
                 borderColor:
                   theme.palette.mode === 'dark'
                     ? 'rgba(255,255,255,0.12)'

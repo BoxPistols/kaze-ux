@@ -25,7 +25,9 @@ import type {
 } from '../chatSupportTypes'
 
 export const useChatConfig = () => {
-  const [config, setConfig] = useState<ChatSupportConfig>(() => loadChatConfig())
+  const [config, setConfig] = useState<ChatSupportConfig>(() =>
+    loadChatConfig()
+  )
 
   const [confirmResetOpen, setConfirmResetOpen] = useState(false)
   const [showSettings, setShowSettings] = useState(false)

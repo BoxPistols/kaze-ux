@@ -16,11 +16,7 @@ import {
   initEmbeddingIndex,
   semanticSearch,
 } from '../embeddingSearch'
-import {
-  FAQ_DATABASE,
-  findFaqAnswer,
-  INITIAL_GREETING,
-} from '../faqDatabase'
+import { FAQ_DATABASE, findFaqAnswer, INITIAL_GREETING } from '../faqDatabase'
 import { findStoryGuide } from '../storyGuideMap'
 
 import type {
@@ -108,9 +104,19 @@ export const useChatMessage = ({
   /** ページ文脈クエリ判定キーワード */
   const isPageContextQuery = (q: string): boolean => {
     const keywords = [
-      'この画面', 'このページ', '今見てる', '今見ている', '今のページ',
-      '今の画面', '何のページ', '何を見て', 'ここは何', 'ここって何',
-      'ここは', 'what is this', 'what page',
+      'この画面',
+      'このページ',
+      '今見てる',
+      '今見ている',
+      '今のページ',
+      '今の画面',
+      '何のページ',
+      '何を見て',
+      'ここは何',
+      'ここって何',
+      'ここは',
+      'what is this',
+      'what page',
     ]
     return keywords.some((kw) => q.toLowerCase().includes(kw))
   }
@@ -130,7 +136,11 @@ export const useChatMessage = ({
         ...storyGuide.codeContext.map((c) => `- ${c}`),
       ]
       if (storyGuide.references?.length) {
-        lines.push('', '**参考:**', ...storyGuide.references.map((r) => `- ${r}`))
+        lines.push(
+          '',
+          '**参考:**',
+          ...storyGuide.references.map((r) => `- ${r}`)
+        )
       }
       if (storyGuide.related?.length) {
         lines.push('', `関連: ${storyGuide.related.join(' / ')}`)
@@ -236,7 +246,10 @@ export const useChatMessage = ({
               ? 'タイムアウト: 応答に時間がかかりすぎています。'
               : error.message
             : String(error)
-        const embeddingFaq = await semanticSearch(config.apiKey, userText).catch(() => [])
+        const embeddingFaq = await semanticSearch(
+          config.apiKey,
+          userText
+        ).catch(() => [])
         const semanticAnswer = findSemanticFaqAnswer(embeddingFaq)
         const faqAnswer = semanticAnswer ?? findFaqAnswer(userText)
         if (faqAnswer) {
@@ -250,7 +263,15 @@ export const useChatMessage = ({
         setIsTyping(false)
       }
     },
-    [isTyping, config, messages, setMessages, contextualPrompt, addBotMessage, respondWithFaq]
+    [
+      isTyping,
+      config,
+      messages,
+      setMessages,
+      contextualPrompt,
+      addBotMessage,
+      respondWithFaq,
+    ]
   )
 
   const handleSuggestionClick = useCallback(
@@ -299,14 +320,24 @@ export const useChatMessage = ({
               : String(error)
           const faqAnswer = findFaqAnswer(query)
           if (faqAnswer) {
-            addBotMessage(`*AI接続エラー*\n\n---\n\n${trimFaqAnswer(faqAnswer)}`)
+            addBotMessage(
+              `*AI接続エラー*\n\n---\n\n${trimFaqAnswer(faqAnswer)}`
+            )
           } else {
             addBotMessage(`エラー: ${errMsg}`)
           }
         })
         .finally(() => setIsTyping(false))
     },
-    [isTyping, config, messages, setMessages, contextualPrompt, addBotMessage, respondWithFaq]
+    [
+      isTyping,
+      config,
+      messages,
+      setMessages,
+      contextualPrompt,
+      addBotMessage,
+      respondWithFaq,
+    ]
   )
 
   const hasUserMessages = messages.some((m) => m.sender === 'user')

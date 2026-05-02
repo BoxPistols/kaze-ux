@@ -28,23 +28,35 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
 
   // --- 状態 hooks ---
   const {
-    isOpen, setIsOpen,
-    message, setMessage,
-    messages, setMessages,
-    scrollRef, inputRef,
-    confirmClearOpen, setConfirmClearOpen,
-    clearChat, executeClearChat,
+    isOpen,
+    setIsOpen,
+    message,
+    setMessage,
+    messages,
+    setMessages,
+    scrollRef,
+    inputRef,
+    confirmClearOpen,
+    setConfirmClearOpen,
+    clearChat,
+    executeClearChat,
   } = useChatState()
 
   const {
-    config, setConfig,
-    apiKeyDraft, setApiKeyDraft,
+    config,
+    setConfig,
+    apiKeyDraft,
+    setApiKeyDraft,
     isUsingDefaultKey,
-    showSettings, setShowSettings,
-    showApiKey, setShowApiKey,
-    testResult, setTestResult,
+    showSettings,
+    setShowSettings,
+    showApiKey,
+    setShowApiKey,
+    testResult,
+    setTestResult,
     isTesting,
-    confirmResetOpen, setConfirmResetOpen,
+    confirmResetOpen,
+    setConfirmResetOpen,
     submitShortcutLabel,
     handleTestConnection,
     handleShortcutInputKeyDown,
@@ -72,22 +84,35 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   )
 
   const { handleKeyDown } = useChatShortcuts({
-    config, isOpen, setIsOpen, setShowSettings,
-    clearChat, handleDownload, toggleUiMode, inputRef,
+    config,
+    isOpen,
+    setIsOpen,
+    setShowSettings,
+    clearChat,
+    handleDownload,
+    toggleUiMode,
+    inputRef,
   })
 
   const { widgetSize, handleResizeStart } = useWidgetResize()
   const { handleSidebarResize } = useSidebarResize(
     config.sidebarWidth,
     useCallback(
-      (width: number) => setConfig((prev) => ({ ...prev, sidebarWidth: width })),
+      (width: number) =>
+        setConfig((prev) => ({ ...prev, sidebarWidth: width })),
       [setConfig]
     )
   )
 
   // --- チャット本体 JSX ---
   const ChatContent = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'transparent' }}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'transparent',
+      }}>
       <ChatHeader
         showSettings={showSettings}
         currentStory={currentStory}
@@ -157,30 +182,53 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   return (
     <>
       {/* サイドバーモード */}
-      <Slide direction='left' in={isOpen && config.uiMode === 'sidebar'} mountOnEnter unmountOnExit>
+      <Slide
+        direction='left'
+        in={isOpen && config.uiMode === 'sidebar'}
+        mountOnEnter
+        unmountOnExit>
         <Paper
           elevation={8}
           sx={{
-            position: 'fixed', top: 0, right: 0, bottom: 0,
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
             width: { xs: '100%', sm: config.sidebarWidth || 400 },
-            zIndex: 1200, display: 'flex',
+            zIndex: 1200,
+            display: 'flex',
             borderLeft: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.06)' : theme.palette.divider}`,
-            bgcolor: theme.palette.mode === 'dark' ? 'rgba(28,28,32,0.95)' : 'rgba(255,255,255,0.98)',
+            bgcolor:
+              theme.palette.mode === 'dark'
+                ? 'rgba(28,28,32,0.95)'
+                : 'rgba(255,255,255,0.98)',
             backdropFilter: 'blur(20px)',
           }}>
           <Box
             onMouseDown={handleSidebarResize}
             sx={{
-              width: 6, flexShrink: 0, cursor: 'ew-resize',
+              width: 6,
+              flexShrink: 0,
+              cursor: 'ew-resize',
               display: { xs: 'none', sm: 'flex' },
-              alignItems: 'center', justifyContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
               transition: 'background-color 0.2s',
               '&:hover': {
-                bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                bgcolor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255,255,255,0.08)'
+                    : 'rgba(0,0,0,0.06)',
               },
             }}
           />
-          <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
             {ChatContent}
           </Box>
         </Paper>
@@ -192,13 +240,26 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
           <Fab
             onClick={() => setIsOpen(true)}
             sx={{
-              bgcolor: theme.palette.mode === 'dark' ? 'rgba(14,173,184,0.5)' : 'rgba(14,173,184,0.85)',
-              color: '#fff', backdropFilter: 'blur(16px)',
-              boxShadow: theme.palette.mode === 'dark' ? '0 8px 32px rgba(0,0,0,0.4)' : '0 8px 32px rgba(14,173,184,0.3)',
+              bgcolor:
+                theme.palette.mode === 'dark'
+                  ? 'rgba(14,173,184,0.5)'
+                  : 'rgba(14,173,184,0.85)',
+              color: '#fff',
+              backdropFilter: 'blur(16px)',
+              boxShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 8px 32px rgba(0,0,0,0.4)'
+                  : '0 8px 32px rgba(14,173,184,0.3)',
               border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.18)'}`,
               '&:hover': {
-                bgcolor: theme.palette.mode === 'dark' ? 'rgba(14,173,184,0.65)' : 'rgba(14,173,184,0.95)',
-                boxShadow: theme.palette.mode === 'dark' ? '0 8px 32px rgba(0,0,0,0.5)' : '0 8px 32px rgba(14,173,184,0.45)',
+                bgcolor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(14,173,184,0.65)'
+                    : 'rgba(14,173,184,0.95)',
+                boxShadow:
+                  theme.palette.mode === 'dark'
+                    ? '0 8px 32px rgba(0,0,0,0.5)'
+                    : '0 8px 32px rgba(14,173,184,0.45)',
               },
             }}>
             <BookConciergeIcon size={24} />
@@ -209,30 +270,83 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             <Paper
               elevation={12}
               sx={{
-                position: 'absolute', bottom: 0, right: 0,
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
                 width: { xs: 'calc(100vw - 48px)', sm: widgetSize.width },
                 height: widgetSize.height,
-                minWidth: 320, minHeight: 400,
-                display: 'flex', flexDirection: 'column',
-                overflow: 'hidden', borderRadius: 2,
+                minWidth: 320,
+                minHeight: 400,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: 2,
                 border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
-                bgcolor: theme.palette.mode === 'dark' ? 'rgba(28,28,32,0.92)' : 'rgba(255,255,255,0.92)',
+                bgcolor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(28,28,32,0.92)'
+                    : 'rgba(255,255,255,0.92)',
                 backdropFilter: 'blur(20px)',
               }}>
               {/* リサイズハンドル: 上辺 */}
-              <Box onMouseDown={handleResizeStart('top')} sx={{ position: 'absolute', top: 0, left: 16, right: 16, height: 6, cursor: 'n-resize', zIndex: 10 }} />
+              <Box
+                onMouseDown={handleResizeStart('top')}
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 16,
+                  right: 16,
+                  height: 6,
+                  cursor: 'n-resize',
+                  zIndex: 10,
+                }}
+              />
               {/* リサイズハンドル: 左辺 */}
-              <Box onMouseDown={handleResizeStart('left')} sx={{ position: 'absolute', left: 0, top: 16, bottom: 0, width: 6, cursor: 'ew-resize', zIndex: 10 }} />
+              <Box
+                onMouseDown={handleResizeStart('left')}
+                sx={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 16,
+                  bottom: 0,
+                  width: 6,
+                  cursor: 'ew-resize',
+                  zIndex: 10,
+                }}
+              />
               {/* リサイズハンドル: 左上角 */}
-              <Box onMouseDown={handleResizeStart('top-left')} sx={{ position: 'absolute', left: 0, top: 0, width: 16, height: 16, cursor: 'nw-resize', zIndex: 11 }} />
+              <Box
+                onMouseDown={handleResizeStart('top-left')}
+                sx={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  width: 16,
+                  height: 16,
+                  cursor: 'nw-resize',
+                  zIndex: 11,
+                }}
+              />
               {/* リサイズインジケーター */}
               <Box
                 onMouseDown={handleResizeStart('top')}
                 sx={{
-                  position: 'absolute', top: 4, left: '50%', transform: 'translateX(-50%)',
-                  width: 32, height: 4, borderRadius: 1, cursor: 'n-resize', zIndex: 12,
-                  bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.12)',
-                  opacity: 0.5, transition: 'opacity 0.2s', '&:hover': { opacity: 1 },
+                  position: 'absolute',
+                  top: 4,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 32,
+                  height: 4,
+                  borderRadius: 1,
+                  cursor: 'n-resize',
+                  zIndex: 12,
+                  bgcolor:
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255,255,255,0.1)'
+                      : 'rgba(0,0,0,0.12)',
+                  opacity: 0.5,
+                  transition: 'opacity 0.2s',
+                  '&:hover': { opacity: 1 },
                 }}
               />
               {ChatContent}
@@ -250,7 +364,11 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
         confirmColor='warning'
         onConfirm={() => {
           setApiKeyDraft('')
-          setConfig((prev) => ({ ...prev, apiKey: DEFAULT_API_KEY, model: DEFAULT_MODEL }))
+          setConfig((prev) => ({
+            ...prev,
+            apiKey: DEFAULT_API_KEY,
+            model: DEFAULT_MODEL,
+          }))
           setTestResult(null)
           setShowApiKey(false)
           setConfirmResetOpen(false)
