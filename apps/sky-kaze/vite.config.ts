@@ -25,6 +25,15 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       sourcemap: !isGitHubPages,
     },
+    // build.target は本番ビルドにしか効かない。dev サーバーの依存事前バンドルは
+    // optimizeDeps 側の esbuild が担うため、同じ手当てをこちらにも入れる。
+    // これが無いと依存の destructuring が降格対象になり `vite` が起動に失敗する
+    optimizeDeps: {
+      esbuildOptions: {
+        target: 'esnext',
+        supported: { destructuring: true },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '../../src'),

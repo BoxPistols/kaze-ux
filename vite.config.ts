@@ -43,6 +43,14 @@ export default defineConfig(({ mode }) => {
     // GitHub Pages用のベースパス設定
     // 環境変数 VITE_BASE_PATH が設定されていればそれを使用、なければリポジトリ名
     base: isGitHubPages ? (process.env.VITE_BASE_PATH || '/kaze-ux/') : '/',
+    // build.target は本番ビルドにしか効かない。dev サーバーの依存事前バンドルは
+    // optimizeDeps 側の esbuild が担うため、同じ手当てをこちらにも入れる
+    optimizeDeps: {
+      esbuildOptions: {
+        target: 'esnext',
+        supported: { destructuring: true },
+      },
+    },
     build: {
       // esbuild の target を esnext に固定して、
       // MUI/framer-motion 等の destructuring が降格でエラーになるのを回避
