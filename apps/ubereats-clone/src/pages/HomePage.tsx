@@ -226,7 +226,7 @@ export const HomePage = () => {
                         top: 12,
                         left: 12,
                         bgcolor: UE_GREEN,
-                        color: '#fff',
+                        color: UE_ON_GREEN,
                         px: 1.5,
                         py: 0.5,
                         borderRadius: 2,

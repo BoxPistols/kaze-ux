@@ -28,11 +28,7 @@ export interface FabProps extends Omit<MuiFabProps, 'children'> {
   position?: 'fixed' | 'absolute' | 'relative'
   /** 配置位置 */
   placement?:
-    | 'bottom-right'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'top-right'
-    | 'top-left'
+    'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left'
   /** カスタムスタイル */
   sx?: SxProps<Theme>
 }

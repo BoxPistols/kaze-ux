@@ -140,6 +140,78 @@ export const bestContrast = (
       : best
   )
 
+// ---- 色相を保った明度調整 ----
+
+const rgbToHsl = ({ r, g, b }: Rgb) => {
+  const [rn, gn, bn] = [r / 255, g / 255, b / 255]
+  const max = Math.max(rn, gn, bn)
+  const min = Math.min(rn, gn, bn)
+  const l = (max + min) / 2
+  if (max === min) return { h: 0, s: 0, l }
+  const d = max - min
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  const h =
+    max === rn
+      ? ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6
+      : max === gn
+        ? ((bn - rn) / d + 2) / 6
+        : ((rn - gn) / d + 4) / 6
+  return { h, s, l }
+}
+
+const hslToHex = ({ h, s, l }: { h: number; s: number; l: number }) => {
+  const k = (n: number) => (n + h * 12) % 12
+  const a = s * Math.min(l, 1 - l)
+  const f = (n: number) =>
+    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))
+  const toHex = (x: number) =>
+    Math.round(255 * clamp01(x))
+      .toString(16)
+      .padStart(2, '0')
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`
+}
+
+/**
+ * 背景に対して目標コントラストを満たすまで、色相・彩度を保ったまま
+ * 明度だけを動かす。
+ *
+ * ブランド色をそのまま文字に使うと読めない（Kaze のティールは白地で
+ * 2.61:1）が、別の色に差し替えるとブランドが失われる。色相を保って
+ * 明度だけ動かせば、ブランドの気配を残したまま可読性を確保できる。
+ *
+ * @param color 起点の色（ブランド色など）
+ * @param background 置かれる背景
+ * @param target 目標コントラスト比（既定は本文 AA の 4.5）
+ */
+export const ensureContrast = (
+  color: string,
+  background: string,
+  target: number = CONTRAST_THRESHOLD.text
+): string => {
+  if (contrastRatio(color, background) >= target) return color
+
+  const hsl = rgbToHsl(parseColor(color))
+  // 背景が明るければ色を暗く、暗ければ明るくする
+  const bgIsLight = relativeLuminance(parseColor(background)) > 0.5
+  const step = bgIsLight ? -0.01 : 0.01
+
+  let best = color
+  let bestRatio = contrastRatio(color, background)
+  for (let i = 1; i <= 100; i++) {
+    const l = clamp01(hsl.l + step * i)
+    const candidate = hslToHex({ ...hsl, l })
+    const ratio = contrastRatio(candidate, background)
+    if (ratio > bestRatio) {
+      bestRatio = ratio
+      best = candidate
+    }
+    if (ratio >= target) return candidate
+    // 明度が振り切ったら打ち切る
+    if (l === 0 || l === 1) break
+  }
+  return best
+}
+
 /**
  * 背景に対して読める前景色を、候補から選ぶ。
  *

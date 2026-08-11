@@ -248,7 +248,7 @@ const ProductCard = ({
             py: 0.5,
             borderRadius: 2,
             bgcolor: 'primary.main',
-            color: '#fff',
+            color: 'primary.contrastText',
             fontSize: '0.95rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
@@ -315,7 +315,7 @@ const FeatureItem = ({
           sx={{
             fontSize: '0.9rem',
             fontWeight: 700,
-            color: 'primary.main',
+            color: 'primary.textContrast',
             fontFamily: 'monospace',
             pt: 0.5,
             flexShrink: 0,
@@ -619,7 +619,7 @@ const EYEBROW_SX = {
   fontWeight: 500,
   letterSpacing: '0.24em',
   textTransform: 'uppercase',
-  color: 'primary.main',
+  color: 'primary.textContrast',
   mb: 2,
 } as const
 
@@ -665,7 +665,7 @@ export const LandingPage = () => {
       title: 'Storybook',
       description:
         'コンポーネントカタログ・デザインガイド・AIチャットアシスタント',
-      icon: <AutoStoriesIcon sx={{ color: 'primary.main' }} />,
+      icon: <AutoStoriesIcon sx={{ color: 'primary.textContrast' }} />,
       href: APP_LINKS.storybook(),
       label: 'Documentation',
     },
@@ -784,7 +784,7 @@ export const LandingPage = () => {
                       fontWeight: 500,
                       letterSpacing: '0.24em',
                       textTransform: 'uppercase',
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                     }}>
                     Kaze Design System · v0
                   </Typography>
@@ -816,7 +816,7 @@ export const LandingPage = () => {
                   <Box
                     component='span'
                     sx={{
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       fontStyle: 'italic',
                       fontVariationSettings:
                         "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
@@ -881,7 +881,7 @@ export const LandingPage = () => {
                       py: 1.5,
                       borderRadius: 2,
                       bgcolor: 'primary.main',
-                      color: '#fff',
+                      color: 'primary.contrastText',
                       fontWeight: 700,
                       fontSize: '0.9rem',
                       textDecoration: 'none',
@@ -918,7 +918,7 @@ export const LandingPage = () => {
                       transition: 'all 0.3s ease',
                       '&:hover': {
                         borderColor: 'primary.main',
-                        color: 'primary.main',
+                        color: 'primary.textContrast',
                         transform: 'translateY(-2px)',
                       },
                     }}>
@@ -1136,7 +1136,7 @@ export const LandingPage = () => {
                     sx={{
                       fontSize: '0.9rem',
                       fontWeight: 700,
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       fontFamily: 'monospace',
                       mb: 1.5,
                     }}>
@@ -1164,7 +1164,7 @@ export const LandingPage = () => {
                     sx={{
                       fontSize: '0.95rem',
                       fontWeight: 600,
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       textDecoration: 'none',
                       '&:hover': { textDecoration: 'underline' },
                     }}>
@@ -1226,7 +1226,7 @@ export const LandingPage = () => {
                   py: 1.25,
                   borderRadius: 2,
                   bgcolor: 'primary.main',
-                  color: '#fff',
+                  color: 'primary.contrastText',
                   fontWeight: 600,
                   fontSize: '1rem',
                   textDecoration: 'none',
@@ -1275,7 +1275,7 @@ export const LandingPage = () => {
                       sx={{
                         fontSize: '0.95rem',
                         fontWeight: 600,
-                        color: 'primary.main',
+                        color: 'primary.textContrast',
                         mb: 0.5,
                       }}>
                       Q: {item.q}
@@ -1315,7 +1315,7 @@ export const LandingPage = () => {
             gap: 2,
           }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AirIcon sx={{ fontSize: 18, color: 'primary.main' }} />
+            <AirIcon sx={{ fontSize: 18, color: 'primary.textContrast' }} />
             <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
               Kaze Design System
             </Typography>
@@ -1339,7 +1339,7 @@ export const LandingPage = () => {
                   color: 'text.secondary',
                   textDecoration: 'none',
                   transition: 'color 0.2s',
-                  '&:hover': { color: 'primary.main' },
+                  '&:hover': { color: 'primary.textContrast' },
                 }}>
                 {link.label}
               </Box>

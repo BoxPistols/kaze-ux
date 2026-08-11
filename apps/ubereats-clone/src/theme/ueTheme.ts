@@ -2,7 +2,13 @@ import { createTheme } from '@mui/material/styles'
 
 import { darkTheme, lightTheme } from '@/themes/theme'
 
-import { UE_GREEN, UE_GREEN_DARK, UE_GREEN_LIGHT, UE_STAR } from './colors'
+import {
+  UE_GREEN,
+  UE_GREEN_DARK,
+  UE_GREEN_LIGHT,
+  UE_ON_GREEN,
+  UE_STAR,
+} from './colors'
 
 // MUI パレット型を拡張
 declare module '@mui/material/styles' {
@@ -21,7 +27,8 @@ const ueColors = {
     main: UE_GREEN,
     dark: UE_GREEN_DARK,
     light: UE_GREEN_LIGHT,
-    contrastText: '#fff',
+    // 明るいブランドグリーンに白は 2.38:1。文字色は実測で決める
+    contrastText: UE_ON_GREEN,
   },
   ueStar: { main: UE_STAR },
 }

@@ -5,11 +5,7 @@
 
 // 距離の単位
 export type DistanceUnit =
-  | 'meters'
-  | 'feet'
-  | 'kilometers'
-  | 'miles'
-  | 'nauticalMiles'
+  'meters' | 'feet' | 'kilometers' | 'miles' | 'nauticalMiles'
 
 // 速度の単位
 export type SpeedUnit = 'ms' | 'kmh' | 'mph' | 'knots'
@@ -31,13 +27,7 @@ export type CoordinateFormat =
 
 // 日時フォーマットのロケール
 export type DateTimeLocale =
-  | 'ja-JP'
-  | 'en-US'
-  | 'en-GB'
-  | 'de-DE'
-  | 'fr-FR'
-  | 'zh-CN'
-  | 'ko-KR'
+  'ja-JP' | 'en-US' | 'en-GB' | 'de-DE' | 'fr-FR' | 'zh-CN' | 'ko-KR'
 
 // 日付フォーマット
 export type DateFormat =

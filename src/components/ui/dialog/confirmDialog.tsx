@@ -30,12 +30,7 @@ export type ConfirmDialogProps = {
   cancelText?: string
   /** 確定ボタンの色 */
   confirmColor?:
-    | 'primary'
-    | 'secondary'
-    | 'error'
-    | 'warning'
-    | 'info'
-    | 'success'
+    'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success'
   /** 確定ボタンのバリアント */
   confirmVariant?: 'text' | 'outlined' | 'contained'
   /** カスタムコンテンツ */

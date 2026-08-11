@@ -179,3 +179,28 @@ describe('境界線の視認性 (全 6 テーマ)', () => {
     })
   }
 })
+
+describe('前景用スロット textContrast (全 6 テーマ)', () => {
+  const semantic = [
+    'primary',
+    'secondary',
+    'success',
+    'info',
+    'warning',
+    'error',
+  ] as const
+
+  for (const [name, c] of allThemes) {
+    it(`${name}: textContrast が本文として AA を満たす`, () => {
+      for (const key of semantic) {
+        const fg = c[key].textContrast
+        expect(fg, `${name} ${key}.textContrast が未定義`).toBeDefined()
+        const ratio = contrastRatio(fg as string, c.background.paper)
+        expect(
+          ratio,
+          `${name} ${key}.textContrast (${fg}) on paper = ${ratio.toFixed(2)}`
+        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+      }
+    })
+  }
+})

@@ -378,9 +378,11 @@ const componentStyles = {
           paddingLeft: 8,
           paddingRight: 8,
         },
+        // outlined Chip の色は MUI 既定 (text.primary 相当) で十分なため
+        // 強制しない。複合セレクタは sx より詳細度が高く、sx や
+        // StatusTag 側の色指定を握り潰してしまう (塗り面に白文字が残り 1.5:1)
         '&.MuiChip-outlined': {
           borderColor: theme.palette.divider,
-          color: theme.palette.text.primary,
         },
       }),
       sizeSmall: {

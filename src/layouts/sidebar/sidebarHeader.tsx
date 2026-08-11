@@ -40,7 +40,9 @@ export const Logo = ({ size = 24 }: { size?: number }) => {
         // テーマのprimary.main色を使用
         backgroundColor: 'primary.main',
         borderRadius: '4px',
-        color: 'white',
+        // ダークでは primary.main が明るく、白文字は 1.73:1 まで落ちる。
+        // 実測で決まる contrastText を使う
+        color: 'primary.contrastText',
         fontSize: `${size * 0.4}px`,
         fontWeight: 'bold',
         letterSpacing: '-0.5px',

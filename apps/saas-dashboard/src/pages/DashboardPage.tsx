@@ -469,7 +469,7 @@ export const DashboardPage = () => {
                       </Typography>
                       <Typography
                         variant='caption'
-                        color='text.disabled'
+                        color='text.secondary'
                         sx={{ fontSize: '0.7rem' }}>
                         {dayjs(activity.timestamp).format('MMM D, HH:mm')}
                       </Typography>
@@ -496,7 +496,8 @@ export const DashboardPage = () => {
                 <Box
                   sx={{
                     bgcolor: 'success.main',
-                    color: '#fff',
+                    // ダークでは success.main が明るく、白文字は 1.96:1 になる
+                    color: 'success.contrastText',
                     px: 1,
                     py: 0.25,
                     borderRadius: 1,

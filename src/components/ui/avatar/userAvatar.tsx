@@ -86,6 +86,9 @@ export const UserAvatar = ({
       variant={variant}
       sx={{
         bgcolor: src ? undefined : `${color}.main`,
+        // MUI 既定の白文字はダークで塗り色が明るくなると 1.7:1 まで落ちる。
+        // 実測で決まる contrastText を使う
+        color: src ? undefined : `${color}.contrastText`,
         width: dimension,
         height: dimension,
         fontSize,

@@ -367,8 +367,8 @@ const EasingCurves = () => {
           イージング値一覧 (CSS)
         </Typography>
         <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-          Kaze 語彙は意味が明示的で、アプリ側はこちらを使います。MUI
-          標準キーは MUI
+          Kaze 語彙は意味が明示的で、アプリ側はこちらを使います。MUI 標準キーは
+          MUI
           内部のトランジションが参照するもので、同じ曲線が割り当てられています。
         </Typography>
         <Stack spacing={3}>

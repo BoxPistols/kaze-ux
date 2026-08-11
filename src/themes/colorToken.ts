@@ -1,6 +1,6 @@
 import { amber, blue, pink } from '@mui/material/colors'
 
-import { bestContrast } from './contrast'
+import { bestContrast, ensureContrast } from './contrast'
 
 export interface ColorSet {
   main: string
@@ -95,6 +95,25 @@ export const foregroundVariant = (
   set: Pick<ColorSet, 'main' | 'dark'>,
   mode: 'light' | 'dark'
 ): string => (mode === 'light' ? set.dark : set.main)
+
+/**
+ * ColorSet に「前景として使う色」(textContrast) を埋める。
+ *
+ * `color: 'primary.main'` と書くとブランドティールがそのまま文字色になり、
+ * 白地で 2.61:1 しか出ない。かといって使う側に variant の選択を強いると
+ * 必ず漏れる。テーマ側で `primary.textContrast` を用意し、
+ * 文字・アイコンにはそれを使う運用にする。
+ */
+const withTextContrast = (
+  cs: ColorSet,
+  mode: 'light' | 'dark',
+  paper: string
+): ColorSet => ({
+  ...cs,
+  // まず用途に応じた variant を選び、それでも本文 AA に届かなければ
+  // 色相・彩度を保ったまま明度だけ動かして基準まで持っていく
+  textContrast: ensureContrast(foregroundVariant(cs, mode), paper),
+})
 
 const createColorSet = (
   main: string,
@@ -281,13 +300,15 @@ export const createLightThemeColors = (
     ...cs,
     lighter: env.lighter,
   })
+  const fg = (cs: ColorSet) =>
+    withTextContrast(cs, 'light', env.background.paper)
   return {
-    primary: patchLighter(lightSemanticColors.primary),
-    secondary: patchLighter(lightSemanticColors.secondary),
-    success: lightSemanticColors.success,
-    info: lightSemanticColors.info,
-    warning: lightSemanticColors.warning,
-    error: lightSemanticColors.error,
+    primary: fg(patchLighter(lightSemanticColors.primary)),
+    secondary: fg(patchLighter(lightSemanticColors.secondary)),
+    success: fg(lightSemanticColors.success),
+    info: fg(lightSemanticColors.info),
+    warning: fg(lightSemanticColors.warning),
+    error: fg(lightSemanticColors.error),
     grey: greyShades,
     text: { ...env.text, white: '#ffffff' },
     background: env.background,
@@ -447,14 +468,16 @@ export const createDarkThemeColors = (
     lighter: env.lighter,
   })
 
+  const fg = (cs: ColorSet) =>
+    withTextContrast(cs, 'dark', env.background.paper)
   return {
-    primary: patchLighter(darkSchemePrimaryMap[scheme]),
-    secondary: patchLighter(darkSemanticBase.secondary),
+    primary: fg(patchLighter(darkSchemePrimaryMap[scheme])),
+    secondary: fg(patchLighter(darkSemanticBase.secondary)),
     // success/info/warning/errorは固有のlighterを維持（Alert背景等で使用）
-    success: darkSemanticBase.success,
-    info: darkSemanticBase.info,
-    warning: darkSemanticBase.warning,
-    error: darkSemanticBase.error,
+    success: fg(darkSemanticBase.success),
+    info: fg(darkSemanticBase.info),
+    warning: fg(darkSemanticBase.warning),
+    error: fg(darkSemanticBase.error),
     grey: greyShades,
     text: { ...env.text, white: '#ffffff' },
     background: env.background,

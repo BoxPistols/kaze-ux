@@ -119,7 +119,9 @@ const ElevationScaleContent = () => {
         の役割で段を選べるセマンティックトークンを用意しています。
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 5 }}>
-        <code>import {'{ elevation }'} from &apos;@/themes/elevation&apos;</code>
+        <code>
+          import {'{ elevation }'} from &apos;@/themes/elevation&apos;
+        </code>
       </Typography>
 
       <Grid container spacing={4}>
@@ -293,7 +295,8 @@ const ComponentElevationContent = () => {
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
         各コンポーネントに割り当てたセマンティック段と、実際の表示例です。
-        表示している CSS 値はテーマから直接取得しているため、実装と必ず一致します。
+        表示している CSS
+        値はテーマから直接取得しているため、実装と必ず一致します。
       </Typography>
 
       <Stack spacing={6}>
@@ -308,8 +311,8 @@ const ComponentElevationContent = () => {
                 <CardHeader title='サービスカード' subheader='通常状態の影' />
                 <CardContent>
                   <Typography variant='body2' color='text.secondary'>
-                    elevation.raised + border。
-                    ホバーすると floating に持ち上がります。
+                    elevation.raised + border。 ホバーすると floating
+                    に持ち上がります。
                   </Typography>
                 </CardContent>
               </Card>
@@ -670,8 +673,8 @@ const SampleCard = () => (
     <CardHeader title='カードタイトル' subheader='サブタイトル' />
     <CardContent>
       <Typography variant='body2' color='text.secondary'>
-        Card は elevation.raised
-        を持ち、hover で floating に持ち上がります。影とボーダーの両方で面を示します。
+        Card は elevation.raised を持ち、hover で floating
+        に持ち上がります。影とボーダーの両方で面を示します。
       </Typography>
     </CardContent>
   </Card>
@@ -685,7 +688,8 @@ const ShadowComparisonContent = () => (
     <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
       影スケールはモードごとに別々に生成されます。ライトは寒色ニュートラルの影で
       「落とす」、ダークは影を濃くしたうえで上端のリムライトで「浮かせる」という
-      別の戦略を取っています。下の 2 列は実際のライト/ダークテーマから値を取得しています。
+      別の戦略を取っています。下の 2
+      列は実際のライト/ダークテーマから値を取得しています。
     </Typography>
 
     <Grid container spacing={4}>
