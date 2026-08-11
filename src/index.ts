@@ -40,6 +40,8 @@ export {
   createLightTheme,
 } from './themes/theme'
 export type { AppTheme } from './types/theme'
+export { createShadows, elevation } from './themes/elevation'
+export type { ElevationLevel } from './themes/elevation'
 export {
   colorData,
   getGrey,

@@ -17,6 +17,7 @@ import {
   createDarkThemeColors,
   createLightThemeColors,
 } from './colorToken'
+import { createShadows, elevation } from './elevation'
 import {
   fontSizesVariant,
   typographyComponentsOverrides,
@@ -54,34 +55,7 @@ const commonThemeOptions = {
   layout: {
     containerMaxWidth,
   },
-  // Tailwind shadow scale 準拠 — 段階的にブラー・スプレッドを増加
-  shadows: [
-    'none', // 0
-    '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // 1
-    '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)', // 2
-    '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)', // 3
-    '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)', // 4
-    '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', // 5
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)', // 6
-    '0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14)', // 7
-    '0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2)', // 8
-    '0 3px 16px 2px rgba(0, 0, 0, 0.12), 0 5px 6px -3px rgba(0, 0, 0, 0.2)', // 9
-    '0 4px 18px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 10
-    '0 4px 20px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 11
-    '0 5px 22px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 12
-    '0 5px 24px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 13
-    '0 5px 26px 4px rgba(0, 0, 0, 0.12), 0 7px 9px -4px rgba(0, 0, 0, 0.2)', // 14
-    '0 6px 28px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 15
-    '0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 16
-    '0 6px 32px 5px rgba(0, 0, 0, 0.14), 0 8px 11px -5px rgba(0, 0, 0, 0.2)', // 17
-    '0 7px 34px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 18
-    '0 7px 36px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 19
-    '0 8px 38px 7px rgba(0, 0, 0, 0.14), 0 10px 13px -6px rgba(0, 0, 0, 0.22)', // 20
-    '0 8px 40px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 21
-    '0 8px 42px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 22
-    '0 9px 44px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 23
-    '0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 24
-  ] as unknown as Theme['shadows'],
+  // 影スケールは mode 依存のため各テーマ生成側で注入する (src/themes/elevation.ts)
 }
 
 // コンポーネントスタイルの定義
@@ -265,7 +239,7 @@ const componentStyles = {
             : theme.palette.common.white,
         borderRadius: 6,
         padding: '8px 12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        boxShadow: theme.shadows[elevation.popover],
       }),
       arrow: ({ theme }: { theme: Theme }) => ({
         color:
@@ -343,18 +317,13 @@ const componentStyles = {
         backgroundColor: theme.palette.background.paper,
         borderRadius: 12,
         border: `1px solid ${theme.palette.divider}`,
-        boxShadow:
-          theme.palette.mode === 'light'
-            ? '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12)',
+        // 影スケールが mode 別に生成されるため、ここでの light/dark 分岐は不要
+        boxShadow: theme.shadows[elevation.raised],
         transition:
           'box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out',
         overflow: 'hidden',
         '&:hover': {
-          boxShadow:
-            theme.palette.mode === 'light'
-              ? '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)'
-              : '0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)',
+          boxShadow: theme.shadows[elevation.floating],
           borderColor: theme.palette.divider,
         },
       }),
@@ -584,7 +553,7 @@ const componentStyles = {
     styleOverrides: {
       paper: ({ theme }: { theme: Theme }) => ({
         borderRadius: 6,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+        boxShadow: theme.shadows[elevation.overlay],
         border: `1px solid ${theme.palette.divider}`,
       }),
     },
@@ -629,10 +598,7 @@ const componentStyles = {
       paper: ({ theme }: { theme: Theme }) => ({
         borderRadius: 16,
         border: `1px solid ${theme.palette.divider}`,
-        boxShadow:
-          theme.palette.mode === 'light'
-            ? '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)'
-            : '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3)',
+        boxShadow: theme.shadows[elevation.modal],
         backgroundColor: theme.palette.background.paper,
         backgroundImage: 'none',
         overflow: 'hidden',
@@ -810,6 +776,8 @@ const componentStyles = {
 // MUI 6のcolorSchemesを使用した統合テーマ
 const theme = createTheme({
   ...commonThemeOptions,
+  // colorSchemes 版は shadows をスキーム別に持てないためライト基準
+  shadows: createShadows('light'),
   defaultColorScheme: 'light',
   colorSchemes: {
     light: {
@@ -843,6 +811,7 @@ const theme = createTheme({
 // 後方互換性のために従来のテーマも提供
 const lightTheme = createTheme({
   ...commonThemeOptions,
+  shadows: createShadows('light'),
   palette: {
     mode: 'light',
     ...colorData,
@@ -857,6 +826,7 @@ const lightTheme = createTheme({
 
 const darkTheme = createTheme({
   ...commonThemeOptions,
+  shadows: createShadows('dark'),
   palette: {
     mode: 'dark',
     ...colorData.dark,
@@ -874,6 +844,7 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
   const colors = createDarkThemeColors(scheme)
   return createTheme({
     ...commonThemeOptions,
+    shadows: createShadows('dark'),
     palette: {
       mode: 'dark',
       ...colors,
@@ -892,6 +863,7 @@ const createLightTheme = (scheme?: ColorScheme): Theme => {
   const colors = createLightThemeColors(scheme)
   return createTheme({
     ...commonThemeOptions,
+    shadows: createShadows('light'),
     palette: {
       mode: 'light',
       ...colors,
