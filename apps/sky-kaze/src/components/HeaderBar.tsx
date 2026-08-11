@@ -9,6 +9,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material'
 import { AppSwitcher } from '@/components/ui/AppSwitcher'
 import { IconButton } from '@/components/ui/icon-button'
 import { hookUseTheme } from '@/hooks/useTheme'
+import { ensureContrast } from '@/themes/contrast'
 import { motionOf } from '@/themes/motion'
 
 import { useSimulation } from '~/data/simulation'
@@ -75,7 +76,15 @@ export const HeaderBar = () => {
               color: 'text.primary',
             }}>
             Kaze
-            <Box component='span' sx={{ color: LOGI_ORANGE }}>
+            <Box
+              component='span'
+              sx={{
+                // ロゴ文字はヘッダー面 (background.paper) に置かれる前景。
+                // ブランドオレンジのままだと暗い面で 4.21:1 と AA を割るため、
+                // 実際の面の色を渡して明度だけ補正する
+                color: (theme) =>
+                  ensureContrast(LOGI_ORANGE, theme.palette.background.paper),
+              }}>
               Logistics
             </Box>
           </Typography>

@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
+import { bestContrast, ensureContrast } from '@/themes/contrast'
 import { darkTheme, lightTheme } from '@/themes/theme'
 
 import {
@@ -21,15 +22,25 @@ declare module '@mui/material/styles' {
   }
 }
 
+/** 塗り面に乗せる文字色は白固定にせず実測で選ぶ（明るいオレンジに白は乗らない） */
+const onSurface = (bg: string) => bestContrast(bg, ['#ffffff', '#0A0A0A'])
+
 const logiColors = {
   logiOrange: {
     main: LOGI_ORANGE,
     dark: LOGI_ORANGE_DARK,
     light: LOGI_ORANGE_LIGHT,
-    contrastText: '#fff',
+    contrastText: onSurface(LOGI_ORANGE),
   },
   logiTeal: { main: LOGI_TEAL },
 }
+
+// ダークでは main が Stepper のアイコンやロゴなど前景としても使われるため、
+// 面の上で本文 AA を満たす明度まで補正する（ブランドの色相は保つ）
+const darkPrimaryMain = ensureContrast(
+  LOGI_ORANGE,
+  darkTheme.palette.background.paper
+)
 
 export const logiLightTheme = createTheme({
   ...lightTheme,
@@ -40,7 +51,7 @@ export const logiLightTheme = createTheme({
       main: LOGI_ORANGE_DARK,
       dark: '#C2410C',
       light: LOGI_ORANGE,
-      contrastText: '#fff',
+      contrastText: onSurface(LOGI_ORANGE_DARK),
     },
   },
 })
@@ -51,10 +62,10 @@ export const logiDarkTheme = createTheme({
     ...darkTheme.palette,
     ...logiColors,
     primary: {
-      main: LOGI_ORANGE,
+      main: darkPrimaryMain,
       dark: LOGI_ORANGE_DARK,
       light: '#FB923C',
-      contrastText: '#1E293B',
+      contrastText: onSurface(darkPrimaryMain),
     },
   },
 })
