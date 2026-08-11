@@ -1,20 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Kaze Design System Favicon -->
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0EADB8"/>
-      <stop offset="100%" stop-color="#0A8A94"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="6" fill="url(#g)"/>
-  <text
-    x="50%"
-    y="50%"
-    dominant-baseline="central"
-    text-anchor="middle"
-    fill="white"
-    font-family="Inter, system-ui, sans-serif"
-    font-size="19"
-    font-weight="700"
-  >K</text>
+  <!--
+    Kaze — 三本のストロークが右へ流れ、上へ抜ける。
+    レギュレーション: src/components/ui/logo/logoRules.ts
+    面と線のコントラストは 7.25:1 (ティール #0EADB8 に墨 #0A0A0A)。
+    白抜きは 2.73:1 で AA を大きく割るため使わない。
+  -->
+  <rect width="32" height="32" rx="6.4" fill="#0EADB8"/>
+  <g fill="none" stroke="#0A0A0A" stroke-width="2.667" stroke-linecap="round">
+    <path d="M7 10.5 H16 a4 4 0 0 0 4-4"/>
+    <path d="M7 16 H21 a4.5 4.5 0 0 0 4.5-4.5"/>
+    <path d="M7 21.5 H18.5 a4 4 0 0 0 4-4"/>
+  </g>
 </svg>
