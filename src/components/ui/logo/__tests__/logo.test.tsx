@@ -23,9 +23,11 @@ const svgOf = (container: HTMLElement) =>
   container.querySelector('svg') as SVGSVGElement
 
 describe('シンボルの構造', () => {
-  it('三本のストロークで構成される', () => {
+  it('二本のストロークで構成される', () => {
+    // 三本を等間隔で並べるとハンバーガーメニューの記号に見えるため、
+    // 要素を二本に絞っている
     const { container } = renderLogo(<KazeLogo />)
-    expect(svgOf(container).querySelectorAll('path')).toHaveLength(3)
+    expect(svgOf(container).querySelectorAll('path')).toHaveLength(2)
   })
 
   it('デザイングリッドの座標系を保つ', () => {
@@ -41,21 +43,23 @@ describe('シンボルの構造', () => {
     expect(group?.getAttribute('stroke-linecap')).toBe('round')
   })
 
-  it('ストローク幅はグリッドの 1/12', () => {
+  it('主線が副線より太い（運筆の抑揚）', () => {
     const { container } = renderLogo(<KazeLogo />)
-    const group = svgOf(container).querySelector('g')
-    expect(Number(group?.getAttribute('stroke-width'))).toBeCloseTo(
-      LOGO_GRID / 12,
-      3
+    const widths = [...svgOf(container).querySelectorAll('path')].map((p) =>
+      Number(p.getAttribute('stroke-width'))
     )
+    const [sub, main] = widths
+    expect(main, '主線が副線より太い').toBeGreaterThan(sub)
+    // 主線でも 16px で 1px を割らない
+    expect((main / LOGO_GRID) * LOGO_MIN_SIZE.icon).toBeGreaterThanOrEqual(1)
   })
 
-  it('三本の長さが異なる（均等な三本線の硬さを避ける）', () => {
+  it('二本の形が異なる（長さ・抜けの深さに差をつける）', () => {
     const { container } = renderLogo(<KazeLogo />)
     const ds = [...svgOf(container).querySelectorAll('path')].map((p) =>
       p.getAttribute('d')
     )
-    expect(new Set(ds).size).toBe(3)
+    expect(new Set(ds).size).toBe(2)
   })
 })
 

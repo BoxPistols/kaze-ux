@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!--
-    Kaze — 三本のストロークが右へ流れ、上へ抜ける。
+    Kaze — 二本のストロークが右へ流れ、上へ抜ける。
+    主線は長く深く、副線は短く控えめに。運筆の抑揚を表す。
     レギュレーション: src/components/ui/logo/logoRules.ts
     面と線のコントラストは 7.25:1 (ティール #0EADB8 に墨 #0A0A0A)。
     白抜きは 2.73:1 で AA を大きく割るため使わない。
   -->
-  <rect width="32" height="32" rx="6.4" fill="#0EADB8"/>
-  <g fill="none" stroke="#0A0A0A" stroke-width="2.667" stroke-linecap="round">
-    <path d="M7 10.5 H16 a4 4 0 0 0 4-4"/>
-    <path d="M7 16 H21 a4.5 4.5 0 0 0 4.5-4.5"/>
-    <path d="M7 21.5 H18.5 a4 4 0 0 0 4-4"/>
+  <rect width="32" height="32" rx="8" fill="#0EADB8"/>
+  <g fill="none" stroke="#0A0A0A" stroke-linecap="round">
+    <path d="M7 11.5 H15 a4.5 4.5 0 0 0 4.5-4.5" stroke-width="2"/>
+    <path d="M7 20 H21 a7 7 0 0 0 7-7" stroke-width="2.6"/>
   </g>
 </svg>

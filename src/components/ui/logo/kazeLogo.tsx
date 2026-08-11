@@ -12,7 +12,6 @@ import {
   type LogoVariant,
 } from './logoRules'
 
-
 export interface KazeLogoProps {
   /** 構成。既定はシンボルのみ */
   variant?: LogoVariant
@@ -31,24 +30,20 @@ export interface KazeLogoProps {
 }
 
 /**
- * ストロークの太さ。グリッドの 1/12。
- * これ以上細いと 16px で 1px を割り、太いと右端の抜けが潰れる。
- */
-const STROKE = LOGO_GRID / 12
-
-/**
- * 三本のストローク。
+ * 二本のストローク。
  *
- * 左端を揃え、長さを 短 / 長 / 中 と変える。右端は同じ半径・同じ角度で
- * 上へ抜き、同じ気流に乗っていることを示す。
+ * 主線（下）は長く、大きな半径で深く抜ける。副線（上）は短く、
+ * 小さな半径で控えめに抜ける。この抑揚が運筆の緩急にあたる。
+ *
+ * 三本を等幅・等間隔で並べるとハンバーガーメニューの記号に見え、
+ * ブランドの識別子として機能しない。要素を二本に絞り、長さ・太さ・
+ * 抜けの深さすべてに差をつけることで、記号ではなく筆跡として読ませる。
  */
 const STROKES = [
-  // 上: 短い
-  `M7 10.5 H16 a4 4 0 0 0 4-4`,
-  // 中: 主線。最も長く、視覚的な重心を担う
-  `M7 16 H21 a4.5 4.5 0 0 0 4.5-4.5`,
-  // 下: 中間
-  `M7 21.5 H18.5 a4 4 0 0 0 4-4`,
+  // 副線: 短く、控えめに抜ける
+  { d: 'M7 11.5 H15 a4.5 4.5 0 0 0 4.5-4.5', width: LOGO_GRID / 16 },
+  // 主線: 長く、深く抜ける。視覚的な重心を担う
+  { d: 'M7 20 H21 a7 7 0 0 0 7-7', width: LOGO_GRID / 12.3 },
 ] as const
 
 /** 背景の明度から、面を持たない単色トーンを選ぶ */
@@ -99,17 +94,13 @@ const Symbol = ({
         <rect
           width={LOGO_GRID}
           height={LOGO_GRID}
-          rx={LOGO_GRID / 5}
+          rx={LOGO_GRID / 4}
           fill={theme.palette.primary.main}
         />
       )}
-      <g
-        fill='none'
-        stroke={strokeColor}
-        strokeWidth={STROKE}
-        strokeLinecap='round'>
-        {STROKES.map((d) => (
-          <path key={d} d={d} />
+      <g fill='none' stroke={strokeColor} strokeLinecap='round'>
+        {STROKES.map((stroke) => (
+          <path key={stroke.d} d={stroke.d} strokeWidth={stroke.width} />
         ))}
       </g>
     </svg>
