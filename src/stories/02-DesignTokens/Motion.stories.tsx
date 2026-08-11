@@ -363,33 +363,68 @@ const EasingCurves = () => {
           borderColor: 'divider',
           borderRadius: 3,
         }}>
-        <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='h6' sx={{ fontWeight: 600, mb: 0.5 }}>
           イージング値一覧 (CSS)
         </Typography>
-        <Stack spacing={1.5}>
-          {Object.entries(easings).map(([key, value]) => (
-            <Box
-              key={key}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                py: 1,
-                px: 2,
-                bgcolor: 'background.paper',
-                borderRadius: 1.5,
-              }}>
-              <Chip
-                label={key}
-                size='small'
-                color='primary'
-                variant='outlined'
-              />
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+          Kaze 語彙は意味が明示的で、アプリ側はこちらを使います。MUI
+          標準キーは MUI
+          内部のトランジションが参照するもので、同じ曲線が割り当てられています。
+        </Typography>
+        <Stack spacing={3}>
+          {(
+            [
+              {
+                group: 'Kaze 語彙',
+                note: 'アプリ側で使う',
+                keys: ['enter', 'exit', 'standard', 'emphasized'],
+              },
+              {
+                group: 'MUI 標準キー',
+                note: 'MUI 内部が参照。Kaze の曲線を割り当て済み',
+                keys: ['easeOut', 'easeIn', 'easeInOut', 'sharp'],
+              },
+            ] as const
+          ).map(({ group, note, keys }) => (
+            <Box key={group}>
               <Typography
-                variant='body2'
-                sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
-                {value}
+                variant='subtitle2'
+                sx={{ fontWeight: 600, mb: 0.25 }}>
+                {group}
               </Typography>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ display: 'block', mb: 1.5 }}>
+                {note}
+              </Typography>
+              <Stack spacing={1.5}>
+                {keys.map((key) => (
+                  <Box
+                    key={key}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      py: 1,
+                      px: 2,
+                      bgcolor: 'background.paper',
+                      borderRadius: 1.5,
+                    }}>
+                    <Chip
+                      label={key}
+                      size='small'
+                      color='primary'
+                      variant='outlined'
+                    />
+                    <Typography
+                      variant='body2'
+                      sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
+                      {easings[key]}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
             </Box>
           ))}
         </Stack>

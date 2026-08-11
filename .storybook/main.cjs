@@ -84,6 +84,16 @@ const config = {
       build: {
         target: 'esnext',
       },
+      // build.target は本番ビルドにしか効かない。dev サーバーの依存事前バンドルは
+      // optimizeDeps 側の esbuild が担うため、同じ手当てをこちらにも入れる。
+      // これが無いと @ai-sdk/gateway (addon-mcp 依存) 等の destructuring が
+      // 降格対象になり、`storybook dev` が数千件のエラーで起動に失敗する
+      optimizeDeps: {
+        esbuildOptions: {
+          target: 'esnext',
+          supported: { destructuring: true },
+        },
+      },
       // 環境変数をdefineに追加
       define: {
         'import.meta.env.VITE_APP_PASSWORD': JSON.stringify(
