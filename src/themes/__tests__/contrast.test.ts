@@ -191,15 +191,21 @@ describe('前景用スロット textContrast (全 6 テーマ)', () => {
   ] as const
 
   for (const [name, c] of allThemes) {
-    it(`${name}: textContrast が本文として AA を満たす`, () => {
+    it(`${name}: textContrast が paper / default 双方で本文 AA を満たす`, () => {
+      // どちらが厳しいかはモードで入れ替わるため両面を検証する
       for (const key of semantic) {
         const fg = c[key].textContrast
         expect(fg, `${name} ${key}.textContrast が未定義`).toBeDefined()
-        const ratio = contrastRatio(fg as string, c.background.paper)
-        expect(
-          ratio,
-          `${name} ${key}.textContrast (${fg}) on paper = ${ratio.toFixed(2)}`
-        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+        for (const [surface, bg] of [
+          ['paper', c.background.paper],
+          ['default', c.background.default],
+        ] as const) {
+          const ratio = contrastRatio(fg as string, bg)
+          expect(
+            ratio,
+            `${name} ${key}.textContrast (${fg}) on ${surface} = ${ratio.toFixed(2)}`
+          ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+        }
       }
     })
   }

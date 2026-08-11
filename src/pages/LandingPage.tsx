@@ -539,7 +539,7 @@ const DevPortSettings = () => {
         sx={{
           fontSize: '1rem',
           fontWeight: 700,
-          color: 'warning.main',
+          color: 'warning.textContrast',
           mb: 1,
         }}>
         DEV — ポート設定（ローカルのみ表示）
@@ -593,7 +593,7 @@ const DevPortSettings = () => {
             borderRadius: 1,
             border: 'none',
             bgcolor: saved ? 'success.main' : 'warning.main',
-            color: '#fff',
+            color: saved ? 'success.contrastText' : 'warning.contrastText',
             fontSize: '0.9rem',
             fontWeight: 600,
             cursor: 'pointer',

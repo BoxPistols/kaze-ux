@@ -107,12 +107,20 @@ export const foregroundVariant = (
 const withTextContrast = (
   cs: ColorSet,
   mode: 'light' | 'dark',
-  paper: string
+  background: { default: string; paper: string }
 ): ColorSet => ({
   ...cs,
   // まず用途に応じた variant を選び、それでも本文 AA に届かなければ
-  // 色相・彩度を保ったまま明度だけ動かして基準まで持っていく
-  textContrast: ensureContrast(foregroundVariant(cs, mode), paper),
+  // 色相・彩度を保ったまま明度だけ動かして基準まで持っていく。
+  //
+  // paper と default の両方に対して満たす必要がある。どちらが厳しいかは
+  // モードで入れ替わるため（ライトは暗い文字なので暗い default が厳しく、
+  // ダークは明るい文字なので明るい paper が厳しい）、片方だけを基準に
+  // すると、もう一方の面に置いたときに AA を割る。
+  textContrast: ensureContrast(
+    ensureContrast(foregroundVariant(cs, mode), background.paper),
+    background.default
+  ),
 })
 
 const createColorSet = (
@@ -300,8 +308,7 @@ export const createLightThemeColors = (
     ...cs,
     lighter: env.lighter,
   })
-  const fg = (cs: ColorSet) =>
-    withTextContrast(cs, 'light', env.background.paper)
+  const fg = (cs: ColorSet) => withTextContrast(cs, 'light', env.background)
   return {
     primary: fg(patchLighter(lightSemanticColors.primary)),
     secondary: fg(patchLighter(lightSemanticColors.secondary)),
@@ -472,8 +479,7 @@ export const createDarkThemeColors = (
     lighter: env.lighter,
   })
 
-  const fg = (cs: ColorSet) =>
-    withTextContrast(cs, 'dark', env.background.paper)
+  const fg = (cs: ColorSet) => withTextContrast(cs, 'dark', env.background)
   return {
     primary: fg(patchLighter(darkSchemePrimaryMap[scheme])),
     secondary: fg(patchLighter(darkSemanticBase.secondary)),
