@@ -9,6 +9,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material'
 import { AppSwitcher } from '@/components/ui/AppSwitcher'
 import { IconButton } from '@/components/ui/icon-button'
 import { hookUseTheme } from '@/hooks/useTheme'
+import { motionOf } from '@/themes/motion'
 
 import { useSimulation } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
@@ -104,7 +105,7 @@ export const HeaderBar = () => {
                 cursor: 'pointer',
                 color: active ? 'text.primary' : 'text.secondary',
                 position: 'relative',
-                transition: 'color 0.15s ease',
+                transition: motionOf(['color'], 'micro'),
                 '&:hover': {
                   color: 'text.primary',
                 },
@@ -117,7 +118,7 @@ export const HeaderBar = () => {
                   right: 8,
                   height: 2,
                   bgcolor: active ? LOGI_ORANGE : 'transparent',
-                  transition: 'background-color 0.15s ease',
+                  transition: motionOf(['background-color'], 'micro'),
                 },
               }}>
               <Typography

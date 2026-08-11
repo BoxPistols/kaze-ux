@@ -20,6 +20,7 @@ import { ConfirmDialog } from '@/components/ui/dialog'
 import { FormDialog } from '@/components/ui/dialog'
 import { IconButton } from '@/components/ui/icon-button'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
+import { motionOf } from '@/themes/motion'
 
 import { SHIPMENTS, DRIVERS } from '~/data/logistics'
 import {
@@ -492,7 +493,7 @@ export const CompleteView = () => {
                     borderColor: 'divider',
                     alignItems: 'center',
                     position: 'relative',
-                    transition: 'background 0.15s ease',
+                    transition: motionOf(['background-color'], 'micro'),
                     '&:last-child': { borderBottom: 'none' },
                     '&:hover': {
                       bgcolor: 'action.hover',
@@ -508,7 +509,7 @@ export const CompleteView = () => {
                       bgcolor: LOGI_ORANGE,
                       borderRadius: '0 2px 2px 0',
                       opacity: 0,
-                      transition: 'opacity 0.15s ease',
+                      transition: motionOf(['opacity'], 'micro'),
                     },
                   }}>
                   <Typography

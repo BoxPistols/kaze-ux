@@ -18,7 +18,9 @@ import { Fab } from '@/components/ui/fab'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
 import { PageHeader } from '@/components/ui/text'
+import { elevation } from '@/themes/elevation'
 import { KAZE_EYEBROW, KAZE_PRINT } from '@/themes/kazeMixins'
+import { motionOf } from '@/themes/motion'
 
 import { activities } from '~/data/activity'
 import { kpiCards } from '~/data/kpi'
@@ -101,13 +103,14 @@ export const DashboardPage = () => {
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.id}>
               <Card
                 sx={{
-                  transition: 'all 0.2s ease-in-out',
+                  // 影スケールが mode 別に生成されるため light/dark 分岐は不要
+                  transition: motionOf(
+                    ['box-shadow', 'transform', 'border-color'],
+                    'short'
+                  ),
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? '0 8px 24px rgba(0,0,0,0.4)'
-                        : '0 8px 24px rgba(0,0,0,0.08)',
+                    boxShadow: (theme) => theme.shadows[elevation.floating],
                   },
                 }}>
                 <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
@@ -266,7 +269,7 @@ export const DashboardPage = () => {
                         key={project.id}
                         style={{
                           cursor: 'pointer',
-                          transition: 'background-color 0.15s ease',
+                          transition: motionOf(['background-color'], 'short'),
                         }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor =
@@ -515,7 +518,7 @@ export const DashboardPage = () => {
                       gap: 1.5,
                       p: 1,
                       borderRadius: 1.5,
-                      transition: 'background-color 0.15s ease',
+                      transition: motionOf(['background-color'], 'short'),
                       '&:hover': { bgcolor: 'action.hover' },
                     }}>
                     <UserAvatar

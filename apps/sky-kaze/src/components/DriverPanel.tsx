@@ -28,6 +28,7 @@ const shimmer = keyframes`
 `
 
 import { IconButton } from '@/components/ui/icon-button'
+import { motionOf } from '@/themes/motion'
 
 import {
   SHIPMENTS,
@@ -379,7 +380,7 @@ export const DriverPanel = () => {
                   width: `${selected.routeProgress * 100}%`,
                   borderRadius: 3,
                   bgcolor: color,
-                  transition: 'width 0.8s ease',
+                  transition: motionOf(['width'], 'scene', 'enter'),
                   position: 'relative',
                   overflow: 'hidden',
                   '&::after': {

@@ -10,6 +10,7 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import { Box, Typography, alpha, keyframes, useMediaQuery } from '@mui/material'
 
 import { IconButton } from '@/components/ui/icon-button'
+import { motionOf } from '@/themes/motion'
 
 import { useSimulation, DRIVER_STATUS_COLOR } from '~/data/simulation'
 import { floatingPanelSx } from '~/utils/panelStyles'
@@ -170,7 +171,10 @@ export const TimelineBar = () => {
                 bgcolor: 'transparent',
                 color:
                   speed === s ? DRIVER_STATUS_COLOR.moving : 'text.secondary',
-                transition: 'all 0.15s ease',
+                transition: motionOf(
+                  ['border-color', 'background-color', 'color'],
+                  'micro'
+                ),
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },

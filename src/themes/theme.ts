@@ -17,7 +17,11 @@ import {
   createDarkThemeColors,
   createLightThemeColors,
 } from './colorToken'
-import { createShadows, elevation } from './elevation'
+import {
+  createDarkSchemeElevationOverrides,
+  createShadows,
+  elevation,
+} from './elevation'
 import { kazeTransitions, motionOf, reducedMotionOverrides } from './motion'
 import {
   fontSizesVariant,
@@ -769,10 +773,28 @@ const componentStyles = {
   },
 }
 
+/**
+ * colorSchemes 版テーマ専用のコンポーネント設定。
+ *
+ * theme.shadows はライト基準で固定されるため、ダークスキーム時の影を
+ * CssBaseline 側で上書きする。これが無いと CssVarsProvider を使う画面
+ * (saas-dashboard) だけダークのエレベーションが効かない。
+ */
+const cssVarsComponentStyles = {
+  ...componentStyles,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...componentStyles.MuiCssBaseline.styleOverrides,
+      ...createDarkSchemeElevationOverrides(),
+    },
+  },
+}
+
 // MUI 6のcolorSchemesを使用した統合テーマ
 const theme = createTheme({
   ...commonThemeOptions,
-  // colorSchemes 版は shadows をスキーム別に持てないためライト基準
+  // colorSchemes 版は shadows をスキーム別に持てないためライト基準。
+  // ダークは cssVarsComponentStyles の CssBaseline 上書きで補う
   shadows: createShadows('light'),
   defaultColorScheme: 'light',
   colorSchemes: {
@@ -799,7 +821,7 @@ const theme = createTheme({
       },
     },
   },
-  components: componentStyles as Components<
+  components: cssVarsComponentStyles as Components<
     Omit<Theme, 'components' | 'palette'> & CssVarsTheme
   >,
 })

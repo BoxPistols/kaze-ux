@@ -131,3 +131,31 @@ export const elevation = {
 } as const
 
 export type ElevationLevel = (typeof elevation)[keyof typeof elevation]
+
+/**
+ * colorSchemes 版テーマ（CssVarsProvider）向けのダーク影上書き。
+ *
+ * MUI の `theme.shadows` はテーマ単体で 1 セットしか持てず、
+ * colorSchemes にスキーム別の shadows を載せる口がない。そのため
+ * lightTheme / darkTheme を切り替えるアプリと違い、CssVarsProvider を
+ * 使う画面ではダークでもライトの影が当たってしまう —
+ * 暗い背景に薄い寒色影が落ちて、エレベーションが消える。
+ *
+ * ここではスキーム属性の下で主要コンポーネントの影だけを差し替える。
+ * MUI が内部生成する CSS 変数名に依存しないため、MUI の実装が変わっても壊れない。
+ */
+export const createDarkSchemeElevationOverrides = () => {
+  const dark = createShadows('dark')
+
+  return {
+    '[data-mui-color-scheme="dark"], .dark': {
+      '& .MuiCard-root': { boxShadow: dark[elevation.raised] },
+      '& .MuiCard-root:hover': { boxShadow: dark[elevation.floating] },
+      '& .MuiMenu-paper': { boxShadow: dark[elevation.overlay] },
+      '& .MuiPopover-paper': { boxShadow: dark[elevation.overlay] },
+      '& .MuiTooltip-tooltip': { boxShadow: dark[elevation.popover] },
+      '& .MuiDialog-paper': { boxShadow: dark[elevation.modal] },
+      '& .MuiDrawer-paper': { boxShadow: dark[elevation.modal] },
+    },
+  }
+}

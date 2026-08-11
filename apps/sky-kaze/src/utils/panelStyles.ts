@@ -4,6 +4,8 @@
  */
 import { alpha, type SxProps, type Theme } from '@mui/material'
 
+import { elevation } from '@/themes/elevation'
+
 /** 標準パネル（backdropFilter + bgcolor + border + shadow） */
 export const floatingPanelSx: SxProps<Theme> = {
   borderRadius: 2,
@@ -14,7 +16,7 @@ export const floatingPanelSx: SxProps<Theme> = {
       : 'rgba(255,255,255,0.94)',
   border: '1px solid',
   borderColor: (theme: Theme) => alpha(theme.palette.divider, 0.15),
-  boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
+  boxShadow: (theme: Theme) => theme.shadows[elevation.overlay],
   overflow: 'hidden',
 }
 

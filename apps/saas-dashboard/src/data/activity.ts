@@ -1,10 +1,5 @@
 export type ActivityType =
-  | 'project'
-  | 'contact'
-  | 'task'
-  | 'invoice'
-  | 'team'
-  | 'system'
+  'project' | 'contact' | 'task' | 'invoice' | 'team' | 'system'
 
 export type Activity = {
   id: string

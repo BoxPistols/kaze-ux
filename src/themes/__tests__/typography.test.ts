@@ -38,9 +38,10 @@ describe('光学的トラッキング (letterSpacingVariant)', () => {
     for (let i = 1; i < SCALE_DESC.length; i++) {
       const larger = toEm(letterSpacingVariant[SCALE_DESC[i - 1]])
       const smaller = toEm(letterSpacingVariant[SCALE_DESC[i]])
-      expect(smaller, `${SCALE_DESC[i]} > ${SCALE_DESC[i - 1]}`).toBeGreaterThan(
-        larger,
-      )
+      expect(
+        smaller,
+        `${SCALE_DESC[i]} > ${SCALE_DESC[i - 1]}`
+      ).toBeGreaterThan(larger)
     }
   })
 
@@ -58,7 +59,7 @@ describe('光学的トラッキング (letterSpacingVariant)', () => {
       const px = toPx(fontSizesVariant[key])
       expect(toEm(letterSpacingVariant[key]), `${key} (${px}px)`).toBeCloseTo(
         expected(px),
-        3,
+        3
       )
     }
   })

@@ -12,6 +12,8 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
+import { elevation } from '@/themes/elevation'
+import { motionOf } from '@/themes/motion'
 
 import { restaurants, categories } from '~/data/restaurants'
 import { UE_GREEN, UE_GREEN_DARK, UE_STAR } from '~/theme/colors'
@@ -97,7 +99,7 @@ export const HomePage = () => {
                 '& .MuiOutlinedInput-root': {
                   bgcolor: 'background.paper',
                   borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                  boxShadow: (theme) => theme.shadows[elevation.overlay],
                 },
               }}
             />
@@ -186,14 +188,15 @@ export const HomePage = () => {
                   sx={{
                     minWidth: 300,
                     cursor: 'pointer',
-                    transition: 'all 0.25s ease',
+                    // 影スケールが mode 別に生成されるため light/dark 分岐は不要
+                    transition: motionOf(
+                      ['box-shadow', 'transform', 'border-color'],
+                      'short'
+                    ),
                     overflow: 'hidden',
                     '&:hover': {
                       transform: 'translateY(-6px)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? '0 12px 32px rgba(0,0,0,0.5)'
-                          : '0 12px 32px rgba(0,0,0,0.12)',
+                      boxShadow: (theme) => theme.shadows[elevation.popover],
                     },
                   }}
                   onClick={() => navigate(`/restaurant/${r.id}`)}>
@@ -202,7 +205,7 @@ export const HomePage = () => {
                       sx={{
                         height: 180,
                         background: `url(${r.image}) center/cover`,
-                        transition: 'transform 0.4s ease',
+                        transition: motionOf(['transform'], 'macro', 'enter'),
                         '&:hover': { transform: 'scale(1.05)' },
                       }}
                     />
@@ -331,17 +334,17 @@ export const HomePage = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    transition: 'all 0.25s ease',
+                    transition: motionOf(
+                      ['box-shadow', 'transform', 'border-color'],
+                      'short'
+                    ),
                     overflow: 'hidden',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? '0 8px 24px rgba(0,0,0,0.5)'
-                          : '0 8px 24px rgba(0,0,0,0.1)',
+                      boxShadow: (theme) => theme.shadows[elevation.overlay],
                     },
                   }}
                   onClick={() => navigate(`/restaurant/${r.id}`)}>
@@ -350,7 +353,7 @@ export const HomePage = () => {
                       sx={{
                         height: 200,
                         background: `url(${r.image}) center/cover`,
-                        transition: 'transform 0.4s ease',
+                        transition: motionOf(['transform'], 'macro', 'enter'),
                       }}
                     />
                     <Box

@@ -9,6 +9,8 @@ import { useEffect, useRef, useCallback } from 'react'
 
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+import { elevation } from '@/themes/elevation'
+
 import { HUBS, HUB_TYPE_LABELS, SHIPMENTS } from '~/data/logistics'
 import {
   useSimulation,
@@ -177,7 +179,7 @@ export const LiveMap = () => {
 
     el.innerHTML += `
       <svg viewBox="0 0 44 44" width="44" height="44" class="driver-svg"
-        style="transition:transform 0.3s ease;">
+        style="transition:transform var(--kaze-dur-macro, 240ms) var(--kaze-ease, cubic-bezier(0.33,0,0,1));">
         <!-- インシデント時のパルスリング -->
         <circle class="pulse-ring" cx="22" cy="22" r="16"
           fill="none" stroke="#EF4444" stroke-width="2"
@@ -319,7 +321,7 @@ export const LiveMap = () => {
         '& .maplibregl-popup-content': {
           borderRadius: '8px',
           padding: '10px 12px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+          boxShadow: (theme) => theme.shadows[elevation.overlay],
         },
       }}>
       <Box

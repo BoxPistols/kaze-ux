@@ -1,9 +1,5 @@
 export type ProjectStatus =
-  | 'active'
-  | 'draft'
-  | 'completed'
-  | 'on-hold'
-  | 'cancelled'
+  'active' | 'draft' | 'completed' | 'on-hold' | 'cancelled'
 export type ProjectPriority = 'high' | 'medium' | 'low' | 'critical'
 
 export type Task = {

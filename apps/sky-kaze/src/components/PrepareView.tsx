@@ -32,6 +32,7 @@ import {
 import { CustomChip } from '@/components/ui/chip'
 import { FormDialog } from '@/components/ui/dialog'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
+import { motionOf } from '@/themes/motion'
 
 import {
   SHIPMENTS,
@@ -506,7 +507,7 @@ export const PrepareView = () => {
                             cursor: 'pointer',
                             borderTop: '1px solid',
                             borderColor: 'divider',
-                            transition: 'background 0.2s ease',
+                            transition: motionOf(['background-color'], 'short'),
                             bgcolor: (theme) =>
                               done
                                 ? alpha(
@@ -652,7 +653,11 @@ export const PrepareView = () => {
                   sx={{
                     color: allChecked ? '#22C55E' : LOGI_ORANGE,
                     '& .MuiCircularProgress-circle': {
-                      transition: 'stroke-dashoffset 0.4s ease',
+                      transition: motionOf(
+                        ['stroke-dashoffset'],
+                        'scene',
+                        'enter'
+                      ),
                     },
                   }}
                 />
@@ -774,9 +779,7 @@ export const PrepareView = () => {
                 setNewShipment((p) => ({
                   ...p,
                   priority: e.target.value as
-                    | 'standard'
-                    | 'express'
-                    | 'same_day',
+                    'standard' | 'express' | 'same_day',
                 }))
               }>
               <MenuItem value='standard'>標準</MenuItem>
