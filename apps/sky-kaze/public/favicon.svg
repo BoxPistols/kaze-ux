@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#F97316"/>
-  <path d="M7 18h4l2-4h6l2 4h4M9 22h14M13 14h6v-2c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2v2z" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!--
+    KazeLogistics — 水平の帯を上下から半円が挟む。半円を逆側にずらし非対称の均衡をつくる。
+    矩形と円のみで構成。角丸・影・グラデーションを持たない。
+    レギュレーション: src/components/ui/logo/logoRules.ts
+  -->
+  <rect width="32" height="32" fill="#FFB612"/>
+  <g fill="#1A1A1A">
+    <rect x="4" y="14" width="24" height="4"/>
+    <path d="M4 14 A7 7 0 0 1 18 14 Z"/>
+    <path d="M14 18 A7 7 0 0 0 28 18 Z"/>
+  </g>
 </svg>

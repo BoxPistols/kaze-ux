@@ -2,7 +2,6 @@
  * アプリ切替ポップオーバーメニュー
  * 全アプリ共通で使える「アプリスイッチャー」
  */
-import AirIcon from '@mui/icons-material/Air'
 import AppsIcon from '@mui/icons-material/Apps'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import DashboardIcon from '@mui/icons-material/Dashboard'
@@ -13,6 +12,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { IconButton } from '@/components/ui/icon-button'
+import { KazeLogo } from '@/components/ui/logo'
 import { APP_LINKS } from '@/utils/appLinks'
 
 type AppEntry = {
@@ -28,7 +28,7 @@ const APP_LIST: AppEntry[] = [
     id: 'top',
     label: 'Kaze Design System',
     desc: 'トップページ',
-    icon: <AirIcon />,
+    icon: <KazeLogo size={20} title='' />,
     getUrl: APP_LINKS.top,
   },
   {

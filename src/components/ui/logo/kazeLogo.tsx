@@ -2,12 +2,14 @@ import { Box } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import type { SxProps, Theme } from '@mui/material'
 
-import { contrastRatio } from '@/themes/contrast'
+import { bestContrast, contrastRatio } from '@/themes/contrast'
 
 import {
   LOGO_CLEAR_SPACE_RATIO,
   LOGO_GRID,
   LOGO_MIN_SIZE,
+  LOGO_PRODUCTS,
+  type LogoProduct,
   type LogoTone,
   type LogoVariant,
 } from './logoRules'
@@ -22,6 +24,11 @@ export interface KazeLogoProps {
   size?: number
   /** 配色。'auto' は背景の明度から ink / inverse を選ぶ */
   tone?: LogoTone | 'auto'
+  /**
+   * プロダクト。tone='brand' のときの面の色を決める。
+   * 形は共通で、色だけがプロダクトを識別する
+   */
+  product?: LogoProduct
   /** クリアスペースを余白として実際に確保する */
   withClearSpace?: boolean
   /** アクセシブルな名前。装飾目的なら空文字を渡す */
@@ -29,21 +36,28 @@ export interface KazeLogoProps {
   sx?: SxProps<Theme>
 }
 
+/** 塗り面に乗せる図形の色の候補。どちらを使うかは面の色から実測で決める */
+const ON_SURFACE_INKS = ['#ffffff', '#0A0A0A'] as const
+
 /**
- * 二本のストローク。
+ * シンボルの幾何。
  *
- * 主線（下）は長く、大きな半径で深く抜ける。副線（上）は短く、
- * 小さな半径で控えめに抜ける。この抑揚が運筆の緩急にあたる。
+ * 水平の帯を、上下から半円が挟む。半円は互いに逆側へずらして置き、
+ * 左右非対称の均衡をつくる。要素は矩形と円だけで、曲線を手で描いていない。
  *
- * 三本を等幅・等間隔で並べるとハンバーガーメニューの記号に見え、
- * ブランドの識別子として機能しない。要素を二本に絞り、長さ・太さ・
- * 抜けの深さすべてに差をつけることで、記号ではなく筆跡として読ませる。
+ * - 帯: グリッド中央、高さ 1/8
+ * - 半円: 半径 7、中心を帯の上辺 / 下辺に置く
+ * - 上の半円は左寄り、下の半円は右寄り。この食い違いが流れを生む
+ *
+ * 角丸・影・グラデーションは持たない。装飾を足さず、構造だけで形にする。
  */
-const STROKES = [
-  // 副線: 短く、控えめに抜ける
-  { d: 'M7 11.5 H15 a4.5 4.5 0 0 0 4.5-4.5', width: LOGO_GRID / 16 },
-  // 主線: 長く、深く抜ける。視覚的な重心を担う
-  { d: 'M7 20 H21 a7 7 0 0 0 7-7', width: LOGO_GRID / 12.3 },
+const BAND = { x: 4, y: 14, width: 24, height: 4 } as const
+const ARC_RADIUS = 7
+const SHAPES = [
+  // 上の半円（左寄り）
+  `M${BAND.x} ${BAND.y} A${ARC_RADIUS} ${ARC_RADIUS} 0 0 1 ${BAND.x + ARC_RADIUS * 2} ${BAND.y} Z`,
+  // 下の半円（右寄り）
+  `M${BAND.x + BAND.width - ARC_RADIUS * 2} ${BAND.y + BAND.height} A${ARC_RADIUS} ${ARC_RADIUS} 0 0 0 ${BAND.x + BAND.width} ${BAND.y + BAND.height} Z`,
 ] as const
 
 /** 背景の明度から、面を持たない単色トーンを選ぶ */
@@ -61,23 +75,26 @@ const resolveAutoTone = (background: string): LogoTone => {
 const Symbol = ({
   size,
   tone,
+  product,
   title,
 }: {
   size: number
   tone: LogoTone
+  product: LogoProduct
   title?: string
 }) => {
-  const theme = useTheme()
-
   const filled = tone === 'brand'
+  const surface = LOGO_PRODUCTS[product]
   const strokeColor =
     tone === 'brand'
-      ? theme.palette.primary.contrastText
+      ? bestContrast(surface, ON_SURFACE_INKS)
       : tone === 'inverse'
         ? '#ffffff'
         : tone === 'ink'
           ? '#0A0A0A'
-          : theme.palette.primary.textContrast
+          : // outline: 面を持たずブランド色で描く。テーマの primary に
+            // 従わせるとロゴだけ別系統の色になり、ブランドが分裂する
+            surface
 
   const labelled = title !== ''
 
@@ -90,17 +107,11 @@ const Symbol = ({
       aria-label={labelled ? (title ?? 'Kaze') : undefined}
       aria-hidden={labelled ? undefined : true}
       focusable='false'>
-      {filled && (
-        <rect
-          width={LOGO_GRID}
-          height={LOGO_GRID}
-          rx={LOGO_GRID / 4}
-          fill={theme.palette.primary.main}
-        />
-      )}
-      <g fill='none' stroke={strokeColor} strokeLinecap='round'>
-        {STROKES.map((stroke) => (
-          <path key={stroke.d} d={stroke.d} strokeWidth={stroke.width} />
+      {filled && <rect width={LOGO_GRID} height={LOGO_GRID} fill={surface} />}
+      <g fill={strokeColor}>
+        <rect x={BAND.x} y={BAND.y} width={BAND.width} height={BAND.height} />
+        {SHAPES.map((d) => (
+          <path key={d} d={d} />
         ))}
       </g>
     </svg>
@@ -150,6 +161,7 @@ export const KazeLogo = ({
   variant = 'symbol',
   size = LOGO_MIN_SIZE.ui,
   tone = 'brand',
+  product = 'kaze',
   withClearSpace = false,
   title,
   sx,
@@ -178,7 +190,12 @@ export const KazeLogo = ({
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
       ]}>
       {variant !== 'wordmark' && (
-        <Symbol size={resolvedSize} tone={resolvedTone} title={title} />
+        <Symbol
+          size={resolvedSize}
+          tone={resolvedTone}
+          product={product}
+          title={title}
+        />
       )}
       {variant !== 'symbol' && (
         <Wordmark size={resolvedSize} tone={resolvedTone} />

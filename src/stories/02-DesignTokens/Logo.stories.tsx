@@ -5,6 +5,7 @@ import { KazeLogo } from '@/components/ui/logo'
 import {
   LOGO_CLEAR_SPACE_RATIO,
   LOGO_MIN_SIZE,
+  LOGO_PRODUCTS,
   LOGO_PROHIBITIONS,
 } from '@/components/ui/logo'
 import { contrastRatioOf } from '@/themes/contrast'
@@ -84,11 +85,11 @@ const CompositionContent = () => (
       ロゴ
     </Typography>
     <Typography variant='body1' color='text.secondary' sx={{ mb: 6 }}>
-      二本のストロークが左から右へ流れ、右端で上へ抜けます。「墨で書かれ、風で運ばれる」
-      という世界観を、書の運筆（入り・送り・抜け）と風の上昇気流を重ね合わせて表しています。
-      主線は長く太く深く抜け、副線は短く細く控えめに抜ける。この抑揚が運筆の緩急にあたります。
-      三本を等幅・等間隔で並べるとハンバーガーメニューの記号に見えてしまうため、
-      要素を二本に絞り、長さ・太さ・抜けの深さすべてに差をつけて筆跡として読ませています。
+      水平の帯を、上下から半円が挟みます。半円は互いに逆側へずらして置き、
+      左右非対称の均衡をつくる。生まれる波形が「風で運ばれる」を表します。
+      矩形と円だけで構成し、曲線を手で描かず半径と中心座標で定義しているため、
+      誰が引いても同じ形になります。角丸・影・グラデーションは持ちません —
+      構造そのものが形であり、後から足す装飾を認めないためです。
     </Typography>
 
     <Section
@@ -129,7 +130,7 @@ const CompositionContent = () => (
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Swatch
             label='brand'
-            note={`ティール地に墨 (${contrastRatioOf('#0A0A0A', '#0EADB8')}:1)`}
+            note={`ブランド青に白 (${contrastRatioOf('#FFFFFF', LOGO_PRODUCTS.kaze)}:1)`}
             background='background.paper'>
             <KazeLogo size={56} tone='brand' title='Kaze' />
           </Swatch>
@@ -147,11 +148,34 @@ const CompositionContent = () => (
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Swatch
             label='outline'
-            note='他の要素と等価に並べる場合'
+            note='面を持たずブランド色で描く'
             background='background.paper'>
             <KazeLogo size={56} tone='outline' title='Kaze' />
           </Swatch>
         </Grid>
+      </Grid>
+    </Section>
+
+    <Section
+      title='プロダクト'
+      description='シンボルは全プロダクトで共通とし、面の色だけがプロダクトを識別します。形を変えると系列であることが読み取れず、色を自由にすると識別性が失われるためです。'>
+      <Grid container spacing={4}>
+        {(
+          [
+            ['kaze', 'Kaze Design System'],
+            ['eats', 'KazeEats'],
+            ['logistics', 'KazeLogistics'],
+          ] as const
+        ).map(([key, name]) => (
+          <Grid key={key} size={{ xs: 12, sm: 4 }}>
+            <Swatch
+              label={name}
+              note={`${LOGO_PRODUCTS[key]} — 図形の色は面から実測で決まる`}
+              background='background.paper'>
+              <KazeLogo size={56} product={key} title={name} />
+            </Swatch>
+          </Grid>
+        ))}
       </Grid>
     </Section>
   </Box>
@@ -199,7 +223,7 @@ const SpacingContent = () => {
 
       <Section
         title='最小サイズ'
-        description='主線の幅がグリッドの 1/12.3 のため、これ以下では線が 1px を割って潰れます。指定が下限を割った場合、コンポーネントが下限に丸めます。'>
+        description='帯の高さがグリッドの 1/8 のため、これ以下では帯と半円の分離が保てません。指定が下限を割った場合、コンポーネントが下限に丸めます。'>
         <Stack direction='row' spacing={5} sx={{ alignItems: 'flex-end' }}>
           {(
             [

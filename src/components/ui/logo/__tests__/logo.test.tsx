@@ -10,6 +10,7 @@ import {
   LOGO_CLEAR_SPACE_RATIO,
   LOGO_GRID,
   LOGO_MIN_SIZE,
+  LOGO_PRODUCTS,
   LOGO_PROHIBITIONS,
   LOGO_TONES,
 } from '../logoRules'
@@ -22,12 +23,23 @@ const renderLogo = (
 const svgOf = (container: HTMLElement) =>
   container.querySelector('svg') as SVGSVGElement
 
+/** 図形の色（帯と半円は同じ g にまとめている） */
+const shapeColorOf = (container: HTMLElement) =>
+  svgOf(container).querySelector('g')?.getAttribute('fill') ?? ''
+
+/** 塗り面の色。面を持つのは brand のみ（面がある場合は最初の rect） */
+const surfaceColorOf = (container: HTMLElement) => {
+  const rects = svgOf(container).querySelectorAll('rect')
+  return rects.length > 1 ? rects[0].getAttribute('fill') : null
+}
+
 describe('シンボルの構造', () => {
-  it('二本のストロークで構成される', () => {
-    // 三本を等間隔で並べるとハンバーガーメニューの記号に見えるため、
-    // 要素を二本に絞っている
-    const { container } = renderLogo(<KazeLogo />)
-    expect(svgOf(container).querySelectorAll('path')).toHaveLength(2)
+  it('矩形と円だけで構成される（幾何学的原形のみ）', () => {
+    const { container } = renderLogo(<KazeLogo tone='ink' />)
+    const svg = svgOf(container)
+    // 帯 1 + 半円 2
+    expect(svg.querySelectorAll('rect')).toHaveLength(1)
+    expect(svg.querySelectorAll('path')).toHaveLength(2)
   })
 
   it('デザイングリッドの座標系を保つ', () => {
@@ -37,29 +49,34 @@ describe('シンボルの構造', () => {
     )
   })
 
-  it('線端が丸い（筆が離れる瞬間の丸みに対応）', () => {
-    const { container } = renderLogo(<KazeLogo />)
-    const group = svgOf(container).querySelector('g')
-    expect(group?.getAttribute('stroke-linecap')).toBe('round')
+  it('帯の高さはグリッドの 1/8', () => {
+    const { container } = renderLogo(<KazeLogo tone='ink' />)
+    const band = svgOf(container).querySelector('rect')
+    expect(Number(band?.getAttribute('height'))).toBe(LOGO_GRID / 8)
   })
 
-  it('主線が副線より太い（運筆の抑揚）', () => {
-    const { container } = renderLogo(<KazeLogo />)
-    const widths = [...svgOf(container).querySelectorAll('path')].map((p) =>
-      Number(p.getAttribute('stroke-width'))
+  it('上下の半円が逆側にずれている（非対称の均衡）', () => {
+    const { container } = renderLogo(<KazeLogo tone='ink' />)
+    const ds = [...svgOf(container).querySelectorAll('path')].map(
+      (p) => p.getAttribute('d') ?? ''
     )
-    const [sub, main] = widths
-    expect(main, '主線が副線より太い').toBeGreaterThan(sub)
-    // 主線でも 16px で 1px を割らない
-    expect((main / LOGO_GRID) * LOGO_MIN_SIZE.icon).toBeGreaterThanOrEqual(1)
+    expect(ds).toHaveLength(2)
+    const startX = ds.map((d) => Number(d.match(/^M(\d+)/)?.[1]))
+    expect(startX[0], '起点が同じでは対称になる').not.toBe(startX[1])
   })
 
-  it('二本の形が異なる（長さ・抜けの深さに差をつける）', () => {
+  it('角丸を持たない（装飾を排す）', () => {
     const { container } = renderLogo(<KazeLogo />)
-    const ds = [...svgOf(container).querySelectorAll('path')].map((p) =>
-      p.getAttribute('d')
-    )
-    expect(new Set(ds).size).toBe(2)
+    const surface = svgOf(container).querySelector('rect')
+    expect(surface?.getAttribute('rx')).toBeNull()
+  })
+
+  it('影・グラデーションを持たない', () => {
+    const { container } = renderLogo(<KazeLogo />)
+    const svg = svgOf(container)
+    expect(svg.querySelector('filter')).toBeNull()
+    expect(svg.querySelector('linearGradient')).toBeNull()
+    expect(svg.querySelector('defs')).toBeNull()
   })
 })
 
@@ -92,11 +109,14 @@ describe('最小サイズ', () => {
     const { container } = renderLogo(<KazeLogo size={64} />)
     expect(Number(svgOf(container).getAttribute('width'))).toBe(64)
   })
+
+  it('最小サイズでも帯が 1px を割らない', () => {
+    expect(LOGO_MIN_SIZE.icon / 8).toBeGreaterThanOrEqual(1)
+  })
 })
 
 describe('クリアスペース', () => {
-  // sx は emotion のクラスを生成するため、インライン style ではなく
-  // 算出値を読む
+  // sx は emotion のクラスを生成するため、インライン style ではなく算出値を読む
   const paddingOf = (container: HTMLElement) =>
     getComputedStyle(container.firstElementChild as HTMLElement).padding
 
@@ -113,58 +133,100 @@ describe('クリアスペース', () => {
 })
 
 describe('配色', () => {
-  it('brand は塗り面を持ち、線は面に対して本文 AA を満たす', () => {
+  it('brand は塗り面を持ち、図形は面に対して本文 AA を満たす', () => {
     const { container } = renderLogo(<KazeLogo tone='brand' />)
-    const svg = svgOf(container)
-    const rect = svg.querySelector('rect')
-    expect(rect, 'brand は面を持つ').not.toBeNull()
+    expect(svgOf(container).querySelectorAll('rect'), '面 + 帯').toHaveLength(2)
 
-    const fill = rect?.getAttribute('fill') ?? ''
-    const stroke = svg.querySelector('g')?.getAttribute('stroke') ?? ''
-    const ratio = contrastRatio(stroke, fill)
+    const surface = surfaceColorOf(container) ?? ''
+    const shape = shapeColorOf(container)
+    const ratio = contrastRatio(shape, surface)
     expect(
       ratio,
-      `線 ${stroke} on 面 ${fill} = ${ratio.toFixed(2)}`
+      `図形 ${shape} on 面 ${surface} = ${ratio.toFixed(2)}`
     ).toBeGreaterThanOrEqual(4.5)
   })
 
-  it('ink / inverse / outline は面を持たない', () => {
+  it('ink / inverse / outline は塗り面を持たない', () => {
     for (const tone of ['ink', 'inverse', 'outline'] as const) {
       const { container } = renderLogo(<KazeLogo tone={tone} />)
-      expect(svgOf(container).querySelector('rect'), tone).toBeNull()
+      // 面がなければ rect は帯の 1 つだけ
+      expect(svgOf(container).querySelectorAll('rect'), tone).toHaveLength(1)
     }
   })
 
   it('ink は明るい面で、inverse は暗い面で AA を満たす', () => {
-    const inkResult = renderLogo(<KazeLogo tone='ink' />)
-    const ink =
-      svgOf(inkResult.container).querySelector('g')?.getAttribute('stroke') ??
-      ''
-    expect(contrastRatio(ink, '#ffffff')).toBeGreaterThanOrEqual(4.5)
+    const ink = renderLogo(<KazeLogo tone='ink' />)
+    expect(
+      contrastRatio(shapeColorOf(ink.container), '#ffffff')
+    ).toBeGreaterThanOrEqual(4.5)
 
-    const invResult = renderLogo(<KazeLogo tone='inverse' />)
-    const inverse =
-      svgOf(invResult.container).querySelector('g')?.getAttribute('stroke') ??
-      ''
-    expect(contrastRatio(inverse, '#0A0A0A')).toBeGreaterThanOrEqual(4.5)
+    const inv = renderLogo(<KazeLogo tone='inverse' />)
+    expect(
+      contrastRatio(shapeColorOf(inv.container), '#0A0A0A')
+    ).toBeGreaterThanOrEqual(4.5)
   })
 
   it('auto はライトで ink、ダークで inverse を選ぶ', () => {
     const light = renderLogo(<KazeLogo tone='auto' />, lightTheme)
-    const lightStroke =
-      svgOf(light.container).querySelector('g')?.getAttribute('stroke') ?? ''
-    expect(contrastRatio(lightStroke, '#ffffff')).toBeGreaterThanOrEqual(4.5)
+    expect(
+      contrastRatio(shapeColorOf(light.container), '#ffffff')
+    ).toBeGreaterThanOrEqual(4.5)
 
     const dark = renderLogo(<KazeLogo tone='auto' />, darkTheme)
-    const darkStroke =
-      svgOf(dark.container).querySelector('g')?.getAttribute('stroke') ?? ''
     expect(
-      contrastRatio(darkStroke, darkTheme.palette.background.default)
+      contrastRatio(
+        shapeColorOf(dark.container),
+        darkTheme.palette.background.default
+      )
     ).toBeGreaterThanOrEqual(4.5)
   })
 
   it('規定の 4 種以外のトーンを受け付けない（型と実装の対応）', () => {
     expect(LOGO_TONES).toEqual(['brand', 'ink', 'inverse', 'outline'])
+  })
+})
+
+describe('プロダクト別サブブランド', () => {
+  const products = Object.keys(LOGO_PRODUCTS) as Array<
+    keyof typeof LOGO_PRODUCTS
+  >
+
+  it('形は全プロダクトで共通', () => {
+    const shapes = products.map((product) => {
+      const { container } = renderLogo(<KazeLogo product={product} />)
+      return [...svgOf(container).querySelectorAll('path')]
+        .map((p) => p.getAttribute('d'))
+        .join('|')
+    })
+    expect(new Set(shapes).size, '形が分岐している').toBe(1)
+  })
+
+  it('面の色だけがプロダクトを識別する', () => {
+    for (const product of products) {
+      const { container } = renderLogo(<KazeLogo product={product} />)
+      expect(surfaceColorOf(container), product).toBe(LOGO_PRODUCTS[product])
+    }
+  })
+
+  it('バウハウスの三原色を使う（中間色を混ぜない）', () => {
+    expect(Object.values(LOGO_PRODUCTS)).toEqual([
+      '#0057B8',
+      '#E4002B',
+      '#FFB612',
+    ])
+  })
+
+  it('どのプロダクト色でも図形が面に対して本文 AA を満たす', () => {
+    for (const product of products) {
+      const { container } = renderLogo(<KazeLogo product={product} />)
+      const surface = surfaceColorOf(container) ?? ''
+      const shape = shapeColorOf(container)
+      const ratio = contrastRatio(shape, surface)
+      expect(
+        ratio,
+        `${product}: 図形 ${shape} on 面 ${surface} = ${ratio.toFixed(2)}`
+      ).toBeGreaterThanOrEqual(4.5)
+    }
   })
 })
 

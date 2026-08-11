@@ -1,4 +1,3 @@
-import AirIcon from '@mui/icons-material/Air'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
@@ -19,6 +18,7 @@ import {
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
+import { KazeLogo } from '@/components/ui/logo'
 import { APP_LINKS } from '@/utils/appLinks'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -661,7 +661,7 @@ const IntroductionContent = () => {
             {
               label: 'Kaze Design System',
               desc: 'デザインシステムのトップページ',
-              icon: <AirIcon />,
+              icon: <KazeLogo size={20} title='' />,
               href: APP_LINKS.top(),
             },
             {

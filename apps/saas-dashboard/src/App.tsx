@@ -1,4 +1,3 @@
-import AirIcon from '@mui/icons-material/Air'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ContactsIcon from '@mui/icons-material/Contacts'
@@ -22,6 +21,7 @@ import {
 
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { NotFoundView } from '@/components/ui/feedback'
+import { KazeLogo } from '@/components/ui/logo'
 import { CustomToaster } from '@/components/ui/toast'
 import {
   LayoutWithSidebar,
@@ -129,7 +129,7 @@ const menuItems: SidebarMenuItem[] = [
   {
     id: 'kaze-design',
     label: 'Kaze Design System',
-    icon: <AirIcon />,
+    icon: <KazeLogo size={20} title='' />,
     href: APP_LINKS.top(),
     category: 'APPS',
     description: 'トップページ',

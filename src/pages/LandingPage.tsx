@@ -1,4 +1,3 @@
-import AirIcon from '@mui/icons-material/Air'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
@@ -8,6 +7,7 @@ import { Box, Typography, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
+import { KazeLogo } from '@/components/ui/logo'
 import {
   APP_LINKS,
   DEFAULT_PORTS,
@@ -775,7 +775,7 @@ export const LandingPage = () => {
                       justifyContent: 'center',
                       boxShadow: '0 4px 20px rgba(14,173,184,0.3)',
                     }}>
-                    <AirIcon sx={{ color: '#fff', fontSize: 28 }} />
+                    <KazeLogo size={28} tone='inverse' title='' />
                   </Box>
                   <Typography
                     sx={{
@@ -1315,7 +1315,7 @@ export const LandingPage = () => {
             gap: 2,
           }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AirIcon sx={{ fontSize: 18, color: 'primary.textContrast' }} />
+            <KazeLogo size={18} tone='outline' title='' />
             <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
               Kaze Design System
             </Typography>

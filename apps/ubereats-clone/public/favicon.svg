@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#06C167"/>
-  <path d="M10 8c0-1.1.9-2 2-2s2 .9 2 2v7a2 2 0 01-4 0V8zm6 0c0-1.1.9-2 2-2s2 .9 2 2v7a2 2 0 01-4 0V8zm-8 14c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v2H8v-2z" fill="#fff"/>
+  <!--
+    KazeEats — 水平の帯を上下から半円が挟む。半円を逆側にずらし非対称の均衡をつくる。
+    矩形と円のみで構成。角丸・影・グラデーションを持たない。
+    レギュレーション: src/components/ui/logo/logoRules.ts
+  -->
+  <rect width="32" height="32" fill="#E4002B"/>
+  <g fill="#FFFFFF">
+    <rect x="4" y="14" width="24" height="4"/>
+    <path d="M4 14 A7 7 0 0 1 18 14 Z"/>
+    <path d="M14 18 A7 7 0 0 0 28 18 Z"/>
+  </g>
 </svg>
