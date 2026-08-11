@@ -44,6 +44,7 @@ import {
 } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
 import { floatingPanelSx, floatingPanelEmphasizedSx } from '~/utils/panelStyles'
+import { readableStatusColor } from '~/utils/readableStatusColor'
 
 const formatEta = (seconds: number | null): string => {
   if (seconds === null) return '--:--'
@@ -511,7 +512,11 @@ export const DriverPanel = () => {
                 fontSize: '13px',
                 fontWeight: 700,
                 bgcolor: alpha(STATUS_COLORS[shipment.status], 0.12),
-                color: STATUS_COLORS[shipment.status],
+                color: (theme) =>
+                  readableStatusColor(
+                    STATUS_COLORS[shipment.status],
+                    theme.palette.mode
+                  ),
               }}
             />
           </Box>

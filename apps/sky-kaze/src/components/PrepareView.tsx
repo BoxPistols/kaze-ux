@@ -45,6 +45,7 @@ import {
 } from '~/data/logistics'
 import { useSimulation } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
+import { readableStatusColor } from '~/utils/readableStatusColor'
 
 interface CheckItem {
   id: string
@@ -429,7 +430,11 @@ export const PrepareView = () => {
                       size='small'
                       sx={{
                         bgcolor: alpha(STATUS_COLORS[s.status], 0.12),
-                        color: STATUS_COLORS[s.status],
+                        color: (theme) =>
+                          readableStatusColor(
+                            STATUS_COLORS[s.status],
+                            theme.palette.mode
+                          ),
                         fontWeight: 600,
                         justifySelf: 'start',
                       }}
