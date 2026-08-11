@@ -18,6 +18,7 @@ import {
   createLightThemeColors,
 } from './colorToken'
 import { createShadows, elevation } from './elevation'
+import { kazeTransitions, motionOf, reducedMotionOverrides } from './motion'
 import {
   fontSizesVariant,
   typographyComponentsOverrides,
@@ -42,13 +43,7 @@ const CommomButtonStyles = {
 const commonThemeOptions = {
   typography: typographyOptions,
   shape: { borderRadius: 8 }, // モダンな角丸
-  transitions: {
-    easing: {
-      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
-      smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    },
-    duration: { leavingScreen: 150, enteringScreen: 200 },
-  },
+  transitions: kazeTransitions,
   spacing: 4,
   zIndex: { appBar: 1100, drawer: 1000 },
   breakpoints: muiBreakpoints,
@@ -74,6 +69,8 @@ const componentStyles = {
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
       }),
+      // 動きを減らす設定を持つ利用者には意匠より要求を優先する
+      ...reducedMotionOverrides,
     },
   },
   MuiAppBar: {
@@ -319,8 +316,7 @@ const componentStyles = {
         border: `1px solid ${theme.palette.divider}`,
         // 影スケールが mode 別に生成されるため、ここでの light/dark 分岐は不要
         boxShadow: theme.shadows[elevation.raised],
-        transition:
-          'box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out',
+        transition: motionOf(['box-shadow', 'border-color'], 'short'),
         overflow: 'hidden',
         '&:hover': {
           boxShadow: theme.shadows[elevation.floating],

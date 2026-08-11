@@ -324,16 +324,30 @@ const EasingCurves = () => {
       <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 6 }}>
           <EasingCurveCard
-            name='Sharp'
-            value={easings.sharp}
-            description='素早い応答が必要なUI操作に使用。加速・減速が均等で、キビキビとした印象を与えます。'
+            name='enter (出現)'
+            value={easings.enter}
+            description='急に立ち上がり、長く静かに収まる。Kaze の基調曲線で、要素が現れる場面に使います。'
           />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <EasingCurveCard
-            name='Smooth'
-            value={easings.smooth}
-            description='自然で滑らかな動きが必要な場面に使用。減速が緩やかで、エレガントな印象を与えます。'
+            name='exit (退出)'
+            value={easings.exit}
+            description='静かに始まり、加速しながら去る。去るものは注意を引かないため、最後まで減速させません。'
+          />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <EasingCurveCard
+            name='standard (移動)'
+            value={easings.standard}
+            description='両端がなめらか。画面内を動く要素に使います。迷ったらこれを選びます。'
+          />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <EasingCurveCard
+            name='emphasized (強調)'
+            value={easings.emphasized}
+            description='わずかに行き過ぎて戻る。成功・追加など祝祭的な瞬間にだけ使い、常用しません。'
           />
         </Grid>
       </Grid>
@@ -465,7 +479,7 @@ const DurationBar = ({
             bgcolor: isFromTheme ? 'primary.main' : 'text.disabled',
             borderRadius: 1,
             transition: isPlaying
-              ? `width ${durationMs}ms ${theme.transitions.easing.smooth}`
+              ? `width ${durationMs}ms ${theme.transitions.easing.standard}`
               : 'none',
           }}
         />
@@ -500,31 +514,16 @@ const DurationScale = () => {
 
   // 表示するデュレーション一覧
   const durations = [
+    { label: 'instant', durationMs: themeDurations.instant, isFromTheme: true },
+    { label: 'micro', durationMs: themeDurations.micro, isFromTheme: true },
     {
-      label: '参考値',
-      durationMs: 100,
-      isFromTheme: false,
-    },
-    {
-      label: 'leavingScreen',
-      durationMs: themeDurations.leavingScreen,
+      label: 'short (shorter)',
+      durationMs: themeDurations.shorter,
       isFromTheme: true,
     },
-    {
-      label: 'enteringScreen',
-      durationMs: themeDurations.enteringScreen,
-      isFromTheme: true,
-    },
-    {
-      label: '参考値',
-      durationMs: 300,
-      isFromTheme: false,
-    },
-    {
-      label: '参考値',
-      durationMs: 500,
-      isFromTheme: false,
-    },
+    { label: 'macro', durationMs: themeDurations.macro, isFromTheme: true },
+    { label: 'long', durationMs: themeDurations.long, isFromTheme: true },
+    { label: 'scene', durationMs: themeDurations.scene, isFromTheme: true },
   ]
 
   const handlePlay = useCallback(() => {
@@ -630,27 +629,23 @@ const InteractiveDemo = () => {
 
   // 利用可能なイージング
   const easingOptions: Record<string, string> = {
+    enter: theme.transitions.easing.enter,
+    exit: theme.transitions.easing.exit,
+    standard: theme.transitions.easing.standard,
+    emphasized: theme.transitions.easing.emphasized,
     sharp: theme.transitions.easing.sharp,
-    smooth: theme.transitions.easing.smooth,
   }
 
   // 利用可能なデュレーション
-  const durationOptions = [
-    { label: '100ms (参考)', value: 100 },
-    {
-      label: `${theme.transitions.duration.leavingScreen}ms (leavingScreen)`,
-      value: theme.transitions.duration.leavingScreen,
-    },
-    {
-      label: `${theme.transitions.duration.enteringScreen}ms (enteringScreen)`,
-      value: theme.transitions.duration.enteringScreen,
-    },
-    { label: '300ms (参考)', value: 300 },
-    { label: '500ms (参考)', value: 500 },
-  ]
+  const durationOptions = (
+    ['instant', 'micro', 'macro', 'long', 'scene'] as const
+  ).map((key) => ({
+    label: `${theme.transitions.duration[key]}ms (${key})`,
+    value: theme.transitions.duration[key],
+  }))
 
   const currentEasingValue =
-    easingOptions[selectedEasing] || easingOptions.sharp
+    easingOptions[selectedEasing] || easingOptions.standard
 
   // アニメーション再生
   const handlePlay = useCallback(() => {

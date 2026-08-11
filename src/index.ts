@@ -43,6 +43,14 @@ export type { AppTheme } from './types/theme'
 export { createShadows, elevation } from './themes/elevation'
 export type { ElevationLevel } from './themes/elevation'
 export {
+  kazeEasing,
+  kazeDuration,
+  kazeTransitions,
+  motionOf,
+  reducedMotionOverrides,
+} from './themes/motion'
+export type { KazeEasing, KazeDuration } from './themes/motion'
+export {
   colorData,
   getGrey,
   createDarkThemeColors,
