@@ -14,6 +14,7 @@ import {
 } from './breakpoints'
 import {
   colorData,
+  createCssVars,
   createDarkThemeColors,
   createLightThemeColors,
 } from './colorToken'
@@ -29,7 +30,7 @@ import {
   typographyOptions,
 } from './typography'
 
-import type { ColorScheme, DarkColorScheme } from './colorToken'
+import type { ColorScheme, DarkColorScheme, ThemeColors } from './colorToken'
 import type { AppTheme } from '../types/theme'
 
 // Button共通
@@ -56,6 +57,22 @@ const commonThemeOptions = {
   },
   // 影スケールは mode 依存のため各テーマ生成側で注入する (src/themes/elevation.ts)
 }
+
+/**
+ * Tailwind が参照する CSS 変数を :root に注入した componentStyles を返す。
+ *
+ * 変数の値を index.css に手打ちすると、MUI 側のトークンを直しても
+ * Tailwind 側が古い値のまま残る。テーマ生成時に注入して同期させる。
+ */
+const withCssVars = (base: typeof componentStyles, colors: ThemeColors) => ({
+  ...base,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...base.MuiCssBaseline.styleOverrides,
+      ':root': createCssVars(colors),
+    },
+  },
+})
 
 // コンポーネントスタイルの定義
 const componentStyles = {
@@ -787,7 +804,15 @@ const cssVarsComponentStyles = {
   MuiCssBaseline: {
     styleOverrides: {
       ...componentStyles.MuiCssBaseline.styleOverrides,
-      ...createDarkSchemeElevationOverrides(),
+      // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
+      // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
+      ':root': createCssVars(createLightThemeColors('kaze')),
+      '[data-mui-color-scheme="dark"], .dark': {
+        ...createDarkSchemeElevationOverrides()[
+          '[data-mui-color-scheme="dark"], .dark'
+        ],
+        ...createCssVars(createDarkThemeColors('dracula')),
+      },
     },
   },
 }
@@ -829,6 +854,7 @@ const theme = createTheme({
 })
 
 // 後方互換性のために従来のテーマも提供
+const lightThemeColors = createLightThemeColors('kaze')
 const lightTheme = createTheme({
   ...commonThemeOptions,
   shadows: createShadows('light'),
@@ -841,9 +867,13 @@ const lightTheme = createTheme({
       paper: colorData.background.paper,
     },
   } as PaletteOptions,
-  components: componentStyles as Components<Theme>,
+  components: withCssVars(
+    componentStyles,
+    lightThemeColors
+  ) as Components<Theme>,
 })
 
+const darkThemeColors = createDarkThemeColors('dracula')
 const darkTheme = createTheme({
   ...commonThemeOptions,
   shadows: createShadows('dark'),
@@ -856,7 +886,10 @@ const darkTheme = createTheme({
       paper: colorData.dark.background.paper,
     },
   } as PaletteOptions,
-  components: componentStyles as Components<Theme>,
+  components: withCssVars(
+    componentStyles,
+    darkThemeColors
+  ) as Components<Theme>,
 })
 
 /** 指定スキームでダークテーマを生成 */
@@ -874,7 +907,7 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
         paper: colors.background.paper,
       },
     } as PaletteOptions,
-    components: componentStyles as Components<Theme>,
+    components: withCssVars(componentStyles, colors) as Components<Theme>,
   })
 }
 
@@ -893,7 +926,7 @@ const createLightTheme = (scheme?: ColorScheme): Theme => {
         paper: colors.background.paper,
       },
     } as PaletteOptions,
-    components: componentStyles as Components<Theme>,
+    components: withCssVars(componentStyles, colors) as Components<Theme>,
   })
 }
 

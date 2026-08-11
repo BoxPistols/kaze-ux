@@ -489,6 +489,55 @@ export const createDarkThemeColors = (
   }
 }
 
+/**
+ * Tailwind / 素の CSS が参照する CSS カスタムプロパティを、
+ * このファイルの色定義から生成する。
+ *
+ * かつては同じ変数が index.css に手打ちされており、しかもアプリごとに
+ * 別の値を持っていた（例: --color-background-paper が Dracula では
+ * #343746、SaaS では #3b3b3d）。色の真のソースが複数あると、MUI 側の
+ * トークンだけ直しても Tailwind 側が古い値のまま残り、同じ画面で
+ * 明暗が食い違う。生成に一本化して構造的に起きないようにする。
+ *
+ * 生成された変数はテーマ適用時に :root へ注入されるため、
+ * テーマ／スキームを切り替えると Tailwind 側も追従する。
+ */
+export const createCssVars = (c: ThemeColors): Record<string, string> => ({
+  '--color-primary': c.primary.main,
+  '--color-primary-foreground': c.primary.contrastText,
+  '--color-primary-light': c.primary.light,
+  '--color-primary-dark': c.primary.dark,
+
+  '--color-secondary': c.secondary.main,
+  '--color-secondary-foreground': c.secondary.contrastText,
+
+  '--color-success': c.success.main,
+  '--color-success-foreground': c.success.contrastText,
+  '--color-success-light': c.success.light,
+  '--color-success-border': c.success.dark,
+
+  '--color-error': c.error.main,
+  '--color-error-foreground': c.error.contrastText,
+  '--color-error-light': c.error.light,
+  '--color-error-border': c.error.dark,
+
+  '--color-warning': c.warning.main,
+  '--color-warning-foreground': c.warning.contrastText,
+  '--color-warning-light': c.warning.light,
+  '--color-warning-border': c.warning.dark,
+
+  '--color-info': c.info.main,
+  '--color-info-foreground': c.info.contrastText,
+  '--color-info-light': c.info.light,
+  '--color-info-border': c.info.dark,
+
+  '--color-background': c.background.default,
+  '--color-background-paper': c.background.paper,
+  '--color-foreground': c.text.primary,
+  '--color-muted': c.text.secondary,
+  '--color-border': c.divider,
+})
+
 /** localStorage キー(Storybook等で使用) */
 export const COLOR_SCHEME_STORAGE_KEY = 'color-scheme'
 /** 後方互換エイリアス */
