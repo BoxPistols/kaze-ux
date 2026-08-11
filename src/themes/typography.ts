@@ -99,6 +99,7 @@ export const fontSizesVariant = {
 
 const fontWeight = {
   bold: 700,
+  semibold: 600,
   medium: 500,
   normal: 400,
 }
@@ -107,9 +108,59 @@ const lineHeight = {
   large: 1.8,
   medium: 1.6,
   small: 1.4,
+  /** display 帯 (24px 以上) の詰めた行送り */
+  tight: 1.2,
+  /** 見出し帯 (16-22px) の行送り */
+  snug: 1.3,
 }
 
+/**
+ * 光学的トラッキング (letter-spacing)
+ *
+ * Inter の公式ダイナミックメトリクス式に基づく。
+ * `tracking(px) = a + b * e^(c * px)`  (a = -0.0223, b = 0.185, c = -0.1745)
+ *
+ * 大きい文字ほど字間を詰め、小さい文字ほど開く。人間の視覚は
+ * 同じ相対字間でも大きい文字ほど「間延び」して見えるため、
+ * 全サイズ一律 0 だと display は散漫に、caption は窮屈に見える。
+ *
+ * 参照: https://rsms.me/inter/dynmetrics/
+ */
+const TRACKING_A = -0.0223
+const TRACKING_B = 0.185
+const TRACKING_C = -0.1745
+
+const trackingFor = (px: number) =>
+  `${(TRACKING_A + TRACKING_B * Math.exp(TRACKING_C * px)).toFixed(4)}em`
+
+/** サイズ (px) → letter-spacing。Storybook のトークン表示でも参照する */
+export const letterSpacingVariant = {
+  displayLarge: trackingFor(32),
+  displayMedium: trackingFor(28),
+  displaySmall: trackingFor(24),
+  xxl: trackingFor(22),
+  xl: trackingFor(20),
+  lg: trackingFor(18),
+  ml: trackingFor(16),
+  md: trackingFor(14),
+  sm: trackingFor(12),
+  xs: trackingFor(10),
+}
+
+/** display 帯 (24px 以上): 太字は大きいほど重く見えるため semibold + 詰めた行送り */
+const display = {
+  fontWeight: fontWeight.semibold,
+  lineHeight: lineHeight.tight,
+}
+
+/** 見出し帯 (16-22px): 本文との対比を保つため bold のまま行送りだけ締める */
 const heading = {
+  fontWeight: fontWeight.bold,
+  lineHeight: lineHeight.snug,
+}
+
+/** 小見出し帯 (14px 以下): 行送りを緩めて可読性を確保 */
+const headingSmall = {
   fontWeight: fontWeight.bold,
   lineHeight: lineHeight.small,
 }
@@ -129,103 +180,129 @@ export const typographyOptions: TypographyOptions = {
     fontWeight: fontWeight.normal,
     textTransform: 'inherit',
     WebkitFontSmoothing: 'antialiased',
-    MozOsxFontSmoothing: 'antialiased',
+    // -moz-osx-font-smoothing は grayscale / auto / unset のみ有効。
+    // antialiased は無効値で描画に反映されないため grayscale に統一
+    MozOsxFontSmoothing: 'grayscale',
     fontSize: pxToRem(baseFontSize),
+    letterSpacing: letterSpacingVariant.md,
   },
   h1: {
     fontSize: fontSizesVariant.xxl,
+    letterSpacing: letterSpacingVariant.xxl,
     ...heading,
   },
   h2: {
     fontSize: fontSizesVariant.xl,
+    letterSpacing: letterSpacingVariant.xl,
     ...heading,
   },
   h3: {
     fontSize: fontSizesVariant.lg,
+    letterSpacing: letterSpacingVariant.lg,
     ...heading,
   },
   h4: {
     fontSize: fontSizesVariant.ml,
+    letterSpacing: letterSpacingVariant.ml,
     ...heading,
   },
   h5: {
     fontSize: fontSizesVariant.md,
-    ...heading,
+    letterSpacing: letterSpacingVariant.md,
+    ...headingSmall,
   },
   h6: {
     fontSize: fontSizesVariant.sm,
-    ...heading,
+    letterSpacing: letterSpacingVariant.sm,
+    ...headingSmall,
   },
   body1: {
     fontSize: fontSizesVariant.md,
     lineHeight: lineHeight.medium,
+    letterSpacing: letterSpacingVariant.md,
   },
   body2: {
     fontSize: fontSizesVariant.sm,
     lineHeight: lineHeight.medium,
+    letterSpacing: letterSpacingVariant.sm,
   },
   subtitle1: {
     fontSize: fontSizesVariant.sm,
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.sm,
   },
   subtitle2: {
     fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.sm,
   },
   caption: {
     fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.sm,
   },
   overline: {
     fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.sm,
     textTransform: 'none',
   },
   button: {
     fontSize: fontSizesVariant.md,
-    fontWeight: fontWeight.normal,
+    fontWeight: fontWeight.medium, // ラベルは本文より一段重く、押せる面に見せる
     lineHeight: lineHeight.medium,
+    letterSpacing: letterSpacingVariant.md,
     textTransform: 'none',
   },
   displayLarge: {
     fontSize: fontSizesVariant.displayLarge,
-    ...heading,
+    letterSpacing: letterSpacingVariant.displayLarge,
+    ...display,
   },
   displayMedium: {
     fontSize: fontSizesVariant.displayMedium,
-    ...heading,
+    letterSpacing: letterSpacingVariant.displayMedium,
+    ...display,
   },
   displaySmall: {
     fontSize: fontSizesVariant.displaySmall,
-    ...heading,
+    letterSpacing: letterSpacingVariant.displaySmall,
+    ...display,
   },
   xxl: {
     fontSize: fontSizesVariant.xxl,
+    letterSpacing: letterSpacingVariant.xxl,
     ...heading,
   },
   xl: {
     fontSize: fontSizesVariant.xl,
+    letterSpacing: letterSpacingVariant.xl,
     ...heading,
   },
   lg: {
     fontSize: fontSizesVariant.lg,
+    letterSpacing: letterSpacingVariant.lg,
     ...heading,
   },
   ml: {
     fontSize: fontSizesVariant.ml,
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.ml,
   },
   md: {
     fontSize: fontSizesVariant.md,
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.md,
   },
   sm: {
     fontSize: fontSizesVariant.sm,
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.sm,
   },
   xs: {
     fontSize: fontSizesVariant.xs,
     lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.xs,
   },
 }
 

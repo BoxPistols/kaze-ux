@@ -171,9 +171,11 @@ const Typographies = () => {
   type TypographyStyle = {
     fontSize: string
     lineHeight: string
+    letterSpacing?: string
+    fontWeight?: number | string
   }
 
-  // フォントサイズとline-heightを取得するためのヘルパー関数
+  // font-size / line-height / letter-spacing / font-weight を表示するヘルパー関数
   const getTypographyStyle = (variant: TypographyVariant) => {
     const style = theme.typography[variant] as TypographyStyle
     const fontSizeRem = style.fontSize
@@ -184,7 +186,9 @@ const Typographies = () => {
       fontSizeRemValue * theme.typography.htmlFontSize
     ).toFixed(0)
     const fontSize = `${fontSizeRem} (${fontSizePx}px相当)`
-    return `font-size: ${fontSize}, line-height: ${lineHeight}`
+    const tracking = style.letterSpacing ?? 'normal'
+    const weight = style.fontWeight ?? 400
+    return `font-size: ${fontSize}, line-height: ${lineHeight}, letter-spacing: ${tracking}, font-weight: ${weight}`
   }
 
   //ページ内リンク用
@@ -257,6 +261,38 @@ const Typographies = () => {
           </Typography>
           <Typography>
             用途が明確なTypographyパターンがあれば、さらに拡張Variantを追加することも推奨します。
+          </Typography>
+        </Stack>
+
+        {/* 光学調整の設計ルール */}
+        <Stack
+          py={3}
+          px={4}
+          mt={2}
+          spacing={1}
+          sx={{
+            backgroundColor:
+              theme.palette.mode === 'light' ? 'grey.200' : 'grey.800',
+          }}>
+          <Typography variant='h4'>光学調整 (Optical adjustment)</Typography>
+          <Typography variant='body2'>
+            全 variant に対して、サイズごとに <code>letter-spacing</code> /{' '}
+            <code>line-height</code> / <code>font-weight</code>{' '}
+            を個別調整しています。同じ相対字間・行送りでも、大きい文字ほど間延びして見え、小さい文字ほど窮屈に見えるためです。
+          </Typography>
+          <Typography variant='body2'>
+            <b>字間</b>: Inter 公式のダイナミックメトリクス式{' '}
+            <code>{'a + b × e^(c × px)'}</code> (a=-0.0223, b=0.185, c=-0.1745)
+            から算出。32px は約 -0.022em、10px は約 +0.010em になります。
+          </Typography>
+          <Typography variant='body2'>
+            <b>行送り</b>: display帯 (24px以上) は 1.2、見出し帯 (16-22px) は
+            1.3、小見出し帯 (14px以下) は 1.4、本文は 1.6。
+          </Typography>
+          <Typography variant='body2'>
+            <b>ウェイト</b>: display帯は 600 (semibold)。大きい文字で 700
+            を使うと視覚的な重量が過剰になるためです。見出し帯以下は 700 (bold)
+            を維持し、本文との対比を確保します。
           </Typography>
         </Stack>
 
