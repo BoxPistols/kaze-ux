@@ -1,5 +1,7 @@
 import { amber, blue, pink } from '@mui/material/colors'
 
+import { bestContrast } from './contrast'
+
 export interface ColorSet {
   main: string
   dark: string
@@ -67,20 +69,50 @@ export interface ThemeColors {
   }
 }
 
+/**
+ * 塗り面に乗せる文字色の候補。
+ *
+ * 墨 (#0A0A0A) は kazeTokens.color.sumi と同値。純白と墨の 2 択にして、
+ * どちらを使うかは実測で決める。
+ */
+const ON_SURFACE_INKS = ['#ffffff', '#0A0A0A'] as const
+
+/**
+ * 色を「前景」として使うときに選ぶべき variant。
+ *
+ * Kaze のブランドティール #0EADB8 は明るい色で、白地に対して 2.73:1 しか
+ * 出ない。塗り面（背景）としては美しく成立するが、アイコン・細線・
+ * テキストなど前景に使うと視認できない。
+ *
+ * そのため用途で variant を使い分ける:
+ * - 塗り面（背景）: `main` + `contrastText`（contrastText は実測で自動決定）
+ * - 前景（アイコン・線・文字）: ライトでは `dark`、ダークでは `main`
+ *
+ * @example
+ * <CheckIcon sx={{ color: foregroundVariant(theme.palette.primary, theme.palette.mode) }} />
+ */
+export const foregroundVariant = (
+  set: Pick<ColorSet, 'main' | 'dark'>,
+  mode: 'light' | 'dark'
+): string => (mode === 'light' ? set.dark : set.main)
+
 const createColorSet = (
   main: string,
   dark: string,
   light: string,
   lighter: string,
   textContrast?: string,
-  contrastText: string = '#ffffff'
+  contrastText?: string
 ): ColorSet => ({
   main,
   dark,
   light,
   lighter,
   textContrast,
-  contrastText,
+  // 白を一律に乗せると明るいブランド色で破綻する
+  // (Kaze のティール #0EADB8 に白は 2.73:1、墨なら 7.69:1)。
+  // 明示指定が無ければ実測でコントラストの高い方を選ぶ
+  contrastText: contrastText ?? bestContrast(main, ON_SURFACE_INKS),
 })
 
 const greyShades: GreyShades = {
@@ -149,55 +181,20 @@ interface SchemeEnv {
 
 /** ライトテーマのベースセマンティックカラー(スキーム共通) */
 const lightSemanticColors = {
-  primary: createColorSet(
-    '#0EADB8',
-    '#0A8A94',
-    '#3CC0C8',
-    '@@lighter@@',
-    undefined,
-    '#ffffff'
-  ),
-  secondary: createColorSet(
-    '#696881',
-    '#424242',
-    '#757575',
-    '@@lighter@@',
-    undefined,
-    '#ffffff'
-  ),
+  primary: createColorSet('#0EADB8', '#0A8A94', '#3CC0C8', '@@lighter@@'),
+  secondary: createColorSet('#696881', '#424242', '#757575', '@@lighter@@'),
   // success/info/warning/error は固有のlighterを持つ（スキーム色で上書きしない）
-  success: createColorSet(
-    '#46ab4a',
-    '#3f7f42',
-    '#6db770',
-    '#e8f5e9',
-    undefined,
-    '#ffffff'
-  ),
-  info: createColorSet(
-    '#1dafc2',
-    '#277781',
-    '#43bfcf',
-    '#e0f7fa',
-    undefined,
-    '#ffffff'
-  ),
+  success: createColorSet('#46ab4a', '#3f7f42', '#6db770', '#e8f5e9'),
+  info: createColorSet('#1dafc2', '#277781', '#43bfcf', '#e0f7fa'),
   warning: createColorSet(
     '#eb8117',
-    '#EF6C00',
+    // 前景用の dark は #EF6C00 だと monotone の paper 上で 2.95:1 と
+    // UI 基準 (3:1) に届かなかったため、緑成分をわずかに落として濃くした
+    '#E56200',
     '#dd9c3c',
-    '#fff3e0',
-    undefined,
-    '#ffffff'
+    '#fff3e0'
   ),
-  error: createColorSet(
-    '#da3737',
-    '#c63535',
-    '#dc4e4e',
-    '#fce4ec',
-    undefined,
-    '#ffffff'
-  ),
+  error: createColorSet('#da3737', '#c63535', '#dc4e4e', '#fce4ec'),
 }
 
 /** ライトスキーム別の環境色 */
@@ -308,14 +305,7 @@ const createLightColors = (): ThemeColors => createLightThemeColors('kaze')
 // ----- M3準拠: ダークテーマの同色相トーナル派生 -----
 // 共通セマンティックカラー（primary以外はスキーム間で共有）
 const darkSemanticBase = {
-  secondary: createColorSet(
-    '#9a9ab4',
-    '#8080a0',
-    '#b4b4c8',
-    '@@lighter@@',
-    undefined,
-    '#ffffff'
-  ),
+  secondary: createColorSet('#9a9ab4', '#8080a0', '#b4b4c8', '@@lighter@@'),
   // success/info/warning/error は固有のlighterを持つ（Alert背景等で使用）
   success: createColorSet(
     '#6dce72',
@@ -387,7 +377,9 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
   dracula: {
     lighter: '#44475A',
     background: { default: '#282A36', paper: '#343746' },
-    text: { primary: '#F8F8F2', secondary: '#6272A4', disabled: '#6272A4' },
+    // secondary は Dracula の comment 色 (#6272A4) を色相・彩度そのままに
+    // 明度だけ上げたもの。元の値は paper 上で 3.03:1 と AA に届かなかった
+    text: { primary: '#F8F8F2', secondary: '#9ca2c4', disabled: '#6272A4' },
     action: {
       hover: 'rgba(248, 248, 242, 0.06)',
       selected: 'rgba(80, 216, 216, 0.15)',
@@ -425,7 +417,8 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
   monotone: {
     lighter: '#2a2c36',
     background: { default: '#1a1a1e', paper: '#26262a' },
-    text: { primary: '#d0d0d4', secondary: '#8a8c94', disabled: '#606068' },
+    // secondary は 4.49:1 で AA にわずかに届かなかったため明度を上げた
+    text: { primary: '#d0d0d4', secondary: '#8c8f97', disabled: '#606068' },
     action: {
       hover: 'rgba(255, 255, 255, 0.04)',
       selected: 'rgba(104, 200, 204, 0.12)',

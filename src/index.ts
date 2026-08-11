@@ -40,6 +40,14 @@ export {
   createLightTheme,
 } from './themes/theme'
 export type { AppTheme } from './types/theme'
+export {
+  CONTRAST_THRESHOLD,
+  bestContrast,
+  contrastLevel,
+  contrastRatio,
+  contrastRatioOf,
+  pickReadable,
+} from './themes/contrast'
 export { createShadows, elevation } from './themes/elevation'
 export type { ElevationLevel } from './themes/elevation'
 export {
@@ -55,6 +63,7 @@ export {
   getGrey,
   createDarkThemeColors,
   createLightThemeColors,
+  foregroundVariant,
   COLOR_SCHEME_STORAGE_KEY,
 } from './themes/colorToken'
 export type {
