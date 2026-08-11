@@ -326,7 +326,10 @@ const createLightColors = (): ThemeColors => createLightThemeColors('kaze')
 // ----- M3準拠: ダークテーマの同色相トーナル派生 -----
 // 共通セマンティックカラー（primary以外はスキーム間で共有）
 const darkSemanticBase = {
-  secondary: createColorSet('#9a9ab4', '#8080a0', '#b4b4c8', '@@lighter@@'),
+  // ダークでは main が前景 (outlined Chip の文字・アイコン) として使われる。
+  // #9a9ab4 は Dracula の paper 上で 4.30:1 と本文 AA に届かないため、
+  // 色相・彩度を保ったまま明度だけ上げた
+  secondary: createColorSet('#a0a0b8', '#8080a0', '#b4b4c8', '@@lighter@@'),
   // success/info/warning/error は固有のlighterを持つ（Alert背景等で使用）
   success: createColorSet(
     '#6dce72',
@@ -353,7 +356,8 @@ const darkSemanticBase = {
     '#2d1f0d'
   ),
   error: createColorSet(
-    '#ef6b6b',
+    // Dracula の paper 上で 3.92:1 だったため明度を上げた
+    '#f18282',
     '#e05050',
     '#f59090',
     '#2d1515',

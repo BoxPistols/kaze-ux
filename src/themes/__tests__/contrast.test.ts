@@ -204,3 +204,30 @@ describe('前景用スロット textContrast (全 6 テーマ)', () => {
     })
   }
 })
+
+describe('ダークでは main が前景として使われる', () => {
+  const semantic = [
+    'primary',
+    'secondary',
+    'success',
+    'info',
+    'warning',
+    'error',
+  ] as const
+
+  // ダークテーマの outlined Chip・アイコン・強調テキストは main を
+  // そのまま文字色に使う。塗り面用の色というだけでなく前景でもあるため、
+  // paper の上で本文 AA を満たしていなければならない
+  for (const [name, c] of allThemes) {
+    if (!name.startsWith('dark')) continue
+    it(`${name}: main が paper 上で本文 AA を満たす`, () => {
+      for (const key of semantic) {
+        const ratio = contrastRatio(c[key].main, c.background.paper)
+        expect(
+          ratio,
+          `${name} ${key}.main (${c[key].main}) on paper = ${ratio.toFixed(2)}`
+        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+      }
+    })
+  }
+})
