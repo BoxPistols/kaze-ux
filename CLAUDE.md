@@ -104,7 +104,25 @@ This project uses both Japanese and English:
 - `<Grid item xs={12}>` → `<Grid size={{ xs: 12 }}>`
 - ハードコード色値 → トークン参照 (`primary.main`)
 - `window.confirm()` → `ConfirmDialog` コンポーネント
+- **アプリから MUI の UI 部品を直 import**（DS に同等品があるもの）→ DS を使う
 - 詳細: `foundations/prohibited.md`
+
+### DS ファースト（アプリを作るとき）
+
+プロダクトの UI は Storybook に定義された DS コンポーネントで組む。
+`apps/*/src` と `src/pages` では、**DS に同等品がある MUI 部品の直 import を
+ESLint が error で止める**（`TextField` → `CustomTextField` 等）。
+
+`Box` / `Grid` / `Stack` / `Typography` のようなレイアウト原始要素は DS に
+同等品が無いため対象外で、直接使ってよい。
+
+対応表の単一ソースは `scripts/ds-equivalents.mjs`。ESLint と計測が同じ表を
+見るので、DS に部品を足したらここだけ更新すればよい。
+
+```bash
+pnpm ds:adoption          # 準拠率を測る
+pnpm ds:adoption --strict # 未準拠があれば exit 1
+```
 
 ### 機械可読データ
 

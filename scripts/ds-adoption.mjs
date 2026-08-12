@@ -17,63 +17,9 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { DS_COUNTED, DS_EQUIVALENT } from './ds-equivalents.mjs'
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-
-/**
- * MUI の部品と DS の同等品の対応。**両方向を機械可読にする。**
- *
- * - `mui` を MUI から直接 import していたら未準拠（分母の一方）
- * - `ds` を DS から import していたら準拠（分子）
- *
- * **分子は「対応表に載っている DS 部品」だけを数える。** `@/components`
- * から来たもの全部を数えると、MUI に同等品が無い部品（PageHeader /
- * SectionTitle / KazeLogo 等）まで分子に入り、準拠率を過大に見せる。
- *
- * DS 側に部品を足したら、ここにも足す。
- */
-export const EQUIVALENTS = [
-  { mui: ['TextField'], ds: ['CustomTextField'] },
-  { mui: ['Select'], ds: ['CustomSelect'] },
-  { mui: ['Autocomplete'], ds: ['MultiSelectAutocomplete'] },
-  { mui: ['Chip'], ds: ['CustomChip', 'ConnectionStatusChip'] },
-  { mui: ['Button'], ds: ['Button', 'LoadingButton', 'SaveButton'] },
-  { mui: ['IconButton'], ds: ['IconButton'] },
-  {
-    mui: ['Card', 'CardContent', 'CardHeader', 'CardActions'],
-    ds: [
-      'Card',
-      'CardContent',
-      'CardHeader',
-      'CardTitle',
-      'CardDescription',
-      'CardFooter',
-      'ServiceCard',
-    ],
-  },
-  {
-    mui: ['Table', 'TableContainer'],
-    ds: ['CustomTable', 'ResourceTable', 'TableToolbar'],
-  },
-  { mui: ['Tooltip'], ds: ['CustomTooltip'] },
-  { mui: ['Avatar'], ds: ['UserAvatar'] },
-  { mui: ['Accordion'], ds: ['CustomAccordion'] },
-  { mui: ['Dialog'], ds: ['ConfirmDialog', 'FormDialog'] },
-  { mui: ['Pagination'], ds: ['Pagination'] },
-  { mui: ['Fab'], ds: ['Fab'] },
-  { mui: ['Menu'], ds: ['ActionMenu'] },
-  { mui: ['ToggleButton'], ds: ['ToggleButton'] },
-  { mui: ['ToggleButtonGroup'], ds: ['ToggleButtonGroup'] },
-  { mui: ['ButtonGroup'], ds: ['ButtonGroup'] },
-  { mui: ['Snackbar', 'Alert'], ds: ['CustomToaster'] },
-]
-
-/** MUI 名 → 置き換え先の表示（未準拠の報告に使う） */
-export const DS_EQUIVALENT = Object.fromEntries(
-  EQUIVALENTS.flatMap((e) => e.mui.map((m) => [m, e.ds.join(' / ')]))
-)
-
-/** 分子に数える DS 部品名 */
-const DS_COUNTED = new Set(EQUIVALENTS.flatMap((e) => e.ds))
 
 const TARGETS = [
   ['saas-dashboard', 'apps/saas-dashboard/src'],
