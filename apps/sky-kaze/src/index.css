@@ -134,12 +134,23 @@ html[data-theme-transitioning] body {
   font-size: 15px !important;
 }
 
+/* 円の色を変えるなら、中の番号も一緒に決める。
+   既定の白は #ea580c に対して 3.56:1 で 12px の数字には届かない */
 .MuiStepIcon-root.Mui-completed {
   color: #059669 !important;
 }
 
+.MuiStepIcon-root.Mui-completed .MuiStepIcon-text {
+  /* 白は #059669 に対して 3.77:1。墨なら 5.25:1 */
+  fill: #0a0a0a !important;
+}
+
 .MuiStepIcon-root.Mui-active {
   color: #ea580c !important;
+}
+
+.MuiStepIcon-root.Mui-active .MuiStepIcon-text {
+  fill: #0a0a0a !important;
 }
 
 /* テーブルのスムーズなホバー */

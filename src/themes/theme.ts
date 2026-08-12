@@ -13,11 +13,13 @@ import {
   muiBreakpoints,
 } from './breakpoints'
 import {
+  ON_SURFACE_INKS,
   colorData,
   createCssVars,
   createDarkThemeColors,
   createLightThemeColors,
 } from './colorToken'
+import { bestContrast } from './contrast'
 import {
   createDarkSchemeElevationOverrides,
   createShadows,
@@ -437,6 +439,25 @@ const componentStyles = {
           paddingRight: 6,
         },
       },
+    },
+  },
+  // Stepper のステップ番号
+  MuiStepIcon: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        // 番号は既定で白。未到達ステップの円は grey.400 なので 1.88:1 まで
+        // 落ちる。円の色は MUI 既定のまま（控えめに見せる意図がある）、
+        // 番号側を実測で決める
+        '& .MuiStepIcon-text': {
+          fill: bestContrast(colorData.grey[400], ON_SURFACE_INKS),
+        },
+        '&.Mui-active .MuiStepIcon-text': {
+          fill: theme.palette.primary.contrastText,
+        },
+        '&.Mui-completed .MuiStepIcon-text': {
+          fill: theme.palette.success.contrastText,
+        },
+      }),
     },
   },
   // Table - モダンでクリーンなスタイル
