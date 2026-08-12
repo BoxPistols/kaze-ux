@@ -334,8 +334,7 @@ function TouchTargetsShowcase() {
       label: 'クリティカル操作',
       size: 56,
       usage: '安全上重要な操作のタッチターゲット',
-      examples:
-        '緊急停止、重要な操作の確認、配送中止などのクリティカル制御',
+      examples: '緊急停止、重要な操作の確認、配送中止などのクリティカル制御',
       color: 'error',
     },
   ]
