@@ -22,7 +22,7 @@ import {
 // requiresUserKey: 共有プールで使用不可（高コストモデル）
 const REQUIRES_USER_KEY_MODELS = new Set<string>(['gpt-5.4'])
 
-const DEFAULT_MODEL = 'gpt-5.4-nano'
+const DEFAULT_MODEL = 'gpt-5.6-luna'
 
 // ---------------------------------------------------------------------------
 // リクエスト/レスポンス型

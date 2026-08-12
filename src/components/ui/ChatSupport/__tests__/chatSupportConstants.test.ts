@@ -204,14 +204,14 @@ describe('normalizeChatConfig', () => {
   it('有効な入力をそのまま返す', () => {
     const input = {
       apiKey: 'sk-test',
-      model: 'gpt-5.4-nano',
+      model: 'gpt-5.6-luna',
       uiMode: 'sidebar',
       sidebarWidth: 500,
       shortcuts: createDefaultShortcuts(),
     }
     const result = normalizeChatConfig(input)
     expect(result.apiKey).toBe('sk-test')
-    expect(result.model).toBe('gpt-5.4-nano')
+    expect(result.model).toBe('gpt-5.6-luna')
     expect(result.uiMode).toBe('sidebar')
     expect(result.sidebarWidth).toBe(500)
   })
