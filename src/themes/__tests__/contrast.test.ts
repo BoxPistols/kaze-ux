@@ -154,7 +154,7 @@ describe('セマンティックカラーの塗り面 (全 6 テーマ)', () => {
     })
 
     it(`${name}: 前景に使う variant が UI 基準 (3:1) を満たす`, () => {
-      // ブランドティールのような明るい色は塗り面としては成立するが、
+      // info (#1dafc2) のような明るい色は塗り面としては成立するが、
       // アイコン・細線に使うと見えない。用途で variant を使い分ける
       const mode = name.startsWith('dark') ? 'dark' : 'light'
       for (const key of semantic) {

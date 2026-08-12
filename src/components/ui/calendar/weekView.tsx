@@ -29,16 +29,26 @@ export interface WeekViewProps {
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i) // 0:00 - 23:00
 
-const getTypeColor = (type: string) => {
+type ScheduleTone = 'primary' | 'warning' | 'success' | 'secondary'
+
+/**
+ * 種別をセマンティック色に対応づける。
+ *
+ * 色を直に書くとテーマ切替に追随せず、文字色との対比も保証できない。
+ * 実際、旧実装の警告色に白文字は 3.11:1、既定色では 2.68:1 しかなく、
+ * 10px の文字に必要な 4.5:1 を割っていた。tone を返して
+ * `${tone}.main` / `${tone}.contrastText` の組で使う
+ */
+const getTypeTone = (type: string): ScheduleTone => {
   switch (type) {
     case '点検':
-      return '#1976d2' // primary
+      return 'primary'
     case '整備':
-      return '#ed6c02' // warning
+      return 'warning'
     case '配送':
-      return '#2e7d32' // success
+      return 'success'
     default:
-      return '#9e9e9e' // grey
+      return 'secondary'
   }
 }
 
@@ -195,8 +205,8 @@ export const WeekView = ({
                           left: scheduleIndex * 4 + 2,
                           right: 2,
                           height: `calc(${durationHours * 60}px - 4px)`,
-                          bgcolor: getTypeColor(schedule.type),
-                          color: 'white',
+                          bgcolor: `${getTypeTone(schedule.type)}.main`,
+                          color: `${getTypeTone(schedule.type)}.contrastText`,
                           borderRadius: 0.5,
                           p: 0.5,
                           fontSize: '11px',
