@@ -20,37 +20,60 @@ import { fileURLToPath } from 'node:url'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 /**
- * MUI の部品 → DS の同等品。
+ * MUI の部品と DS の同等品の対応。**両方向を機械可読にする。**
  *
- * ここに載っているものを MUI から直接 import していたら未準拠。
+ * - `mui` を MUI から直接 import していたら未準拠（分母の一方）
+ * - `ds` を DS から import していたら準拠（分子）
+ *
+ * **分子は「対応表に載っている DS 部品」だけを数える。** `@/components`
+ * から来たもの全部を数えると、MUI に同等品が無い部品（PageHeader /
+ * SectionTitle / KazeLogo 等）まで分子に入り、準拠率を過大に見せる。
+ *
  * DS 側に部品を足したら、ここにも足す。
  */
-export const DS_EQUIVALENT = {
-  TextField: 'CustomTextField',
-  Select: 'CustomSelect',
-  Autocomplete: 'MultiSelectAutocomplete',
-  Chip: 'CustomChip',
-  Button: 'Button (CVA) / LoadingButton / SaveButton',
-  IconButton: 'IconButton (DS)',
-  Card: 'Card (CVA) / ServiceCard',
-  CardContent: 'CardContent (CVA)',
-  CardHeader: 'CardHeader (CVA)',
-  CardActions: 'Card (CVA)',
-  Table: 'CustomTable / ResourceTable',
-  TableContainer: 'CustomTable / ResourceTable',
-  Tooltip: 'CustomTooltip',
-  Avatar: 'UserAvatar',
-  Accordion: 'CustomAccordion',
-  Dialog: 'ConfirmDialog / FormDialog',
-  Pagination: 'Pagination (DS)',
-  Fab: 'Fab (DS)',
-  Menu: 'ActionMenu',
-  ToggleButton: 'ToggleButton (DS)',
-  ToggleButtonGroup: 'ToggleButtonGroup (DS)',
-  ButtonGroup: 'ButtonGroup (DS)',
-  Snackbar: 'CustomToaster',
-  Alert: 'CustomToaster',
-}
+export const EQUIVALENTS = [
+  { mui: ['TextField'], ds: ['CustomTextField'] },
+  { mui: ['Select'], ds: ['CustomSelect'] },
+  { mui: ['Autocomplete'], ds: ['MultiSelectAutocomplete'] },
+  { mui: ['Chip'], ds: ['CustomChip', 'ConnectionStatusChip'] },
+  { mui: ['Button'], ds: ['Button', 'LoadingButton', 'SaveButton'] },
+  { mui: ['IconButton'], ds: ['IconButton'] },
+  {
+    mui: ['Card', 'CardContent', 'CardHeader', 'CardActions'],
+    ds: [
+      'Card',
+      'CardContent',
+      'CardHeader',
+      'CardTitle',
+      'CardDescription',
+      'CardFooter',
+      'ServiceCard',
+    ],
+  },
+  {
+    mui: ['Table', 'TableContainer'],
+    ds: ['CustomTable', 'ResourceTable', 'TableToolbar'],
+  },
+  { mui: ['Tooltip'], ds: ['CustomTooltip'] },
+  { mui: ['Avatar'], ds: ['UserAvatar'] },
+  { mui: ['Accordion'], ds: ['CustomAccordion'] },
+  { mui: ['Dialog'], ds: ['ConfirmDialog', 'FormDialog'] },
+  { mui: ['Pagination'], ds: ['Pagination'] },
+  { mui: ['Fab'], ds: ['Fab'] },
+  { mui: ['Menu'], ds: ['ActionMenu'] },
+  { mui: ['ToggleButton'], ds: ['ToggleButton'] },
+  { mui: ['ToggleButtonGroup'], ds: ['ToggleButtonGroup'] },
+  { mui: ['ButtonGroup'], ds: ['ButtonGroup'] },
+  { mui: ['Snackbar', 'Alert'], ds: ['CustomToaster'] },
+]
+
+/** MUI 名 → 置き換え先の表示（未準拠の報告に使う） */
+export const DS_EQUIVALENT = Object.fromEntries(
+  EQUIVALENTS.flatMap((e) => e.mui.map((m) => [m, e.ds.join(' / ')]))
+)
+
+/** 分子に数える DS 部品名 */
+const DS_COUNTED = new Set(EQUIVALENTS.flatMap((e) => e.ds))
 
 const TARGETS = [
   ['saas-dashboard', 'apps/saas-dashboard/src'],
@@ -123,6 +146,8 @@ const analyze = (dir) => {
   const bypass = new Map()
   const bySite = []
   let dsUse = 0
+  // MUI に同等品が無い DS 部品。分子には数えないが、情報としては出す
+  const dsOnly = new Map()
   for (const file of walk(join(ROOT, dir))) {
     const src = readFileSync(file, 'utf8')
     const { map, typeOnly } = parseImports(src)
@@ -133,7 +158,8 @@ const analyze = (dir) => {
       const mod = map.get(name)
       if (!mod) continue
       if (isDs(mod)) {
-        dsUse++
+        if (DS_COUNTED.has(name)) dsUse++
+        else dsOnly.set(name, (dsOnly.get(name) ?? 0) + 1)
       } else if (isMui(mod) && DS_EQUIVALENT[name]) {
         bypass.set(name, (bypass.get(name) ?? 0) + 1)
         const line = src.slice(0, m.index).split('\n').length
@@ -146,7 +172,7 @@ const analyze = (dir) => {
       }
     }
   }
-  return { dsUse, bypass, bySite }
+  return { dsUse, bypass, bySite, dsOnly }
 }
 
 const strict = process.argv.includes('--strict')
@@ -173,6 +199,15 @@ const total = totalDs + totalBypass
 console.log(
   '\n  合計:',
   `DS ${totalDs} / MUI 直 ${totalBypass} → ${total ? ((totalDs / total) * 100).toFixed(1) : '—'}%`
+)
+
+const dsOnlyTotal = rows.reduce(
+  (n, r) => n + [...r.dsOnly.values()].reduce((a, c) => a + c, 0),
+  0
+)
+console.log(
+  `  参考: MUI に同等品が無い DS 部品の利用 ${dsOnlyTotal} 箇所`,
+  '（PageHeader / SectionTitle / KazeLogo 等。分子には数えない）'
 )
 
 const sites = rows.flatMap((r) => r.bySite)

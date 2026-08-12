@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 /// <reference path="./src/test/vitest-matchers.d.ts" />
-import { defineConfig } from 'vitest/config'
+import { coverageConfigDefaults, defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
@@ -39,17 +39,17 @@ export default defineConfig({
       // 0% として計上され、実態 27.5% が 8.5% と表示されていた。
       // 末尾スラッシュだけの 'dist/' はルート直下しか外せず、
       // apps/*/dist が残るので ** で書く。
+      // coverage.exclude は既定値を「置き換える」ので、自前の配列だけを
+      // 書くと vitest が元から外していたもの（テストファイル、*.d.ts、
+      // 各種 config 等）まで対象に戻る。既定を展開したうえで足す。
       exclude: [
-        '**/node_modules/**',
         '**/dist/**',
-        'coverage/**',
         'storybook-static/**',
         'gh-pages/**',
         'figma-plugin/code.js',
         'src/test/',
         'src/**/*.stories.tsx',
-        'src/**/*.d.ts',
-        '**/*.config.{js,ts}',
+        ...coverageConfigDefaults.exclude,
       ],
     },
   },
