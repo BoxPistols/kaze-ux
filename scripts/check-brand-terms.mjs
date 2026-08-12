@@ -109,8 +109,17 @@ const EXCLUDED_PATHS = [
 /** 同じ行にこれがあれば意図的な記述として通す */
 const ALLOW_MARKER = 'brand-check-allow'
 
+/**
+ * 追跡済みに加えて未追跡（.gitignore 対象を除く）も見る。
+ *
+ * `git ls-files` だけだと、これから足すファイルが手元では検査されず、
+ * 追跡された瞬間に CI だけが落ちる。実際にこの検査を入れた PR で、
+ * まだ未追跡だった説明文書を手元で見逃して CI で落ちた。
+ */
 const listFiles = () =>
-  execSync('git ls-files', { encoding: 'utf8' })
+  execSync('git ls-files --cached --others --exclude-standard', {
+    encoding: 'utf8',
+  })
     .split('\n')
     .filter(Boolean)
     .filter((f) => TARGET_EXT.test(f))
