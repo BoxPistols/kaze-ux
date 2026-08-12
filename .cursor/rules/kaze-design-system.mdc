@@ -19,8 +19,9 @@ globs: ["src/**/*.tsx", "src/**/*.ts", "apps/**/*.tsx"]
 - スペーシング: `spacing(2)` = 8px (4px 基準)
 
 ## ブランドカラー
-- primary: #0EADB8 (ティール)
-- ダーク/ライト全スキーム統一
+- primary: #0057B8 (ブルー) — 単一ソースは `colorToken.ts` の `BRAND_BLUE`
+- ロゴのシンボルとテーマの primary は同じ値を共有する
+- ダークは地に対して明度を上げた青（スキームごとに別値）
 
 ## 禁止パターン
 - window.confirm / window.alert → ConfirmDialog 使用

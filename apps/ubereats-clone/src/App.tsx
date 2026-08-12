@@ -38,12 +38,12 @@ import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
 import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
 import { ProfilePage } from '~/pages/ProfilePage'
 import { RestaurantPage } from '~/pages/RestaurantPage'
-import { UE_GREEN, UE_GREEN_LIGHT } from '~/theme/colors'
+import { UE_GREEN, UE_GREEN_LIGHT, ueWordmarkColor } from '~/theme/colors'
 import { ueDarkTheme, ueLightTheme } from '~/theme/ueTheme'
 
 type ThemeMode = 'light' | 'dark'
 
-// hookUseTheme ではなく独自管理: UberEats Clone は専用テーマ (ueLightTheme/ueDarkTheme) を使用し、
+// hookUseTheme ではなく独自管理: KazeEats は専用テーマ (ueLightTheme/ueDarkTheme) を使用し、
 // localStorage キーも 'ubereats-theme' で他アプリと分離するため。
 // SaaS Dashboard は共通 ThemeProvider + CssVarsProvider を利用するが、
 // 本アプリは UE ブランドカラー専用のため独立した ThemeProvider/useState で管理する。
@@ -191,7 +191,13 @@ const AppContent = ({
                   lineHeight: 1,
                 }}>
                 Kaze
-                <Box component='span' sx={{ color: UE_GREEN }}>
+                <Box
+                  component='span'
+                  // ブランドの緑をそのまま白地に置くと 2.38:1。
+                  // 面はモードで変わるので、置く面を渡して都度決める
+                  sx={(t) => ({
+                    color: ueWordmarkColor(t.palette.background.paper),
+                  })}>
                   Eats
                 </Box>
               </Typography>

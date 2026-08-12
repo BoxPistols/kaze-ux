@@ -369,7 +369,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#0EADB8', light: '#3CC0C8', dark: '#0A8A94' },
+    primary: { main: '#0057B8', light: '#3D82D2', dark: '#00458F' },
     secondary: { main: '#696881' },
     error: { main: '#da3737' },
     background: { default: '#f8fafc', paper: '#ffffff' },

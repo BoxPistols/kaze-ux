@@ -62,15 +62,11 @@ const RadioDemo = () => {
       <RadioGroup value={value} onChange={(e) => setValue(e.target.value)}>
         <FormControlLabel value='auto' control={<Radio />} label='自動実行' />
         <FormControlLabel value='manual' control={<Radio />} label='手動操作' />
-        <FormControlLabel
-          value='hover'
-          control={<Radio />}
-          label='ホバリング'
-        />
+        <FormControlLabel value='standby' control={<Radio />} label='待機' />
         <FormControlLabel
           value='emergency'
           control={<Radio disabled />}
-          label='緊急着陸（無効）'
+          label='緊急停止（無効）'
         />
       </RadioGroup>
     </FormControl>

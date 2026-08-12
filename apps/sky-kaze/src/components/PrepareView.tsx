@@ -32,6 +32,7 @@ import {
 import { CustomChip } from '@/components/ui/chip'
 import { FormDialog } from '@/components/ui/dialog'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
+import { motionOf } from '@/themes/motion'
 
 import {
   SHIPMENTS,
@@ -43,7 +44,12 @@ import {
   type Shipment,
 } from '~/data/logistics'
 import { useSimulation } from '~/data/simulation'
-import { LOGI_ORANGE } from '~/theme/colors'
+import {
+  LOGI_ORANGE,
+  logiForeground,
+  logiForegroundLarge,
+} from '~/theme/colors'
+import { readableOnTint } from '~/utils/readableStatusColor'
 
 interface CheckItem {
   id: string
@@ -226,7 +232,10 @@ export const PrepareView = () => {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
                       fontSize: '36px',
-                      color: kpi.color,
+                      // 36px は WCAG の「大きい文字」。ブランド色のまま白地に
+                      // 置くと 2.15〜2.8:1 しか出ないため、明度だけ寄せる
+                      color: (t) =>
+                        logiForegroundLarge(kpi.color, t.palette.mode),
                       lineHeight: 1,
                       mb: 1.5,
                     }}>
@@ -390,7 +399,8 @@ export const PrepareView = () => {
                           fontFamily: "'JetBrains Mono', monospace",
                           fontWeight: 700,
                           fontSize: '14px',
-                          color: LOGI_ORANGE,
+                          color: (t) =>
+                            logiForeground(LOGI_ORANGE, t.palette.mode),
                         }}>
                         {s.trackingNo}
                       </Typography>
@@ -428,7 +438,13 @@ export const PrepareView = () => {
                       size='small'
                       sx={{
                         bgcolor: alpha(STATUS_COLORS[s.status], 0.12),
-                        color: STATUS_COLORS[s.status],
+                        // Chip は面に自身の色を 12% 敷く。パネル基準で測ると
+                        // その分ずれるので、実際に描かれる面を合成して測る
+                        color: (theme) =>
+                          readableOnTint(
+                            STATUS_COLORS[s.status],
+                            theme.palette.background.paper
+                          ),
                         fontWeight: 600,
                         justifySelf: 'start',
                       }}
@@ -506,7 +522,7 @@ export const PrepareView = () => {
                             cursor: 'pointer',
                             borderTop: '1px solid',
                             borderColor: 'divider',
-                            transition: 'background 0.2s ease',
+                            transition: motionOf(['background-color'], 'short'),
                             bgcolor: (theme) =>
                               done
                                 ? alpha(
@@ -526,7 +542,10 @@ export const PrepareView = () => {
                           }}>
                           {done ? (
                             <CheckCircleIcon
-                              sx={{ fontSize: 22, color: 'success.main' }}
+                              sx={{
+                                fontSize: 22,
+                                color: 'success.textContrast',
+                              }}
                             />
                           ) : (
                             <RadioButtonUncheckedIcon
@@ -652,7 +671,11 @@ export const PrepareView = () => {
                   sx={{
                     color: allChecked ? '#22C55E' : LOGI_ORANGE,
                     '& .MuiCircularProgress-circle': {
-                      transition: 'stroke-dashoffset 0.4s ease',
+                      transition: motionOf(
+                        ['stroke-dashoffset'],
+                        'scene',
+                        'enter'
+                      ),
                     },
                   }}
                 />
@@ -774,9 +797,7 @@ export const PrepareView = () => {
                 setNewShipment((p) => ({
                   ...p,
                   priority: e.target.value as
-                    | 'standard'
-                    | 'express'
-                    | 'same_day',
+                    'standard' | 'express' | 'same_day',
                 }))
               }>
               <MenuItem value='standard'>標準</MenuItem>

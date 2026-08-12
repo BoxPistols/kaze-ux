@@ -211,7 +211,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'success.main' }}>
+                      sx={{ fontWeight: 600, color: 'success.textContrast' }}>
                       ¥{(paidInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -234,7 +234,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'warning.main' }}>
+                      sx={{ fontWeight: 600, color: 'warning.textContrast' }}>
                       ¥{(pendingInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -257,7 +257,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'error.main' }}>
+                      sx={{ fontWeight: 600, color: 'error.textContrast' }}>
                       ¥{(overdueInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -287,12 +287,12 @@ export const ReportsPage = () => {
                 <CardTitle>Revenue Trend</CardTitle>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <TrendingUpIcon
-                    sx={{ fontSize: 18, color: 'success.main' }}
+                    sx={{ fontSize: 18, color: 'success.textContrast' }}
                     aria-hidden='true'
                   />
                   <Typography
                     variant='caption'
-                    sx={{ color: 'success.main', fontWeight: 600 }}>
+                    sx={{ color: 'success.textContrast', fontWeight: 600 }}>
                     +12.5% vs last quarter
                   </Typography>
                 </Box>

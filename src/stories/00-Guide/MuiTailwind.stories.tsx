@@ -16,6 +16,8 @@ import {
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
+import { motionOf } from '@/themes/motion'
+
 import { CodeBlock } from '../_shared/CodeBlock'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -979,7 +981,7 @@ const SxPlayground = ({
         sx={{
           p: padding,
           borderRadius,
-          transition: 'all 0.3s ease',
+          transition: motionOf(['border-radius', 'background-color'], 'macro'),
         }}>
         <Box
           sx={{
@@ -988,7 +990,10 @@ const SxPlayground = ({
             p: 3,
             borderRadius: Math.max(0, borderRadius - 0.5),
             textAlign: 'center',
-            transition: 'all 0.3s ease',
+            transition: motionOf(
+              ['border-radius', 'background-color', 'color'],
+              'macro'
+            ),
           }}>
           <Typography variant='h6' sx={{ fontWeight: 700 }}>
             {bgColor.split('.')[0]}

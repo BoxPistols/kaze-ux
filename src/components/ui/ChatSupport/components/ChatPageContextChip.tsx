@@ -1,7 +1,7 @@
 // ページ解説トリガー（スティッキーチップ）
 // storyGuide が存在する時だけ表示し、クリックでページ解説をチャットに展開する
 
-import { Box, Chip, useTheme } from '@mui/material'
+import { alpha, Box, Chip, useTheme } from '@mui/material'
 import { Info } from 'lucide-react'
 
 import type { CurrentStoryContext } from '../chatSupportTypes'
@@ -29,8 +29,8 @@ export const ChatPageContextChip = ({
         py: 0.75,
         bgcolor:
           theme.palette.mode === 'dark'
-            ? 'rgba(14,173,184,0.3)'
-            : 'rgba(63,81,181,0.08)',
+            ? alpha(theme.palette.primary.main, 0.3)
+            : alpha(theme.palette.primary.main, 0.08),
         borderBottom: '1px solid',
         borderColor: 'divider',
         position: 'sticky',

@@ -63,7 +63,7 @@ interface StatCardItem {
 const statCards: StatCardItem[] = [
   {
     icon: <AssignmentIcon />,
-    label: '稼働機体数',
+    label: '稼働車両数',
     value: '12',
     change: '先月比 +2',
     trend: 'positive',
@@ -300,10 +300,10 @@ export const ActivityFeed: StoryObj = {
 }
 
 // ---------------------------------------------------------------------------
-// 機体概況 (Fleet Overview)
+// 車両概況 (Fleet Overview)
 // ---------------------------------------------------------------------------
 
-/** 機体ステータス1件のデータ型 */
+/** 車両ステータス1件のデータ型 */
 interface DeviceRow {
   name: string
   model: string
@@ -347,13 +347,13 @@ interface ScheduleItem {
 const schedules: ScheduleItem[] = [
   {
     time: '09:00',
-    route: '東京湾岸 - 調査タスク',
+    route: '東京湾岸 - 定期便',
     status: '完了',
     statusColor: 'success',
   },
   {
     time: '11:30',
-    route: '横浜港 - 点検タスク',
+    route: '横浜港 - 集荷便',
     status: '進行中',
     statusColor: 'info',
   },
@@ -374,18 +374,18 @@ const schedules: ScheduleItem[] = [
 const FleetOverviewContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
     <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
-      機体概況
+      車両概況
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
-      左カードに機体稼働状況、右カードに今日のスケジュールを並列配置。
+      左カードに車両稼働状況、右カードに今日のスケジュールを並列配置。
     </Typography>
 
     <Grid container spacing={3}>
-      {/* --- 機体稼働状況 --- */}
+      {/* --- 車両稼働状況 --- */}
       <Grid size={{ xs: 12, md: 7 }}>
         <Card sx={{ height: '100%' }}>
           <CardHeader
-            title='機体稼働状況'
+            title='車両稼働状況'
             action={
               <IconButton size='small'>
                 <MoreVertIcon />
@@ -396,7 +396,7 @@ const FleetOverviewContent = () => (
             <Stack spacing={2.5}>
               {devices.map((device) => (
                 <Box key={device.name}>
-                  {/* 上段: 機体名 / モデル / ステータス */}
+                  {/* 上段: 車両名 / モデル / ステータス */}
                   <Stack
                     direction='row'
                     alignItems='center'
@@ -520,6 +520,6 @@ const FleetOverviewContent = () => (
 )
 
 export const FleetOverview: StoryObj = {
-  name: '機体概況',
+  name: '車両概況',
   render: () => <FleetOverviewContent />,
 }

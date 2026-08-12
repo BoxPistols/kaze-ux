@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -523,7 +523,7 @@ const productExtensions = [
   },
   {
     name: 'SaaS Dashboard',
-    color: '#0EADB8',
+    color: 'primary.textContrast',
     description: '業務管理ダッシュボード',
     items: [
       {
@@ -625,13 +625,16 @@ const ApplicationGuideContent = () => {
           borderRadius: 4,
           position: 'relative',
           overflow: 'hidden',
-          background: isDark
-            ? 'linear-gradient(160deg, #1a2a2e 0%, #0f1a1c 40%, #131f22 100%)'
-            : 'linear-gradient(160deg, #edf8f9 0%, #e0f4f5 40%, #f0fafb 100%)',
+          // ブランド色を薄く敷く。直値で置くと primary を変えたとき
+          // ここだけティールのまま取り残される（実際に起きた）
+          background: (t) =>
+            `linear-gradient(160deg, ${alpha(t.palette.primary.main, isDark ? 0.16 : 0.08)} 0%, ${alpha(
+              t.palette.primary.main,
+              isDark ? 0.06 : 0.03
+            )} 40%, ${alpha(t.palette.primary.main, isDark ? 0.1 : 0.05)} 100%)`,
           border: 1,
-          borderColor: isDark
-            ? 'rgba(14,173,184,0.15)'
-            : 'rgba(14,173,184,0.1)',
+          borderColor: (t) =>
+            alpha(t.palette.primary.main, isDark ? 0.15 : 0.1),
         }}>
         <Box
           sx={{
@@ -704,7 +707,7 @@ const ApplicationGuideContent = () => {
             },
             {
               name: 'SaaS Dashboard',
-              color: '#0EADB8',
+              color: 'primary.textContrast',
               desc: '業務管理ダッシュボード',
               path: 'apps/saas-dashboard/',
             },
@@ -966,7 +969,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
 // 各プロダクトのブランドカラー:
 // KazeLogistics: LOGI_ORANGE (#E87A1E) + LOGI_NAVY
 // KazeEats:      UE_GREEN   (#06C167)
-// SaaS Dashboard: primary.main (#0EADB8) をそのまま使用`}
+// SaaS Dashboard: primary.main をそのまま使用`}
         </CodeBlock>
 
         <Grid container spacing={2.5}>
@@ -983,7 +986,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
             },
             {
               name: 'SaaS Dashboard',
-              color: '#0EADB8',
+              color: 'primary.textContrast',
               method: '共通 ThemeProvider をそのまま使用',
             },
           ].map((t) => (

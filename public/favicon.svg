@@ -1,20 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Kaze Design System Favicon -->
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0EADB8"/>
-      <stop offset="100%" stop-color="#0A8A94"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="6" fill="url(#g)"/>
-  <text
-    x="50%"
-    y="50%"
-    dominant-baseline="central"
-    text-anchor="middle"
-    fill="white"
-    font-family="Inter, system-ui, sans-serif"
-    font-size="19"
-    font-weight="700"
-  >K</text>
+  <!--
+    Kaze Design System — 水平の帯を上下から半円が挟む。半円を逆側にずらし非対称の均衡をつくる。
+    矩形と円のみで構成。角丸・影・グラデーションを持たない。
+    レギュレーション: src/components/ui/logo/logoRules.ts
+  -->
+  <rect width="32" height="32" fill="#0057B8"/>
+  <g fill="#FFFFFF">
+    <rect x="4" y="14" width="24" height="4"/>
+    <path d="M4 14 A7 7 0 0 1 18 14 Z"/>
+    <path d="M14 18 A7 7 0 0 0 28 18 Z"/>
+  </g>
 </svg>

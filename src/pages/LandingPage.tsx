@@ -1,13 +1,15 @@
-import AirIcon from '@mui/icons-material/Air'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Typography, alpha, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
+import { KazeLogo } from '@/components/ui/logo'
+import { parseColor } from '@/themes/contrast'
+import { motionOf } from '@/themes/motion'
 import {
   APP_LINKS,
   DEFAULT_PORTS,
@@ -16,12 +18,22 @@ import {
 } from '@/utils/appLinks'
 import type { DevPorts } from '@/utils/appLinks'
 
+// アンビエント（オーブ・粒子・グロー）は同じ色を何段もの alpha で重ねるため、
+// `rgba(r,g,b,` までを組んで末尾の alpha を呼び出し側が足す形にしている。
+// 値を手打ちするとトークンと二重管理になるので、必ず色から導出する
+const rgbaPrefix = (color: string) => {
+  const { r, g, b } = parseColor(color)
+  return `rgba(${r},${g},${b},`
+}
+
 // ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
 const HeroBackground = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  const teal = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
-  const teal2 = isDark ? 'rgba(10,138,148,' : 'rgba(60,192,200,'
+  const brand = rgbaPrefix(theme.palette.primary.main)
+  const brandAlt = rgbaPrefix(
+    isDark ? theme.palette.primary.dark : theme.palette.primary.light
+  )
 
   return (
     <Box
@@ -43,7 +55,7 @@ const HeroBackground = () => {
           top: '-20%',
           right: '-15%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal}${isDark ? '0.18' : '0.12'}) 0%, ${teal}${isDark ? '0.06' : '0.04'}) 40%, transparent 70%)`,
+          background: `radial-gradient(circle, ${brand}${isDark ? '0.18' : '0.12'}) 0%, ${brand}${isDark ? '0.06' : '0.04'}) 40%, transparent 70%)`,
           animation: 'orbDrift 16s ease-in-out infinite',
           filter: 'blur(40px)',
         }}
@@ -60,7 +72,7 @@ const HeroBackground = () => {
           bottom: '-15%',
           left: '-10%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal2}${isDark ? '0.12' : '0.08'}) 0%, transparent 65%)`,
+          background: `radial-gradient(circle, ${brandAlt}${isDark ? '0.12' : '0.08'}) 0%, transparent 65%)`,
           animation: 'orbDrift 20s ease-in-out infinite reverse',
           filter: 'blur(30px)',
         }}
@@ -77,7 +89,7 @@ const HeroBackground = () => {
           top: '20%',
           left: '40%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal}${isDark ? '0.08' : '0.05'}) 0%, transparent 60%)`,
+          background: `radial-gradient(circle, ${brand}${isDark ? '0.08' : '0.05'}) 0%, transparent 60%)`,
           animation: 'orbFloat 12s ease-in-out infinite',
           filter: 'blur(50px)',
         }}
@@ -90,8 +102,8 @@ const HeroBackground = () => {
           inset: 0,
           opacity: isDark ? 0.06 : 0.05,
           backgroundImage: `
-            linear-gradient(${teal}0.3) 1px, transparent 1px),
-            linear-gradient(90deg, ${teal}0.3) 1px, transparent 1px)
+            linear-gradient(${brand}0.3) 1px, transparent 1px),
+            linear-gradient(90deg, ${brand}0.3) 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px',
           maskImage:
@@ -110,7 +122,7 @@ const HeroBackground = () => {
             width: 3 + (i % 3) * 2,
             height: 3 + (i % 3) * 2,
             borderRadius: '50%',
-            bgcolor: `${teal}${isDark ? '0.4' : '0.3'})`,
+            bgcolor: `${brand}${isDark ? '0.4' : '0.3'})`,
             top: `${10 + i * 10}%`,
             left: `${15 + ((i * 11) % 70)}%`,
             animation: `particle ${6 + i * 2}s ease-in-out infinite`,
@@ -128,7 +140,7 @@ const HeroBackground = () => {
           top: '10%',
           right: '8%',
           borderRadius: '50%',
-          border: `1px solid ${teal}${isDark ? '0.1' : '0.08'})`,
+          border: `1px solid ${brand}${isDark ? '0.1' : '0.08'})`,
           animation: 'ringRotate 30s linear infinite',
           '&::before': {
             content: '""',
@@ -138,7 +150,7 @@ const HeroBackground = () => {
             width: 6,
             height: 6,
             borderRadius: '50%',
-            bgcolor: `${teal}${isDark ? '0.5' : '0.4'})`,
+            bgcolor: `${brand}${isDark ? '0.5' : '0.4'})`,
             transform: 'translateX(-50%)',
           },
         }}
@@ -151,7 +163,7 @@ const HeroBackground = () => {
           top: '18%',
           right: '12%',
           borderRadius: '50%',
-          border: `1px dashed ${teal}${isDark ? '0.06' : '0.05'})`,
+          border: `1px dashed ${brand}${isDark ? '0.06' : '0.05'})`,
           animation: 'ringRotate 24s linear infinite reverse',
         }}
       />
@@ -226,14 +238,15 @@ const ProductCard = ({
           borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
           bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)',
           backdropFilter: 'blur(8px)',
-          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+          transition: motionOf(['border-color', 'box-shadow'], 'short'),
           cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
           '&:hover': {
-            boxShadow: isDark
-              ? '0 12px 40px rgba(14,173,184,0.15)'
-              : '0 12px 40px rgba(14,173,184,0.12)',
+            boxShadow: `0 12px 40px ${alpha(
+              theme.palette.primary.main,
+              isDark ? 0.15 : 0.12
+            )}`,
             borderColor: 'primary.main',
           },
         }}>
@@ -248,7 +261,7 @@ const ProductCard = ({
             py: 0.5,
             borderRadius: 2,
             bgcolor: 'primary.main',
-            color: '#fff',
+            color: 'primary.contrastText',
             fontSize: '0.95rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
@@ -315,7 +328,7 @@ const FeatureItem = ({
           sx={{
             fontSize: '0.9rem',
             fontWeight: 700,
-            color: 'primary.main',
+            color: 'primary.textContrast',
             fontFamily: 'monospace',
             pt: 0.5,
             flexShrink: 0,
@@ -357,10 +370,10 @@ const BauhausDivider = ({
 }) => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  // Kaze 骨格 3 色。teal 主役 + asagi/beni をアクセントに（画面 5% 以下）
-  const teal = 'rgba(14,173,184,'
-  const asagi = 'rgba(91,143,185,' // #5B8FB9
-  const beni = 'rgba(227,78,58,' // #E34E3A
+  // Kaze 骨格 3 色。ブランド青が主役 + asagi/beni をアクセントに（画面 5% 以下）
+  const brand = rgbaPrefix(theme.palette.primary.main)
+  const asagi = rgbaPrefix('#5B8FB9')
+  const beni = rgbaPrefix('#E34E3A')
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -385,7 +398,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 120, md: 200 },
               height: { xs: 120, md: 200 },
-              border: `2px solid ${teal}${isDark ? '0.12' : '0.08'})`,
+              border: `2px solid ${brand}${isDark ? '0.12' : '0.08'})`,
               position: 'absolute',
               left: flip ? 'auto' : '8%',
               right: flip ? '8%' : 'auto',
@@ -415,7 +428,7 @@ const BauhausDivider = ({
             top: '50%',
             width: { xs: 80, md: 140 },
             height: 2,
-            bgcolor: `${teal}${isDark ? '0.1' : '0.06'})`,
+            bgcolor: `${brand}${isDark ? '0.1' : '0.06'})`,
           }}
         />
       </>
@@ -441,7 +454,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 40, md: 64 },
               height: { xs: 40, md: 64 },
-              border: `2px solid ${teal}${isDark ? '0.14' : '0.1'})`,
+              border: `2px solid ${brand}${isDark ? '0.14' : '0.1'})`,
               borderRadius: '50%',
               position: 'absolute',
               right: flip ? 'auto' : '22%',
@@ -459,7 +472,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 160, md: 280 },
               height: 2,
-              bgcolor: `${teal}${isDark ? '0.08' : '0.05'})`,
+              bgcolor: `${brand}${isDark ? '0.08' : '0.05'})`,
               position: 'absolute',
               left: '50%',
               top: 20,
@@ -484,7 +497,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 50, md: 80 },
               height: { xs: 50, md: 80 },
-              border: `1.5px solid ${teal}${isDark ? '0.08' : '0.05'})`,
+              border: `1.5px solid ${brand}${isDark ? '0.08' : '0.05'})`,
               position: 'absolute',
               left: '50%',
               top: -10,
@@ -539,7 +552,7 @@ const DevPortSettings = () => {
         sx={{
           fontSize: '1rem',
           fontWeight: 700,
-          color: 'warning.main',
+          color: 'warning.textContrast',
           mb: 1,
         }}>
         DEV — ポート設定（ローカルのみ表示）
@@ -593,7 +606,7 @@ const DevPortSettings = () => {
             borderRadius: 1,
             border: 'none',
             bgcolor: saved ? 'success.main' : 'warning.main',
-            color: '#fff',
+            color: saved ? 'success.contrastText' : 'warning.contrastText',
             fontSize: '0.9rem',
             fontWeight: 600,
             cursor: 'pointer',
@@ -619,7 +632,7 @@ const EYEBROW_SX = {
   fontWeight: 500,
   letterSpacing: '0.24em',
   textTransform: 'uppercase',
-  color: 'primary.main',
+  color: 'primary.textContrast',
   mb: 2,
 } as const
 
@@ -665,7 +678,7 @@ export const LandingPage = () => {
       title: 'Storybook',
       description:
         'コンポーネントカタログ・デザインガイド・AIチャットアシスタント',
-      icon: <AutoStoriesIcon sx={{ color: 'primary.main' }} />,
+      icon: <AutoStoriesIcon sx={{ color: 'primary.textContrast' }} />,
       href: APP_LINKS.storybook(),
       label: 'Documentation',
     },
@@ -767,15 +780,14 @@ export const LandingPage = () => {
                     sx={{
                       width: 48,
                       height: 48,
-                      borderRadius: 3,
-                      background:
-                        'linear-gradient(135deg, #0EADB8 0%, #0A8A94 100%)',
+                      // favicon と同じロックアップ。単色の正方形に白のシンボル。
+                      // グラデーション・角丸・色付きの光彩はレギュレーションで排す
+                      bgcolor: 'primary.main',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 4px 20px rgba(14,173,184,0.3)',
                     }}>
-                    <AirIcon sx={{ color: '#fff', fontSize: 28 }} />
+                    <KazeLogo size={28} tone='inverse' title='' />
                   </Box>
                   <Typography
                     sx={{
@@ -784,7 +796,7 @@ export const LandingPage = () => {
                       fontWeight: 500,
                       letterSpacing: '0.24em',
                       textTransform: 'uppercase',
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                     }}>
                     Kaze Design System · v0
                   </Typography>
@@ -816,7 +828,7 @@ export const LandingPage = () => {
                   <Box
                     component='span'
                     sx={{
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       fontStyle: 'italic',
                       fontVariationSettings:
                         "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
@@ -881,15 +893,20 @@ export const LandingPage = () => {
                       py: 1.5,
                       borderRadius: 2,
                       bgcolor: 'primary.main',
-                      color: '#fff',
+                      color: 'primary.contrastText',
                       fontWeight: 700,
                       fontSize: '0.9rem',
                       textDecoration: 'none',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 4px 20px rgba(14,173,184,0.25)',
+                      transition: motionOf(
+                        ['transform', 'box-shadow'],
+                        'macro'
+                      ),
+                      boxShadow: (t) =>
+                        `0 4px 20px ${alpha(t.palette.primary.main, 0.25)}`,
                       '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 30px rgba(14,173,184,0.35)',
+                        boxShadow: (t) =>
+                          `0 8px 30px ${alpha(t.palette.primary.main, 0.35)}`,
                       },
                     }}>
                     <AutoStoriesIcon sx={{ fontSize: 18 }} />
@@ -915,10 +932,13 @@ export const LandingPage = () => {
                       fontWeight: 600,
                       fontSize: '0.9rem',
                       textDecoration: 'none',
-                      transition: 'all 0.3s ease',
+                      transition: motionOf(
+                        ['transform', 'box-shadow'],
+                        'macro'
+                      ),
                       '&:hover': {
                         borderColor: 'primary.main',
-                        color: 'primary.main',
+                        color: 'primary.textContrast',
                         transform: 'translateY(-2px)',
                       },
                     }}>
@@ -1136,7 +1156,7 @@ export const LandingPage = () => {
                     sx={{
                       fontSize: '0.9rem',
                       fontWeight: 700,
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       fontFamily: 'monospace',
                       mb: 1.5,
                     }}>
@@ -1164,7 +1184,7 @@ export const LandingPage = () => {
                     sx={{
                       fontSize: '0.95rem',
                       fontWeight: 600,
-                      color: 'primary.main',
+                      color: 'primary.textContrast',
                       textDecoration: 'none',
                       '&:hover': { textDecoration: 'underline' },
                     }}>
@@ -1226,13 +1246,14 @@ export const LandingPage = () => {
                   py: 1.25,
                   borderRadius: 2,
                   bgcolor: 'primary.main',
-                  color: '#fff',
+                  color: 'primary.contrastText',
                   fontWeight: 600,
                   fontSize: '1rem',
                   textDecoration: 'none',
-                  transition: 'all 0.2s',
+                  transition: motionOf(['transform', 'box-shadow']),
                   '&:hover': {
-                    boxShadow: '0 4px 16px rgba(14,173,184,0.25)',
+                    boxShadow: (t) =>
+                      `0 4px 16px ${alpha(t.palette.primary.main, 0.25)}`,
                   },
                 }}>
                 Storybook で試す
@@ -1275,7 +1296,7 @@ export const LandingPage = () => {
                       sx={{
                         fontSize: '0.95rem',
                         fontWeight: 600,
-                        color: 'primary.main',
+                        color: 'primary.textContrast',
                         mb: 0.5,
                       }}>
                       Q: {item.q}
@@ -1315,7 +1336,7 @@ export const LandingPage = () => {
             gap: 2,
           }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AirIcon sx={{ fontSize: 18, color: 'primary.main' }} />
+            <KazeLogo size={18} tone='outline' title='' />
             <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
               Kaze Design System
             </Typography>
@@ -1338,8 +1359,8 @@ export const LandingPage = () => {
                   fontSize: '0.9rem',
                   color: 'text.secondary',
                   textDecoration: 'none',
-                  transition: 'color 0.2s',
-                  '&:hover': { color: 'primary.main' },
+                  transition: motionOf(['color'], 'short'),
+                  '&:hover': { color: 'primary.textContrast' },
                 }}>
                 {link.label}
               </Box>

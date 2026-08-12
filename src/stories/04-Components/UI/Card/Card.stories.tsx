@@ -131,43 +131,43 @@ export const Basic: StoryObj = {
   render: () => <BasicContent />,
 }
 
-// --- デバイスステータスカード ---
+// --- 配送ユニットステータスカード ---
 
 const DeviceStatusContent = () => {
   const devices = [
     {
-      name: 'Device-Alpha',
-      status: '稼働中',
+      name: 'Unit-Alpha',
+      status: '配送中',
       statusColor: 'success' as const,
       battery: 78,
-      altitude: 120,
-      speed: 8.5,
+      remaining: 12.4,
+      speed: 32,
       location: '東京湾岸エリア',
     },
     {
-      name: 'Device-Beta',
+      name: 'Unit-Beta',
       status: '待機中',
       statusColor: 'info' as const,
       battery: 95,
-      altitude: 0,
+      remaining: 0,
       speed: 0,
-      location: '横浜基地',
+      location: '横浜デポ',
     },
     {
-      name: 'Device-Gamma',
+      name: 'Unit-Gamma',
       status: 'メンテナンス',
       statusColor: 'warning' as const,
       battery: 42,
-      altitude: 0,
+      remaining: 0,
       speed: 0,
-      location: '千葉整備場',
+      location: '千葉整備センター',
     },
   ]
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
       <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-        デバイスステータスカード
+        配送ユニットステータスカード
       </Typography>
 
       <Grid container spacing={3}>
@@ -242,13 +242,13 @@ const DeviceStatusContent = () => {
                             fontWeight: 600,
                             display: 'block',
                           }}>
-                          {device.altitude}m
+                          {device.remaining}km
                         </Typography>
                         <Typography
                           variant='caption'
                           color='text.secondary'
                           sx={{ fontSize: '0.625rem' }}>
-                          高度
+                          残り距離
                         </Typography>
                       </Box>
                     </Grid>
@@ -272,7 +272,7 @@ const DeviceStatusContent = () => {
                             fontWeight: 600,
                             display: 'block',
                           }}>
-                          {device.speed}m/s
+                          {device.speed}km/h
                         </Typography>
                         <Typography
                           variant='caption'
@@ -302,7 +302,7 @@ const DeviceStatusContent = () => {
 }
 
 export const DeviceStatus: StoryObj = {
-  name: 'デバイスステータス',
+  name: '配送ユニットステータス',
   render: () => <DeviceStatusContent />,
 }
 

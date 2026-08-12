@@ -28,6 +28,7 @@ const shimmer = keyframes`
 `
 
 import { IconButton } from '@/components/ui/icon-button'
+import { motionOf } from '@/themes/motion'
 
 import {
   SHIPMENTS,
@@ -43,6 +44,7 @@ import {
 } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
 import { floatingPanelSx, floatingPanelEmphasizedSx } from '~/utils/panelStyles'
+import { readableOnTint } from '~/utils/readableStatusColor'
 
 const formatEta = (seconds: number | null): string => {
   if (seconds === null) return '--:--'
@@ -379,7 +381,7 @@ export const DriverPanel = () => {
                   width: `${selected.routeProgress * 100}%`,
                   borderRadius: 3,
                   bgcolor: color,
-                  transition: 'width 0.8s ease',
+                  transition: motionOf(['width'], 'scene', 'enter'),
                   position: 'relative',
                   overflow: 'hidden',
                   '&::after': {
@@ -510,7 +512,12 @@ export const DriverPanel = () => {
                 fontSize: '13px',
                 fontWeight: 700,
                 bgcolor: alpha(STATUS_COLORS[shipment.status], 0.12),
-                color: STATUS_COLORS[shipment.status],
+                // Chip は面に自身の色を 12% 敷く。実際に描かれる面で測る
+                color: (theme) =>
+                  readableOnTint(
+                    STATUS_COLORS[shipment.status],
+                    theme.palette.background.paper
+                  ),
               }}
             />
           </Box>

@@ -15,6 +15,8 @@ import {
   type GridSlots,
 } from '@mui/x-data-grid'
 
+import { focusRing } from '@/themes/focus'
+
 // フィルター設定の型
 export interface FilterConfig {
   field: string
@@ -304,9 +306,12 @@ export const ResourceTable = <T extends { id: string | number }>({
               borderColor: 'divider',
             },
             '& .MuiDataGrid-columnHeader': {
-              '&:focus, &:focus-within': {
-                outline: 'none',
-              },
+              // DataGrid の既定アウトラインは :focus-within に当たる。
+              // 消すだけだとキーボード操作で現在地が分からなくなるため、
+              // 中の要素がキーボードフォーカスを持つときだけリングを出す
+              '&:focus, &:focus-within': { outline: 'none' },
+              '&:focus-visible, &:focus-within:has(:focus-visible)':
+                focusRing('var(--color-ring)'),
             },
             '& .MuiDataGrid-row': {
               cursor: onRowClick ? 'pointer' : 'default',
@@ -325,9 +330,9 @@ export const ResourceTable = <T extends { id: string | number }>({
               alignItems: 'center',
               borderBottom: 1,
               borderColor: 'divider',
-              '&:focus, &:focus-within': {
-                outline: 'none',
-              },
+              '&:focus, &:focus-within': { outline: 'none' },
+              '&:focus-visible, &:focus-within:has(:focus-visible)':
+                focusRing('var(--color-ring)'),
             },
             '& .MuiDataGrid-footerContainer': {
               borderTop: 1,

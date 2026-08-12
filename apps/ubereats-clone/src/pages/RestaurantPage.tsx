@@ -246,7 +246,10 @@ export const RestaurantPage = () => {
                             )}
                             {item.spicy && (
                               <LocalFireDepartmentIcon
-                                sx={{ fontSize: 18, color: 'error.main' }}
+                                sx={{
+                                  fontSize: 18,
+                                  color: 'error.textContrast',
+                                }}
                                 aria-hidden='true'
                               />
                             )}
@@ -305,7 +308,7 @@ export const RestaurantPage = () => {
                     )}
                     {item.spicy && (
                       <LocalFireDepartmentIcon
-                        sx={{ fontSize: 18, color: 'error.main' }}
+                        sx={{ fontSize: 18, color: 'error.textContrast' }}
                         aria-hidden='true'
                       />
                     )}

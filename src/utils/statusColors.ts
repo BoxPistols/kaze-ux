@@ -5,13 +5,7 @@
 
 /** MUI Chipコンポーネントで使用可能な色型 */
 export type ChipColor =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'error'
-  | 'info'
-  | 'success'
-  | 'warning'
+  'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
 
 /**
  * デバイスの稼働状態に対応する色を取得

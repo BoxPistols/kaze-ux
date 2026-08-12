@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom'
 
 import { ThemeToggle } from '@/components/ui/themeToggle'
 import type { ContainerMaxWidthVariant } from '@/themes/breakpoints'
+import { motionOf } from '@/themes/motion'
 
 import {
   MAIN_ELEMENT_PADDING_BOTTOM_SPACING,
@@ -189,7 +190,7 @@ export const LayoutWithSidebar = ({
         width: hasVisibleSidebar ? `calc(100% - ${sidebarWidth}px)` : '100%',
         height: '100vh',
         position: 'relative' as const,
-        transition: 'margin-left 0.3s ease, width 0.3s ease',
+        transition: motionOf(['margin-left', 'width'], 'long'),
       }
     }
 
@@ -205,7 +206,7 @@ export const LayoutWithSidebar = ({
         padding: 2,
         paddingTop: MAIN_ELEMENT_PADDING_TOP_SPACING,
         paddingBottom: MAIN_ELEMENT_PADDING_BOTTOM_SPACING,
-        transition: 'margin-left 0.3s ease, width 0.3s ease',
+        transition: motionOf(['margin-left', 'width'], 'long'),
       }
     }
 
@@ -225,7 +226,7 @@ export const LayoutWithSidebar = ({
       padding: contentPadding,
       paddingTop: MAIN_ELEMENT_PADDING_TOP_SPACING,
       paddingBottom: MAIN_ELEMENT_PADDING_BOTTOM_SPACING,
-      transition: 'margin-left 0.3s ease, width 0.3s ease',
+      transition: motionOf(['margin-left', 'width'], 'long'),
       ...(resolvedMaxWidth !== '100%' && {
         maxWidth: resolvedMaxWidth,
         ...(centerContent && {

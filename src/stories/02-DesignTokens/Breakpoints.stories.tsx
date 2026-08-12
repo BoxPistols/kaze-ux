@@ -9,6 +9,7 @@ import {
   Alert,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
 import { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -18,6 +19,7 @@ import {
   touchTargets,
 } from '@/themes/breakpoints'
 import type { BreakpointKey } from '@/themes/breakpoints'
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -170,7 +172,10 @@ const BreakpointScaleDemo = () => {
                 borderColor: isActive ? 'primary.main' : 'divider',
                 borderStyle: 'solid',
                 borderRadius: 1,
-                transition: 'all 0.3s ease',
+                transition: motionOf(
+                  ['background-color', 'border-color', 'border-width'],
+                  'macro'
+                ),
               }}>
               <Box
                 sx={{
@@ -229,7 +234,7 @@ const BreakpointScaleDemo = () => {
                       ? theme.palette.primary.main
                       : 'text.disabled',
                     borderRadius: 1,
-                    transition: 'background-color 0.3s ease',
+                    transition: motionOf(['background-color'], 'long'),
                   }}
                 />
               </Box>
@@ -333,7 +338,7 @@ const BreakpointScaleDemo = () => {
                       ? '2px solid white'
                       : 'none',
                   opacity: isActive ? 1 : 0.5,
-                  transition: 'all 0.3s ease',
+                  transition: motionOf(['opacity', 'border-color'], 'macro'),
                 }}>
                 <Typography
                   variant='caption'
@@ -359,7 +364,7 @@ const BreakpointScaleDemo = () => {
               width: 3,
               bgcolor: 'error.main',
               zIndex: 1,
-              transition: 'left 0.15s ease',
+              transition: motionOf(['left'], 'micro'),
               '&::after': {
                 content: '""',
                 position: 'absolute',
@@ -708,8 +713,8 @@ const TouchTargetsDemo = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: `0 0 0 4px ${color}33`,
-                    transition: 'transform 0.2s ease',
+                    boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
+                    transition: motionOf(['transform'], 'short'),
                     cursor: 'pointer',
                     '&:hover': {
                       transform: 'scale(1.05)',
@@ -736,7 +741,7 @@ const TouchTargetsDemo = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: `0 0 0 4px ${color}33`,
+                    boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
                     opacity: 0.7,
                   }}>
                   <Typography
@@ -783,7 +788,7 @@ const TouchTargetsDemo = () => {
                   justifyContent: 'center',
                   mx: 'auto',
                   mb: 1.5,
-                  boxShadow: `0 0 0 4px ${color}33`,
+                  boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
                 }}>
                 <Typography
                   variant='caption'

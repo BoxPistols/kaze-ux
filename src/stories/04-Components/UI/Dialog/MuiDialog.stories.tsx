@@ -363,7 +363,7 @@ const PracticalPatternsContent = () => {
             {[
               { label: 'バージョン', value: 'v2.4.1' },
               { label: '最終更新', value: '2025-03-01 10:30' },
-              { label: '稼働機体数', value: '8 / 12' },
+              { label: '稼働車両数', value: '8 / 12' },
               { label: 'サーバーステータス', value: '正常稼働中' },
             ].map((item) => (
               <Stack

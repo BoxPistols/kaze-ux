@@ -1,6 +1,8 @@
 import { Box, Typography, Stack, Paper, Grid, Chip } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
+import { motionOf } from '@/themes/motion'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta = {
@@ -128,7 +130,7 @@ const SpacingScaleShowcase = () => {
                       bgcolor: 'primary.main',
                       borderRadius: 0.5,
                       opacity: 0.7,
-                      transition: 'width 0.2s ease',
+                      transition: motionOf(['width'], 'short'),
                     }}
                   />
                 )}

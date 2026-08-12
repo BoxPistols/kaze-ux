@@ -1,3 +1,8 @@
+/* 色の CSS 変数は src/themes/colorToken.ts の createCssVars() が
+   テーマ適用時に :root へ注入する。ここに手打ちすると MUI 側の
+   トークンを直しても Tailwind 側が古い値のまま残り、同じ画面で
+   明暗が食い違うため、定義を置かないこと。 */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
 /* Kaze 骨格フォント (v0) — 既存 Inter/Noto と並行ロード。opt-in で使う */
@@ -7,43 +12,8 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* === MUI Theme Variables Integration === */
+/* === ベース組版（色は CssBaseline 経由でテーマが注入する） === */
 :root {
-  /* Light Theme Colors — colorToken.ts (Blue/Kaze scheme) と同期 */
-  --color-primary: #0eadb8;
-  --color-primary-foreground: #ffffff;
-  --color-primary-light: #3cc0c8;
-  --color-primary-dark: #0a8a94;
-
-  --color-secondary: #696881;
-  --color-secondary-foreground: #ffffff;
-
-  --color-success: #46ab4a;
-  --color-success-foreground: #ffffff;
-  --color-success-light: #e8f5e9;
-  --color-success-border: #6db770;
-
-  --color-error: #da3737;
-  --color-error-foreground: #ffffff;
-  --color-error-light: #fce4ec;
-  --color-error-border: #dc4e4e;
-
-  --color-warning: #eb8117;
-  --color-warning-foreground: #ffffff;
-  --color-warning-light: #fff3e0;
-  --color-warning-border: #dd9c3c;
-
-  --color-info: #1dafc2;
-  --color-info-foreground: #ffffff;
-  --color-info-light: #e0f7fa;
-  --color-info-border: #43bfcf;
-
-  --color-background: #f8fafc;
-  --color-background-paper: #ffffff;
-  --color-foreground: #1a1a2e;
-  --color-muted: #4a5568;
-  --color-border: rgba(0, 0, 0, 0.08);
-
   font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -55,9 +25,9 @@
   /* === Kaze 骨格 CSS 変数 (v0) ===
    * 値の TypeScript ミラー: src/themes/kazeTokens.ts
    * 既存 --color-* とは独立した additive な namespace。
-   * opt-in で使用: var(--kaze-teal), var(--kaze-r-sharp), etc.
+   * opt-in で使用: var(--kaze-blue), var(--kaze-r-sharp), etc.
    */
-  --kaze-teal: #0eadb8;
+  --kaze-blue: #0057b8;
   --kaze-sumi: #0a0a0a;
   --kaze-washi: #f7f4ee;
   --kaze-asagi: #5b8fb9;
@@ -91,45 +61,10 @@
   --kaze-ink-mist: rgba(247, 244, 238, 0.04);
 }
 
-/* Dark Theme Colors — colorToken.ts (Dracula scheme) と同期 */
-.dark {
-  --color-primary: #50d8d8;
-  --color-primary-foreground: #1a2e2e;
-  --color-primary-light: #7ae8e8;
-  --color-primary-dark: #38c0c0;
-
-  --color-secondary: #9a9ab4;
-  --color-secondary-foreground: #ffffff;
-
-  --color-success: #6dce72;
-  --color-success-foreground: #1a2e1a;
-  --color-success-light: #90dd94;
-  --color-success-border: #52b856;
-
-  --color-error: #ef6b6b;
-  --color-error-foreground: #ffffff;
-  --color-error-light: #f59090;
-  --color-error-border: #e05050;
-
-  --color-warning: #f0a050;
-  --color-warning-foreground: #ffffff;
-  --color-warning-light: #f5b878;
-  --color-warning-border: #e08c38;
-
-  --color-info: #4dd4e6;
-  --color-info-foreground: #0d2528;
-  --color-info-light: #78e0ee;
-  --color-info-border: #30c0d4;
-
-  --color-background: #282a36;
-  --color-background-paper: #343746;
-  --color-foreground: #f8f8f2;
-  --color-muted: #6272a4;
-  --color-border: rgba(98, 114, 164, 0.15);
-}
-
-/* === CSS Variables available for Tailwind utility classes === */
-/* These variables can be used as: bg-[var(--color-primary)] text-[var(--color-primary-foreground)] */
+/* --color-* は createCssVars() が注入する（冒頭の注記を参照）。
+   Tailwind からは bg-[var(--color-primary)] のように参照できる。
+   かつてここにライト/ダークの定義が並んでいたが、MUI 側と二重管理に
+   なっていたため削除した。見出しだけが残っていたので整理する。 */
 
 body {
   overscroll-behavior: none;
@@ -138,8 +73,8 @@ body {
 /* テーマ切替トランジション */
 html[data-theme-transitioning] body {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color var(--motion-duration-long) var(--motion-ease-standard),
+    color var(--motion-duration-long) var(--motion-ease-standard);
 }
 
 main > main {

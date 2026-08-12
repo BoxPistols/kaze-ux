@@ -52,13 +52,13 @@ A: Figmaの「カラースタイル」「テキストスタイル」と同じ考
 
 | Figmaの概念 | Kaze UXでの対応 | 例 |
 |------------|-------------|-----|
-| カラースタイル | デザイントークン(色) | primary.main = #0EADB8 |
+| カラースタイル | デザイントークン(色) | primary.main = #0057B8 |
 | テキストスタイル | デザイントークン(文字) | body1 = 14px/1.6 |
 | スペーシング変数 | spacing単位 | spacing(2) = 16px |
 
 \`\`\`tsx
 // NG: 値を直接書く（Figmaでスタイルを使わずHEXを直書きするのと同じ）
-<Box sx={{ color: '#0EADB8', fontSize: 14, gap: '16px' }}>
+<Box sx={{ color: '#0057B8', fontSize: 14, gap: '16px' }}>
 
 // OK: トークンで参照する（Figmaのカラースタイルを適用するのと同じ）
 <Box sx={{ color: 'primary.main', fontSize: 'body1.fontSize', gap: 2 }}>
@@ -109,7 +109,7 @@ A: Figmaの操作に例えると、**sx = コンポーネントのデザイン�
 
 ## デザイントークン早見表
 ### カラー
-primary=#0EADB8, secondary=#696881, success=#46ab4a, info=#1dafc2, warning=#eb8117, error=#da3737
+primary=#0057B8, secondary=#696881, success=#46ab4a, info=#1dafc2, warning=#eb8117, error=#da3737
 text.primary=#1a1a2e, text.secondary=#4a5568, background=#f8fafc | ダークモード完全対応（WCAG AA）
 
 ### タイポグラフィ
@@ -276,7 +276,7 @@ export const CONFIG_STORAGE_KEY = 'storybook_chat_config'
 
 // デフォルトAPIキー（ビルド時に埋め込み）
 export const DEFAULT_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
-export const DEFAULT_MODEL = 'gpt-5.4-nano'
+export const DEFAULT_MODEL = 'gpt-5.6-luna'
 
 export interface ModelOption {
   value: string
@@ -291,46 +291,11 @@ export interface ModelOption {
 
 export const OPENAI_MODELS: ModelOption[] = [
   {
-    value: 'gpt-5.4',
-    label: 'gpt-5.4',
-    description: 'フル性能モデル。最高精度の推論・分析が必要な用途に',
-    features: [
-      '最上位の推論・分析能力',
-      '最大コンテキスト長',
-      '最高品質のコード生成',
-    ],
-    usecases: [
-      '大規模リファクタリング・設計',
-      '高度なバグ原因分析',
-      'システム全体のアーキテクチャレビュー',
-    ],
-    tier: 'premium',
-    requiresUserKey: true,
-  },
-  {
-    value: 'gpt-5.4-mini',
-    label: 'gpt-5.4-mini (推奨)',
-    description:
-      '最新世代の高精度モデル。高度な推論・文脈維持・ガードレール遵守に優れる',
-    features: [
-      '上位モデルに迫る推論力',
-      'システムプロンプトの厳格な遵守',
-      '意図しない文脈での破綻を大幅に低減',
-    ],
-    usecases: [
-      'アーキテクチャ設計・リファクタ提案',
-      'エビデンスベースのデザイン相談',
-      '求人分析・戦略的インサイト',
-    ],
-    tier: 'premium',
-    projectKeyEnabled: true,
-  },
-  {
-    value: 'gpt-5.4-nano',
-    label: 'gpt-5.4-nano (標準)',
+    value: 'gpt-5.6-luna',
+    label: 'gpt-5.6-luna',
     description: '最新世代のコスト最適モデル。日常的なQAに十分な品質',
     features: [
-      'GPT-5.4系の推論能力',
+      'GPT-5.6系の推論能力',
       '高速レスポンス',
       '月間1000回でも約140円の低コスト',
     ],

@@ -14,7 +14,8 @@ import {
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
-import { darkTheme } from '@/themes/theme'
+import { elevation } from '@/themes/elevation'
+import { darkTheme, lightTheme } from '@/themes/theme'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -28,104 +29,154 @@ const meta: Meta = {
 
 export default meta
 
-// --- 各elevation段階の使用場面の説明 ---
-const elevationDescriptions: Record<number, string> = {
-  0: 'フラットな要素。影なし。Paper, Card（デフォルト）',
-  1: '微かな浮き上がり。ホバー前のカード、入力フィールド',
-  2: '軽い浮き上がり。ホバー中のカード、アクティブなリスト項目',
-  3: '中程度の浮き上がり。ドロップダウンメニュー、ポップオーバー',
-  4: '高い浮き上がり。モーダル、ダイアログの手前要素',
-  5: '最大級の浮き上がり。フルスクリーンに近いダイアログ',
-  6: '最大の浮き上がり。最前面のオーバーレイ要素',
+// --- セマンティック段の定義（src/themes/elevation.ts と対応） ---
+const semanticLevels = [
+  {
+    token: 'resting',
+    level: elevation.resting,
+    label: '接地',
+    description:
+      '影を持たず、境界線と背景色差で分離する。表・リスト行・入れ子のカード',
+  },
+  {
+    token: 'raised',
+    level: elevation.raised,
+    label: '微浮上',
+    description: '面がひとつ手前にあることだけを示す。カード・パネル',
+  },
+  {
+    token: 'floating',
+    level: elevation.floating,
+    label: '浮上',
+    description: '操作に応じて持ち上がった状態。hover 中のカード・選択中の行',
+  },
+  {
+    token: 'overlay',
+    level: elevation.overlay,
+    label: '重ね',
+    description:
+      '下のコンテンツを覆う一時的な面。ドロップダウン・ポップオーバー',
+  },
+  {
+    token: 'popover',
+    level: elevation.popover,
+    label: '前面',
+    description: '強い一時面。メニュー・ツールチップ・通知',
+  },
+  {
+    token: 'modal',
+    level: elevation.modal,
+    label: '最前面',
+    description: '背景を遮断する面。ダイアログ・ドロワー',
+  },
+]
+
+/**
+ * 影の実値を表示するチップ。
+ * 直近の ThemeProvider から影を取るため、Dark プレビュー内では
+ * ダークの影が正しく表示される。
+ */
+const ShadowValue = ({ level }: { level: number }) => {
+  const theme = useTheme()
+  const value = theme.shadows[level]
+
+  return (
+    <Box
+      sx={{
+        p: 1.5,
+        bgcolor: 'action.hover',
+        borderRadius: 1.5,
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
+      <Typography
+        variant='caption'
+        sx={{
+          fontFamily: 'monospace',
+          fontSize: '0.7rem',
+          lineHeight: 1.6,
+          wordBreak: 'break-all',
+          color: 'text.secondary',
+        }}>
+        {value === 'none' ? 'box-shadow: none' : `box-shadow: ${value}`}
+      </Typography>
+    </Box>
+  )
 }
 
-// --- 1. ElevationScale: 各elevation段階をカード形式で表示 ---
+// --- 1. ElevationScale: セマンティック段の一覧 ---
 const ElevationScaleContent = () => {
   const theme = useTheme()
-  // テーマから有効なシャドウ値のみ取得（0〜6）
-  const elevations = [0, 1, 2, 3, 4, 5, 6]
 
   return (
     <Box sx={{ maxWidth: 1400, mx: 'auto', p: 4 }}>
       <Typography variant='h3' gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
         Elevation スケール
       </Typography>
-      <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
-        プロジェクトで定義されているカスタムシャドウの一覧。0〜6の7段階で構成され、
-        6以降は同一の値が適用されます。
+      <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
+        影は 0〜24 の 25 段を単一の曲線から生成しています。数値を直接書くと
+        「なぜ 4 なのか」が失われるため、UI
+        の役割で段を選べるセマンティックトークンを用意しています。
+      </Typography>
+      <Typography variant='body2' color='text.secondary' sx={{ mb: 5 }}>
+        <code>
+          import {'{ elevation }'} from &apos;@/themes/elevation&apos;
+        </code>
       </Typography>
 
       <Grid container spacing={4}>
-        {elevations.map((level) => {
-          const shadowValue = theme.shadows[level]
-          return (
-            <Grid key={level} size={{ xs: 12, sm: 6, lg: 4 }}>
+        {semanticLevels.map(({ token, level, label, description }) => (
+          <Grid key={token} size={{ xs: 12, sm: 6, lg: 4 }}>
+            <Box
+              sx={{
+                p: 4,
+                borderRadius: 3,
+                bgcolor: 'background.paper',
+                boxShadow: theme.shadows[level],
+                border: '1px solid',
+                borderColor: 'divider',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+              }}>
               <Box
                 sx={{
-                  p: 4,
-                  borderRadius: 3,
-                  bgcolor: 'background.paper',
-                  boxShadow: shadowValue,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  height: '100%',
                   display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 1,
                 }}>
-                {/* Elevation値 */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
+                <Box>
                   <Typography variant='h4' sx={{ fontWeight: 700 }}>
-                    {level}
+                    {label}
                   </Typography>
-                  <Chip
-                    label={`elevation={${level}}`}
-                    size='small'
-                    variant='outlined'
-                    sx={{ fontFamily: 'monospace' }}
-                  />
-                </Box>
-
-                {/* CSS値 */}
-                <Box
-                  sx={{
-                    p: 1.5,
-                    bgcolor: 'action.hover',
-                    borderRadius: 1.5,
-                    border: '1px solid',
-                    borderColor: 'divider',
-                  }}>
                   <Typography
                     variant='caption'
-                    sx={{
-                      fontFamily: 'monospace',
-                      fontSize: '0.7rem',
-                      lineHeight: 1.6,
-                      wordBreak: 'break-all',
-                      color: 'text.secondary',
-                    }}>
-                    {shadowValue === 'none'
-                      ? 'box-shadow: none'
-                      : `box-shadow: ${shadowValue}`}
+                    color='text.secondary'
+                    sx={{ fontFamily: 'monospace' }}>
+                    elevation.{token}
                   </Typography>
                 </Box>
-
-                {/* 使用場面 */}
-                <Typography
-                  variant='body2'
-                  color='text.secondary'
-                  sx={{ mt: 'auto' }}>
-                  {elevationDescriptions[level]}
-                </Typography>
+                <Chip
+                  label={level}
+                  size='small'
+                  variant='outlined'
+                  sx={{ fontFamily: 'monospace' }}
+                />
               </Box>
-            </Grid>
-          )
-        })}
+
+              <ShadowValue level={level} />
+
+              <Typography
+                variant='body2'
+                color='text.secondary'
+                sx={{ mt: 'auto' }}>
+                {description}
+              </Typography>
+            </Box>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   )
@@ -136,56 +187,106 @@ export const ElevationScale: StoryObj = {
   render: () => <ElevationScaleContent />,
 }
 
-// --- 2. ComponentElevation: コンポーネント別の推奨elevation ---
-const ComponentElevationContent = () => {
+// --- 2. ComponentElevation: コンポーネント別の割り当て ---
+const componentAssignments = [
+  {
+    name: 'Card',
+    borderRadius: 12,
+    token: 'raised',
+    level: elevation.raised,
+    hoverToken: 'floating',
+    hoverLevel: elevation.floating,
+    description:
+      'elevation.raised。border と組み合わせて面を示し、hover で floating に持ち上がる。',
+  },
+  {
+    name: 'Dialog',
+    borderRadius: 16,
+    token: 'modal',
+    level: elevation.modal,
+    hoverToken: null,
+    hoverLevel: null,
+    description:
+      'elevation.modal。背景コンテンツを遮断する最も深い段。角丸 16px。',
+  },
+  {
+    name: 'Menu',
+    borderRadius: 6,
+    token: 'overlay',
+    level: elevation.overlay,
+    hoverToken: null,
+    hoverLevel: null,
+    description:
+      'elevation.overlay。下のコンテンツを一時的に覆うドロップダウン用。',
+  },
+  {
+    name: 'Paper',
+    borderRadius: 12,
+    token: 'resting',
+    level: elevation.resting,
+    hoverToken: null,
+    hoverLevel: null,
+    description:
+      'elevation.resting。影を持たず、境界線と背景色差だけで分離する。',
+  },
+  {
+    name: 'Tooltip',
+    borderRadius: 6,
+    token: 'popover',
+    level: elevation.popover,
+    hoverToken: null,
+    hoverLevel: null,
+    description: 'elevation.popover。短命だが最前面に出る補助表示。',
+  },
+]
+
+const AssignmentPanel = ({
+  assignment,
+}: {
+  assignment: (typeof componentAssignments)[number]
+}) => {
   const theme = useTheme()
 
-  // コンポーネント別の影情報
-  const componentShadows = [
-    {
-      name: 'Card',
-      borderRadius: 12,
-      lightShadow:
-        '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
-      hoverShadow:
-        '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)',
-      description:
-        'デフォルトelevation: 0。border + カスタムboxShadowで表現。ホバー時に影が強まる。',
-    },
-    {
-      name: 'Dialog',
-      borderRadius: 16,
-      lightShadow:
-        '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)',
-      hoverShadow: null,
-      description:
-        'デフォルトelevation: 0。最も大きなboxShadowを持つ。モーダル表示に適切な深さ。',
-    },
-    {
-      name: 'Menu',
-      borderRadius: 6,
-      lightShadow: '0 4px 20px rgba(0,0,0,0.15)',
-      hoverShadow: null,
-      description:
-        'コンテキストメニュー・ドロップダウン用。コンパクトな角丸と中程度の影。',
-    },
-    {
-      name: 'Paper',
-      borderRadius: 12,
-      lightShadow: 'none',
-      hoverShadow: null,
-      description:
-        'デフォルトelevation: 0。影なしのフラットな背景要素。角丸12pxが基本。',
-    },
-    {
-      name: 'Tooltip',
-      borderRadius: 6,
-      lightShadow: '0 2px 8px rgba(0,0,0,0.15)',
-      hoverShadow: null,
-      description:
-        '補助的な情報表示。暗い背景に白テキスト。コンパクトな影と角丸。',
-    },
-  ]
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        p: 3,
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
+      <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+        {assignment.description}
+      </Typography>
+      <Typography
+        variant='caption'
+        sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+        borderRadius: {assignment.borderRadius}px
+      </Typography>
+      <br />
+      <Typography
+        variant='caption'
+        sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+        boxShadow: {theme.shadows[assignment.level]}
+      </Typography>
+      {assignment.hoverLevel !== null && (
+        <>
+          <br />
+          <Typography
+            variant='caption'
+            sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+            hover: {theme.shadows[assignment.hoverLevel]}
+          </Typography>
+        </>
+      )}
+    </Paper>
+  )
+}
+
+const ComponentElevationContent = () => {
+  const theme = useTheme()
 
   return (
     <Box sx={{ maxWidth: 1400, mx: 'auto', p: 4 }}>
@@ -193,7 +294,9 @@ const ComponentElevationContent = () => {
         コンポーネント別 Elevation
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
-        各コンポーネントに適用されている推奨影スタイルと、実際の表示例です。
+        各コンポーネントに割り当てたセマンティック段と、実際の表示例です。
+        表示している CSS
+        値はテーマから直接取得しているため、実装と必ず一致します。
       </Typography>
 
       <Stack spacing={6}>
@@ -208,43 +311,14 @@ const ComponentElevationContent = () => {
                 <CardHeader title='サービスカード' subheader='通常状態の影' />
                 <CardContent>
                   <Typography variant='body2' color='text.secondary'>
-                    elevation: 0 + カスタムboxShadow。
-                    ホバーすると影が強調されます。border付き。
+                    elevation.raised + border。 ホバーすると floating
+                    に持ち上がります。
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {componentShadows[0].description}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  borderRadius: {componentShadows[0].borderRadius}px
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  boxShadow: {componentShadows[0].lightShadow}
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  hover: {componentShadows[0].hoverShadow}
-                </Typography>
-              </Paper>
+              <AssignmentPanel assignment={componentAssignments[0]} />
             </Grid>
           </Grid>
         </Box>
@@ -256,21 +330,15 @@ const ComponentElevationContent = () => {
           </Typography>
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, md: 6 }}>
-              {/* Dialogの静的プレビュー（開かずに影だけ確認） */}
+              {/* Dialog の静的プレビュー（開かずに影だけ確認） */}
               <Box
                 sx={{
                   p: 0,
                   borderRadius: '16px',
                   bgcolor: 'background.paper',
                   border: '1px solid',
-                  borderColor:
-                    theme.palette.mode === 'light'
-                      ? 'rgba(0, 0, 0, 0.08)'
-                      : 'rgba(255, 255, 255, 0.08)',
-                  boxShadow:
-                    theme.palette.mode === 'light'
-                      ? '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)'
-                      : '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3)',
+                  borderColor: 'divider',
+                  boxShadow: theme.shadows[elevation.modal],
                   overflow: 'hidden',
                 }}>
                 <Box
@@ -287,7 +355,7 @@ const ComponentElevationContent = () => {
                 <Box sx={{ px: 3, py: 3 }}>
                   <Typography variant='body2' color='text.secondary'>
                     ダイアログのコンテンツ領域です。
-                    最も深い影が適用され、背景コンテンツとの視覚的な分離を実現します。
+                    最も深い段が適用され、背景コンテンツとの視覚的な分離を実現します。
                   </Typography>
                 </Box>
                 <Box
@@ -310,30 +378,7 @@ const ComponentElevationContent = () => {
               </Box>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {componentShadows[1].description}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  borderRadius: {componentShadows[1].borderRadius}px
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  boxShadow: {componentShadows[1].lightShadow}
-                </Typography>
-              </Paper>
+              <AssignmentPanel assignment={componentAssignments[1]} />
             </Grid>
           </Grid>
         </Box>
@@ -345,7 +390,7 @@ const ComponentElevationContent = () => {
           </Typography>
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, md: 6 }}>
-              {/* Menuの静的プレビュー */}
+              {/* Menu の静的プレビュー */}
               <Box
                 sx={{
                   display: 'inline-block',
@@ -353,7 +398,7 @@ const ComponentElevationContent = () => {
                   bgcolor: 'background.paper',
                   border: '1px solid',
                   borderColor: 'divider',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                  boxShadow: theme.shadows[elevation.overlay],
                   overflow: 'hidden',
                   minWidth: 200,
                 }}>
@@ -375,30 +420,7 @@ const ComponentElevationContent = () => {
               </Box>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {componentShadows[2].description}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  borderRadius: {componentShadows[2].borderRadius}px
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  boxShadow: {componentShadows[2].lightShadow}
-                </Typography>
-              </Paper>
+              <AssignmentPanel assignment={componentAssignments[2]} />
             </Grid>
           </Grid>
         </Box>
@@ -415,36 +437,13 @@ const ComponentElevationContent = () => {
                 variant='outlined'
                 sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant='body2' color='text.secondary'>
-                  Paperコンポーネント（elevation: 0, variant:
+                  Paper コンポーネント（elevation.resting, variant:
                   outlined）。影なしのフラットな背景要素として使用されます。
                 </Typography>
               </Paper>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {componentShadows[3].description}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  borderRadius: {componentShadows[3].borderRadius}px
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  boxShadow: {componentShadows[3].lightShadow}
-                </Typography>
-              </Paper>
+              <AssignmentPanel assignment={componentAssignments[3]} />
             </Grid>
           </Grid>
         </Box>
@@ -463,30 +462,7 @@ const ComponentElevationContent = () => {
               </Box>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {componentShadows[4].description}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  borderRadius: {componentShadows[4].borderRadius}px
-                </Typography>
-                <br />
-                <Typography
-                  variant='caption'
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                  boxShadow: {componentShadows[4].lightShadow}
-                </Typography>
-              </Paper>
+              <AssignmentPanel assignment={componentAssignments[4]} />
             </Grid>
           </Grid>
         </Box>
@@ -636,260 +612,232 @@ export const BorderRadius: StoryObj = {
 }
 
 // --- 4. ShadowComparison: Light vs Dark での影の見え方比較 ---
-const ShadowComparisonContent = () => {
+
+/**
+ * 各段を 1 行で表示する。useTheme() は直近の ThemeProvider を見るため、
+ * Dark プレビュー内に置けばダークの影が表示される。
+ */
+const ElevationRows = () => {
   const theme = useTheme()
-  const elevations = [0, 1, 2, 3, 4, 5, 6]
 
   return (
-    <Box sx={{ maxWidth: 1400, mx: 'auto', p: 4 }}>
-      <Typography variant='h3' gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
-        Light / Dark シャドウ比較
-      </Typography>
-      <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
-        同じelevation値でも、背景色によって影の視認性が大きく変わります。
-        ダークモードではborderやopacityの調整が重要です。
-      </Typography>
-
-      <Grid container spacing={4}>
-        {/* Lightモード */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-            Light Mode
+    <Stack spacing={3}>
+      {semanticLevels.map(({ token, level, label }) => (
+        <Box
+          key={token}
+          sx={{
+            p: 3,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: theme.shadows[level],
+            border: '1px solid',
+            borderColor: 'divider',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+          }}>
+          <Box>
+            <Typography
+              variant='body2'
+              color='text.primary'
+              sx={{ fontWeight: 600 }}>
+              {label}
+            </Typography>
+            <Typography
+              variant='caption'
+              color='text.secondary'
+              sx={{ fontFamily: 'monospace' }}>
+              elevation.{token} ({level})
+            </Typography>
+          </Box>
+          <Typography
+            variant='caption'
+            color='text.secondary'
+            sx={{
+              fontFamily: 'monospace',
+              maxWidth: '60%',
+              textAlign: 'right',
+              wordBreak: 'break-all',
+            }}>
+            {theme.shadows[level]}
           </Typography>
+        </Box>
+      ))}
+    </Stack>
+  )
+}
+
+const SampleCard = () => (
+  <Card>
+    <CardHeader title='カードタイトル' subheader='サブタイトル' />
+    <CardContent>
+      <Typography variant='body2' color='text.secondary'>
+        Card は elevation.raised を持ち、hover で floating
+        に持ち上がります。影とボーダーの両方で面を示します。
+      </Typography>
+    </CardContent>
+  </Card>
+)
+
+const ShadowComparisonContent = () => (
+  <Box sx={{ maxWidth: 1400, mx: 'auto', p: 4 }}>
+    <Typography variant='h3' gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
+      Light / Dark シャドウ比較
+    </Typography>
+    <Typography variant='body1' color='text.secondary' sx={{ mb: 5 }}>
+      影スケールはモードごとに別々に生成されます。ライトは寒色ニュートラルの影で
+      「落とす」、ダークは影を濃くしたうえで上端のリムライトで「浮かせる」という
+      別の戦略を取っています。下の 2
+      列は実際のライト/ダークテーマから値を取得しています。
+    </Typography>
+
+    <Grid container spacing={4}>
+      {/* Lightモード */}
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          Light Mode
+        </Typography>
+        <ThemeProvider theme={lightTheme}>
           <Box
             sx={{
               p: 3,
-              bgcolor: 'action.hover',
+              bgcolor: 'background.default',
               borderRadius: 3,
               border: '1px solid',
               borderColor: 'divider',
             }}>
-            <Stack spacing={3}>
-              {elevations.map((level) => (
-                <Box
-                  key={level}
-                  sx={{
-                    p: 3,
-                    bgcolor: 'background.paper',
-                    borderRadius: 2,
-                    boxShadow: theme.shadows[level],
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                    Elevation {level}
-                  </Typography>
-                  <Typography
-                    variant='caption'
-                    sx={{
-                      fontFamily: 'monospace',
-                      color: 'text.secondary',
-                      maxWidth: '60%',
-                      textAlign: 'right',
-                      wordBreak: 'break-all',
-                    }}>
-                    {theme.shadows[level] === 'none'
-                      ? 'none'
-                      : theme.shadows[level]}
-                  </Typography>
-                </Box>
-              ))}
-            </Stack>
+            <ElevationRows />
           </Box>
-        </Grid>
-
-        {/* Darkモード */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-            Dark Mode
-          </Typography>
-          <ThemeProvider theme={darkTheme}>
-            <Box
-              sx={{
-                p: 3,
-                bgcolor: 'background.default',
-                borderRadius: 3,
-                border: '1px solid',
-                borderColor: 'divider',
-              }}>
-              <Stack spacing={3}>
-                {elevations.map((level) => (
-                  <Box
-                    key={level}
-                    sx={{
-                      p: 3,
-                      bgcolor: 'background.paper',
-                      borderRadius: 2,
-                      boxShadow: theme.shadows[level],
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Typography
-                      variant='body2'
-                      sx={{ fontWeight: 600 }}
-                      color='text.primary'>
-                      Elevation {level}
-                    </Typography>
-                    <Typography
-                      variant='caption'
-                      color='text.secondary'
-                      sx={{
-                        fontFamily: 'monospace',
-                        maxWidth: '60%',
-                        textAlign: 'right',
-                        wordBreak: 'break-all',
-                      }}>
-                      {theme.shadows[level] === 'none'
-                        ? 'none'
-                        : theme.shadows[level]}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </ThemeProvider>
-        </Grid>
+        </ThemeProvider>
       </Grid>
 
-      {/* コンポーネント比較 */}
-      <Box sx={{ mt: 8 }}>
+      {/* Darkモード */}
+      <Grid size={{ xs: 12, md: 6 }}>
         <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-          コンポーネントの見え方比較
+          Dark Mode
         </Typography>
-        <Grid container spacing={4}>
-          {/* Light Card */}
-          <Grid size={{ xs: 12, md: 6 }}>
+        <ThemeProvider theme={darkTheme}>
+          <Box
+            sx={{
+              p: 3,
+              bgcolor: 'background.default',
+              borderRadius: 3,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}>
+            <ElevationRows />
+          </Box>
+        </ThemeProvider>
+      </Grid>
+    </Grid>
+
+    {/* コンポーネント比較 */}
+    <Box sx={{ mt: 8 }}>
+      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        コンポーネントの見え方比較
+      </Typography>
+      <Grid container spacing={4}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <ThemeProvider theme={lightTheme}>
             <Box
               sx={{
                 p: 4,
-                bgcolor: 'action.hover',
+                bgcolor: 'background.default',
                 borderRadius: 3,
                 border: '1px solid',
                 borderColor: 'divider',
               }}>
               <Typography
                 variant='subtitle2'
-                sx={{ fontWeight: 600, mb: 2, color: 'text.secondary' }}>
+                color='text.secondary'
+                sx={{ fontWeight: 600, mb: 2 }}>
                 Light
               </Typography>
-              <Card>
-                <CardHeader title='カードタイトル' subheader='サブタイトル' />
-                <CardContent>
-                  <Typography variant='body2' color='text.secondary'>
-                    ライトモードのカードです。微かな影とボーダーで浮き上がりを表現します。
-                  </Typography>
-                </CardContent>
-              </Card>
+              <SampleCard />
             </Box>
-          </Grid>
-
-          {/* Dark Card */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <ThemeProvider theme={darkTheme}>
-              <Box
-                sx={{
-                  p: 4,
-                  bgcolor: 'background.default',
-                  borderRadius: 3,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}>
-                <Typography
-                  variant='subtitle2'
-                  color='text.secondary'
-                  sx={{ fontWeight: 600, mb: 2 }}>
-                  Dark
-                </Typography>
-                <Box
-                  sx={{
-                    bgcolor: 'background.paper',
-                    borderRadius: 3,
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    boxShadow:
-                      '0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12)',
-                    overflow: 'hidden',
-                  }}>
-                  <Box
-                    sx={{
-                      px: 2.5,
-                      py: 2,
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                    }}>
-                    <Typography
-                      variant='subtitle2'
-                      color='text.primary'
-                      sx={{ fontWeight: 600 }}>
-                      カードタイトル
-                    </Typography>
-                    <Typography
-                      variant='caption'
-                      color='text.secondary'
-                      sx={{ mt: 0.25, display: 'block' }}>
-                      サブタイトル
-                    </Typography>
-                  </Box>
-                  <Box sx={{ px: 2.5, py: 2.5 }}>
-                    <Typography variant='body2' color='text.secondary'>
-                      ダークモードのカードです。ボーダーの視認性が重要になり、影は背景に溶け込みやすくなります。
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </ThemeProvider>
-          </Grid>
+          </ThemeProvider>
         </Grid>
-      </Box>
 
-      {/* 設計指針 */}
-      <Box sx={{ mt: 8 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-          設計指針
-        </Typography>
-        <Grid container spacing={3}>
-          {[
-            {
-              title: 'Lightモードの影',
-              description:
-                'rgba(0, 0, 0, 0.04)〜rgba(0, 0, 0, 0.25) の範囲で透明度を調整。微かな影で奥行きを表現し、UIの階層構造を伝えます。',
-            },
-            {
-              title: 'Darkモードの影',
-              description:
-                '暗い背景では影が見えにくいため、borderの活用が重要です。rgba(255, 255, 255, 0.08) のボーダーで要素の境界を明確にします。',
-            },
-            {
-              title: 'ホバー時の変化',
-              description:
-                'Cardなどのインタラクティブ要素はホバー時に影を強調。transition で滑らかなアニメーションを実現しています。',
-            },
-          ].map((item) => (
-            <Grid key={item.title} size={{ xs: 12, md: 4 }}>
-              <Paper
-                elevation={0}
-                variant='outlined'
-                sx={{ p: 3, borderRadius: 2, height: '100%' }}>
-                <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1 }}>
-                  {item.title}
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {item.description}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <ThemeProvider theme={darkTheme}>
+            <Box
+              sx={{
+                p: 4,
+                bgcolor: 'background.default',
+                borderRadius: 3,
+                border: '1px solid',
+                borderColor: 'divider',
+              }}>
+              <Typography
+                variant='subtitle2'
+                color='text.secondary'
+                sx={{ fontWeight: 600, mb: 2 }}>
+                Dark
+              </Typography>
+              <SampleCard />
+            </Box>
+          </ThemeProvider>
         </Grid>
-      </Box>
+      </Grid>
     </Box>
-  )
-}
+
+    {/* 設計指針 */}
+    <Box sx={{ mt: 8 }}>
+      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        設計指針
+      </Typography>
+      <Grid container spacing={3}>
+        {[
+          {
+            title: '影に色相を与える',
+            description:
+              '純黒の影は彩度がゼロで、色面に落ちるとくすんで「汚れ」に見えます。実世界の影は環境光を拾って寒色に転ぶため、ライトの影色は背景と同じ寒色ニュートラル slate-900 (#0f172a) を基準にしています。',
+          },
+          {
+            title: 'ダークはリムライトで浮かせる',
+            description:
+              '暗い背景に暗い影を落としても見えません。ダークでは影を濃くしたうえで、面の上端が光を拾う inset ハイライト（最大 10%）を重ね、「浮き」を光で表現します。',
+          },
+          {
+            title: '二層構造で空間に置く',
+            description:
+              '単層の影は「板が浮いている」だけに見えます。接地点を締める近接影と、距離を示す遠方影（負のスプレッドで裾を絞る）を重ね、面が空間に存在して見えるようにしています。',
+          },
+          {
+            title: '25 段を単一の曲線から生成',
+            description:
+              '手打ちの配列は途中で設計思想が変わり、段の連続性が壊れます。オフセット・ブラー・不透明度を段数 n の関数として導出し、どの段を選んでも同じ物理の上に乗るようにしています。',
+          },
+          {
+            title: 'ブラーはオフセットの 2.5 倍',
+            description:
+              '物理的な半影の広がりに合わせた比率です（整数への丸めがあるため実測比は 2.4〜2.7 に散ります）。遠方影は負のスプレッドで裾を絞り、影が要素より大きく広がって滲むのを防ぎます。',
+          },
+          {
+            title: '濃度は緩やかにしか上げない',
+            description:
+              '高く浮くほど影は「薄く広く」なるのが物理ですが、UI では階層の識別性が要るため 1 段あたり 0.2〜0.4% だけ濃くします。急峻に濃くすると上位の段が黒く潰れます。',
+          },
+        ].map((item) => (
+          <Grid key={item.title} size={{ xs: 12, md: 4 }}>
+            <Paper
+              elevation={0}
+              variant='outlined'
+              sx={{ p: 3, borderRadius: 2, height: '100%' }}>
+              <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1 }}>
+                {item.title}
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {item.description}
+              </Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  </Box>
+)
 
 export const ShadowComparison: StoryObj = {
   name: 'Light / Dark 比較',

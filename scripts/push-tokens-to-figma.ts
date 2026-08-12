@@ -55,10 +55,7 @@ interface FigmaVariableModeValue {
   variableId: string
   modeId: string
   value:
-    | boolean
-    | number
-    | string
-    | { r: number; g: number; b: number; a: number }
+    boolean | number | string | { r: number; g: number; b: number; a: number }
 }
 
 // ---------------------------------------------------------------------------
@@ -96,10 +93,7 @@ interface VariableEntry {
   name: string
   resolvedType: 'BOOLEAN' | 'FLOAT' | 'STRING' | 'COLOR'
   value:
-    | boolean
-    | number
-    | string
-    | { r: number; g: number; b: number; a: number }
+    boolean | number | string | { r: number; g: number; b: number; a: number }
   description?: string
 }
 

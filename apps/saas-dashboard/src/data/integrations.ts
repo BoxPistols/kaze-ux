@@ -1,8 +1,5 @@
 export type IntegrationStatus =
-  | 'connected'
-  | 'disconnected'
-  | 'error'
-  | 'pending'
+  'connected' | 'disconnected' | 'error' | 'pending'
 
 export type Integration = {
   id: string

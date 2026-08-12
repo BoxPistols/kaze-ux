@@ -64,7 +64,8 @@ const resolveMaxOutputTokens = (model: string, isTest: boolean): number => {
     // Gemini 2.5 は reasoning 消費で 50 では不足、buffer+最低出力 10 を確保
     return isGemini25 ? GEMINI_REASONING_BUFFER + 10 : 50
   }
-  if (model.includes('nano')) return 4000
+  // コスト最適枠（nano / luna）は出力上限を絞る
+  if (model.includes('nano') || model.includes('luna')) return 4000
   if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
     return 16000
   }

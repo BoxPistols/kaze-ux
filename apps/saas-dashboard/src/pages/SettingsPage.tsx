@@ -58,7 +58,7 @@ export const SettingsPage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               {sectionIcon(
                 <PersonIcon fontSize='small' aria-hidden='true' />,
-                'primary.main',
+                'primary.textContrast',
                 'rgba(38, 66, 190, 0.08)'
               )}
               <CardTitle>Profile</CardTitle>
@@ -127,7 +127,7 @@ export const SettingsPage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               {sectionIcon(
                 <TuneIcon fontSize='small' aria-hidden='true' />,
-                'info.main',
+                'info.textContrast',
                 'rgba(29, 175, 194, 0.08)'
               )}
               <CardTitle>Preferences</CardTitle>
@@ -183,7 +183,7 @@ export const SettingsPage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               {sectionIcon(
                 <DarkModeIcon fontSize='small' aria-hidden='true' />,
-                'warning.main',
+                'warning.textContrast',
                 'rgba(235, 129, 23, 0.08)'
               )}
               <CardTitle>Theme</CardTitle>
@@ -204,7 +204,7 @@ export const SettingsPage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               {sectionIcon(
                 <CalendarMonthIcon fontSize='small' aria-hidden='true' />,
-                'success.main',
+                'success.textContrast',
                 'rgba(70, 171, 74, 0.08)'
               )}
               <CardTitle>Calendar</CardTitle>
@@ -227,7 +227,7 @@ export const SettingsPage = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           {sectionIcon(
             <SettingsIcon fontSize='small' aria-hidden='true' />,
-            'error.main',
+            'error.textContrast',
             'rgba(218, 55, 55, 0.08)'
           )}
           <CardTitle>Advanced Settings</CardTitle>
@@ -298,7 +298,7 @@ export const SettingsPage = () => {
           summary={
             <Typography
               variant='body2'
-              sx={{ fontWeight: 500, color: 'error.main' }}>
+              sx={{ fontWeight: 500, color: 'error.textContrast' }}>
               Danger Zone
             </Typography>
           }

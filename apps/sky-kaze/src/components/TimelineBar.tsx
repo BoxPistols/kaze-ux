@@ -10,9 +10,11 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import { Box, Typography, alpha, keyframes, useMediaQuery } from '@mui/material'
 
 import { IconButton } from '@/components/ui/icon-button'
+import { motionOf } from '@/themes/motion'
 
 import { useSimulation, DRIVER_STATUS_COLOR } from '~/data/simulation'
 import { floatingPanelSx } from '~/utils/panelStyles'
+import { readableStatusColor } from '~/utils/readableStatusColor'
 
 const SPEEDS = [1, 2, 5, 10]
 
@@ -170,7 +172,10 @@ export const TimelineBar = () => {
                 bgcolor: 'transparent',
                 color:
                   speed === s ? DRIVER_STATUS_COLOR.moving : 'text.secondary',
-                transition: 'all 0.15s ease',
+                transition: motionOf(
+                  ['border-color', 'background-color', 'color'],
+                  'micro'
+                ),
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -218,7 +223,14 @@ export const TimelineBar = () => {
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <CheckCircleIcon
-            sx={{ fontSize: 12, color: DRIVER_STATUS_COLOR.delivering }}
+            sx={{
+              fontSize: 12,
+              color: (theme) =>
+                readableStatusColor(
+                  DRIVER_STATUS_COLOR.delivering,
+                  theme.palette.mode
+                ),
+            }}
             aria-hidden='true'
           />
           <Typography
@@ -226,7 +238,11 @@ export const TimelineBar = () => {
               fontSize: '14px',
               fontFamily: "'JetBrains Mono', monospace",
               fontWeight: 600,
-              color: DRIVER_STATUS_COLOR.delivering,
+              color: (theme) =>
+                readableStatusColor(
+                  DRIVER_STATUS_COLOR.delivering,
+                  theme.palette.mode
+                ),
             }}>
             {deliveryCount} 完了
           </Typography>
@@ -248,7 +264,11 @@ export const TimelineBar = () => {
                 fontSize: '14px',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
-                color: DRIVER_STATUS_COLOR.incident,
+                color: (theme) =>
+                  readableStatusColor(
+                    DRIVER_STATUS_COLOR.incident,
+                    theme.palette.mode
+                  ),
               }}>
               {incidentCount} 異常
             </Typography>

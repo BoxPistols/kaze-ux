@@ -120,7 +120,7 @@ const MUIAutocompleteRender = () => {
       renderInput={(params) => (
         <TextField
           {...params}
-          label='運航拠点'
+          label='配送拠点'
           placeholder='拠点名を検索'
           size='small'
         />

@@ -312,9 +312,9 @@ const PracticalContent = () => {
               テーブル行のコンテキストメニュー
             </Typography>
             <Stack divider={<Divider />}>
-              <TableRowMenu name='FL-001 東京湾岸調査' />
-              <TableRowMenu name='FL-002 河川敷点検' />
-              <TableRowMenu name='FL-003 農地モニタリング' />
+              <TableRowMenu name='DL-001 東京湾岸ルート' />
+              <TableRowMenu name='DL-002 沿岸倉庫便' />
+              <TableRowMenu name='DL-003 郊外集荷ルート' />
             </Stack>
           </Paper>
         </Grid>

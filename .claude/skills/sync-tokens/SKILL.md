@@ -37,7 +37,7 @@ pnpm figma-plugin:build
 
 以下を確認:
 
-- `src/themes/colorToken.ts` の primary カラーが `#0EADB8` であること
+- `src/themes/colorToken.ts` の primary が `BRAND_BLUE`（`#0057B8`）を参照していること
 - `tokens.json` の `$description` が適切であること
 - `metadata/components.json` の `framework` フィールドにバージョン番号がないこと
 

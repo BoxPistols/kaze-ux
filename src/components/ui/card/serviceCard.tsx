@@ -1,4 +1,5 @@
 import {
+  alpha,
   Box,
   Button,
   Card,
@@ -7,6 +8,8 @@ import {
   Typography,
 } from '@mui/material'
 import { type ReactNode } from 'react'
+
+import { motionOf } from '@/themes/motion'
 
 export interface ServiceCardProps {
   /** サービス名 */
@@ -64,12 +67,12 @@ export const ServiceCard = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+        transition: motionOf(['border-color', 'box-shadow'], 'short'),
         '&:hover': {
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 12px 40px rgba(14,173,184,0.15)'
-              : '0 12px 40px rgba(14,173,184,0.12)',
+              ? `0 12px 40px ${alpha(theme.palette.primary.main, 0.15)}`
+              : `0 12px 40px ${alpha(theme.palette.primary.main, 0.12)}`,
           borderColor: 'primary.main',
         },
       }}>

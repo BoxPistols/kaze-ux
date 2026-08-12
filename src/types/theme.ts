@@ -1,10 +1,19 @@
 import type { ThemeColors, ColorSet, GreyShades } from '../themes/colorToken'
 import type { PaletteOptions, Theme as MuiTheme } from '@mui/material/styles'
 
-// Augment MUI's Easing interface with custom easing values
+// Easing / Duration の拡張は src/themes/motion.ts に集約している
+
+// ColorSet の textContrast（前景として使う色）を MUI のパレット型に載せる。
+// sx の文字列指定 (color: 'primary.textContrast') だけでなく、
+// theme.palette.primary.textContrast として型安全に参照できるようにする
 declare module '@mui/material/styles' {
-  interface Easing {
-    smooth: string
+  interface PaletteColor {
+    textContrast?: string
+    onLight?: string
+  }
+  interface SimplePaletteColorOptions {
+    textContrast?: string
+    onLight?: string
   }
 }
 

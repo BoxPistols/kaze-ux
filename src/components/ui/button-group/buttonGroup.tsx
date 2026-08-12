@@ -9,6 +9,8 @@ import {
 } from '@mui/material'
 import { type ReactNode } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 export interface ButtonGroupOption {
   /** オプションの値 */
   value: string
@@ -147,7 +149,7 @@ export const ButtonGroup = ({
           variant={isSelected(option.value) ? 'contained' : variant}
           startIcon={option.icon}
           sx={{
-            transition: 'all 0.2s ease-in-out',
+            transition: motionOf(['background-color', 'color', 'box-shadow']),
             ...(isSelected(option.value) && {
               boxShadow: 'none',
             }),

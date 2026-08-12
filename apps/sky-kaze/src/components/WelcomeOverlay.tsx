@@ -6,6 +6,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useRef } from 'react'
 
+import { elevation } from '@/themes/elevation'
+import { kazeDuration, kazeEasing } from '@/themes/motion'
+
 import { useSimulation } from '~/data/simulation'
 
 export const WelcomeOverlay = () => {
@@ -41,8 +44,8 @@ export const WelcomeOverlay = () => {
           backdropFilter: 'blur(12px)',
           bgcolor: 'rgba(15, 23, 42, 0.6)',
           border: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
-          animation: 'fadeIn 0.6s ease',
+          boxShadow: (theme) => theme.shadows[elevation.overlay],
+          animation: `fadeIn ${kazeDuration.scene}ms ${kazeEasing.enter}`,
           '@keyframes fadeIn': {
             from: { opacity: 0, transform: 'translateY(8px)' },
             to: { opacity: 1, transform: 'translateY(0)' },

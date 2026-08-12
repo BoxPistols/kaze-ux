@@ -11,6 +11,8 @@ import {
 } from '@mui/material'
 import { forwardRef, type ReactNode } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 export interface FabProps extends Omit<MuiFabProps, 'children'> {
   /** アイコン */
   icon: ReactNode
@@ -28,11 +30,7 @@ export interface FabProps extends Omit<MuiFabProps, 'children'> {
   position?: 'fixed' | 'absolute' | 'relative'
   /** 配置位置 */
   placement?:
-    | 'bottom-right'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'top-right'
-    | 'top-left'
+    'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left'
   /** カスタムスタイル */
   sx?: SxProps<Theme>
 }
@@ -143,7 +141,11 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(
         sx={[
           {
             boxShadow: 3,
-            transition: 'all 0.2s ease-in-out',
+            transition: motionOf([
+              'box-shadow',
+              'transform',
+              'background-color',
+            ]),
             // フォントサイズ: small=12px(0.86rem), medium=14px(1rem), large=16px(1.14rem)
             fontSize:
               size === 'small'

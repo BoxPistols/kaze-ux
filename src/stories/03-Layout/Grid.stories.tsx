@@ -289,12 +289,7 @@ interface SpacingArgs {
 
 const SpacingPlayground = ({ spacing, itemCount, columns }: SpacingArgs) => {
   const colSize = Math.max(1, Math.round(12 / columns)) as
-    | 1
-    | 2
-    | 3
-    | 4
-    | 6
-    | 12
+    1 | 2 | 3 | 4 | 6 | 12
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
       <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>

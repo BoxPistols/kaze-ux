@@ -12,9 +12,11 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
+import { elevation } from '@/themes/elevation'
+import { motionOf } from '@/themes/motion'
 
 import { restaurants, categories } from '~/data/restaurants'
-import { UE_GREEN, UE_GREEN_DARK, UE_STAR } from '~/theme/colors'
+import { UE_GREEN, UE_GREEN_DARK, UE_ON_GREEN, UE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const HomePage = () => {
@@ -97,7 +99,7 @@ export const HomePage = () => {
                 '& .MuiOutlinedInput-root': {
                   bgcolor: 'background.paper',
                   borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                  boxShadow: (theme) => theme.shadows[elevation.overlay],
                 },
               }}
             />
@@ -186,14 +188,15 @@ export const HomePage = () => {
                   sx={{
                     minWidth: 300,
                     cursor: 'pointer',
-                    transition: 'all 0.25s ease',
+                    // 影スケールが mode 別に生成されるため light/dark 分岐は不要
+                    transition: motionOf(
+                      ['box-shadow', 'transform', 'border-color'],
+                      'short'
+                    ),
                     overflow: 'hidden',
                     '&:hover': {
                       transform: 'translateY(-6px)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? '0 12px 32px rgba(0,0,0,0.5)'
-                          : '0 12px 32px rgba(0,0,0,0.12)',
+                      boxShadow: (theme) => theme.shadows[elevation.popover],
                     },
                   }}
                   onClick={() => navigate(`/restaurant/${r.id}`)}>
@@ -202,7 +205,7 @@ export const HomePage = () => {
                       sx={{
                         height: 180,
                         background: `url(${r.image}) center/cover`,
-                        transition: 'transform 0.4s ease',
+                        transition: motionOf(['transform'], 'macro', 'enter'),
                         '&:hover': { transform: 'scale(1.05)' },
                       }}
                     />
@@ -213,8 +216,11 @@ export const HomePage = () => {
                         left: 0,
                         right: 0,
                         height: '50%',
+                        // 写真の明るさは制御できない。最悪ケース（白い写真）
+                        // でも上に乗る文字が基準を満たす濃さにする。
+                        // 0.6 だと半透明の副次テキストが 4.07:1 まで落ちた
                         background:
-                          'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
+                          'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
                       }}
                     />
                     <Box
@@ -223,7 +229,7 @@ export const HomePage = () => {
                         top: 12,
                         left: 12,
                         bgcolor: UE_GREEN,
-                        color: '#fff',
+                        color: UE_ON_GREEN,
                         px: 1.5,
                         py: 0.5,
                         borderRadius: 2,
@@ -252,7 +258,7 @@ export const HomePage = () => {
                       </Typography>
                       <Typography
                         variant='body2'
-                        sx={{ color: 'rgba(255,255,255,0.75)' }}>
+                        sx={{ color: 'rgba(255,255,255,0.85)' }}>
                         ({r.reviewCount}+)
                       </Typography>
                     </Box>
@@ -331,17 +337,17 @@ export const HomePage = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    transition: 'all 0.25s ease',
+                    transition: motionOf(
+                      ['box-shadow', 'transform', 'border-color'],
+                      'short'
+                    ),
                     overflow: 'hidden',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? '0 8px 24px rgba(0,0,0,0.5)'
-                          : '0 8px 24px rgba(0,0,0,0.1)',
+                      boxShadow: (theme) => theme.shadows[elevation.overlay],
                     },
                   }}
                   onClick={() => navigate(`/restaurant/${r.id}`)}>
@@ -350,7 +356,7 @@ export const HomePage = () => {
                       sx={{
                         height: 200,
                         background: `url(${r.image}) center/cover`,
-                        transition: 'transform 0.4s ease',
+                        transition: motionOf(['transform'], 'macro', 'enter'),
                       }}
                     />
                     <Box

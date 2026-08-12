@@ -191,6 +191,8 @@ const TransitionDemo = () => {
               borderRadius: 1,
               mx: 'auto',
               mb: 0.5,
+              // motion-usage-allow: CSS のイージングを比較して見せる教材。
+              // 時間を固定してイージングだけを変えるため、直書きが必要
               transition: `transform 0.4s ${t.easing}`,
               '&:hover': { transform: 'scale(1.3)' },
               cursor: 'pointer',

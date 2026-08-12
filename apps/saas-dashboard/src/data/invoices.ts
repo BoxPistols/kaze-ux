@@ -1,9 +1,5 @@
 export type InvoiceStatus =
-  | 'paid'
-  | 'pending'
-  | 'overdue'
-  | 'draft'
-  | 'cancelled'
+  'paid' | 'pending' | 'overdue' | 'draft' | 'cancelled'
 
 export type Invoice = {
   id: string

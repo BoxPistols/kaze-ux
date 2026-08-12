@@ -2,6 +2,9 @@ import { Close } from '@mui/icons-material'
 import { Box, IconButton, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
+import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
+
 /**
  * サイドバーヘッダーコンポーネントのProps型定義
  */
@@ -24,31 +27,13 @@ interface SidebarHeaderProps {
 
 /**
  * ロゴコンポーネント
- * Kaze UXのテキストベースロゴを表示
+ *
+ * レギュレーションは src/components/ui/logo に集約している。
+ * ここは後方互換のための薄いラッパー。
  */
-export const Logo = ({ size = 24 }: { size?: number }) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: size,
-        height: size,
-        minWidth: size,
-        minHeight: size,
-        // テーマのprimary.main色を使用
-        backgroundColor: 'primary.main',
-        borderRadius: '4px',
-        color: 'white',
-        fontSize: `${size * 0.4}px`,
-        fontWeight: 'bold',
-        letterSpacing: '-0.5px',
-      }}>
-      KU
-    </Box>
-  )
-}
+export const Logo = ({ size = 24 }: { size?: number }) => (
+  <KazeLogo size={size} title='Kaze' />
+)
 
 export const SidebarHeader = ({
   isOpen,
@@ -99,7 +84,7 @@ export const SidebarHeader = ({
                 '&:hover': {
                   opacity: 0.8,
                 },
-                transition: 'opacity 0.2s ease',
+                transition: motionOf(['opacity'], 'short'),
               }}>
               {appName}
             </Typography>
@@ -139,7 +124,7 @@ export const SidebarHeader = ({
               '&:hover': {
                 opacity: 0.8,
               },
-              transition: 'opacity 0.2s ease',
+              transition: motionOf(['opacity'], 'short'),
             }}>
             <Logo size={24} />
           </Box>

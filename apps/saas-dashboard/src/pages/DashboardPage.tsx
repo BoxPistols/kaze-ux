@@ -18,7 +18,9 @@ import { Fab } from '@/components/ui/fab'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
 import { PageHeader } from '@/components/ui/text'
+import { elevation } from '@/themes/elevation'
 import { KAZE_EYEBROW, KAZE_PRINT } from '@/themes/kazeMixins'
+import { motionOf } from '@/themes/motion'
 
 import { activities } from '~/data/activity'
 import { kpiCards } from '~/data/kpi'
@@ -32,22 +34,22 @@ const kpiIconConfig: Record<
   projects: {
     icon: <FolderIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(38, 66, 190, 0.08)',
-    color: 'primary.main',
+    color: 'primary.textContrast',
   },
   contacts: {
     icon: <ContactsIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(29, 175, 194, 0.08)',
-    color: 'info.main',
+    color: 'info.textContrast',
   },
   revenue: {
     icon: <AttachMoneyIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(70, 171, 74, 0.08)',
-    color: 'success.main',
+    color: 'success.textContrast',
   },
   tasks: {
     icon: <TaskAltIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(235, 129, 23, 0.08)',
-    color: 'warning.main',
+    color: 'warning.textContrast',
   },
 }
 
@@ -68,12 +70,14 @@ const activityTypeColors: Record<string, string> = {
   system: 'default',
 }
 
+// ドットは非テキストの UI 部品なので 3:1 が要る。main は面のための色で、
+// 淡い背景に置くと届かない（success #46ab4a は 2.71:1）
 const activityDotColors: Record<string, string> = {
-  project: 'primary.main',
-  task: 'success.main',
-  contact: 'info.main',
-  invoice: 'warning.main',
-  team: 'secondary.main',
+  project: 'primary.textContrast',
+  task: 'success.textContrast',
+  contact: 'info.textContrast',
+  invoice: 'warning.textContrast',
+  team: 'secondary.textContrast',
   system: 'text.disabled',
 }
 
@@ -101,13 +105,14 @@ export const DashboardPage = () => {
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.id}>
               <Card
                 sx={{
-                  transition: 'all 0.2s ease-in-out',
+                  // 影スケールが mode 別に生成されるため light/dark 分岐は不要
+                  transition: motionOf(
+                    ['box-shadow', 'transform', 'border-color'],
+                    'short'
+                  ),
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? '0 8px 24px rgba(0,0,0,0.4)'
-                        : '0 8px 24px rgba(0,0,0,0.08)',
+                    boxShadow: (theme) => theme.shadows[elevation.floating],
                   },
                 }}>
                 <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
@@ -154,12 +159,12 @@ export const DashboardPage = () => {
                         }}>
                         {kpi.change > 0 ? (
                           <TrendingUpIcon
-                            sx={{ fontSize: 16, color: 'success.main' }}
+                            sx={{ fontSize: 16, color: 'success.textContrast' }}
                             aria-hidden='true'
                           />
                         ) : (
                           <TrendingDownIcon
-                            sx={{ fontSize: 16, color: 'error.main' }}
+                            sx={{ fontSize: 16, color: 'error.textContrast' }}
                             aria-hidden='true'
                           />
                         )}
@@ -167,7 +172,9 @@ export const DashboardPage = () => {
                           variant='caption'
                           sx={{
                             color:
-                              kpi.change > 0 ? 'success.main' : 'error.main',
+                              kpi.change > 0
+                                ? 'success.textContrast'
+                                : 'error.textContrast',
                             fontWeight: 600,
                           }}>
                           {kpi.change > 0 ? '+' : ''}
@@ -221,7 +228,7 @@ export const DashboardPage = () => {
                   href='/projects'
                   variant='caption'
                   sx={{
-                    color: 'primary.main',
+                    color: 'primary.textContrast',
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'none',
@@ -266,7 +273,7 @@ export const DashboardPage = () => {
                         key={project.id}
                         style={{
                           cursor: 'pointer',
-                          transition: 'background-color 0.15s ease',
+                          transition: motionOf(['background-color'], 'short'),
                         }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor =
@@ -466,7 +473,7 @@ export const DashboardPage = () => {
                       </Typography>
                       <Typography
                         variant='caption'
-                        color='text.disabled'
+                        color='text.secondary'
                         sx={{ fontSize: '0.7rem' }}>
                         {dayjs(activity.timestamp).format('MMM D, HH:mm')}
                       </Typography>
@@ -493,7 +500,8 @@ export const DashboardPage = () => {
                 <Box
                   sx={{
                     bgcolor: 'success.main',
-                    color: '#fff',
+                    // ダークでは success.main が明るく、白文字は 1.96:1 になる
+                    color: 'success.contrastText',
                     px: 1,
                     py: 0.25,
                     borderRadius: 1,
@@ -515,7 +523,7 @@ export const DashboardPage = () => {
                       gap: 1.5,
                       p: 1,
                       borderRadius: 1.5,
-                      transition: 'background-color 0.15s ease',
+                      transition: motionOf(['background-color'], 'short'),
                       '&:hover': { bgcolor: 'action.hover' },
                     }}>
                     <UserAvatar

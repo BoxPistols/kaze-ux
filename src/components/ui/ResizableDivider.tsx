@@ -9,6 +9,8 @@
 import { Box, useTheme, alpha } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 /**
  * ドラッグインジケーター - ドット（・）の表示
  */
@@ -231,7 +233,7 @@ export const ResizableDivider = React.forwardRef<
               }),
           bgcolor: theme.palette.divider,
           opacity: isDragging ? 0 : 1, // Drag時はハイライト色が出るのでラインは隠す（好みで調整）
-          transition: 'opacity 0.2s',
+          transition: motionOf(['opacity'], 'short'),
         }}
       />
       <DragIndicator

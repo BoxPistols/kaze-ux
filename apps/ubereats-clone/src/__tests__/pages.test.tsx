@@ -37,7 +37,7 @@ const renderPage = (page: React.ReactNode, path = '/', route = '/') => {
   )
 }
 
-describe('UberEats Clone Pages - Smoke Tests', () => {
+describe('KazeEats Pages - Smoke Tests', () => {
   it('renders HomePage without crashing', () => {
     renderPage(<HomePage />)
     expect(screen.getByText(/Delicious food/)).toBeTruthy()

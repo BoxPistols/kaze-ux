@@ -1,5 +1,7 @@
 import { Box, Typography, Grid, Stack } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
+
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -30,7 +32,7 @@ const DesignPhilosophyOverview = () => {
     values: [
       {
         title: '信頼感',
-        color: '#0EADB8',
+        color: 'primary.textContrast',
         attributes: ['安心感', '分かりやすさ', '高品質', '責任感', '現場目線'],
       },
       {
@@ -97,7 +99,7 @@ const DesignPhilosophyOverview = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(14,173,184,0.08)',
+            : alpha(theme.palette.primary.main, 0.08),
         }}>
         {/* 装飾: グリッドドット */}
         <Box
@@ -263,7 +265,7 @@ const DesignPhilosophyOverview = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s',
+                  transition: motionOf(['border-color'], 'short'),
                   '&:hover': {
                     borderColor: value.color,
                   },
@@ -357,7 +359,7 @@ const DesignPhilosophyOverview = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                  transition: motionOf(['border-color', 'box-shadow'], 'short'),
                   '&:hover': {
                     borderColor: isDark
                       ? 'rgba(255,255,255,0.15)'

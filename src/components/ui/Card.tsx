@@ -5,6 +5,8 @@
  */
 
 import {
+  Box,
+  type BoxProps,
   Paper,
   type PaperProps,
   Typography,
@@ -51,16 +53,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 )
 Card.displayName = 'Card'
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex flex-col space-y-1.5 p-6 pb-0', className)}
-    {...props}
-  />
-))
+const CardHeader = React.forwardRef<HTMLDivElement, BoxProps>(
+  ({ className, ...props }, ref) => (
+    <Box
+      ref={ref}
+      className={cn('flex flex-col space-y-1.5 p-6 pb-0', className)}
+      {...props}
+    />
+  )
+)
 CardHeader.displayName = 'CardHeader'
 
 // PRINT = 活字 (Fraunces Variable 基調)、display 見出し
@@ -104,24 +105,27 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 )
 CardDescription.displayName = 'CardDescription'
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('p-6', className)} {...props} />
-))
+/**
+ * Card は Paper（MUI）なので sx を受けるが、配下は素の div だった。
+ * 呼び出し側は sx で余白を調整しており、それが DOM 属性として
+ * 捨てられて無視されていた。Box にして両方の書き方を通す。
+ */
+const CardContent = React.forwardRef<HTMLDivElement, BoxProps>(
+  ({ className, ...props }, ref) => (
+    <Box ref={ref} className={cn('p-6', className)} {...props} />
+  )
+)
 CardContent.displayName = 'CardContent'
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex items-center p-6', className)}
-    {...props}
-  />
-))
+const CardFooter = React.forwardRef<HTMLDivElement, BoxProps>(
+  ({ className, ...props }, ref) => (
+    <Box
+      ref={ref}
+      className={cn('flex items-center p-6', className)}
+      {...props}
+    />
+  )
+)
 CardFooter.displayName = 'CardFooter'
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

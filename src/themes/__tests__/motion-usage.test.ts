@@ -1,0 +1,139 @@
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+
+import { describe, expect, it } from 'vitest'
+
+/**
+ * モーションの禁止パターンをリポジトリ全体で機械的に止める。
+ *
+ * `transition: 'all ...'` は何度直しても戻ってくる。人が気をつけるより、
+ * 混入した時点で落ちるようにした方が安い。
+ *
+ * `all` を避ける理由:
+ * - 意図しないプロパティまで動く。フォーカスリングの outline がフェード
+ *   インして、キーボード操作の応答が遅れて見える（実際に起きた）
+ * - レイアウトに関わるプロパティが混ざると毎フレーム再計算が走る
+ */
+
+const ROOTS = ['src', 'apps']
+const SKIP_DIRS = new Set([
+  'node_modules',
+  'dist',
+  'coverage',
+  'storybook-static',
+  '__tests__',
+])
+const EXTENSIONS = ['.ts', '.tsx']
+
+/** モーション体系そのものを説明するファイルは対象外 */
+const ALLOWLIST = new Set([resolve('src/themes/motion.ts')])
+
+const collect = (dir: string, out: string[] = []): string[] => {
+  for (const entry of readdirSync(dir)) {
+    if (SKIP_DIRS.has(entry)) continue
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) {
+      collect(full, out)
+    } else if (EXTENSIONS.some((ext) => entry.endsWith(ext))) {
+      out.push(full)
+    }
+  }
+  return out
+}
+
+const sourceFiles = ROOTS.flatMap((root) => collect(resolve(root))).filter(
+  (file) => !ALLOWLIST.has(file)
+)
+
+/** `.css` は別の形をしているので、走査も判定も分ける */
+const collectCss = (dir: string, out: string[] = []): string[] => {
+  for (const entry of readdirSync(dir)) {
+    if (SKIP_DIRS.has(entry)) continue
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) {
+      collectCss(full, out)
+    } else if (entry.endsWith('.css')) {
+      out.push(full)
+    }
+  }
+  return out
+}
+
+/**
+ * 直前の行に付いた個別の除外指定。
+ *
+ * イージング曲線そのものを見せるデモのように、時間を固定して
+ * イージングだけを変える必要がある箇所を、理由付きで通す。
+ * ファイル単位で除外すると、その中の新しい違反まで見逃す。
+ */
+const ALLOW_MARKER = 'motion-usage-allow'
+
+const findMatches = (pattern: RegExp) =>
+  sourceFiles.flatMap((file) => {
+    const lines = readFileSync(file, 'utf8').split('\n')
+    return lines
+      .map((line, i) => ({ file, line: i + 1, text: line.trim() }))
+      .filter(({ text, line }) => {
+        if (!pattern.test(text)) return false
+        // 直前のコメントブロック（最大 3 行）にマーカーがあれば通す
+        const preceding = lines.slice(Math.max(0, line - 4), line - 1)
+        return !preceding.some((l) => l.includes(ALLOW_MARKER))
+      })
+  })
+
+const format = (hits: { file: string; line: number; text: string }[]) =>
+  hits
+    .map(
+      ({ file, line, text }) =>
+        `${file.replace(resolve('.'), '.')}:${line} ${text}`
+    )
+    .join('\n')
+
+describe('モーションの禁止パターン', () => {
+  it('走査対象を取りこぼしていない', () => {
+    expect(sourceFiles.length).toBeGreaterThan(100)
+  })
+
+  it("transition: 'all ...' を使っていない", () => {
+    const hits = findMatches(/transition:\s*['"`]all\b/)
+    expect(hits, `\n${format(hits)}`).toEqual([])
+  })
+
+  it('transition に秒数を直書きしていない（motionOf を使う）', () => {
+    // 'all' を伴わない `transition: '0.3s ease'` のような直書きも同じ問題を持つ
+    // プロパティ名が先行する `transition: 'opacity 150ms ease'` も拾う
+    const hits = findMatches(/transition:\s*['"`][^'"`]*\b\d+(?:\.\d+)?m?s\b/)
+    expect(hits, `\n${format(hits)}`).toEqual([])
+  })
+})
+
+/**
+ * 素の CSS は上の検査を素通りしていた。
+ *
+ * 上のパターンは TS の文字列リテラルを狙って引用符を要求し、かつ 1 行で
+ * 完結する前提だった。CSS の宣言は引用符が無く複数行にまたがるため、
+ * 全アプリの `index.css` に写経された `0.3s ease` が 4 件とも残っていた。
+ * 宣言を `;` まで連結してから見る。
+ */
+describe('CSS のモーション', () => {
+  const cssFiles = ROOTS.flatMap((root) => collectCss(resolve(root)))
+
+  it('走査対象の .css を見つけている', () => {
+    expect(cssFiles.length).toBeGreaterThan(0)
+  })
+
+  it('transition に秒数を直書きしていない（--motion-* 変数を使う）', () => {
+    const hits: string[] = []
+    for (const file of cssFiles) {
+      const css = readFileSync(file, 'utf8')
+      for (const m of css.matchAll(/transition:[^;}]*/g)) {
+        if (!/\b\d+(?:\.\d+)?m?s\b/.test(m[0])) continue
+        const line = css.slice(0, m.index).split('\n').length
+        hits.push(
+          `${file.replace(resolve('.'), '.')}:${line} ${m[0].replace(/\s+/g, ' ').trim()}`
+        )
+      }
+    }
+    expect(hits, `\n${hits.join('\n')}`).toEqual([])
+  })
+})

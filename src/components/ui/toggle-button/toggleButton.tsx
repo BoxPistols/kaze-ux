@@ -12,6 +12,7 @@ import {
 import { forwardRef, type ReactNode } from 'react'
 
 import { KAZE_STAMP } from '@/themes/kazeMixins'
+import { motionOf } from '@/themes/motion'
 
 // ToggleButton Props
 export interface ToggleButtonProps extends Omit<MuiToggleButtonProps, 'color'> {
@@ -75,7 +76,7 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
       : {
           textTransform: 'none' as const,
           borderRadius: 1.5,
-          transition: 'all 0.2s ease-in-out',
+          transition: motionOf(['background-color', 'color', 'border-color']),
           '&.Mui-selected': {
             fontWeight: 600,
           },

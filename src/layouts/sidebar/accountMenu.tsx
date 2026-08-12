@@ -11,6 +11,8 @@ import {
 import { styled } from '@mui/material/styles'
 import { useState } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 import type { AccountMenuItem } from './types'
 
 export type AccountMenuProps = {
@@ -91,7 +93,7 @@ export const AccountMenu = ({
             <ExpandMoreIcon
               fontSize='small'
               sx={{
-                transition: 'transform 0.2s',
+                transition: motionOf(['transform'], 'short'),
                 transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
               }}
             />

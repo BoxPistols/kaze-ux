@@ -1,6 +1,6 @@
 // Visual Editor メインコンテナ
 
-import { Box, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Stack, Typography, alpha, useTheme } from '@mui/material'
 import { useState, useCallback } from 'react'
 
 import { ComponentPalette } from './ComponentPalette'
@@ -56,8 +56,8 @@ export const VisualEditor = () => {
           borderColor: 'divider',
           bgcolor:
             theme.palette.mode === 'dark'
-              ? 'rgba(14,173,184,0.08)'
-              : 'rgba(14,173,184,0.04)',
+              ? alpha(theme.palette.primary.main, 0.08)
+              : alpha(theme.palette.primary.main, 0.04),
         }}>
         <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
           Visual Editor

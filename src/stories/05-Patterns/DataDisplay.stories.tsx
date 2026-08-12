@@ -187,7 +187,7 @@ function SearchBar({
         alignItems='center'
         justifyContent='space-between'>
         <TextField
-          placeholder='機体名で検索...'
+          placeholder='車両名で検索...'
           size='small'
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -243,7 +243,7 @@ function filterRecords(
   activeFilter: FilterOption
 ): DeviceRecord[] {
   return records.filter((record) => {
-    // 機体名による検索フィルター
+    // 車両名による検索フィルター
     const matchesSearch =
       searchQuery === '' ||
       record.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -325,7 +325,7 @@ const SearchableTableContent = () => {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>機体名</TableCell>
+              <TableCell>車両名</TableCell>
               <TableCell>モデル</TableCell>
               <TableCell>ステータス</TableCell>
               <TableCell align='right'>バッテリー</TableCell>
@@ -457,7 +457,7 @@ const CardGridContent = () => {
             <Grid key={record.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
-                  {/* ヘッダー: 機体名とステータス */}
+                  {/* ヘッダー: 車両名とステータス */}
                   <Stack
                     direction='row'
                     justifyContent='space-between'

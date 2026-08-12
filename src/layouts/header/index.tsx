@@ -3,6 +3,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
 
 import { LAYOUT_CONSTANTS } from '@/constants/layout'
+import { motionOf } from '@/themes/motion'
 
 interface HeaderProps {
   toggleDrawer: () => void
@@ -28,7 +29,7 @@ export const Header = ({ toggleDrawer, open }: HeaderProps) => {
           sx={{
             marginRight: 2,
             marginLeft: -1,
-            transition: 'transform 0.2s ease-in-out',
+            transition: motionOf(['transform'], 'short'),
             transform: open ? 'rotate(0deg)' : 'rotate(-180deg)', // 矢印の向きを調整
           }}>
           <MenuOpenIcon />
@@ -38,6 +39,8 @@ export const Header = ({ toggleDrawer, open }: HeaderProps) => {
           variant='lg'
           noWrap
           sx={{
+            // サイズ帯は太さを持たない。見出しとして使うので明示する
+            fontWeight: 'bold',
             fontSize: '1.25rem',
             flexGrow: 1,
           }}>

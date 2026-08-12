@@ -151,7 +151,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
   'Design Philosophy/Overview': {
     summary: 'デザインシステムの設計思想。信頼感、革新性、共創のブランド価値。',
     codeContext: [
-      'ブランドカラー primary=#0EADB8 がブランドの清涼感を表現',
+      'ブランドカラー primary=#0057B8 がブランドの明快さを表現',
       'テーマ構造: src/themes/ 配下に分離（theme.ts, colorToken.ts, typography.ts, breakpoints.ts）',
     ],
     related: ['Design Philosophy/Component Design Guide'],
@@ -195,7 +195,7 @@ export const STORY_GUIDE_MAP: Record<string, StoryGuideEntry> = {
     summary: 'カラーパレット。colorToken.ts で定義された実際の色値を表示。',
     codeContext: [
       '定義ファイル: src/themes/colorToken.ts',
-      'Light primary: #0EADB8(main) #0A8A94(dark) #3CC0C8(light)',
+      'Light primary: #0057B8(main) #00458F(dark) #3D82D2(light)',
       'Dark primary: #4DD8E0(main) #2CB8C2(dark) #7AE6EC(light)',
       'グレースケール: grey.50=#fafafa 〜 grey.900=#292929（全11段階）',
       'grey.850=#323232 はカスタム追加（MUI標準にはない）',

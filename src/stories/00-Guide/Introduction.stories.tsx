@@ -1,4 +1,3 @@
-import AirIcon from '@mui/icons-material/Air'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
@@ -17,8 +16,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
+import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
 import { APP_LINKS } from '@/utils/appLinks'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -271,7 +272,7 @@ const IntroductionContent = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(14,173,184,0.08)',
+            : alpha(theme.palette.primary.main, 0.08),
         }}>
         <Box
           sx={{
@@ -339,7 +340,7 @@ const IntroductionContent = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s',
+                  transition: motionOf(['border-color'], 'short'),
                   '&:hover': {
                     borderColor: isDark
                       ? 'rgba(255,255,255,0.16)'
@@ -445,8 +446,8 @@ const IntroductionContent = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   bgcolor: isDark
-                    ? 'rgba(14,173,184,0.15)'
-                    : 'rgba(14,173,184,0.08)',
+                    ? alpha(theme.palette.primary.main, 0.15)
+                    : alpha(theme.palette.primary.main, 0.08),
                   color: 'primary.main',
                   borderRadius: 2,
                   flexShrink: 0,
@@ -661,7 +662,7 @@ const IntroductionContent = () => {
             {
               label: 'Kaze Design System',
               desc: 'デザインシステムのトップページ',
-              icon: <AirIcon />,
+              icon: <KazeLogo size={20} title='' />,
               href: APP_LINKS.top(),
             },
             {
@@ -702,12 +703,12 @@ const IntroductionContent = () => {
                     : 'rgba(0,0,0,0.08)',
                   textDecoration: 'none',
                   color: 'inherit',
-                  transition: 'border-color 0.2s, background 0.2s',
+                  transition: motionOf(['border-color', 'background'], 'short'),
                   '&:hover': {
                     borderColor: 'primary.main',
                     bgcolor: isDark
-                      ? 'rgba(14,173,184,0.06)'
-                      : 'rgba(14,173,184,0.03)',
+                      ? alpha(theme.palette.primary.main, 0.06)
+                      : alpha(theme.palette.primary.main, 0.03),
                   },
                 }}>
                 <Box
@@ -719,8 +720,8 @@ const IntroductionContent = () => {
                     height: 40,
                     borderRadius: 2,
                     bgcolor: isDark
-                      ? 'rgba(14,173,184,0.15)'
-                      : 'rgba(14,173,184,0.08)',
+                      ? alpha(theme.palette.primary.main, 0.15)
+                      : alpha(theme.palette.primary.main, 0.08),
                     color: 'primary.main',
                     flexShrink: 0,
                     '& .MuiSvgIcon-root': { fontSize: 22 },

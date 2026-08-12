@@ -26,7 +26,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import {
   AlertTriangle,
   Battery,
@@ -48,6 +48,8 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useState } from 'react'
+
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -326,7 +328,7 @@ const PrinciplesContent = () => {
       color: 'primary' as const,
       summary: '一箇所を直せば全部直る仕組み',
       detail:
-        'トークンやマスターコンポーネントを介して変更を集約する。色=#0EADB8ではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
+        'トークンやマスターコンポーネントを介して変更を集約する。色=#0057B8ではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
       example:
         'Figmaの色指定 → トークン名(primary.main)で指定し、カラーコード直書きを避ける',
     },
@@ -1329,13 +1331,16 @@ const VariablesContent = () => {
                         bgcolor:
                           slotIcon === key
                             ? isDark
-                              ? 'rgba(14,173,184,0.15)'
-                              : 'rgba(14,173,184,0.06)'
+                              ? alpha(theme.palette.primary.main, 0.15)
+                              : alpha(theme.palette.primary.main, 0.06)
                             : 'transparent',
                         display: 'flex',
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        transition: 'all 0.15s',
+                        transition: motionOf([
+                          'border-color',
+                          'background-color',
+                        ]),
                         '&:hover': {
                           borderColor: 'primary.main',
                         },
@@ -1766,7 +1771,7 @@ const DeviceRow = ({
           theme.palette.mode === 'dark'
             ? 'rgba(255,255,255,0.02)'
             : 'rgba(0,0,0,0.015)',
-        transition: 'background 0.15s',
+        transition: motionOf(['background'], 'micro'),
         '&:hover': {
           bgcolor:
             theme.palette.mode === 'dark'
@@ -1892,7 +1897,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
               sx={{
                 fontWeight: key === state ? 700 : 400,
                 opacity: key === state ? 1 : 0.5,
-                transition: 'all 0.2s',
+                transition: motionOf(['opacity']),
               }}
             />
           )
@@ -1908,7 +1913,10 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
           maxWidth: '100%',
           borderRadius: 3,
           overflow: 'hidden',
-          transition: 'all 0.3s ease',
+          transition: motionOf(
+            ['width', 'border-radius', 'border-color'],
+            'macro'
+          ),
           borderColor: state === 'Error' ? 'error.main' : 'divider',
           ...(showInteraction && {
             cursor: 'pointer',

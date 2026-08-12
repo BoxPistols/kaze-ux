@@ -38,7 +38,8 @@ SaaS Dashboard / KazeEats の2プロダクトで実証済み。理論ではな�
 
 ## Brand Identity
 
-- **Primary**: `#0EADB8`（ティール）— 清涼感・信頼・先進性
+- **Primary**: `#0057B8`（ブルー）— 信頼・先進性。バウハウスの三原色から採り、
+  ロゴのシンボルとテーマの `primary` が `BRAND_BLUE` を単一ソースとして共有する
 - **Font**: Inter + Noto Sans JP
 - **Grid**: 4px 基準、8px 推奨
 - **Border Radius**: xs(4) / sm(6) / md(8) / lg(10) / xl(12) / 2xl(16)

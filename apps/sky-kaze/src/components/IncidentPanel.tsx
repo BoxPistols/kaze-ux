@@ -4,6 +4,8 @@
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import { Box, Typography, alpha, useMediaQuery } from '@mui/material'
 
+import { kazeDuration, kazeEasing, motionOf } from '@/themes/motion'
+
 import { DRIVERS } from '~/data/logistics'
 import {
   useSimulation,
@@ -133,7 +135,10 @@ export const IncidentPanel = () => {
                     border: '1px solid',
                     borderColor: 'divider',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
+                    transition: motionOf(
+                      ['border-color', 'background-color'],
+                      'micro'
+                    ),
                     '&:hover': {
                       borderColor: color,
                       bgcolor: alpha(color, 0.05),
@@ -219,12 +224,12 @@ export const IncidentPanel = () => {
               borderColor: alpha(color, 0.4),
               boxShadow: `0 2px 12px ${alpha(color, 0.2)}`,
               cursor: 'pointer',
-              transition: 'all 0.15s ease',
+              transition: motionOf(['border-color', 'box-shadow'], 'micro'),
               '&:hover': {
                 borderColor: color,
                 boxShadow: `0 2px 16px ${alpha(color, 0.35)}`,
               },
-              animation: 'slideIn 0.3s ease',
+              animation: `slideIn ${kazeDuration.macro}ms ${kazeEasing.enter}`,
               '@keyframes slideIn': {
                 from: { opacity: 0, transform: 'translateX(-16px)' },
                 to: { opacity: 1, transform: 'translateX(0)' },

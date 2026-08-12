@@ -30,38 +30,42 @@ export interface StatusTagProps {
 }
 
 // ステータスごとのスタイル定義（テーマパレット参照）
+// 塗り面の文字色は common.white を固定せず contrastText を使う。
+// ダークでは塗り色が明るくなり、白文字だと 1.5:1 まで落ちるため
 const statusStyles: Record<
   StatusType,
   { backgroundColor: string; color: string; borderColor: string }
 > = {
   draft: {
     backgroundColor: 'background.default',
-    color: 'primary.main',
+    color: 'primary.textContrast',
     borderColor: 'primary.main',
   },
   submitted: {
     backgroundColor: 'primary.main',
-    color: 'common.white',
+    color: 'primary.contrastText',
     borderColor: 'primary.main',
   },
   approved: {
     backgroundColor: 'success.main',
-    color: 'common.white',
+    color: 'success.contrastText',
     borderColor: 'success.main',
   },
   rejected: {
     backgroundColor: 'error.main',
-    color: 'common.white',
+    color: 'error.contrastText',
     borderColor: 'error.main',
   },
   pending: {
     backgroundColor: 'warning.main',
-    color: 'common.white',
+    color: 'warning.contrastText',
     borderColor: 'warning.main',
   },
   active: {
     backgroundColor: 'success.light',
-    color: 'success.dark',
+    // 面が success.light なので、main 基準の contrastText では基準がずれる。
+    // light 面に対して実測した onLight を使う
+    color: 'success.onLight',
     borderColor: 'success.main',
   },
   inactive: {

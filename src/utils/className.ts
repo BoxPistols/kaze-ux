@@ -59,7 +59,7 @@ export const sxToClassName = {
   'minHeight: "100vh"': 'min-h-screen',
 
   // Colors (using MUI theme integration)
-  'color: "primary.main"': 'text-primary-main',
+  'color: "primary.main"': 'text-primary-ink',
   'backgroundColor: "primary.main"': 'bg-primary-main',
   'color: "error.main"': 'text-error-main',
   'backgroundColor: "error.main"': 'bg-error-main',
@@ -111,8 +111,9 @@ export const variants = {
   button: {
     default:
       'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-    primary: 'bg-primary-main text-white hover:bg-primary-dark',
-    secondary: 'bg-secondary-main text-white hover:bg-secondary-dark',
+    primary: 'bg-primary-main text-primary-foreground hover:bg-primary-dark',
+    secondary:
+      'bg-secondary-main text-secondary-foreground hover:bg-secondary-dark',
     outline:
       'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
   },

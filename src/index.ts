@@ -39,12 +39,54 @@ export {
   createDarkTheme,
   createLightTheme,
 } from './themes/theme'
+export {
+  KazeLogo,
+  LOGO_CLEAR_SPACE_RATIO,
+  LOGO_GRID,
+  LOGO_MIN_SIZE,
+  LOGO_PRODUCTS,
+  LOGO_PROHIBITIONS,
+  LOGO_TONES,
+  LOGO_VARIANTS,
+} from './components/ui/logo'
+export type {
+  KazeLogoProps,
+  LogoProduct,
+  LogoTone,
+  LogoVariant,
+} from './components/ui/logo'
 export type { AppTheme } from './types/theme'
+export {
+  CONTRAST_THRESHOLD,
+  bestContrast,
+  contrastLevel,
+  contrastRatio,
+  contrastRatioOf,
+  ensureContrast,
+  pickReadable,
+} from './themes/contrast'
+export {
+  FOCUS_RING_OFFSET,
+  FOCUS_RING_WIDTH,
+  focusRing,
+  focusRingColor,
+} from './themes/focus'
+export { createShadows, elevation } from './themes/elevation'
+export type { ElevationLevel } from './themes/elevation'
+export {
+  kazeEasing,
+  kazeDuration,
+  kazeTransitions,
+  motionOf,
+  reducedMotionOverrides,
+} from './themes/motion'
+export type { KazeEasing, KazeDuration } from './themes/motion'
 export {
   colorData,
   getGrey,
   createDarkThemeColors,
   createLightThemeColors,
+  foregroundVariant,
   COLOR_SCHEME_STORAGE_KEY,
 } from './themes/colorToken'
 export type {

@@ -78,11 +78,7 @@ export interface DriverPosition {
 }
 
 export type IncidentType =
-  | 'traffic_jam'
-  | 'breakdown'
-  | 'weather'
-  | 'customer_absent'
-  | 'accident_ahead'
+  'traffic_jam' | 'breakdown' | 'weather' | 'customer_absent' | 'accident_ahead'
 
 export interface Incident {
   id: string

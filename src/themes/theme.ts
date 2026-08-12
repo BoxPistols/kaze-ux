@@ -13,17 +13,32 @@ import {
   muiBreakpoints,
 } from './breakpoints'
 import {
+  ON_SURFACE_INKS,
   colorData,
+  createCssVars,
   createDarkThemeColors,
   createLightThemeColors,
 } from './colorToken'
+import { bestContrast } from './contrast'
+import {
+  createDarkSchemeElevationOverrides,
+  createShadows,
+  elevation,
+} from './elevation'
+import { createFocusVisibleOverrides } from './focus'
+import {
+  createMotionCssVars,
+  kazeTransitions,
+  motionOf,
+  reducedMotionOverrides,
+} from './motion'
 import {
   fontSizesVariant,
   typographyComponentsOverrides,
   typographyOptions,
 } from './typography'
 
-import type { ColorScheme, DarkColorScheme } from './colorToken'
+import type { ColorScheme, DarkColorScheme, ThemeColors } from './colorToken'
 import type { AppTheme } from '../types/theme'
 
 // Button共通
@@ -41,48 +56,31 @@ const CommomButtonStyles = {
 const commonThemeOptions = {
   typography: typographyOptions,
   shape: { borderRadius: 8 }, // モダンな角丸
-  transitions: {
-    easing: {
-      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
-      smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    },
-    duration: { leavingScreen: 150, enteringScreen: 200 },
-  },
+  transitions: kazeTransitions,
   spacing: 4,
   zIndex: { appBar: 1100, drawer: 1000 },
   breakpoints: muiBreakpoints,
   layout: {
     containerMaxWidth,
   },
-  // Tailwind shadow scale 準拠 — 段階的にブラー・スプレッドを増加
-  shadows: [
-    'none', // 0
-    '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // 1
-    '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)', // 2
-    '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)', // 3
-    '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)', // 4
-    '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', // 5
-    '0 25px 50px -12px rgba(0, 0, 0, 0.25)', // 6
-    '0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14)', // 7
-    '0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2)', // 8
-    '0 3px 16px 2px rgba(0, 0, 0, 0.12), 0 5px 6px -3px rgba(0, 0, 0, 0.2)', // 9
-    '0 4px 18px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 10
-    '0 4px 20px 3px rgba(0, 0, 0, 0.12), 0 6px 7px -4px rgba(0, 0, 0, 0.2)', // 11
-    '0 5px 22px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 12
-    '0 5px 24px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2)', // 13
-    '0 5px 26px 4px rgba(0, 0, 0, 0.12), 0 7px 9px -4px rgba(0, 0, 0, 0.2)', // 14
-    '0 6px 28px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 15
-    '0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)', // 16
-    '0 6px 32px 5px rgba(0, 0, 0, 0.14), 0 8px 11px -5px rgba(0, 0, 0, 0.2)', // 17
-    '0 7px 34px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 18
-    '0 7px 36px 6px rgba(0, 0, 0, 0.14), 0 9px 12px -6px rgba(0, 0, 0, 0.2)', // 19
-    '0 8px 38px 7px rgba(0, 0, 0, 0.14), 0 10px 13px -6px rgba(0, 0, 0, 0.22)', // 20
-    '0 8px 40px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 21
-    '0 8px 42px 7px rgba(0, 0, 0, 0.14), 0 10px 14px -6px rgba(0, 0, 0, 0.22)', // 22
-    '0 9px 44px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 23
-    '0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.22)', // 24
-  ] as unknown as Theme['shadows'],
+  // 影スケールは mode 依存のため各テーマ生成側で注入する (src/themes/elevation.ts)
 }
+
+/**
+ * Tailwind が参照する CSS 変数を :root に注入した componentStyles を返す。
+ *
+ * 変数の値を index.css に手打ちすると、MUI 側のトークンを直しても
+ * Tailwind 側が古い値のまま残る。テーマ生成時に注入して同期させる。
+ */
+const withCssVars = (base: typeof componentStyles, colors: ThemeColors) => ({
+  ...base,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...base.MuiCssBaseline.styleOverrides,
+      ':root': { ...createCssVars(colors), ...createMotionCssVars() },
+    },
+  },
+})
 
 // コンポーネントスタイルの定義
 const componentStyles = {
@@ -100,6 +98,12 @@ const componentStyles = {
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
       }),
+      // 動きを減らす設定を持つ利用者には意匠より要求を優先する
+      ...reducedMotionOverrides,
+      // フォーカスの所在はキーボード操作の唯一の手がかり。既定を 1 箇所で
+      // 与えて、外したい箇所だけが明示的に上書きする形にする。
+      // 色は --color-ring（テーマ／スキームで自動的に切り替わる）
+      ...createFocusVisibleOverrides('var(--color-ring)'),
     },
   },
   MuiAppBar: {
@@ -265,7 +269,7 @@ const componentStyles = {
             : theme.palette.common.white,
         borderRadius: 6,
         padding: '8px 12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        boxShadow: theme.shadows[elevation.popover],
       }),
       arrow: ({ theme }: { theme: Theme }) => ({
         color:
@@ -343,18 +347,12 @@ const componentStyles = {
         backgroundColor: theme.palette.background.paper,
         borderRadius: 12,
         border: `1px solid ${theme.palette.divider}`,
-        boxShadow:
-          theme.palette.mode === 'light'
-            ? '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12)',
-        transition:
-          'box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out',
+        // 影スケールが mode 別に生成されるため、ここでの light/dark 分岐は不要
+        boxShadow: theme.shadows[elevation.raised],
+        transition: motionOf(['box-shadow', 'border-color'], 'short'),
         overflow: 'hidden',
         '&:hover': {
-          boxShadow:
-            theme.palette.mode === 'light'
-              ? '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)'
-              : '0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)',
+          boxShadow: theme.shadows[elevation.floating],
           borderColor: theme.palette.divider,
         },
       }),
@@ -409,10 +407,34 @@ const componentStyles = {
           paddingLeft: 8,
           paddingRight: 8,
         },
+        // outlined Chip の色は MUI 既定 (text.primary 相当) で十分なため
+        // 強制しない。複合セレクタは sx より詳細度が高く、sx や
+        // StatusTag 側の色指定を握り潰してしまう (塗り面に白文字が残り 1.5:1)
         '&.MuiChip-outlined': {
           borderColor: theme.palette.divider,
-          color: theme.palette.text.primary,
         },
+      }),
+      // MUI 既定の outlined Chip は文字色に main を使う。main は面のための
+      // 色なので、白地に置くと届かない (warning は 2.73:1)。
+      // 複合セレクタ (&.MuiChip-outlinedWarning) は sx より詳細度が高く
+      // 使う側の指定を握り潰すため、スロット単位で上書きする
+      outlinedPrimary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.primary.textContrast,
+      }),
+      outlinedSecondary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.secondary.textContrast,
+      }),
+      outlinedSuccess: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.success.textContrast,
+      }),
+      outlinedError: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.error.textContrast,
+      }),
+      outlinedWarning: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.warning.textContrast,
+      }),
+      outlinedInfo: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.info.textContrast,
       }),
       sizeSmall: {
         height: 20,
@@ -422,6 +444,28 @@ const componentStyles = {
           paddingRight: 6,
         },
       },
+    },
+  },
+  // Stepper のステップ番号
+  MuiStepIcon: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        // 番号は既定で白。未到達ステップの円は MUI 7 では text.disabled
+        // なので、ライトでは 1.88:1 まで落ちる。円の色は MUI 既定のまま
+        // （控えめに見せる意図がある）、番号側を実測で決める。
+        // completed は CheckCircle を描くため .MuiStepIcon-text を持たない
+        '& .MuiStepIcon-text': {
+          fill: bestContrast(
+            theme.palette.mode === 'dark'
+              ? colorData.dark.text.disabled
+              : colorData.text.disabled,
+            ON_SURFACE_INKS
+          ),
+        },
+        '&.Mui-active .MuiStepIcon-text': {
+          fill: theme.palette.primary.contrastText,
+        },
+      }),
     },
   },
   // Table - モダンでクリーンなスタイル
@@ -481,7 +525,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         '& .MuiTableRow-root': {
-          transition: 'background-color 0.15s ease',
+          transition: motionOf(['background-color'], 'micro'),
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },
@@ -573,7 +617,10 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.contrastText,
+        // 面は primary.light。contrastText は primary.main 基準で測った値なので
+        // ここでは基準がずれる（白文字が 3.95:1 まで落ちていた）。
+        // light 面に対して実測した onLight を使う
+        color: theme.palette.primary.onLight,
         fontWeight: 600,
         fontSize: fontSizesVariant.sm,
       }),
@@ -584,7 +631,7 @@ const componentStyles = {
     styleOverrides: {
       paper: ({ theme }: { theme: Theme }) => ({
         borderRadius: 6,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+        boxShadow: theme.shadows[elevation.overlay],
         border: `1px solid ${theme.palette.divider}`,
       }),
     },
@@ -605,7 +652,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         borderRadius: 8,
-        transition: 'background-color 0.15s ease, color 0.15s ease',
+        transition: motionOf(['background-color', 'color'], 'micro'),
         '&:hover': {
           backgroundColor: theme.palette.action.hover,
         },
@@ -629,10 +676,7 @@ const componentStyles = {
       paper: ({ theme }: { theme: Theme }) => ({
         borderRadius: 16,
         border: `1px solid ${theme.palette.divider}`,
-        boxShadow:
-          theme.palette.mode === 'light'
-            ? '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)'
-            : '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3)',
+        boxShadow: theme.shadows[elevation.modal],
         backgroundColor: theme.palette.background.paper,
         backgroundImage: 'none',
         overflow: 'hidden',
@@ -807,9 +851,40 @@ const componentStyles = {
   },
 }
 
+/**
+ * colorSchemes 版テーマ専用のコンポーネント設定。
+ *
+ * theme.shadows はライト基準で固定されるため、ダークスキーム時の影を
+ * CssBaseline 側で上書きする。これが無いと CssVarsProvider を使う画面
+ * (saas-dashboard) だけダークのエレベーションが効かない。
+ */
+const cssVarsComponentStyles = {
+  ...componentStyles,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...componentStyles.MuiCssBaseline.styleOverrides,
+      // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
+      // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
+      ':root': {
+        ...createCssVars(createLightThemeColors('kaze')),
+        ...createMotionCssVars(),
+      },
+      '[data-mui-color-scheme="dark"], .dark': {
+        ...createDarkSchemeElevationOverrides()[
+          '[data-mui-color-scheme="dark"], .dark'
+        ],
+        ...createCssVars(createDarkThemeColors('dracula')),
+      },
+    },
+  },
+}
+
 // MUI 6のcolorSchemesを使用した統合テーマ
 const theme = createTheme({
   ...commonThemeOptions,
+  // colorSchemes 版は shadows をスキーム別に持てないためライト基準。
+  // ダークは cssVarsComponentStyles の CssBaseline 上書きで補う
+  shadows: createShadows('light'),
   defaultColorScheme: 'light',
   colorSchemes: {
     light: {
@@ -835,14 +910,16 @@ const theme = createTheme({
       },
     },
   },
-  components: componentStyles as Components<
+  components: cssVarsComponentStyles as Components<
     Omit<Theme, 'components' | 'palette'> & CssVarsTheme
   >,
 })
 
 // 後方互換性のために従来のテーマも提供
+const lightThemeColors = createLightThemeColors('kaze')
 const lightTheme = createTheme({
   ...commonThemeOptions,
+  shadows: createShadows('light'),
   palette: {
     mode: 'light',
     ...colorData,
@@ -852,11 +929,16 @@ const lightTheme = createTheme({
       paper: colorData.background.paper,
     },
   } as PaletteOptions,
-  components: componentStyles as Components<Theme>,
+  components: withCssVars(
+    componentStyles,
+    lightThemeColors
+  ) as Components<Theme>,
 })
 
+const darkThemeColors = createDarkThemeColors('dracula')
 const darkTheme = createTheme({
   ...commonThemeOptions,
+  shadows: createShadows('dark'),
   palette: {
     mode: 'dark',
     ...colorData.dark,
@@ -866,7 +948,10 @@ const darkTheme = createTheme({
       paper: colorData.dark.background.paper,
     },
   } as PaletteOptions,
-  components: componentStyles as Components<Theme>,
+  components: withCssVars(
+    componentStyles,
+    darkThemeColors
+  ) as Components<Theme>,
 })
 
 /** 指定スキームでダークテーマを生成 */
@@ -874,6 +959,7 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
   const colors = createDarkThemeColors(scheme)
   return createTheme({
     ...commonThemeOptions,
+    shadows: createShadows('dark'),
     palette: {
       mode: 'dark',
       ...colors,
@@ -883,7 +969,7 @@ const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
         paper: colors.background.paper,
       },
     } as PaletteOptions,
-    components: componentStyles as Components<Theme>,
+    components: withCssVars(componentStyles, colors) as Components<Theme>,
   })
 }
 
@@ -892,6 +978,7 @@ const createLightTheme = (scheme?: ColorScheme): Theme => {
   const colors = createLightThemeColors(scheme)
   return createTheme({
     ...commonThemeOptions,
+    shadows: createShadows('light'),
     palette: {
       mode: 'light',
       ...colors,
@@ -901,7 +988,7 @@ const createLightTheme = (scheme?: ColorScheme): Theme => {
         paper: colors.background.paper,
       },
     } as PaletteOptions,
-    components: componentStyles as Components<Theme>,
+    components: withCssVars(componentStyles, colors) as Components<Theme>,
   })
 }
 
