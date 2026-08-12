@@ -2,7 +2,7 @@
 // - ChatSupport から呼ばれるバックエンドプロキシ
 // - サーバー側で API キーを保持し、ブラウザに露出させない
 // - X-User-API-Key ヘッダーで自前キー利用時はレート制限免除
-// - requiresUserKey なモデル（gpt-5.4 等）はサーバー側でも拒否
+// - requiresUserKey なモデルはサーバー側でも拒否（現在は該当なし）
 
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createOpenAI } from '@ai-sdk/openai'
@@ -19,8 +19,9 @@ import {
 // モデル別のサーバー側ポリシー
 // ---------------------------------------------------------------------------
 
-// requiresUserKey: 共有プールで使用不可（高コストモデル）
-const REQUIRES_USER_KEY_MODELS = new Set<string>(['gpt-5.4'])
+// requiresUserKey: 共有プールで使用不可（高コストモデル）。
+// 現在は該当モデルなし。高コストモデルを足すときにここへ登録する
+const REQUIRES_USER_KEY_MODELS = new Set<string>()
 
 const DEFAULT_MODEL = 'gpt-5.6-luna'
 

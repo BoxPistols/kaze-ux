@@ -291,43 +291,8 @@ export interface ModelOption {
 
 export const OPENAI_MODELS: ModelOption[] = [
   {
-    value: 'gpt-5.4',
-    label: 'gpt-5.4',
-    description: 'フル性能モデル。最高精度の推論・分析が必要な用途に',
-    features: [
-      '最上位の推論・分析能力',
-      '最大コンテキスト長',
-      '最高品質のコード生成',
-    ],
-    usecases: [
-      '大規模リファクタリング・設計',
-      '高度なバグ原因分析',
-      'システム全体のアーキテクチャレビュー',
-    ],
-    tier: 'premium',
-    requiresUserKey: true,
-  },
-  {
-    value: 'gpt-5.4-mini',
-    label: 'gpt-5.4-mini (推奨)',
-    description:
-      '最新世代の高精度モデル。高度な推論・文脈維持・ガードレール遵守に優れる',
-    features: [
-      '上位モデルに迫る推論力',
-      'システムプロンプトの厳格な遵守',
-      '意図しない文脈での破綻を大幅に低減',
-    ],
-    usecases: [
-      'アーキテクチャ設計・リファクタ提案',
-      'エビデンスベースのデザイン相談',
-      '求人分析・戦略的インサイト',
-    ],
-    tier: 'premium',
-    projectKeyEnabled: true,
-  },
-  {
     value: 'gpt-5.6-luna',
-    label: 'gpt-5.6-luna (標準)',
+    label: 'gpt-5.6-luna',
     description: '最新世代のコスト最適モデル。日常的なQAに十分な品質',
     features: [
       'GPT-5.6系の推論能力',

@@ -13,6 +13,8 @@ import {
   detectPersona,
   DESIGNER_PROMPT_EXTENSION,
   ENGINEER_PROMPT_EXTENSION,
+  OPENAI_MODELS,
+  GEMINI_MODELS,
 } from '../chatSupportConstants'
 import type { ShortcutBinding } from '../chatSupportTypes'
 
@@ -283,14 +285,14 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'stored-key',
-        model: 'gpt-5.4-mini',
+        model: 'gpt-5.6-luna',
         uiMode: 'sidebar',
         sidebarWidth: 600,
       })
     )
     const config = loadChatConfig()
     expect(config.apiKey).toBe('stored-key')
-    expect(config.model).toBe('gpt-5.4-mini')
+    expect(config.model).toBe('gpt-5.6-luna')
     expect(config.uiMode).toBe('sidebar')
   })
 
@@ -300,41 +302,37 @@ describe('loadChatConfig', () => {
     expect(config.model).toBe(DEFAULT_CHAT_CONFIG.model)
   })
 
-  it('デフォルトAPIキー使用時はrequiresUserKeyモデルをデフォルトにリセットする', () => {
-    // apiKeyが空（デフォルト）なのに gpt-5.4（requiresUserKey: true）が選択済み → リセットされる
-    getItemSpy.mockReturnValue(
-      JSON.stringify({
-        apiKey: '',
-        model: 'gpt-5.4',
-        uiMode: 'widget',
-      })
-    )
-    const config = loadChatConfig()
-    expect(config.model).toBe(DEFAULT_CHAT_CONFIG.model)
+  // requiresUserKey を立てたモデルは現在なく、loadChatConfig のリセット分岐は
+  // 到達しない。分岐自体は api/ai.ts のサーバー側ガードと対になる契約なので
+  // 残し、「一覧に自前キー必須のモデルを混ぜていない」ことを不変条件で守る
+  it('一覧のモデルはすべてプロジェクトキーで使える', () => {
+    for (const model of [...OPENAI_MODELS, ...GEMINI_MODELS]) {
+      expect(model.requiresUserKey, model.value).toBeFalsy()
+    }
   })
 
   it('デフォルトAPIキー使用時でもrequiresUserKeyでないモデルはそのまま保持する', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: '',
-        model: 'gpt-5.4-mini',
+        model: 'gpt-5.6-luna',
         uiMode: 'widget',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-5.4-mini')
+    expect(config.model).toBe('gpt-5.6-luna')
   })
 
   it('カスタムAPIキー使用時はモデルをそのまま保持する', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'sk-custom-key',
-        model: 'gpt-5.4-mini',
+        model: 'gpt-5.6-luna',
         uiMode: 'sidebar',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-5.4-mini')
+    expect(config.model).toBe('gpt-5.6-luna')
   })
 })
 
