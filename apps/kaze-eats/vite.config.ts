@@ -15,11 +15,11 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: isGitHubPages ? '/kaze-ux/ubereats/' : (process.env.VITE_BASE_PATH || '/'),
+    base: isGitHubPages ? '/kaze-ux/kaze-eats/' : (process.env.VITE_BASE_PATH || '/'),
     build: {
       // esbuild の destructuring 降格エラーを回避
       target: 'esnext',
-      outDir: isGitHubPages ? '../../gh-pages/ubereats' : 'dist',
+      outDir: isGitHubPages ? '../../gh-pages/kaze-eats' : 'dist',
       emptyOutDir: true,
       sourcemap: !isGitHubPages,
     },

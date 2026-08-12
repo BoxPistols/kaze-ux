@@ -15,7 +15,7 @@ on:
           - all
           - storybook
           - dashboard
-          - ubereats
+          - kaze-eats
 
 # GitHub Pages デプロイ用の権限設定
 permissions:
@@ -88,10 +88,10 @@ jobs:
         if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'dashboard'
         run: pnpm --filter saas-dashboard build:gh-pages
 
-      # UberEats Cloneのビルド
-      - name: Build UberEats Clone Demo
-        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'ubereats'
-        run: pnpm --filter ubereats-clone build:gh-pages
+      # KazeEats のビルド
+      - name: Build KazeEats Demo
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'kaze-eats'
+        run: pnpm --filter kaze-eats build:gh-pages
 
       # ランディングページ（Vite ビルド）
       - name: Build Landing Page
@@ -127,4 +127,4 @@ jobs:
           echo "Landing Page: ${{ steps.deployment.outputs.page_url }}"
           echo "Storybook: ${{ steps.deployment.outputs.page_url }}storybook/"
           echo "SaaS Dashboard: ${{ steps.deployment.outputs.page_url }}saas/"
-          echo "UberEats Clone: ${{ steps.deployment.outputs.page_url }}ubereats/"
+          echo "KazeEats: ${{ steps.deployment.outputs.page_url }}kaze-eats/"

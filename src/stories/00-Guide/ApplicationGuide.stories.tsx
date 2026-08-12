@@ -703,7 +703,7 @@ const ApplicationGuideContent = () => {
               name: 'KazeEats',
               color: '#0F8048',
               desc: 'フードデリバリー',
-              path: 'apps/ubereats-clone/',
+              path: 'apps/kaze-eats/',
             },
             {
               name: 'SaaS Dashboard',
@@ -963,7 +963,7 @@ import { LOGI_ORANGE } from '~/theme/colors'`}
 // apps/sky-kaze/src/theme/skyTheme.ts
 import { darkTheme, lightTheme } from '@/themes/theme'
 
-// apps/ubereats-clone/src/theme/keTheme.ts
+// apps/kaze-eats/src/theme/keTheme.ts
 import { darkTheme, lightTheme } from '@/themes/theme'
 
 // 各プロダクトのブランドカラー:
@@ -1115,7 +1115,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
       theme/                   #   skyTheme.ts, colors.ts
       utils/                   #   panelStyles.ts, format.ts
 
-    ubereats-clone/src/        # KazeEats
+    kaze-eats/src/        # KazeEats
       pages/                   #   HomePage, CartPage, RestaurantPage ...
       data/                    #   cart.ts, restaurants.ts, orders.ts
       theme/                   #   keTheme.ts, colors.ts

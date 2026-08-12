@@ -20,7 +20,7 @@ interface DevPorts {
   top: number
   storybook: number
   saas: number
-  ubereats: number
+  kazeEats: number
   skyKaze: number
 }
 
@@ -28,15 +28,29 @@ const DEFAULT_PORTS: DevPorts = {
   top: 5173,
   storybook: 6007,
   saas: 3001,
-  ubereats: 3002,
+  kazeEats: 3002,
   skyKaze: 3003,
+}
+
+/**
+ * 保存済みの設定を現在のキーに寄せる。
+ *
+ * KazeEats のキーは以前 `ubereats` だった。改名しただけだと、ポートを
+ * 変えていた人の設定が無言で既定値に戻る（保存値は残っているのに
+ * 参照されないので、原因にも辿り着けない）。
+ */
+const migrate = (saved: Record<string, unknown>): Partial<DevPorts> => {
+  const { ubereats, ...rest } = saved
+  return typeof ubereats === 'number'
+    ? { ...rest, kazeEats: ubereats }
+    : (rest as Partial<DevPorts>)
 }
 
 const getDevPorts = (): DevPorts => {
   if (typeof window === 'undefined') return DEFAULT_PORTS
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) return { ...DEFAULT_PORTS, ...JSON.parse(saved) }
+    if (saved) return { ...DEFAULT_PORTS, ...migrate(JSON.parse(saved)) }
   } catch {
     // ignore
   }
@@ -75,7 +89,7 @@ export const APP_LINKS = {
   top: () => resolve('top', '/'),
   storybook: () => resolve('storybook', '/storybook/'),
   saas: () => resolve('saas', '/saas/'),
-  ubereats: () => resolve('ubereats', '/ubereats/'),
+  kazeEats: () => resolve('kazeEats', '/kaze-eats/'),
   skyKaze: () => resolve('skyKaze', '/sky-kaze/'),
   github: () => 'https://github.com/BoxPistols/kaze-ux',
 }

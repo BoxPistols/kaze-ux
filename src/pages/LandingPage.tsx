@@ -694,7 +694,7 @@ export const LandingPage = () => {
       title: 'KazeEats',
       description: 'レストラン検索・カート・注文フロー・レビューシステム',
       icon: <RestaurantIcon sx={{ color: 'warning.main' }} />,
-      href: APP_LINKS.ubereats(),
+      href: APP_LINKS.kazeEats(),
       label: 'Product Demo',
     },
     {
@@ -1345,7 +1345,7 @@ export const LandingPage = () => {
             {[
               { label: 'Storybook', href: APP_LINKS.storybook() },
               { label: 'SaaS Demo', href: APP_LINKS.saas() },
-              { label: 'KazeEats', href: APP_LINKS.ubereats() },
+              { label: 'KazeEats', href: APP_LINKS.kazeEats() },
               { label: 'GitHub', href: APP_LINKS.github() },
             ].map((link) => (
               <Box

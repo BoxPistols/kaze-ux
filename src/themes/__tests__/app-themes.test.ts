@@ -19,13 +19,13 @@ import {
 import {
   KE_GREEN,
   keWordmarkColor,
-} from '../../../apps/ubereats-clone/src/theme/colors'
+} from '../../../apps/kaze-eats/src/theme/colors'
 import {
   keDarkColors,
   keDarkTheme,
   keLightColors,
   keLightTheme,
-} from '../../../apps/ubereats-clone/src/theme/keTheme'
+} from '../../../apps/kaze-eats/src/theme/keTheme'
 import { CONTRAST_THRESHOLD, contrastRatioOf } from '../contrast'
 import { createShadows, elevation } from '../elevation'
 import { kazeDuration, kazeEasing } from '../motion'
@@ -43,8 +43,8 @@ import type { Theme } from '@mui/material/styles'
  * という最悪の状態になり、しかも見た目では気づきにくい。
  */
 const brandThemes: Array<[string, Theme, 'light' | 'dark']> = [
-  ['ubereats-clone (light)', keLightTheme, 'light'],
-  ['ubereats-clone (dark)', keDarkTheme, 'dark'],
+  ['kaze-eats (light)', keLightTheme, 'light'],
+  ['kaze-eats (dark)', keDarkTheme, 'dark'],
 ]
 
 /** colorSchemes 版テーマ（1 つのテーマが light/dark 両方を持つ） */
@@ -282,7 +282,7 @@ describe('MUI と Tailwind が同じ色定義を指している', () => {
     const cssFiles = [
       'apps/sky-kaze/src/index.css',
       'apps/saas-dashboard/src/index.css',
-      'apps/ubereats-clone/src/index.css',
+      'apps/kaze-eats/src/index.css',
     ]
     for (const rel of cssFiles) {
       const css = readFileSync(join(process.cwd(), rel), 'utf8')

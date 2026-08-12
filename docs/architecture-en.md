@@ -132,7 +132,7 @@ kaze-ux/
 │   └── assets/                  Static assets
 ├── apps/                        Demo applications
 │   ├── saas-dashboard/          SaaS Dashboard (CRUD, DataGrid, Calendar, Map)
-│   ├── ubereats-clone/          KazeEats (Restaurant search, cart, ordering)
+│   ├── kaze-eats/          KazeEats (Restaurant search, cart, ordering)
 │   └── sky-kaze/                KazeLogistics (Delivery monitoring, real-time maps)
 ├── packages/
 │   └── system-design-export/    CLI: Theme to W3C DTCG token conversion
@@ -356,7 +356,7 @@ SaaS admin panel demo with CRUD operations, MUI DataGrid, calendar, and maps.
 - Vite + React + TypeScript
 - Shares components and themes from the main library
 
-### KazeEats (`apps/ubereats-clone/`)
+### KazeEats (`apps/kaze-eats/`)
 
 Food delivery app demo with restaurant search, cart management, and order flow.
 
@@ -433,7 +433,7 @@ Consolidates all apps under `dist/`:
 1. LP (sandbox) -> dist/
 2. Storybook -> dist/storybook/
 3. SaaS Dashboard -> dist/saas/
-4. KazeEats -> dist/ubereats/
+4. KazeEats -> dist/kaze-eats/
 5. KazeLogistics -> dist/sky-kaze/
 ```
 
@@ -442,7 +442,7 @@ URL rewrites:
 ```json
 { "source": "/storybook/(.*)", "destination": "/storybook/$1" }
 { "source": "/saas/(.*)", "destination": "/saas/$1" }
-{ "source": "/ubereats/(.*)", "destination": "/ubereats/$1" }
+{ "source": "/kaze-eats/(.*)", "destination": "/kaze-eats/$1" }
 { "source": "/sky-kaze/(.*)", "destination": "/sky-kaze/$1" }
 ```
 
@@ -594,7 +594,7 @@ Provides to all stories:
 │  /           -> LP (Vite sandbox)                     │
 │  /storybook/ -> Storybook 10                          │
 │  /saas/      -> SaaS Dashboard                        │
-│  /ubereats/  -> KazeEats                              │
+│  /kaze-eats/  -> KazeEats                              │
 │  /sky-kaze/  -> KazeLogistics                         │
 └─────────────────────────────────────────────────────┘
          ^ scripts/vercel-build.mjs
