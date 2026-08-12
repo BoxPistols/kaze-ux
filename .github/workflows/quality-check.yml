@@ -70,6 +70,12 @@ jobs:
             echo "Warning: 'any' type detected"
           fi
 
+      # サンプルデータへの実在ブランド名の再混入を止める (#74)
+      # 上の 2 つと違い警告では済ませない。公開後は履歴にも成果物にも残り、
+      # 作業ツリーを直しても消えないため、入る前に落とす
+      - name: Check for real brand names in sample data
+        run: pnpm check:brand
+
   # Unit Tests
   test:
     name: Unit Tests

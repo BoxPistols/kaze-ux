@@ -35,14 +35,14 @@ const DEFAULT_PORTS: DevPorts = {
 /**
  * 保存済みの設定を現在のキーに寄せる。
  *
- * KazeEats のキーは以前 `ubereats` だった。改名しただけだと、ポートを
+ * KazeEats のキーは以前 `ubereats` だった。改名しただけだと、ポートを brand-check-allow
  * 変えていた人の設定が無言で既定値に戻る（保存値は残っているのに
  * 参照されないので、原因にも辿り着けない）。
  */
 const migrate = (saved: Record<string, unknown>): Partial<DevPorts> => {
-  const { ubereats, ...rest } = saved
-  return typeof ubereats === 'number'
-    ? { ...rest, kazeEats: ubereats }
+  const { ubereats, ...rest } = saved // brand-check-allow: 旧キーからの移行
+  return typeof ubereats === 'number' // brand-check-allow
+    ? { ...rest, kazeEats: ubereats } // brand-check-allow
     : (rest as Partial<DevPorts>)
 }
 
