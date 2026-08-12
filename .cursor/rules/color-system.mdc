@@ -6,7 +6,7 @@ globs: ["src/themes/**", "src/components/**/*.tsx"]
 # Kaze Color System
 
 ## セマンティックカラー (Light)
-- primary: main=#0EADB8, dark=#0A8A94, light=#3CC0C8
+- primary: main=#0057B8, dark=#00458F, light=#3D82D2
 - secondary: main=#696881
 - success: main=#46ab4a
 - info: main=#1dafc2
@@ -14,13 +14,13 @@ globs: ["src/themes/**", "src/components/**/*.tsx"]
 - error: main=#da3737
 
 ## ダークスキーム
-- Dracula: primary=#50D8D8, bg=#282A36
-- Kaze(Blue): primary=#4DD8E0, bg=#18181b
-- Monotone: primary=#68C8CC, bg=#1a1a1e
+- Dracula: primary=#7FA8F8, bg=#282A36 / paper=#343746
+- Kaze: primary=#5AA9FF, bg=#18181b / paper=#27272a
+- Monotone: primary=#86ADD9, bg=#1a1a1e / paper=#26262a
 
 ## 使い方
 - OK: `color='primary.main'`, `bgcolor='background.paper'`
-- NG: `color='#0EADB8'`, `bgcolor='#fff'`
+- NG: `color='#0057B8'`, `bgcolor='#fff'`
 - 定義: `src/themes/colorToken.ts`
 
 ## グレースケール

@@ -16,7 +16,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { KazeLogo } from '@/components/ui/logo'
 import { motionOf } from '@/themes/motion'
@@ -272,7 +272,7 @@ const IntroductionContent = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(0,87,184,0.08)',
+            : alpha(theme.palette.primary.main, 0.08),
         }}>
         <Box
           sx={{
@@ -446,8 +446,8 @@ const IntroductionContent = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   bgcolor: isDark
-                    ? 'rgba(0,87,184,0.15)'
-                    : 'rgba(0,87,184,0.08)',
+                    ? alpha(theme.palette.primary.main, 0.15)
+                    : alpha(theme.palette.primary.main, 0.08),
                   color: 'primary.main',
                   borderRadius: 2,
                   flexShrink: 0,
@@ -707,8 +707,8 @@ const IntroductionContent = () => {
                   '&:hover': {
                     borderColor: 'primary.main',
                     bgcolor: isDark
-                      ? 'rgba(0,87,184,0.06)'
-                      : 'rgba(0,87,184,0.03)',
+                      ? alpha(theme.palette.primary.main, 0.06)
+                      : alpha(theme.palette.primary.main, 0.03),
                   },
                 }}>
                 <Box
@@ -720,8 +720,8 @@ const IntroductionContent = () => {
                     height: 40,
                     borderRadius: 2,
                     bgcolor: isDark
-                      ? 'rgba(0,87,184,0.15)'
-                      : 'rgba(0,87,184,0.08)',
+                      ? alpha(theme.palette.primary.main, 0.15)
+                      : alpha(theme.palette.primary.main, 0.08),
                     color: 'primary.main',
                     flexShrink: 0,
                     '& .MuiSvgIcon-root': { fontSize: 22 },

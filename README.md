@@ -92,13 +92,13 @@ kaze-ux/
 
 マルチスキーム対応のテーマシステム。Light / Dark の各モードに 3 つのカラースキームを提供。
 
-| スキーム     | Light              | Dark            | 特徴             |
-| ------------ | ------------------ | --------------- | ---------------- |
-| **Kaze**     | クールティール系   | Zinc + ティール | デフォルト       |
-| **Dracula**  | 暖色パープル系     | 紫灰 + ティール | コントラスト高め |
-| **Monotone** | 低彩度ニュートラル | 最小彩度        | 目に優しい       |
+| スキーム     | Light              | Dark          | 特徴             |
+| ------------ | ------------------ | ------------- | ---------------- |
+| **Kaze**     | クールブルー系     | Zinc + ブルー | デフォルト       |
+| **Dracula**  | 暖色パープル系     | 紫灰 + ブルー | コントラスト高め |
+| **Monotone** | 低彩度ニュートラル | 最小彩度      | 目に優しい       |
 
-- **プライマリカラー**: `#0EADB8` (ティール)
+- **プライマリカラー**: `#0057B8` (ブルー) — 白文字が 6.87:1 出る。単一ソースは `BRAND_BLUE`
 - **フォント**: Inter + Noto Sans JP, baseFontSize = 14px
 - **スペーシング**: 4px 基準 (`spacing(1)=4px`, `spacing(2)=8px`)
 - **角丸**: デフォルト 8px (shape.borderRadius)
@@ -179,7 +179,7 @@ Claude Code / Cursor 等の AI エージェントがプログラマティック�
 
 ```bash
 # .mcp.json で自動接続
-get_token("color.light.primary.main")     → #0EADB8
+get_token("color.light.primary.main")     → #0057B8
 get_component("button")                   → variants, sizes, sample
 check_rule("<IconButton><X /></IconButton>") → A01: aria-label なし
 search("spacing")                         → トークン横断検索
@@ -290,7 +290,7 @@ design-tokens/tokens.json
 
 ## Brand
 
-- **Primary**: `#0EADB8`（ティール）
+- **Primary**: `#0057B8`（ブルー）
 - **Font**: Inter + Noto Sans JP
 - **Grid**: 4px 基準
 - **Dark**: Dracula / Kaze / Monotone の 3 スキーム

@@ -8,6 +8,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 import { KazeLogo } from '@/components/ui/logo'
+import { parseColor } from '@/themes/contrast'
 import { motionOf } from '@/themes/motion'
 import {
   APP_LINKS,
@@ -17,19 +18,22 @@ import {
 } from '@/utils/appLinks'
 import type { DevPorts } from '@/utils/appLinks'
 
-// アンビエント（オーブ・粒子・グロー）で使うブランド色の rgba プレフィックス。
-// theme.palette からは alpha 付き文字列を組めないため、ここで一度だけ定義する。
-// 値は colorToken.ts の primary と一致させる（#0057B8 / #00458F / #3D82D2）
-const BRAND_RGBA = 'rgba(0,87,184,'
-const BRAND_DEEP_RGBA = 'rgba(0,69,143,'
-const BRAND_SOFT_RGBA = 'rgba(61,130,210,'
+// アンビエント（オーブ・粒子・グロー）は同じ色を何段もの alpha で重ねるため、
+// `rgba(r,g,b,` までを組んで末尾の alpha を呼び出し側が足す形にしている。
+// 値を手打ちするとトークンと二重管理になるので、必ず色から導出する
+const rgbaPrefix = (color: string) => {
+  const { r, g, b } = parseColor(color)
+  return `rgba(${r},${g},${b},`
+}
 
 // ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
 const HeroBackground = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  const teal = BRAND_RGBA
-  const teal2 = isDark ? BRAND_DEEP_RGBA : BRAND_SOFT_RGBA
+  const brand = rgbaPrefix(theme.palette.primary.main)
+  const brandAlt = rgbaPrefix(
+    isDark ? theme.palette.primary.dark : theme.palette.primary.light
+  )
 
   return (
     <Box
@@ -51,7 +55,7 @@ const HeroBackground = () => {
           top: '-20%',
           right: '-15%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal}${isDark ? '0.18' : '0.12'}) 0%, ${teal}${isDark ? '0.06' : '0.04'}) 40%, transparent 70%)`,
+          background: `radial-gradient(circle, ${brand}${isDark ? '0.18' : '0.12'}) 0%, ${brand}${isDark ? '0.06' : '0.04'}) 40%, transparent 70%)`,
           animation: 'orbDrift 16s ease-in-out infinite',
           filter: 'blur(40px)',
         }}
@@ -68,7 +72,7 @@ const HeroBackground = () => {
           bottom: '-15%',
           left: '-10%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal2}${isDark ? '0.12' : '0.08'}) 0%, transparent 65%)`,
+          background: `radial-gradient(circle, ${brandAlt}${isDark ? '0.12' : '0.08'}) 0%, transparent 65%)`,
           animation: 'orbDrift 20s ease-in-out infinite reverse',
           filter: 'blur(30px)',
         }}
@@ -85,7 +89,7 @@ const HeroBackground = () => {
           top: '20%',
           left: '40%',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${teal}${isDark ? '0.08' : '0.05'}) 0%, transparent 60%)`,
+          background: `radial-gradient(circle, ${brand}${isDark ? '0.08' : '0.05'}) 0%, transparent 60%)`,
           animation: 'orbFloat 12s ease-in-out infinite',
           filter: 'blur(50px)',
         }}
@@ -98,8 +102,8 @@ const HeroBackground = () => {
           inset: 0,
           opacity: isDark ? 0.06 : 0.05,
           backgroundImage: `
-            linear-gradient(${teal}0.3) 1px, transparent 1px),
-            linear-gradient(90deg, ${teal}0.3) 1px, transparent 1px)
+            linear-gradient(${brand}0.3) 1px, transparent 1px),
+            linear-gradient(90deg, ${brand}0.3) 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px',
           maskImage:
@@ -118,7 +122,7 @@ const HeroBackground = () => {
             width: 3 + (i % 3) * 2,
             height: 3 + (i % 3) * 2,
             borderRadius: '50%',
-            bgcolor: `${teal}${isDark ? '0.4' : '0.3'})`,
+            bgcolor: `${brand}${isDark ? '0.4' : '0.3'})`,
             top: `${10 + i * 10}%`,
             left: `${15 + ((i * 11) % 70)}%`,
             animation: `particle ${6 + i * 2}s ease-in-out infinite`,
@@ -136,7 +140,7 @@ const HeroBackground = () => {
           top: '10%',
           right: '8%',
           borderRadius: '50%',
-          border: `1px solid ${teal}${isDark ? '0.1' : '0.08'})`,
+          border: `1px solid ${brand}${isDark ? '0.1' : '0.08'})`,
           animation: 'ringRotate 30s linear infinite',
           '&::before': {
             content: '""',
@@ -146,7 +150,7 @@ const HeroBackground = () => {
             width: 6,
             height: 6,
             borderRadius: '50%',
-            bgcolor: `${teal}${isDark ? '0.5' : '0.4'})`,
+            bgcolor: `${brand}${isDark ? '0.5' : '0.4'})`,
             transform: 'translateX(-50%)',
           },
         }}
@@ -159,7 +163,7 @@ const HeroBackground = () => {
           top: '18%',
           right: '12%',
           borderRadius: '50%',
-          border: `1px dashed ${teal}${isDark ? '0.06' : '0.05'})`,
+          border: `1px dashed ${brand}${isDark ? '0.06' : '0.05'})`,
           animation: 'ringRotate 24s linear infinite reverse',
         }}
       />
@@ -239,9 +243,10 @@ const ProductCard = ({
           position: 'relative',
           overflow: 'hidden',
           '&:hover': {
-            boxShadow: isDark
-              ? '0 12px 40px rgba(0,87,184,0.15)'
-              : '0 12px 40px rgba(0,87,184,0.12)',
+            boxShadow: `0 12px 40px ${alpha(
+              theme.palette.primary.main,
+              isDark ? 0.15 : 0.12
+            )}`,
             borderColor: 'primary.main',
           },
         }}>
@@ -366,9 +371,9 @@ const BauhausDivider = ({
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
   // Kaze 骨格 3 色。ブランド青が主役 + asagi/beni をアクセントに（画面 5% 以下）
-  const teal = BRAND_RGBA
-  const asagi = 'rgba(91,143,185,' // #5B8FB9
-  const beni = 'rgba(227,78,58,' // #E34E3A
+  const brand = rgbaPrefix(theme.palette.primary.main)
+  const asagi = rgbaPrefix('#5B8FB9')
+  const beni = rgbaPrefix('#E34E3A')
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -393,7 +398,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 120, md: 200 },
               height: { xs: 120, md: 200 },
-              border: `2px solid ${teal}${isDark ? '0.12' : '0.08'})`,
+              border: `2px solid ${brand}${isDark ? '0.12' : '0.08'})`,
               position: 'absolute',
               left: flip ? 'auto' : '8%',
               right: flip ? '8%' : 'auto',
@@ -423,7 +428,7 @@ const BauhausDivider = ({
             top: '50%',
             width: { xs: 80, md: 140 },
             height: 2,
-            bgcolor: `${teal}${isDark ? '0.1' : '0.06'})`,
+            bgcolor: `${brand}${isDark ? '0.1' : '0.06'})`,
           }}
         />
       </>
@@ -449,7 +454,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 40, md: 64 },
               height: { xs: 40, md: 64 },
-              border: `2px solid ${teal}${isDark ? '0.14' : '0.1'})`,
+              border: `2px solid ${brand}${isDark ? '0.14' : '0.1'})`,
               borderRadius: '50%',
               position: 'absolute',
               right: flip ? 'auto' : '22%',
@@ -467,7 +472,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 160, md: 280 },
               height: 2,
-              bgcolor: `${teal}${isDark ? '0.08' : '0.05'})`,
+              bgcolor: `${brand}${isDark ? '0.08' : '0.05'})`,
               position: 'absolute',
               left: '50%',
               top: 20,
@@ -492,7 +497,7 @@ const BauhausDivider = ({
             sx={{
               width: { xs: 50, md: 80 },
               height: { xs: 50, md: 80 },
-              border: `1.5px solid ${teal}${isDark ? '0.08' : '0.05'})`,
+              border: `1.5px solid ${brand}${isDark ? '0.08' : '0.05'})`,
               position: 'absolute',
               left: '50%',
               top: -10,

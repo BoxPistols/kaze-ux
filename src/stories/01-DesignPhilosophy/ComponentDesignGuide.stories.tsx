@@ -26,7 +26,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import {
   AlertTriangle,
   Battery,
@@ -1331,8 +1331,8 @@ const VariablesContent = () => {
                         bgcolor:
                           slotIcon === key
                             ? isDark
-                              ? 'rgba(0,87,184,0.15)'
-                              : 'rgba(0,87,184,0.06)'
+                              ? alpha(theme.palette.primary.main, 0.15)
+                              : alpha(theme.palette.primary.main, 0.06)
                             : 'transparent',
                         display: 'flex',
                         justifyContent: 'center',

@@ -66,7 +66,7 @@ This project uses both Japanese and English:
 
 ### Quick Reference（このファイルだけで基本 UI 生成可能）
 
-**ブランドカラー**: `primary.main = #0EADB8` (ティール)
+**ブランドカラー**: `primary.main = #0057B8` (ブルー) — 単一ソースは `colorToken.ts` の `BRAND_BLUE`
 **フォント**: Inter + Noto Sans JP, baseFontSize = 14px
 **スペーシング**: 4px 基準 (`spacing(1)=4px`, `spacing(2)=8px`)
 **角丸**: xs=4, sm=6, md=8, lg=10, xl=12, 2xl=16, full=9999
@@ -324,7 +324,7 @@ This project uses both Japanese and English:
 - Decorator: MUI ThemeProvider + Emotion CacheProvider + CssBaseline の多重ラップ
 - ChatSupport: `viewMode !== 'docs'` のとき全 Story に自動注入
 - パラメータ制御: `noPadding`, `fullscreenNoPadding`, `blockLinks`, `forceDarkTheme`
-- manager.ts: Kaze 独自テーマ（dark base, #0EADB8 primary, Inter + Noto Sans JP）
+- manager.ts: Kaze 独自テーマ（dark base, #0057B8 primary, Inter + Noto Sans JP）
 - Story カテゴリ: 00-Guide → 01-DesignPhilosophy → 02-DesignTokens → 03-Layout → 04-Components → 05-Patterns → 06-Tools
 - ビルド設定: env を `viteFinal` で define 注入、パスワード認証は managerHead で注入
 
@@ -347,7 +347,7 @@ This project uses both Japanese and English:
 ## デザインシステム
 
 - カラー: マルチスキーム（Kaze/Dracula/Monotone）× Light/Dark = 6テーマ
-- プライマリ: #0EADB8（ティール）、フォント: Inter + Noto Sans JP、baseFontSize=14px
+- プライマリ: #0057B8（ブルー）、フォント: Inter + Noto Sans JP、baseFontSize=14px
 - spacing: 4px基準、borderRadius: xs=4/sm=6/md=8/lg=10/xl=12/2xl=16
 - ブレイクポイント: mobile(0)/tablet(768)/laptop(1366)/desktop(1920)
 - CVA (class-variance-authority): Button/Card で shadcn 互換バリアントパターン

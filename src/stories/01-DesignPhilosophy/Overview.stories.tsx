@@ -1,5 +1,5 @@
 import { Box, Typography, Grid, Stack } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { motionOf } from '@/themes/motion'
 
@@ -99,7 +99,7 @@ const DesignPhilosophyOverview = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(0,87,184,0.08)',
+            : alpha(theme.palette.primary.main, 0.08),
         }}>
         {/* 装飾: グリッドドット */}
         <Box
