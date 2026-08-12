@@ -79,7 +79,7 @@ interface SectionHeaderProps {
 const SectionHeader = ({ title, subtitle }: SectionHeaderProps) => (
   <div className='mb-10 border-l-4 border-primary pl-6'>
     <Typography
-      variant='xl'
+      variant='h2'
       component='h2'
       className='font-extrabold tracking-tight text-foreground'>
       {title}
@@ -121,7 +121,7 @@ interface SubSectionProps {
 const SubSection = ({ title, children }: SubSectionProps) => (
   <div className='mb-14'>
     <Typography
-      variant='lg'
+      variant='h3'
       component='h3'
       className='mb-6 font-bold tracking-tight'>
       {title}

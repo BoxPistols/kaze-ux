@@ -165,6 +165,22 @@ const headingSmall = {
   lineHeight: lineHeight.small,
 }
 
+/**
+ * サイズ帯 (xxl - xs): 寸法だけを与え、太さは呼び出し側の裁量に残す。
+ *
+ * 以前は xxl/xl/lg だけが bold + 行送り 1.3、ml 以下が normal + 1.4 で、
+ * 同じ命名軸の途中で太さが切り替わっていた。結果として、見出しに使う側は
+ * 必ず fontWeight を書き足し（serviceCard は variant='md' に 600 を追加）、
+ * サイズ帯に使う側は太さを打ち消す必要があった。
+ *
+ * 意味 (h1-h6 / display) と寸法 (xxl-xs) を別の軸として扱い、
+ * 寸法側は太さを主張しない。
+ */
+const sizeOnly = {
+  fontWeight: fontWeight.normal,
+  lineHeight: lineHeight.small,
+}
+
 // Typography options
 export const typographyOptions: TypographyOptions = {
   htmlFontSize: baseFontSize,
@@ -226,26 +242,43 @@ export const typographyOptions: TypographyOptions = {
     lineHeight: lineHeight.medium,
     letterSpacing: letterSpacingVariant.sm,
   },
+  // subtitle1 / subtitle2 / caption / overline は以前すべて 12px・
+  // 行送り 1.4・weight 400 の同値だった。名前が 4 つあって見た目が 1 つでは
+  // 段として機能しないため、呼び出し側は毎回 sx で打ち消していた。
+  // 見出しと本文の間を埋める段として、それぞれに役割を与える。
+  /** 見出しに添える導入文。本文よりわずかに大きく、やや重い */
   subtitle1: {
+    fontSize: fontSizesVariant.ml,
+    fontWeight: fontWeight.medium,
+    lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.ml,
+  },
+  /** 小見出しに添える補足。本文と同じ寸法で、太さだけで区別する */
+  subtitle2: {
+    fontSize: fontSizesVariant.md,
+    fontWeight: fontWeight.medium,
+    lineHeight: lineHeight.small,
+    letterSpacing: letterSpacingVariant.md,
+  },
+  /** 図版の説明・補助テキスト。最小フォントサイズ 12px 原則に準拠 */
+  caption: {
     fontSize: fontSizesVariant.sm,
     lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.sm,
   },
-  subtitle2: {
-    fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
-    lineHeight: lineHeight.small,
-    letterSpacing: letterSpacingVariant.sm,
-  },
-  caption: {
-    fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
-    lineHeight: lineHeight.small,
-    letterSpacing: letterSpacingVariant.sm,
-  },
+  /**
+   * セクションの上に置くラベル (eyebrow)。
+   *
+   * 字間を大きく開けるのは光学調整の式から意図的に外れる。この段は
+   * 読ませる文ではなく「印」として認識されるため、単語の塊を解いて
+   * 文字の帯に見せる方が役目に合う。
+   */
   overline: {
-    fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+    fontSize: fontSizesVariant.sm,
+    fontWeight: fontWeight.medium,
     lineHeight: lineHeight.small,
-    letterSpacing: letterSpacingVariant.sm,
-    textTransform: 'none',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
   },
   button: {
     fontSize: fontSizesVariant.md,
@@ -272,37 +305,37 @@ export const typographyOptions: TypographyOptions = {
   xxl: {
     fontSize: fontSizesVariant.xxl,
     letterSpacing: letterSpacingVariant.xxl,
-    ...heading,
+    ...sizeOnly,
   },
   xl: {
     fontSize: fontSizesVariant.xl,
     letterSpacing: letterSpacingVariant.xl,
-    ...heading,
+    ...sizeOnly,
   },
   lg: {
     fontSize: fontSizesVariant.lg,
     letterSpacing: letterSpacingVariant.lg,
-    ...heading,
+    ...sizeOnly,
   },
   ml: {
     fontSize: fontSizesVariant.ml,
-    lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.ml,
+    ...sizeOnly,
   },
   md: {
     fontSize: fontSizesVariant.md,
-    lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.md,
+    ...sizeOnly,
   },
   sm: {
     fontSize: fontSizesVariant.sm,
-    lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.sm,
+    ...sizeOnly,
   },
   xs: {
     fontSize: fontSizesVariant.xs,
-    lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.xs,
+    ...sizeOnly,
   },
 }
 

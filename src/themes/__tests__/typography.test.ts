@@ -123,3 +123,74 @@ describe('光学的な行送り・ウェイト', () => {
     }
   })
 })
+
+/**
+ * 名前が違えば見た目も違う、を機械的に保つ。
+ *
+ * 以前は subtitle1 / subtitle2 / caption / overline が完全同値で、
+ * xxl / xl / lg も h1 / h2 / h3 と同値だった。名前が 5 つあって見た目が
+ * 1 つでは段として機能せず、呼び出し側は毎回 sx で打ち消していた。
+ */
+describe('variant の一意性', () => {
+  const SHAPE_KEYS = [
+    'fontSize',
+    'fontWeight',
+    'lineHeight',
+    'letterSpacing',
+    'textTransform',
+  ] as const
+
+  /**
+   * 意味の軸 (caption) と寸法の軸 (sm) が同じ見た目に着地するのは許容する。
+   * 別の命名軸から同じ段を指しているだけで、段が潰れているわけではない。
+   */
+  const ALLOWED_ALIASES = [['caption', 'sm']]
+
+  const isAllowedAlias = (a: string, b: string) =>
+    ALLOWED_ALIASES.some((pair) => pair.includes(a) && pair.includes(b))
+
+  const shapeOf = (name: string) => {
+    const v = typographyOptions[name] as Record<string, unknown>
+    return JSON.stringify(SHAPE_KEYS.map((k) => v[k] ?? null))
+  }
+
+  const variantNames = Object.keys(typographyOptions).filter(
+    (name) =>
+      typeof typographyOptions[name] === 'object' &&
+      typographyOptions[name] !== null &&
+      name !== 'allVariants'
+  )
+
+  it('走査対象を取りこぼしていない', () => {
+    expect(variantNames.length).toBeGreaterThanOrEqual(20)
+  })
+
+  it('同じ見た目の variant が複数存在しない', () => {
+    const collisions: string[] = []
+    for (let i = 0; i < variantNames.length; i++) {
+      for (let j = i + 1; j < variantNames.length; j++) {
+        const [a, b] = [variantNames[i], variantNames[j]]
+        if (shapeOf(a) === shapeOf(b) && !isAllowedAlias(a, b)) {
+          collisions.push(`${a} ≡ ${b}`)
+        }
+      }
+    }
+    expect(collisions, collisions.join(', ')).toEqual([])
+  })
+
+  it('サイズ帯 (xxl-xs) は太さを主張しない', () => {
+    for (const name of ['xxl', 'xl', 'lg', 'ml', 'md', 'sm', 'xs']) {
+      const v = typographyOptions[name] as { fontWeight?: number }
+      expect(v.fontWeight, name).toBe(400)
+    }
+  })
+
+  it('overline は字間を開けて「印」に見せる', () => {
+    const v = typographyOptions.overline as {
+      letterSpacing?: string
+      textTransform?: string
+    }
+    expect(Number.parseFloat(v.letterSpacing ?? '0')).toBeGreaterThan(0.05)
+    expect(v.textTransform).toBe('uppercase')
+  })
+})

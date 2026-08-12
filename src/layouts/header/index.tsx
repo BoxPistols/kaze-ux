@@ -38,6 +38,8 @@ export const Header = ({ toggleDrawer, open }: HeaderProps) => {
           variant='lg'
           noWrap
           sx={{
+            // サイズ帯は太さを持たない。見出しとして使うので明示する
+            fontWeight: 'bold',
             fontSize: '1.25rem',
             flexGrow: 1,
           }}>
