@@ -634,7 +634,7 @@ export const CompleteView = () => {
 
       <ConfirmDialog
         open={resetDialogOpen}
-        onClose={() => setResetDialogOpen(false)}
+        onCancel={() => setResetDialogOpen(false)}
         onConfirm={() => {
           reset()
           setResetDialogOpen(false)

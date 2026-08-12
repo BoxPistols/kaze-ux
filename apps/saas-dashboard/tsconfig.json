@@ -21,6 +21,8 @@
     },
     "types": ["node"]
   },
-  "include": ["src"],
+  // ルートの型拡張 (PaletteColor.lighter など) は誰も import しない
+  // 宣言ファイルなので、include に入れないと解決されない
+  "include": ["src", "../../src/types"],
   "exclude": ["node_modules", "dist"]
 }
