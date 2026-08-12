@@ -23,6 +23,7 @@ import {
   createShadows,
   elevation,
 } from './elevation'
+import { createFocusVisibleOverrides } from './focus'
 import { kazeTransitions, motionOf, reducedMotionOverrides } from './motion'
 import {
   fontSizesVariant,
@@ -92,6 +93,10 @@ const componentStyles = {
       }),
       // 動きを減らす設定を持つ利用者には意匠より要求を優先する
       ...reducedMotionOverrides,
+      // フォーカスの所在はキーボード操作の唯一の手がかり。既定を 1 箇所で
+      // 与えて、外したい箇所だけが明示的に上書きする形にする。
+      // 色は --color-ring（テーマ／スキームで自動的に切り替わる）
+      ...createFocusVisibleOverrides('var(--color-ring)'),
     },
   },
   MuiAppBar: {

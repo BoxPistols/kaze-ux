@@ -1,6 +1,7 @@
 import { amber, blue, pink } from '@mui/material/colors'
 
 import { bestContrast, ensureContrast } from './contrast'
+import { focusRingColor } from './focus'
 
 export interface ColorSet {
   main: string
@@ -544,6 +545,10 @@ export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-foreground': c.text.primary,
   '--color-muted': c.text.secondary,
   '--color-border': c.divider,
+
+  // フォーカスリング。ブランド色そのままだと primary の塗り面で溶けるため、
+  // 面と地の両方に対して UI 基準 (3:1) を満たす明度に寄せた値を持つ
+  '--color-ring': focusRingColor(c.primary.main, c.background),
 })
 
 /** localStorage キー(Storybook等で使用) */

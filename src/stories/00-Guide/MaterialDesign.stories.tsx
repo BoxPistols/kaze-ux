@@ -19,6 +19,8 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { Plus } from 'lucide-react'
 
+import { motionOf } from '@/themes/motion'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta = {
@@ -440,7 +442,7 @@ const ElevationPlayground = ({
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius,
-          transition: 'all 0.3s ease',
+          transition: motionOf(['border-radius', 'box-shadow'], 'macro'),
         }}>
         <Typography variant='h4' sx={{ fontWeight: 800, mb: 0.5 }}>
           {elevation}
@@ -530,7 +532,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
             sx={{
               p: spacingValue,
               borderRadius: 2,
-              transition: 'all 0.3s ease',
+              transition: motionOf(['padding', 'border-radius'], 'macro'),
             }}>
             <Box
               sx={{
@@ -552,7 +554,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
           <Stack
             direction='row'
             spacing={spacingValue}
-            sx={{ transition: 'all 0.3s ease' }}>
+            sx={{ transition: motionOf(['gap'], 'macro') }}>
             {[1, 2, 3, 4].map((n) => (
               <Box
                 key={n}

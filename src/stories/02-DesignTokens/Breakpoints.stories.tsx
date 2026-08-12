@@ -18,6 +18,7 @@ import {
   touchTargets,
 } from '@/themes/breakpoints'
 import type { BreakpointKey } from '@/themes/breakpoints'
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -170,7 +171,10 @@ const BreakpointScaleDemo = () => {
                 borderColor: isActive ? 'primary.main' : 'divider',
                 borderStyle: 'solid',
                 borderRadius: 1,
-                transition: 'all 0.3s ease',
+                transition: motionOf(
+                  ['background-color', 'border-color', 'border-width'],
+                  'macro'
+                ),
               }}>
               <Box
                 sx={{
@@ -333,7 +337,7 @@ const BreakpointScaleDemo = () => {
                       ? '2px solid white'
                       : 'none',
                   opacity: isActive ? 1 : 0.5,
-                  transition: 'all 0.3s ease',
+                  transition: motionOf(['opacity', 'border-color'], 'macro'),
                 }}>
                 <Typography
                   variant='caption'

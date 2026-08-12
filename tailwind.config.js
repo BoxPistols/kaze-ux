@@ -103,7 +103,7 @@ export default {
           DEFAULT: 'var(--color-background-paper)',
           foreground: 'var(--color-foreground)',
         },
-        ring: 'var(--color-primary)',
+        ring: 'var(--color-ring)',
         input: 'var(--color-border)',
       },
       typography: (theme) => ({

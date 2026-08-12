@@ -8,6 +8,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
 import {
   APP_LINKS,
   DEFAULT_PORTS,
@@ -891,7 +892,10 @@ export const LandingPage = () => {
                       fontWeight: 700,
                       fontSize: '0.9rem',
                       textDecoration: 'none',
-                      transition: 'all 0.3s ease',
+                      transition: motionOf(
+                        ['transform', 'box-shadow'],
+                        'macro'
+                      ),
                       boxShadow: '0 4px 20px rgba(0,87,184,0.25)',
                       '&:hover': {
                         transform: 'translateY(-2px)',
@@ -921,7 +925,10 @@ export const LandingPage = () => {
                       fontWeight: 600,
                       fontSize: '0.9rem',
                       textDecoration: 'none',
-                      transition: 'all 0.3s ease',
+                      transition: motionOf(
+                        ['transform', 'box-shadow'],
+                        'macro'
+                      ),
                       '&:hover': {
                         borderColor: 'primary.main',
                         color: 'primary.textContrast',
@@ -1236,7 +1243,7 @@ export const LandingPage = () => {
                   fontWeight: 600,
                   fontSize: '1rem',
                   textDecoration: 'none',
-                  transition: 'all 0.2s',
+                  transition: motionOf(['transform', 'box-shadow']),
                   '&:hover': {
                     boxShadow: '0 4px 16px rgba(0,87,184,0.25)',
                   },

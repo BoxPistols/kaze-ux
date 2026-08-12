@@ -65,6 +65,12 @@ export {
   ensureContrast,
   pickReadable,
 } from './themes/contrast'
+export {
+  FOCUS_RING_OFFSET,
+  FOCUS_RING_WIDTH,
+  focusRing,
+  focusRingColor,
+} from './themes/focus'
 export { createShadows, elevation } from './themes/elevation'
 export type { ElevationLevel } from './themes/elevation'
 export {

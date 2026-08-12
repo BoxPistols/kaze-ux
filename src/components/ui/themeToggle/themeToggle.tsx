@@ -4,6 +4,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import { IconButton, Tooltip } from '@mui/material'
 
 import { useTheme } from '@/hooks/useTheme'
+import { motionOf } from '@/themes/motion'
 
 /**
  * テーマ切り替えボタンコンポーネント
@@ -61,7 +62,11 @@ export const ThemeToggle = () => {
             backgroundColor: 'action.hover',
             boxShadow: 2,
           },
-          transition: 'all 0.2s ease',
+          transition: motionOf([
+            'background-color',
+            'box-shadow',
+            'border-color',
+          ]),
           '& .MuiSvgIcon-root': {
             fontSize: '1.125rem',
           },

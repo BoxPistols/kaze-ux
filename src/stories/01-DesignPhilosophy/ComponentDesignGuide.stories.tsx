@@ -49,6 +49,8 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta = {
@@ -1335,7 +1337,10 @@ const VariablesContent = () => {
                         display: 'flex',
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        transition: 'all 0.15s',
+                        transition: motionOf([
+                          'border-color',
+                          'background-color',
+                        ]),
                         '&:hover': {
                           borderColor: 'primary.main',
                         },
@@ -1892,7 +1897,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
               sx={{
                 fontWeight: key === state ? 700 : 400,
                 opacity: key === state ? 1 : 0.5,
-                transition: 'all 0.2s',
+                transition: motionOf(['opacity']),
               }}
             />
           )
@@ -1908,7 +1913,10 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
           maxWidth: '100%',
           borderRadius: 3,
           overflow: 'hidden',
-          transition: 'all 0.3s ease',
+          transition: motionOf(
+            ['width', 'border-radius', 'border-color'],
+            'macro'
+          ),
           borderColor: state === 'Error' ? 'error.main' : 'divider',
           ...(showInteraction && {
             cursor: 'pointer',
