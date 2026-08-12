@@ -28,14 +28,27 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      // json-summary があると coverage/coverage-summary.json から
+      // 数値をそのまま読める（自動化・報告用）
+      reporter: ['text', 'json', 'json-summary', 'html'],
+      // 除外するのは「生成物」だけにする。ソースを都合よく外すと
+      // 数字は上がるが実態を表さなくなる。
+      //
+      // storybook-static を外していなかったため、minify 済みの
+      // ベンダーバンドルだけで 114,000 statements (全体の 69%) が
+      // 0% として計上され、実態 27.5% が 8.5% と表示されていた。
+      // 末尾スラッシュだけの 'dist/' はルート直下しか外せず、
+      // apps/*/dist が残るので ** で書く。
       exclude: [
-        'node_modules/',
+        '**/node_modules/**',
+        '**/dist/**',
+        'coverage/**',
+        'storybook-static/**',
+        'gh-pages/**',
+        'figma-plugin/code.js',
         'src/test/',
         'src/**/*.stories.tsx',
         'src/**/*.d.ts',
-        'dist/',
-        'coverage/',
         '**/*.config.{js,ts}',
       ],
     },
