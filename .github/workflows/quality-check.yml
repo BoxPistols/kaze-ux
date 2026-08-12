@@ -1,6 +1,10 @@
 name: Quality Check
 
 on:
+  # main への直 push / 管理者マージでも走らせる。pull_request だけだと、
+  # その経路が素通りしたまま deploy-pages.yml が公開してしまう
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]

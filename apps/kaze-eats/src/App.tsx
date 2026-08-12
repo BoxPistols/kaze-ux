@@ -54,7 +54,7 @@ type ThemeMode = 'light' | 'dark'
 // 本アプリはブランドカラー専用のため独立した ThemeProvider/useState で管理する。
 const THEME_STORAGE_KEY = 'kaze-eats-theme'
 /** 改名前のキー。読むだけで書かない（次回保存で新キーに移る） */
-const LEGACY_THEME_STORAGE_KEY = 'ubereats-theme' // brand-check-allow: 改名前キーの読み取り互換
+const LEGACY_THEME_STORAGE_KEY = 'ubereats-theme' // brand-check-allow: ubereats — 改名前キーの読み取り互換
 
 const getInitialMode = (): ThemeMode => {
   if (typeof window === 'undefined') return 'light'
