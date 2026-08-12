@@ -1027,43 +1027,70 @@ const darkTheme = createTheme({
   ) as Components<Theme>,
 })
 
-/** 指定スキームでダークテーマを生成 */
-const createDarkTheme = (scheme?: DarkColorScheme): Theme => {
-  const colors = createDarkThemeColors(scheme)
-  return createTheme({
-    ...commonThemeOptions,
-    shadows: createShadows('dark'),
-    palette: {
-      mode: 'dark',
-      ...colors,
-      background: {
-        ...colors.background,
-        default: colors.background.default,
-        paper: colors.background.paper,
-      },
-    } as PaletteOptions,
-    components: withCssVars(componentStyles, colors) as Components<Theme>,
-  })
+export interface BrandModeThemeOptions {
+  /** palette に足すブランド固有スロット（例: keGreen） */
+  paletteExtras?: object
+  /** createCssVars() が持たないアプリ固有の CSS 変数 */
+  cssVars?: Record<string, string>
+  /** アプリ固有のコンポーネント上書き。createTheme の deep merge で合流する */
+  components?: Components<Theme>
 }
 
-/** 指定スキームでライトテーマを生成 */
-const createLightTheme = (scheme?: ColorScheme): Theme => {
-  const colors = createLightThemeColors(scheme)
-  return createTheme({
+/**
+ * 任意の ThemeColors から、単一モードの（palette を直に持つ）テーマを生成する。
+ *
+ * CssVarsProvider を使わず自前でモードを切り替えるアプリ（KazeEats）向け。
+ * createBrandTheme() との違いは colorSchemes を持つかどうかだけで、
+ * Tailwind が読む `--color-*` を同じ定義から生成する点は共通。
+ */
+export const createBrandModeTheme = (
+  colors: ThemeColors,
+  mode: 'light' | 'dark',
+  { paletteExtras, cssVars, components }: BrandModeThemeOptions = {}
+): Theme => {
+  const base = createTheme({
     ...commonThemeOptions,
-    shadows: createShadows('light'),
+    shadows: createShadows(mode),
     palette: {
-      mode: 'light',
+      mode,
       ...colors,
       background: {
         ...colors.background,
         default: colors.background.default,
         paper: colors.background.paper,
       },
+      ...paletteExtras,
     } as PaletteOptions,
-    components: withCssVars(componentStyles, colors) as Components<Theme>,
+    components: {
+      ...withCssVars(componentStyles, colors),
+      ...(cssVars
+        ? {
+            MuiCssBaseline: {
+              styleOverrides: {
+                ...withCssVars(componentStyles, colors).MuiCssBaseline
+                  .styleOverrides,
+                ':root': {
+                  ...createCssVars(colors),
+                  ...createMotionCssVars(),
+                  ...cssVars,
+                },
+              },
+            },
+          }
+        : {}),
+    } as Components<Theme>,
   })
+
+  return components ? createTheme(base, { components }) : base
 }
+
+/** 指定スキームでダークテーマを生成 */
+const createDarkTheme = (scheme?: DarkColorScheme): Theme =>
+  createBrandModeTheme(createDarkThemeColors(scheme), 'dark')
+
+/** 指定スキームでライトテーマを生成 */
+const createLightTheme = (scheme?: ColorScheme): Theme =>
+  createBrandModeTheme(createLightThemeColors(scheme), 'light')
 
 // Theme 型も明示的にエクスポート
 export type { AppTheme }

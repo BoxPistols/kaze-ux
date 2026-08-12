@@ -491,13 +491,13 @@ const productExtensions = [
   },
   {
     name: 'KazeEats',
-    color: '#06C167',
+    color: '#0F8048',
     description: 'フードデリバリー',
     items: [
       {
-        label: '独自テーマ (UE Green)',
+        label: '独自テーマ (KazeEats Green)',
         detail:
-          'UE_GREEN (#06C167) を基調にベーステーマを拡張した ueLightTheme / ueDarkTheme',
+          'KE_GREEN (#0F8048) を基調にベーステーマを拡張した keLightTheme / keDarkTheme',
       },
       {
         label: 'BottomNavigation',
@@ -701,7 +701,7 @@ const ApplicationGuideContent = () => {
             },
             {
               name: 'KazeEats',
-              color: '#06C167',
+              color: '#0F8048',
               desc: 'フードデリバリー',
               path: 'apps/ubereats-clone/',
             },
@@ -963,12 +963,12 @@ import { LOGI_ORANGE } from '~/theme/colors'`}
 // apps/sky-kaze/src/theme/skyTheme.ts
 import { darkTheme, lightTheme } from '@/themes/theme'
 
-// apps/ubereats-clone/src/theme/ueTheme.ts
+// apps/ubereats-clone/src/theme/keTheme.ts
 import { darkTheme, lightTheme } from '@/themes/theme'
 
 // 各プロダクトのブランドカラー:
 // KazeLogistics: LOGI_ORANGE (#E87A1E) + LOGI_NAVY
-// KazeEats:      UE_GREEN   (#06C167)
+// KazeEats:      KE_GREEN   (#0F8048)
 // SaaS Dashboard: primary.main をそのまま使用`}
         </CodeBlock>
 
@@ -981,7 +981,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
             },
             {
               name: 'KazeEats',
-              color: '#06C167',
+              color: '#0F8048',
               method: 'ベーステーマ + 独自 ThemeProvider（localStorage 分離）',
             },
             {
@@ -1118,7 +1118,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
     ubereats-clone/src/        # KazeEats
       pages/                   #   HomePage, CartPage, RestaurantPage ...
       data/                    #   cart.ts, restaurants.ts, orders.ts
-      theme/                   #   ueTheme.ts, colors.ts
+      theme/                   #   keTheme.ts, colors.ts
       utils/                   #   format.ts
 
     saas-dashboard/src/        # SaaS Dashboard

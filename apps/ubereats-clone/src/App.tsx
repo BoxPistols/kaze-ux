@@ -38,12 +38,12 @@ import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
 import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
 import { ProfilePage } from '~/pages/ProfilePage'
 import { RestaurantPage } from '~/pages/RestaurantPage'
-import { UE_GREEN, UE_GREEN_LIGHT, ueWordmarkColor } from '~/theme/colors'
-import { ueDarkTheme, ueLightTheme } from '~/theme/ueTheme'
+import { KE_GREEN, KE_GREEN_LIGHT, keWordmarkColor } from '~/theme/colors'
+import { keDarkTheme, keLightTheme } from '~/theme/keTheme'
 
 type ThemeMode = 'light' | 'dark'
 
-// hookUseTheme ではなく独自管理: KazeEats は専用テーマ (ueLightTheme/ueDarkTheme) を使用し、
+// hookUseTheme ではなく独自管理: KazeEats は専用テーマ (keLightTheme/keDarkTheme) を使用し、
 // localStorage キーも 'ubereats-theme' で他アプリと分離するため。
 // SaaS Dashboard は共通 ThemeProvider + CssVarsProvider を利用するが、
 // 本アプリは UE ブランドカラー専用のため独立した ThemeProvider/useState で管理する。
@@ -76,7 +76,7 @@ const navItems = [
 ]
 
 const BADGE_SX = {
-  '& .MuiBadge-badge': { bgcolor: 'ueGreen.main', color: 'common.white' },
+  '& .MuiBadge-badge': { bgcolor: 'keGreen.main', color: 'common.white' },
 } as const
 
 const renderNavIcon = (item: (typeof navItems)[0], cartCount: number) =>
@@ -161,7 +161,7 @@ const AppContent = ({
                 outline: 'none',
                 '&:focus-visible': {
                   outline: '2px solid',
-                  outlineColor: UE_GREEN,
+                  outlineColor: KE_GREEN,
                   outlineOffset: 4,
                   borderRadius: 1,
                 },
@@ -174,7 +174,7 @@ const AppContent = ({
                   width: 42,
                   height: 42,
                   borderRadius: 2.5,
-                  bgcolor: UE_GREEN,
+                  bgcolor: KE_GREEN,
                   flexShrink: 0,
                 }}>
                 <RestaurantMenuIcon
@@ -196,7 +196,7 @@ const AppContent = ({
                   // ブランドの緑をそのまま白地に置くと 2.38:1。
                   // 面はモードで変わるので、置く面を渡して都度決める
                   sx={(t) => ({
-                    color: ueWordmarkColor(t.palette.background.paper),
+                    color: keWordmarkColor(t.palette.background.paper),
                   })}>
                   Eats
                 </Box>
@@ -222,10 +222,10 @@ const AppContent = ({
                       aria-label={item.label}
                       size='medium'
                       sx={{
-                        color: isActive ? UE_GREEN : 'text.secondary',
-                        bgcolor: isActive ? UE_GREEN_LIGHT : 'transparent',
+                        color: isActive ? KE_GREEN : 'text.secondary',
+                        bgcolor: isActive ? KE_GREEN_LIGHT : 'transparent',
                         '&:hover': {
-                          color: UE_GREEN,
+                          color: KE_GREEN,
                           bgcolor: 'action.hover',
                         },
                       }}>
@@ -310,7 +310,7 @@ const AppContent = ({
 const App = () => {
   const [mode, setMode] = useState<ThemeMode>(getInitialMode)
   const theme = useMemo(
-    () => (mode === 'dark' ? ueDarkTheme : ueLightTheme),
+    () => (mode === 'dark' ? keDarkTheme : keLightTheme),
     [mode]
   )
   const toggleMode = useCallback(() => {

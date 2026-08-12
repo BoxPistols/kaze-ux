@@ -17,10 +17,10 @@ import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
 import {
-  UE_BLACK,
-  UE_BLACK_HOVER,
-  UE_GREEN,
-  UE_GREEN_DARK,
+  KE_BLACK,
+  KE_BLACK_HOVER,
+  KE_GREEN,
+  KE_GREEN_DARK,
 } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
@@ -248,7 +248,7 @@ export const CartPage = () => {
             <Box
               sx={{
                 height: 4,
-                background: `linear-gradient(90deg, ${UE_GREEN} 0%, ${UE_GREEN_DARK} 100%)`,
+                background: `linear-gradient(90deg, ${KE_GREEN} 0%, ${KE_GREEN_DARK} 100%)`,
               }}
             />
             <CardHeader>
@@ -293,7 +293,7 @@ export const CartPage = () => {
                 </Typography>
                 <Typography
                   variant='subtitle1'
-                  sx={{ fontWeight: 700, color: UE_GREEN }}>
+                  sx={{ fontWeight: 700, color: KE_GREEN }}>
                   {formatPrice(total)}
                 </Typography>
               </Box>
@@ -306,9 +306,9 @@ export const CartPage = () => {
                   py: 1.5,
                   fontWeight: 700,
                   borderRadius: 2,
-                  bgcolor: UE_BLACK,
+                  bgcolor: KE_BLACK,
                   '&:hover': {
-                    bgcolor: UE_BLACK_HOVER,
+                    bgcolor: KE_BLACK_HOVER,
                   },
                 }}>
                 Place Order

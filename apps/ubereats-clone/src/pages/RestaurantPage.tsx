@@ -17,7 +17,7 @@ import { toast } from '@/components/ui/toast'
 
 import { useCartStore } from '~/data/cart'
 import { restaurants } from '~/data/restaurants'
-import { UE_GREEN, UE_STAR } from '~/theme/colors'
+import { KE_GREEN, KE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const RestaurantPage = () => {
@@ -99,7 +99,7 @@ export const RestaurantPage = () => {
           <Badge
             badgeContent={cartCount}
             sx={{
-              '& .MuiBadge-badge': { bgcolor: UE_GREEN, color: 'common.white' },
+              '& .MuiBadge-badge': { bgcolor: KE_GREEN, color: 'common.white' },
             }}>
             <IconButton
               onClick={() => navigate('/cart')}
@@ -150,7 +150,7 @@ export const RestaurantPage = () => {
                 borderRadius: 2,
               }}>
               <StarIcon
-                sx={{ fontSize: 18, color: UE_STAR }}
+                sx={{ fontSize: 18, color: KE_STAR }}
                 aria-hidden='true'
               />
               <Typography
@@ -269,7 +269,7 @@ export const RestaurantPage = () => {
                             }}>
                             <Typography
                               variant='body1'
-                              sx={{ fontWeight: 700, color: UE_GREEN }}>
+                              sx={{ fontWeight: 700, color: KE_GREEN }}>
                               {formatPrice(item.price)}
                             </Typography>
                             <Button
@@ -328,7 +328,7 @@ export const RestaurantPage = () => {
                     }}>
                     <Typography
                       variant='body1'
-                      sx={{ fontWeight: 700, color: UE_GREEN }}>
+                      sx={{ fontWeight: 700, color: KE_GREEN }}>
                       {formatPrice(item.price)}
                     </Typography>
                     <Button

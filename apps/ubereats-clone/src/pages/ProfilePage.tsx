@@ -16,14 +16,14 @@ import { CustomChip } from '@/components/ui/chip'
 import { IconButton } from '@/components/ui/icon-button'
 import { toast } from '@/components/ui/toast'
 
-import { UE_GREEN, UE_GREEN_DARK } from '~/theme/colors'
+import { KE_GREEN, KE_GREEN_DARK } from '~/theme/colors'
 
 const orderStats = [
   {
     label: 'Total Orders',
     value: '47',
     icon: <ReceiptLongIcon aria-hidden='true' />,
-    color: UE_GREEN,
+    color: KE_GREEN,
   },
   {
     label: 'Deliveries',
@@ -83,7 +83,7 @@ export const ProfilePage = () => {
         <Box
           sx={{
             height: 100,
-            background: `linear-gradient(135deg, ${UE_GREEN} 0%, ${UE_GREEN_DARK} 100%)`,
+            background: `linear-gradient(135deg, ${KE_GREEN} 0%, ${KE_GREEN_DARK} 100%)`,
           }}
         />
         <CardContent>
@@ -240,7 +240,7 @@ export const ProfilePage = () => {
             <CardHeader>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <NotificationsIcon
-                  sx={{ fontSize: 20, color: UE_GREEN }}
+                  sx={{ fontSize: 20, color: KE_GREEN }}
                   aria-hidden='true'
                 />
                 <CardTitle>Preferences</CardTitle>
