@@ -39,13 +39,24 @@ export const KE_ON_GREEN = bestContrast(KE_GREEN, ON_SURFACE_INKS)
  * 塗り面ではなく文字なので基準が変わる。18.66px 以上の太字（WCAG の
  * 「大きい文字」）に必要な 3:1 を、置く面ごとに満たす値を返す。
  * 面はモードで変わるため、置く面を渡して都度決める。
+ *
+ * ちょうど 3:1 で止めると余裕がゼロになる。基準色を #06C167 から
+ * #0F8048 に変えたとき、暗い面 (#242424) での実測が 3.11:1 まで落ちた。
+ * 「基準は満たすが読みづらい」状態なので、colorToken.ts と同じ 1.2 倍の
+ * 余裕を持たせる。明るい面では元から余裕があり、値は変わらない。
  */
+const WORDMARK_HEADROOM = 1.2
+
 const wordmarkCache = new Map<string, string>()
 
 export const keWordmarkColor = (surface: string): string => {
   const hit = wordmarkCache.get(surface)
   if (hit !== undefined) return hit
-  const value = ensureContrast(KE_GREEN, surface, CONTRAST_THRESHOLD.largeText)
+  const value = ensureContrast(
+    KE_GREEN,
+    surface,
+    CONTRAST_THRESHOLD.largeText * WORDMARK_HEADROOM
+  )
   wordmarkCache.set(surface, value)
   return value
 }

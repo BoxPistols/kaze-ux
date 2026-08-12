@@ -151,7 +151,7 @@ export const HomePage = () => {
               }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon
-                  sx={{ color: KE_GREEN, fontSize: 24 }}
+                  sx={{ color: 'primary.textContrast', fontSize: 24 }}
                   aria-hidden='true'
                 />
                 <Typography

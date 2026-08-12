@@ -293,7 +293,7 @@ export const CartPage = () => {
                 </Typography>
                 <Typography
                   variant='subtitle1'
-                  sx={{ fontWeight: 700, color: KE_GREEN }}>
+                  sx={{ fontWeight: 700, color: 'primary.textContrast' }}>
                   {formatPrice(total)}
                 </Typography>
               </Box>

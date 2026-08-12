@@ -38,7 +38,12 @@ import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
 import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
 import { ProfilePage } from '~/pages/ProfilePage'
 import { RestaurantPage } from '~/pages/RestaurantPage'
-import { KE_GREEN, KE_GREEN_LIGHT, keWordmarkColor } from '~/theme/colors'
+import {
+  KE_GREEN,
+  KE_GREEN_LIGHT,
+  KE_ON_GREEN,
+  keWordmarkColor,
+} from '~/theme/colors'
 import { keDarkTheme, keLightTheme } from '~/theme/keTheme'
 
 type ThemeMode = 'light' | 'dark'
@@ -76,7 +81,10 @@ const navItems = [
 ]
 
 const BADGE_SX = {
-  '& .MuiBadge-badge': { bgcolor: 'keGreen.main', color: 'common.white' },
+  '& .MuiBadge-badge': {
+    bgcolor: 'keGreen.main',
+    color: 'keGreen.contrastText',
+  },
 } as const
 
 const renderNavIcon = (item: (typeof navItems)[0], cartCount: number) =>
@@ -178,7 +186,7 @@ const AppContent = ({
                   flexShrink: 0,
                 }}>
                 <RestaurantMenuIcon
-                  sx={{ color: 'common.white', fontSize: 26 }}
+                  sx={{ color: KE_ON_GREEN, fontSize: 26 }}
                   aria-hidden='true'
                 />
               </Box>
@@ -222,10 +230,12 @@ const AppContent = ({
                       aria-label={item.label}
                       size='medium'
                       sx={{
-                        color: isActive ? KE_GREEN : 'text.secondary',
+                        color: isActive
+                          ? 'primary.textContrast'
+                          : 'text.secondary',
                         bgcolor: isActive ? KE_GREEN_LIGHT : 'transparent',
                         '&:hover': {
-                          color: KE_GREEN,
+                          color: 'primary.textContrast',
                           bgcolor: 'action.hover',
                         },
                       }}>

@@ -21,7 +21,7 @@ import { toast } from '@/components/ui/toast'
 import type { OrderStatus } from '~/data/orders'
 
 import { orders } from '~/data/orders'
-import { KE_GREEN, KE_GREEN_DARK } from '~/theme/colors'
+import { KE_GREEN, KE_GREEN_DARK, KE_ON_GREEN } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 const statusMap: Record<OrderStatus, StatusType> = {
@@ -171,7 +171,7 @@ export const OrderTrackingPage = () => {
                   aria-label={`Call driver ${order.driverName}`}
                   sx={{
                     bgcolor: KE_GREEN,
-                    color: 'common.white',
+                    color: KE_ON_GREEN,
                     '&:hover': { bgcolor: KE_GREEN_DARK },
                   }}>
                   <PhoneIcon aria-hidden='true' />
@@ -281,7 +281,7 @@ export const OrderTrackingPage = () => {
             </Typography>
             <Typography
               variant='subtitle1'
-              sx={{ fontWeight: 700, color: KE_GREEN }}>
+              sx={{ fontWeight: 700, color: 'primary.textContrast' }}>
               {formatPrice(order.total + order.deliveryFee)}
             </Typography>
           </Box>

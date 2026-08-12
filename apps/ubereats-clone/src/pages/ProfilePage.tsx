@@ -23,7 +23,7 @@ const orderStats = [
     label: 'Total Orders',
     value: '47',
     icon: <ReceiptLongIcon aria-hidden='true' />,
-    color: KE_GREEN,
+    color: 'primary.textContrast',
   },
   {
     label: 'Deliveries',
@@ -240,7 +240,7 @@ export const ProfilePage = () => {
             <CardHeader>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <NotificationsIcon
-                  sx={{ fontSize: 20, color: KE_GREEN }}
+                  sx={{ fontSize: 20, color: 'primary.textContrast' }}
                   aria-hidden='true'
                 />
                 <CardTitle>Preferences</CardTitle>
