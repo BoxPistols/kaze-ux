@@ -10,17 +10,17 @@ import {
   CircularProgress,
   Grid,
   LinearProgress,
-  MenuItem,
   Step,
   StepLabel,
   Stepper,
-  TextField,
   Typography,
   alpha,
 } from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { CustomSelect } from '@/components/Form/CustomSelect'
+import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import {
   Card,
@@ -74,6 +74,18 @@ const STEP_DESCRIPTIONS = [
   '出荷予定の荷物を確認してください',
   '全8項目をチェックすると次に進めます',
   'ドライバーの割当状況を確認してください',
+]
+
+/** CustomSelect は MenuItem の children ではなく options 配列を受け取る */
+const HUB_OPTIONS = HUBS.map((h) => ({
+  value: h.code,
+  label: `${h.code} — ${h.name}`,
+}))
+
+const PRIORITY_OPTIONS = [
+  { value: 'standard', label: '標準' },
+  { value: 'express', label: '速達' },
+  { value: 'same_day', label: '当日' },
 ]
 
 const PriorityChip = ({ priority }: { priority: Shipment['priority'] }) => {
@@ -715,7 +727,7 @@ export const PrepareView = () => {
           !newShipment.destinationHub
         }>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
-          <TextField
+          <CustomTextField
             label='内容物'
             placeholder='例: 電子部品 型番ABC-1234 500個'
             fullWidth
@@ -726,7 +738,7 @@ export const PrepareView = () => {
             }
           />
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <TextField
+            <CustomTextField
               label='送り主（会社名）'
               placeholder='例: 田中電機株式会社'
               value={newShipment.senderCompany}
@@ -734,7 +746,7 @@ export const PrepareView = () => {
                 setNewShipment((p) => ({ ...p, senderCompany: e.target.value }))
               }
             />
-            <TextField
+            <CustomTextField
               label='届け先（会社名）'
               placeholder='例: 鈴木自動車部品'
               value={newShipment.receiverCompany}
@@ -747,65 +759,50 @@ export const PrepareView = () => {
             />
           </Box>
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <TextField
+            <CustomSelect
               label='出発拠点'
-              select
               required
               value={newShipment.originHub}
-              onChange={(e) =>
-                setNewShipment((p) => ({ ...p, originHub: e.target.value }))
-              }>
-              {HUBS.map((h) => (
-                <MenuItem key={h.code} value={h.code}>
-                  {h.code} — {h.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
+              options={HUB_OPTIONS}
+              onChange={(_, value) =>
+                setNewShipment((p) => ({ ...p, originHub: String(value) }))
+              }
+            />
+            <CustomSelect
               label='到着拠点'
-              select
               required
               value={newShipment.destinationHub}
-              onChange={(e) =>
-                setNewShipment((p) => ({
-                  ...p,
-                  destinationHub: e.target.value,
-                }))
-              }>
-              {HUBS.map((h) => (
-                <MenuItem key={h.code} value={h.code}>
-                  {h.code} — {h.name}
-                </MenuItem>
-              ))}
-            </TextField>
+              options={HUB_OPTIONS}
+              onChange={(_, value) =>
+                setNewShipment((p) => ({ ...p, destinationHub: String(value) }))
+              }
+            />
           </Box>
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <TextField
+            <CustomTextField
               label='重量 (kg)'
               type='number'
               placeholder='例: 500'
               value={newShipment.weight}
+              // フォーカス中のホイールで値が勝手に変わるのを止める
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) =>
                 setNewShipment((p) => ({ ...p, weight: e.target.value }))
               }
             />
-            <TextField
+            <CustomSelect
               label='優先度'
-              select
               value={newShipment.priority}
-              onChange={(e) =>
+              options={PRIORITY_OPTIONS}
+              onChange={(_, value) =>
                 setNewShipment((p) => ({
                   ...p,
-                  priority: e.target.value as
-                    'standard' | 'express' | 'same_day',
+                  priority: value as 'standard' | 'express' | 'same_day',
                 }))
-              }>
-              <MenuItem value='standard'>標準</MenuItem>
-              <MenuItem value='express'>速達</MenuItem>
-              <MenuItem value='same_day'>当日</MenuItem>
-            </TextField>
+              }
+            />
           </Box>
-          <TextField
+          <CustomTextField
             label='特記事項'
             placeholder='例: 冷蔵必須、天地無用、時間指定あり'
             multiline
