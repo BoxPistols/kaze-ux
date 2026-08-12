@@ -14,6 +14,8 @@ import { toast } from 'sonner'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { CustomToaster } from '@/components/ui/toast'
 
+import { skyTheme } from './theme/skyTheme'
+
 import { CompleteView } from '~/components/CompleteView'
 import { DriverPanel } from '~/components/DriverPanel'
 import { EventLog } from '~/components/EventLog'
@@ -73,7 +75,7 @@ const App = () => {
   const viewMode = useSimulation((s) => s.viewMode)
 
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={skyTheme}>
       <CssBaseline />
       <CustomToaster position='top-right' duration={3000} />
       <Box

@@ -1,8 +1,12 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
 import { describe, expect, it } from 'vitest'
 
 import {
-  logiDarkTheme,
-  logiLightTheme,
+  skyDarkColors,
+  skyLightColors,
+  skyTheme,
 } from '../../../apps/sky-kaze/src/theme/skyTheme'
 import {
   LOGI_AMBER,
@@ -34,11 +38,23 @@ import type { Theme } from '@mui/material/styles'
  * という最悪の状態になり、しかも見た目では気づきにくい。
  */
 const brandThemes: Array<[string, Theme, 'light' | 'dark']> = [
-  ['sky-kaze (light)', logiLightTheme, 'light'],
-  ['sky-kaze (dark)', logiDarkTheme, 'dark'],
   ['ubereats-clone (light)', ueLightTheme, 'light'],
   ['ubereats-clone (dark)', ueDarkTheme, 'dark'],
 ]
+
+/** colorSchemes 版テーマ（1 つのテーマが light/dark 両方を持つ） */
+const cssVarsThemes: Array<[string, Theme]> = [
+  ['kaze (共有)', theme],
+  ['sky-kaze', skyTheme],
+]
+
+const cssBaselineOverrides = (t: Theme): Record<string, unknown> =>
+  (t.components?.MuiCssBaseline?.styleOverrides ?? {}) as Record<
+    string,
+    unknown
+  >
+
+const DARK_SELECTOR = '[data-mui-color-scheme="dark"], .dark'
 
 describe('プロダクトテーマが光学タイポグラフィを継承している', () => {
   for (const [name, t] of brandThemes) {
@@ -100,13 +116,11 @@ describe('プロダクトテーマがエレベーション体系を継承して�
 })
 
 describe('ブランド差し替えが目的どおり効いている', () => {
-  it('sky-kaze は primary をロジ・オレンジに差し替える', () => {
+  it('sky-kaze は primary をロジのブランド軸に差し替える', () => {
     // ブランド色をハードコードすると、Kaze 側の primary を変えたときに
     // 差し替えの検証にならないまま通過する
-    expect(logiLightTheme.palette.primary.main).not.toBe(
-      theme.palette.primary.main
-    )
-    expect(logiLightTheme.palette.logiOrange.main).toBeTruthy()
+    expect(skyLightColors.primary.main).not.toBe(theme.palette.primary.main)
+    expect(skyTheme.palette.logiOrange.main).toBeTruthy()
   })
 
   it('ubereats-clone は ueGreen を追加しつつ Kaze の primary を保つ', () => {
@@ -114,53 +128,123 @@ describe('ブランド差し替えが目的どおり効いている', () => {
   })
 })
 
-describe('CssVarsProvider 版テーマ (saas-dashboard が使用)', () => {
-  it('ライトの影スケールを持つ', () => {
-    const light = createShadows('light')
-    expect(theme.shadows[elevation.raised]).toBe(light[elevation.raised])
+describe('colorSchemes 版テーマ (saas-dashboard / sky-kaze が使用)', () => {
+  for (const [name, t] of cssVarsThemes) {
+    it(`${name}: ライトの影スケールを持つ`, () => {
+      const light = createShadows('light')
+      expect(t.shadows[elevation.raised]).toBe(light[elevation.raised])
+    })
+
+    it(`${name}: モーション体系を持つ`, () => {
+      expect(t.transitions.easing.easeOut).toBe(kazeEasing.enter)
+    })
+
+    it(`${name}: 光学タイポグラフィを継承している`, () => {
+      expect(t.typography.h1.letterSpacing).toBe(letterSpacingVariant.xxl)
+      expect(t.typography.body1.lineHeight).toBe(1.6)
+      expect(t.typography.button.fontWeight).toBe(500)
+    })
+
+    it(`${name}: ダークスキームでもリムライトが効く`, () => {
+      // colorSchemes 版は shadows をスキーム別に持てないため、
+      // CssBaseline 側でダークスキーム時の影を上書きしている
+      const darkRules = cssBaselineOverrides(t)[DARK_SELECTOR] as
+        Record<string, { boxShadow: string }> | undefined
+      expect(darkRules, 'ダークスキーム用の影上書き').toBeDefined()
+
+      const dark = createShadows('dark')
+      expect(darkRules?.['& .MuiCard-root'].boxShadow).toBe(
+        dark[elevation.raised]
+      )
+      expect(darkRules?.['& .MuiCard-root'].boxShadow).toContain('inset')
+      expect(darkRules?.['& .MuiDialog-paper'].boxShadow).toBe(
+        dark[elevation.modal]
+      )
+    })
+
+    it(`${name}: ダーク上書きが主要な浮遊面を網羅している`, () => {
+      const darkRules = cssBaselineOverrides(t)[DARK_SELECTOR] as
+        Record<string, unknown> | undefined
+
+      for (const selector of [
+        '& .MuiCard-root',
+        '& .MuiCard-root:hover',
+        '& .MuiMenu-paper',
+        '& .MuiPopover-paper',
+        '& .MuiTooltip-tooltip',
+        '& .MuiDialog-paper',
+        '& .MuiDrawer-paper',
+      ]) {
+        expect(darkRules?.[selector], selector).toBeDefined()
+      }
+    })
+  }
+})
+
+/**
+ * #69: apps/sky-kaze だけ `--color-*` が index.css に手打ちで残り、
+ * 同じ画面で MUI の primary (青) と Tailwind の primary (navy) が
+ * 別の色を指していた。どちらが効くかは CSS の注入順次第だった。
+ *
+ * 「MUI と Tailwind が同じ定義から出ていること」を構造として検証する。
+ */
+describe('MUI と Tailwind が同じ色定義を指している (sky-kaze)', () => {
+  const overrides = cssBaselineOverrides(skyTheme)
+  const lightVars = overrides[':root'] as Record<string, string>
+  const darkVars = overrides[DARK_SELECTOR] as Record<string, string>
+
+  it('ライト: --color-primary が palette.primary.main と一致する', () => {
+    expect(lightVars['--color-primary']).toBe(skyLightColors.primary.main)
+    expect(lightVars['--color-primary']).toBe(skyTheme.palette.primary.main)
   })
 
-  it('モーション体系を持つ', () => {
-    expect(theme.transitions.easing.easeOut).toBe(kazeEasing.enter)
+  it('ダーク: --color-primary が ダークスキームの primary.main と一致する', () => {
+    expect(darkVars['--color-primary']).toBe(skyDarkColors.primary.main)
   })
 
-  it('ダークスキームでもリムライトが効く', () => {
-    // colorSchemes 版は shadows をスキーム別に持てないため、
-    // CssBaseline 側でダークスキーム時の影を上書きしている
-    const overrides = theme.components?.MuiCssBaseline?.styleOverrides as
-      Record<string, unknown> | undefined
-    expect(overrides).toBeDefined()
-
-    const darkRules = overrides?.['[data-mui-color-scheme="dark"], .dark'] as
-      Record<string, { boxShadow: string }> | undefined
-    expect(darkRules, 'ダークスキーム用の影上書き').toBeDefined()
-
-    const dark = createShadows('dark')
-    expect(darkRules?.['& .MuiCard-root'].boxShadow).toBe(
-      dark[elevation.raised]
+  it('背景・文字もモードごとに生成されている', () => {
+    expect(lightVars['--color-background-paper']).toBe(
+      skyLightColors.background.paper
     )
-    expect(darkRules?.['& .MuiCard-root'].boxShadow).toContain('inset')
-    expect(darkRules?.['& .MuiDialog-paper'].boxShadow).toBe(
-      dark[elevation.modal]
+    expect(darkVars['--color-background-paper']).toBe(
+      skyDarkColors.background.paper
     )
+    expect(lightVars['--color-foreground']).toBe(skyLightColors.text.primary)
+    expect(darkVars['--color-foreground']).toBe(skyDarkColors.text.primary)
   })
 
-  it('ダーク上書きが主要な浮遊面を網羅している', () => {
-    const overrides = theme.components?.MuiCssBaseline?.styleOverrides as
-      Record<string, unknown> | undefined
-    const darkRules = overrides?.['[data-mui-color-scheme="dark"], .dark'] as
-      Record<string, unknown> | undefined
+  it('アプリ固有の accent も生成側に載っている', () => {
+    for (const [label, vars] of [
+      ['light', lightVars],
+      ['dark', darkVars],
+    ] as const) {
+      expect(vars['--color-accent'], label).toBeTruthy()
+      expect(vars['--color-accent-light'], label).toBeTruthy()
+      // 塗り面に置く文字は実測で決める（明るいオレンジに白は乗らない）
+      const accent = vars['--color-accent']
+      const ink = vars['--color-accent-foreground']
+      expect(
+        contrastRatioOf(ink, accent),
+        `${label}: accent ${accent} に ${ink}`
+      ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+    }
+  })
 
-    for (const selector of [
-      '& .MuiCard-root',
-      '& .MuiCard-root:hover',
-      '& .MuiMenu-paper',
-      '& .MuiPopover-paper',
-      '& .MuiTooltip-tooltip',
-      '& .MuiDialog-paper',
-      '& .MuiDrawer-paper',
-    ]) {
-      expect(darkRules?.[selector], selector).toBeDefined()
+  it('アプリの index.css に --color-* の手打ち定義が無い', () => {
+    // 生成に一本化した意味は「もう一つのソースが無いこと」にある。
+    // 1 行に複数宣言が来ても拾えるよう、行頭を前提にしない
+    // apps/ubereats-clone にも手打ちが残っているが、そちらはブランド色の
+    // 変更と一緒に移す（#72）。移したらこの配列に足す
+    const cssFiles = [
+      'apps/sky-kaze/src/index.css',
+      'apps/saas-dashboard/src/index.css',
+    ]
+    for (const rel of cssFiles) {
+      const css = readFileSync(join(process.cwd(), rel), 'utf8')
+      // コメント内の記述は対象外（注意書きで --color-* に言及している）
+      const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
+      const declarations = withoutComments.match(/--color-[\w-]+\s*:/g) ?? []
+      expect(declarations, `${rel} の手打ち定義`).toEqual([])
     }
   })
 })
