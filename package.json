@@ -78,7 +78,8 @@
     "preview:sky-kaze": "pnpm --filter sky-kaze preview",
     "audit:contrast": "node scripts/audit-contrast.mjs",
     "check:brand": "node scripts/check-brand-terms.mjs",
-    "ds:adoption": "node scripts/ds-adoption.mjs"
+    "ds:adoption": "node scripts/ds-adoption.mjs",
+    "capture:products": "node scripts/capture-products.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

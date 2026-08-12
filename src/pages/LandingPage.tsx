@@ -199,6 +199,54 @@ interface ProductCardProps {
   href: string
   label: string
   index: number
+  /** public/captures/ のファイル名の頭。ダークが無いものは light だけ使う */
+  capture?: { id: string; hasDark: boolean }
+}
+
+/** キャプチャの実寸。撮影時のビューポート (scripts/capture-products.mjs) と揃える */
+const CAPTURE_SIZE = { width: 1440, height: 900 }
+
+/**
+ * プロダクトのキャプチャ。
+ *
+ * 画像が無い/読めない場合でもカードは成立する（画像は情報の補強で、
+ * これが無いと意味が通らない作りにはしない）。alt は「何の画面か」を
+ * 述べる。装飾ではないので空にはしない。
+ */
+const ProductCapture = ({
+  title,
+  capture,
+  isDark,
+}: {
+  title: string
+  capture: NonNullable<ProductCardProps['capture']>
+  isDark: boolean
+}) => {
+  const scheme = isDark && capture.hasDark ? 'dark' : 'light'
+  return (
+    <Box
+      sx={{
+        mb: 3,
+        borderRadius: 2,
+        overflow: 'hidden',
+        border: '1px solid',
+        borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+        // 読み込み前に高さが確定していないと、カードが後からずれる
+        aspectRatio: `${CAPTURE_SIZE.width} / ${CAPTURE_SIZE.height}`,
+        bgcolor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+      }}>
+      <Box
+        component='img'
+        src={`${import.meta.env.BASE_URL}captures/${capture.id}-${scheme}.webp`}
+        alt={`${title} の画面`}
+        loading='lazy'
+        decoding='async'
+        width={CAPTURE_SIZE.width}
+        height={CAPTURE_SIZE.height}
+        sx={{ display: 'block', width: '100%', height: 'auto' }}
+      />
+    </Box>
+  )
 }
 
 // インタラクティブなプロダクトカード
@@ -209,6 +257,7 @@ const ProductCard = ({
   href,
   label,
   index,
+  capture,
 }: ProductCardProps) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
@@ -270,6 +319,10 @@ const ProductCard = ({
           }}>
           {label}
         </Box>
+
+        {capture && (
+          <ProductCapture title={title} capture={capture} isDark={isDark} />
+        )}
 
         <Box
           className='card-icon'
@@ -681,6 +734,8 @@ export const LandingPage = () => {
       icon: <AutoStoriesIcon sx={{ color: 'primary.textContrast' }} />,
       href: APP_LINKS.storybook(),
       label: 'Documentation',
+      // Storybook のテーマはツールバーの globals で持つため light のみ
+      capture: { id: 'storybook', hasDark: false },
     },
     {
       title: 'SaaS Dashboard',
@@ -689,6 +744,7 @@ export const LandingPage = () => {
       icon: <SpaceDashboardIcon sx={{ color: 'secondary.main' }} />,
       href: APP_LINKS.saas(),
       label: 'Product Demo',
+      capture: { id: 'saas', hasDark: true },
     },
     {
       title: 'KazeEats',
@@ -696,6 +752,7 @@ export const LandingPage = () => {
       icon: <RestaurantIcon sx={{ color: 'warning.main' }} />,
       href: APP_LINKS.kazeEats(),
       label: 'Product Demo',
+      capture: { id: 'kaze-eats', hasDark: true },
     },
     {
       title: 'KazeLogistics',
@@ -703,6 +760,7 @@ export const LandingPage = () => {
       icon: <LocalShippingIcon sx={{ color: 'info.main' }} />,
       href: APP_LINKS.skyKaze(),
       label: 'Product Demo',
+      capture: { id: 'sky-kaze', hasDark: true },
     },
   ]
 
