@@ -17,7 +17,8 @@
  * 使い方:
  *   node scripts/check-brand-terms.mjs
  *
- * 個別に許可したい行には、同じ行に `brand-check-allow` を含むコメントを置く。
+ * 個別に許可したい行には、同じ行に通す語を書いたコメントを置く。
+ *   例: // brand-check-allow: ubereats — 旧キー互換
  */
 
 import { execSync } from 'node:child_process'
@@ -105,12 +106,6 @@ const ALLOWED_OCCURRENCES = [
 /**
  * 検査対象の拡張子。
  *
- * バイナリとロックファイルは対象外。ビルド成果物も見ない
- * （ソースを直せば消えるものなので、二重に落ちても情報が増えない）。
- */
-/**
- * 検査対象の拡張子。
- *
  * テキストとして読めるものは基本的に見る。特に:
  * - `.mdx` は Storybook のドキュメントページ。**公開される面そのもの**で、
  *   ここを外していると一番読まれる場所が検査されない
@@ -140,7 +135,8 @@ const EXCLUDED_PATHS = [
  * 意図的な記述として通すマーカー。
  *
  * **通す語を必ず書かせる。** 素の目印だけで行ごと通すと、その行は以後
- * 30 語すべてに対する盲点になり、あとから別の実在名を書いても気づけない。
+ * 一覧のすべての語に対する盲点になり、あとから別の実在名を書いても気づけない。
+ * 照合は完全一致（`honda motorized` では `honda motor` を通さない）。
  *
  *   const KEY = 'ubereats-theme' // brand-check-allow: ubereats — 旧キー互換
  */
@@ -190,13 +186,57 @@ const normalize = (s) => s.replace(/[-_\s]+/g, ' ')
 const buildMatcher = (term) =>
   // 英数の前後が単語構成文字でないことだけを見る。\b はハイフンを含む語で
   // 意図しない位置に入る
-  new RegExp(`(^|[^a-z0-9])${escapeRegExp(term)}([^a-z0-9]|$)`, 'i')
+  new RegExp(`(^|[^a-z0-9])${escapeRegExp(term)}([^a-z0-9]|$)`, 'gi')
 
 const matchers = DENY_TERMS.map(({ term, kind }) =>
   kind === 'ascii'
     ? { term, kind, re: buildMatcher(normalize(term)) }
-    : { term, kind, re: new RegExp(escapeRegExp(term)) }
+    : { term, kind, re: new RegExp(escapeRegExp(term), 'g') }
 )
+
+/**
+ * 区切りを均した本文と、そこから元の位置へ戻すための対応表を作る。
+ *
+ * 行ごとに切ってから均すと、`Juniper\nNetworks` のように**改行で折り返された
+ * 複合語**が別々の行になって当たらない。Prettier は散文を普通に折り返すので、
+ * これは起こる。ファイル全体を均してから照合し、当たった位置を行番号へ戻す。
+ */
+const normalizeWithMap = (content) => {
+  let text = ''
+  const offsets = []
+  let i = 0
+  while (i < content.length) {
+    if (/[-_\s]/.test(content[i])) {
+      const start = i
+      while (i < content.length && /[-_\s]/.test(content[i])) i++
+      text += ' '
+      offsets.push(start)
+    } else {
+      text += content[i]
+      offsets.push(i)
+      i++
+    }
+  }
+  return { text, offsets }
+}
+
+/** 元の文字位置から行番号 (1 始まり) を引く */
+const makeLineLookup = (content) => {
+  const starts = [0]
+  for (let i = 0; i < content.length; i++) {
+    if (content[i] === '\n') starts.push(i + 1)
+  }
+  return (offset) => {
+    let lo = 0
+    let hi = starts.length - 1
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1
+      if (starts[mid] <= offset) lo = mid
+      else hi = mid - 1
+    }
+    return lo + 1
+  }
+}
 
 const findings = []
 // 走査したファイルの集合をそのまま報告に使う。二度数えると、
@@ -211,30 +251,49 @@ for (const file of files) {
     continue
   }
   const lines = content.split('\n')
-  for (const [i, rawLine] of lines.entries()) {
-    const markerTerms = rawLine.includes('brand-check-allow')
-      ? allowedTermsOn(rawLine)
-      : []
-    const line = normalize(rawLine)
+  const lineOf = makeLineLookup(content)
+  const { text: normalized, offsets } = normalizeWithMap(content)
+  // 行ごとの許可語（複数書ける）。行に目印が無ければ空
+  const markersByLine = lines.map((l) =>
+    l.includes('brand-check-allow') ? allowedTermsOn(l) : []
+  )
 
-    for (const { term, kind, re } of matchers) {
-      // 目印に書かれた語だけを通す。行ごと通さない
-      if (markerTerms.some((t) => t.includes(term.toLowerCase()))) continue
+  for (const { term, kind, re } of matchers) {
+    // 日本語は区切りの均しが意味を持たないので元の本文で見る
+    const haystack = kind === 'ascii' ? normalized : content
+    re.lastIndex = 0
+    for (const m of haystack.matchAll(re)) {
+      const startInSource = kind === 'ascii' ? (offsets[m.index] ?? 0) : m.index
+      const endInSource =
+        kind === 'ascii'
+          ? (offsets[m.index + m[0].length - 1] ?? startInSource)
+          : m.index + m[0].length - 1
+
+      const firstLine = lineOf(startInSource)
+      const lastLine = lineOf(endInSource)
+
+      // 折り返された語は複数行にまたがる。どの行の目印でも通す
+      let allowedByMarker = false
+      for (let ln = firstLine; ln <= lastLine && !allowedByMarker; ln++) {
+        allowedByMarker = markersByLine[ln - 1].includes(term.toLowerCase())
+      }
+      if (allowedByMarker) continue
+
+      const rawLine = lines[firstLine - 1] ?? ''
       const allowed = ALLOWED_OCCURRENCES.some(
         (a) =>
           a.file === file &&
           a.term === term &&
           (!a.contains || rawLine.includes(a.contains))
       )
-      // 日本語は区切りの均しが意味を持たないので元の行で見る
-      if (!allowed && re.test(kind === 'ascii' ? line : rawLine)) {
-        findings.push({
-          file,
-          line: i + 1,
-          term,
-          text: rawLine.trim().slice(0, 120),
-        })
-      }
+      if (allowed) continue
+
+      findings.push({
+        file,
+        line: firstLine,
+        term,
+        text: rawLine.trim().slice(0, 120),
+      })
     }
   }
 }
