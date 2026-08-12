@@ -8,8 +8,13 @@
       "permanent": true
     },
     {
-      "source": "/ubereats/:path*",
-      "destination": "/kaze-eats/:path*",
+      "source": "/ubereats/",
+      "destination": "/kaze-eats/",
+      "permanent": true
+    },
+    {
+      "source": "/ubereats/:path+",
+      "destination": "/kaze-eats/:path+",
       "permanent": true
     }
   ],
