@@ -199,6 +199,8 @@ const preview: Preview = {
         order: [
           'Guide',
           [
+            // Storybook 自体が初めての人が最初に開く場所に置く
+            'Getting Started',
             'Introduction',
             'How to Use',
             'MUI + Tailwind CSS',
