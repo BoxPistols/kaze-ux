@@ -915,6 +915,79 @@ const theme = createTheme({
   >,
 })
 
+export interface BrandThemeOptions {
+  /** ライトスキームの色定義 */
+  light: ThemeColors
+  /** ダークスキームの色定義 */
+  dark: ThemeColors
+  /**
+   * palette に足すブランド固有スロット（例: logiOrange）。
+   * MUI の型拡張は各アプリ側の module augmentation で行う。
+   */
+  paletteExtras?: { light?: object; dark?: object }
+  /**
+   * createCssVars() が持たないアプリ固有の CSS 変数（例: --color-accent）。
+   * 生成済みの変数と同じ経路に載せることで、手打ちに戻らないようにする。
+   */
+  cssVars?: { light?: Record<string, string>; dark?: Record<string, string> }
+  /** アプリ固有のコンポーネント上書き。createTheme の deep merge で合流する */
+  components?: Components<Theme>
+}
+
+/**
+ * アプリのブランド色から colorSchemes 版テーマを生成する。
+ *
+ * 各アプリが lightTheme / darkTheme を spread して palette だけ差し替える形だと、
+ * Tailwind が参照する `--color-*` は付いてこないため index.css に手打ちされ、
+ * 同じ画面で MUI と Tailwind が別の色を指す状態になっていた
+ * (apps/sky-kaze の primary が MUI=青 / Tailwind=navy だった)。
+ *
+ * ここを通すと両方が同じ ThemeColors から生成されるため、構造的に食い違わない。
+ */
+export const createBrandTheme = ({
+  light,
+  dark,
+  paletteExtras,
+  cssVars,
+  components,
+}: BrandThemeOptions): Theme => {
+  const base = createTheme({
+    ...commonThemeOptions,
+    // colorSchemes 版は shadows をスキーム別に持てないためライト基準。
+    // ダークは下の CssBaseline 上書きで補う
+    shadows: createShadows('light'),
+    defaultColorScheme: 'light',
+    colorSchemes: {
+      light: { palette: { mode: 'light', ...light, ...paletteExtras?.light } },
+      dark: { palette: { mode: 'dark', ...dark, ...paletteExtras?.dark } },
+    },
+    components: {
+      ...componentStyles,
+      MuiCssBaseline: {
+        styleOverrides: {
+          ...componentStyles.MuiCssBaseline.styleOverrides,
+          // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
+          // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
+          ':root': {
+            ...createCssVars(light),
+            ...createMotionCssVars(),
+            ...cssVars?.light,
+          },
+          '[data-mui-color-scheme="dark"], .dark': {
+            ...createDarkSchemeElevationOverrides()[
+              '[data-mui-color-scheme="dark"], .dark'
+            ],
+            ...createCssVars(dark),
+            ...cssVars?.dark,
+          },
+        },
+      },
+    } as Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme>,
+  })
+
+  return components ? createTheme(base, { components }) : base
+}
+
 // 後方互換性のために従来のテーマも提供
 const lightThemeColors = createLightThemeColors('kaze')
 const lightTheme = createTheme({

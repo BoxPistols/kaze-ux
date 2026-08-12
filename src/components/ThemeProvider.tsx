@@ -7,9 +7,10 @@ import {
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
 
-import { theme } from '../themes/theme'
+import { theme as defaultTheme } from '../themes/theme'
 
 import type { ThemeMode } from '../types/theme'
+import type { Theme } from '@mui/material/styles'
 
 /**
  * CssVarsProvider 内部でモード変更をHTML属性に同期するコンポーネント
@@ -37,6 +38,13 @@ const ThemeSync = ({ children }: { children: ReactNode }) => {
 export interface ThemeProviderProps {
   children: ReactNode
   defaultMode?: ThemeMode
+  /**
+   * アプリ固有のブランドテーマ。省略時は Kaze の既定テーマ。
+   *
+   * createBrandTheme() で生成したものを渡すと、MUI の palette と
+   * Tailwind が参照する `--color-*` が同じ定義から出る。
+   */
+  theme?: Theme
 }
 
 /**
@@ -46,6 +54,7 @@ export interface ThemeProviderProps {
 export const ThemeProvider = ({
   children,
   defaultMode = 'light',
+  theme = defaultTheme,
 }: ThemeProviderProps) => {
   return (
     <StyledEngineProvider injectFirst>

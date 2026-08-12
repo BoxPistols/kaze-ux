@@ -143,7 +143,13 @@ export const foregroundVariant = (
  */
 const TEXT_CONTRAST_HEADROOM = 1.2
 
-const withTextContrast = (
+/**
+ * アプリ側のブランドテーマも同じ計算に載せる必要があるため公開する。
+ *
+ * 背景を差し替えたのに textContrast を計算し直さないと、前景色が
+ * 「別の面を基準に測った値」のまま残って無言で AA を割る。
+ */
+export const withTextContrast = (
   cs: ColorSet,
   mode: 'light' | 'dark',
   background: { default: string; paper: string }
@@ -167,7 +173,13 @@ const withTextContrast = (
   ),
 })
 
-const createColorSet = (
+/**
+ * ブランド色の ColorSet を組み立てる。
+ *
+ * アプリ側（KazeLogistics / KazeEats）も自前の ColorSet を作るため公開する。
+ * 各所で手組みすると contrastText の決め方（実測 or 白固定）が食い違う。
+ */
+export const createColorSet = (
   main: string,
   dark: string,
   light: string,
