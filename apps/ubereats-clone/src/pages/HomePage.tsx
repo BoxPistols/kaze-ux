@@ -16,7 +16,7 @@ import { elevation } from '@/themes/elevation'
 import { motionOf } from '@/themes/motion'
 
 import { restaurants, categories } from '~/data/restaurants'
-import { UE_GREEN, UE_GREEN_DARK, UE_ON_GREEN, UE_STAR } from '~/theme/colors'
+import { KE_GREEN, KE_GREEN_DARK, KE_ON_GREEN, KE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const HomePage = () => {
@@ -51,7 +51,7 @@ export const HomePage = () => {
           background: (theme) =>
             theme.palette.mode === 'dark'
               ? 'linear-gradient(135deg, #0a0a0a 0%, #1a2e1a 100%)'
-              : `linear-gradient(135deg, ${UE_GREEN} 0%, ${UE_GREEN_DARK} 100%)`,
+              : `linear-gradient(135deg, ${KE_GREEN} 0%, ${KE_GREEN_DARK} 100%)`,
           pt: { xs: 4, md: 6 },
           pb: { xs: 5, md: 7 },
           px: 3,
@@ -151,7 +151,7 @@ export const HomePage = () => {
               }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon
-                  sx={{ color: UE_GREEN, fontSize: 24 }}
+                  sx={{ color: 'primary.textContrast', fontSize: 24 }}
                   aria-hidden='true'
                 />
                 <Typography
@@ -228,8 +228,8 @@ export const HomePage = () => {
                         position: 'absolute',
                         top: 12,
                         left: 12,
-                        bgcolor: UE_GREEN,
-                        color: UE_ON_GREEN,
+                        bgcolor: KE_GREEN,
+                        color: KE_ON_GREEN,
                         px: 1.5,
                         py: 0.5,
                         borderRadius: 2,
@@ -248,7 +248,7 @@ export const HomePage = () => {
                         gap: 0.5,
                       }}>
                       <StarIcon
-                        sx={{ fontSize: 18, color: UE_STAR }}
+                        sx={{ fontSize: 18, color: KE_STAR }}
                         aria-hidden='true'
                       />
                       <Typography

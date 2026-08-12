@@ -16,11 +16,16 @@ import {
   logiForeground,
   logiForegroundLarge,
 } from '../../../apps/sky-kaze/src/theme/colors'
-import { ueWordmarkColor } from '../../../apps/ubereats-clone/src/theme/colors'
 import {
-  ueDarkTheme,
-  ueLightTheme,
-} from '../../../apps/ubereats-clone/src/theme/ueTheme'
+  KE_GREEN,
+  keWordmarkColor,
+} from '../../../apps/ubereats-clone/src/theme/colors'
+import {
+  keDarkColors,
+  keDarkTheme,
+  keLightColors,
+  keLightTheme,
+} from '../../../apps/ubereats-clone/src/theme/keTheme'
 import { CONTRAST_THRESHOLD, contrastRatioOf } from '../contrast'
 import { createShadows, elevation } from '../elevation'
 import { kazeDuration, kazeEasing } from '../motion'
@@ -38,8 +43,8 @@ import type { Theme } from '@mui/material/styles'
  * という最悪の状態になり、しかも見た目では気づきにくい。
  */
 const brandThemes: Array<[string, Theme, 'light' | 'dark']> = [
-  ['ubereats-clone (light)', ueLightTheme, 'light'],
-  ['ubereats-clone (dark)', ueDarkTheme, 'dark'],
+  ['ubereats-clone (light)', keLightTheme, 'light'],
+  ['ubereats-clone (dark)', keDarkTheme, 'dark'],
 ]
 
 /** colorSchemes 版テーマ（1 つのテーマが light/dark 両方を持つ） */
@@ -123,8 +128,18 @@ describe('ブランド差し替えが目的どおり効いている', () => {
     expect(skyTheme.palette.logiOrange.main).toBeTruthy()
   })
 
-  it('ubereats-clone は ueGreen を追加しつつ Kaze の primary を保つ', () => {
-    expect(ueLightTheme.palette.ueGreen.main).toBeTruthy()
+  it('KazeEats は primary をブランドグリーンに差し替える', () => {
+    // かつては MUI 側が Kaze の青のままで、index.css だけがグリーンを
+    // 指していた。両方が同じブランド色を指していることを検証する
+    expect(keLightColors.primary.main).toBe(KE_GREEN)
+    expect(keLightColors.primary.main).not.toBe(theme.palette.primary.main)
+    expect(keLightTheme.palette.keGreen.main).toBe(KE_GREEN)
+  })
+
+  it('KazeEats のブランドグリーンが実在サービスの値から離れている', () => {
+    // 値そのものを固定すると「意図して変えた」ことの検証にならないため、
+    // 「旧値ではないこと」だけを守る
+    expect(KE_GREEN.toLowerCase()).not.toBe('#06c167')
   })
 })
 
@@ -188,7 +203,7 @@ describe('colorSchemes 版テーマ (saas-dashboard / sky-kaze が使用)', () =
  *
  * 「MUI と Tailwind が同じ定義から出ていること」を構造として検証する。
  */
-describe('MUI と Tailwind が同じ色定義を指している (sky-kaze)', () => {
+describe('MUI と Tailwind が同じ色定義を指している', () => {
   const overrides = cssBaselineOverrides(skyTheme)
   const lightVars = overrides[':root'] as Record<string, string>
   const darkVars = overrides[DARK_SELECTOR] as Record<string, string>
@@ -230,14 +245,44 @@ describe('MUI と Tailwind が同じ色定義を指している (sky-kaze)', () 
     }
   })
 
+  it('KazeEats も MUI と Tailwind が同じ値を指す', () => {
+    // KazeEats は CssVarsProvider ではなくモードごとのテーマを切り替える。
+    // 生成の入口は違うが、揃っていることの検証は同じ
+    for (const [label, t, colors] of [
+      ['light', keLightTheme, keLightColors],
+      ['dark', keDarkTheme, keDarkColors],
+    ] as const) {
+      const vars = cssBaselineOverrides(t)[':root'] as Record<string, string>
+      expect(vars['--color-primary'], label).toBe(colors.primary.main)
+      expect(vars['--color-primary'], label).toBe(t.palette.primary.main)
+      expect(vars['--color-background-paper'], label).toBe(
+        colors.background.paper
+      )
+    }
+  })
+
+  it('KazeEats のブランドグリーンに乗る文字が本文 AA を満たす', () => {
+    // 旧 #06C167 は index.css が白文字を指定していて 2.38:1 だった。
+    // 実測で決める経路に載ったので、色を動かしても割れない
+    for (const [label, t] of [
+      ['light', keLightTheme],
+      ['dark', keDarkTheme],
+    ] as const) {
+      const { main, contrastText } = t.palette.primary
+      expect(
+        contrastRatioOf(contrastText, main),
+        `${label}: ${main} に ${contrastText}`
+      ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+    }
+  })
+
   it('アプリの index.css に --color-* の手打ち定義が無い', () => {
     // 生成に一本化した意味は「もう一つのソースが無いこと」にある。
     // 1 行に複数宣言が来ても拾えるよう、行頭を前提にしない
-    // apps/ubereats-clone にも手打ちが残っているが、そちらはブランド色の
-    // 変更と一緒に移す（#72）。移したらこの配列に足す
     const cssFiles = [
       'apps/sky-kaze/src/index.css',
       'apps/saas-dashboard/src/index.css',
+      'apps/ubereats-clone/src/index.css',
     ]
     for (const rel of cssFiles) {
       const css = readFileSync(join(process.cwd(), rel), 'utf8')
@@ -255,10 +300,10 @@ describe('MUI と Tailwind が同じ色定義を指している (sky-kaze)', () 
  */
 describe('アプリのブランド色が置く面ごとに基準を満たす', () => {
   it('KazeEats のワードマークはライト・ダーク両方で大きい文字の 3:1 を満たす', () => {
-    for (const t of [ueLightTheme, ueDarkTheme]) {
+    for (const t of [keLightTheme, keDarkTheme]) {
       const surface = t.palette.background.paper
       expect(
-        contrastRatioOf(ueWordmarkColor(surface), surface),
+        contrastRatioOf(keWordmarkColor(surface), surface),
         `${t.palette.mode}: ${surface}`
       ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.largeText)
     }
