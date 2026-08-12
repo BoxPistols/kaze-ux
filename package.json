@@ -75,7 +75,8 @@
     "dev:sky-kaze": "pnpm --filter sky-kaze dev",
     "build:sky-kaze": "pnpm --filter sky-kaze build",
     "build:gh-pages:sky-kaze": "pnpm --filter sky-kaze build:gh-pages",
-    "preview:sky-kaze": "pnpm --filter sky-kaze preview"
+    "preview:sky-kaze": "pnpm --filter sky-kaze preview",
+    "audit:contrast": "node scripts/audit-contrast.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
@@ -169,6 +170,7 @@
     "husky": "^9.1.7",
     "jsdom": "^24.1.3",
     "lint-staged": "^15.5.2",
+    "playwright": "^1.59.1",
     "postcss": "^8.5.18",
     "prettier": "^3.9.5",
     "react-map-gl": "^7.1.9",

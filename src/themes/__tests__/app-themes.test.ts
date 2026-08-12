@@ -5,9 +5,19 @@ import {
   logiLightTheme,
 } from '../../../apps/sky-kaze/src/theme/skyTheme'
 import {
+  LOGI_AMBER,
+  LOGI_GREEN,
+  LOGI_NAVY_LIGHT,
+  LOGI_ORANGE,
+  logiForeground,
+  logiForegroundLarge,
+} from '../../../apps/sky-kaze/src/theme/colors'
+import { ueWordmarkColor } from '../../../apps/ubereats-clone/src/theme/colors'
+import {
   ueDarkTheme,
   ueLightTheme,
 } from '../../../apps/ubereats-clone/src/theme/ueTheme'
+import { CONTRAST_THRESHOLD, contrastRatioOf } from '../contrast'
 import { createShadows, elevation } from '../elevation'
 import { kazeDuration, kazeEasing } from '../motion'
 import { theme } from '../theme'
@@ -151,6 +161,38 @@ describe('CssVarsProvider 版テーマ (saas-dashboard が使用)', () => {
       '& .MuiDrawer-paper',
     ]) {
       expect(darkRules?.[selector], selector).toBeDefined()
+    }
+  })
+})
+
+/**
+ * アプリ側のブランド色は「面ごとに前景を決める」形にしてある。
+ * 面を渡し忘れると、片方のモードで基準を割る（実際に起きた）。
+ */
+describe('アプリのブランド色が置く面ごとに基準を満たす', () => {
+  it('KazeEats のワードマークはライト・ダーク両方で大きい文字の 3:1 を満たす', () => {
+    for (const t of [ueLightTheme, ueDarkTheme]) {
+      const surface = t.palette.background.paper
+      expect(
+        contrastRatioOf(ueWordmarkColor(surface), surface),
+        `${t.palette.mode}: ${surface}`
+      ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.largeText)
+    }
+  })
+
+  it('KazeLogistics のブランド色は前景として使う面で基準を満たす', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const surface = mode === 'light' ? '#FFFFFF' : LOGI_NAVY_LIGHT
+      for (const color of [LOGI_ORANGE, LOGI_AMBER, LOGI_GREEN]) {
+        expect(
+          contrastRatioOf(logiForeground(color, mode), surface),
+          `${mode} / ${color}`
+        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+        expect(
+          contrastRatioOf(logiForegroundLarge(color, mode), surface),
+          `${mode} / ${color} (大きい文字)`
+        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.largeText)
+      }
     }
   })
 })

@@ -4,15 +4,24 @@
  * テーマ側の数値が合っていても、実際の画面では別の色が乗る。
  * ブラウザで描画された色を読み、WCAG 2.1 の基準に照らす。
  *
- * 使い方: 各アプリの dev サーバーを起動してから
+ * 使い方:
+ *   pnpm exec playwright install chromium   # 初回のみ
+ *   pnpm dev:all                            # 各アプリを起動
  *   node scripts/audit-contrast.mjs
+ *
+ * ダークモードについて:
+ * prefers-color-scheme に従うのは LP と KazeEats だけで、SaaS と
+ * KazeLogistics はアプリ内トグルで切り替える。後者を colorScheme:'dark'
+ * で測ってもライトが描画されるため、無効な数値を「ダークの結果」として
+ * 報告しないよう、既定はライトのみにしている。
+ * AUDIT_SCHEMES=light,dark で両方を走らせられる。
  *
  * 判定できないもの:
  * - 背景画像・グラデーションの上（下地の色が確定しない）
  * - 絶対配置の要素（兄弟のスクリムや画像の上に乗る）
  * これらは「破綻」ではなく「判定不能」として分ける。断定すると誤報になる。
  */
-import { chromium } from '/home/user/kaze-ux/node_modules/.pnpm/playwright-core@1.59.1/node_modules/playwright-core/index.mjs'
+import { chromium } from 'playwright'
 
 const TARGETS = [
   ['LP', 'http://localhost:5174/'],
@@ -35,12 +44,18 @@ const AUDIT = () => {
     }
     return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
   }
-  const over = (fg, bg) => ({
-    r: fg.r * fg.a + bg.r * (1 - fg.a),
-    g: fg.g * fg.a + bg.g * (1 - fg.a),
-    b: fg.b * fg.a + bg.b * (1 - fg.a),
-    a: 1,
-  })
+  // 親も子も半透明のとき、合成結果を不透明として扱うと走査がそこで
+  // 止まり、実際とは違う背景色を報告する。アルファを保って積み上げる
+  const over = (fg, bg) => {
+    const a = fg.a + bg.a * (1 - fg.a)
+    if (a === 0) return { r: 0, g: 0, b: 0, a: 0 }
+    return {
+      r: (fg.r * fg.a + bg.r * bg.a * (1 - fg.a)) / a,
+      g: (fg.g * fg.a + bg.g * bg.a * (1 - fg.a)) / a,
+      b: (fg.b * fg.a + bg.b * bg.a * (1 - fg.a)) / a,
+      a,
+    }
+  }
   const ratio = (a, b) => {
     const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p)
     return (x + 0.05) / (y + 0.05)
@@ -66,7 +81,12 @@ const AUDIT = () => {
       }
       node = node.parentElement
     }
-    return acc || { r: 255, g: 255, b: 255, a: 1 }
+    // 走査しきっても不透明にならなければ、ページの地（キャンバス）に落とす
+    const canvas = parse(
+      getComputedStyle(document.documentElement).backgroundColor
+    ) ?? { r: 255, g: 255, b: 255, a: 1 }
+    const base = canvas.a > 0 ? canvas : { r: 255, g: 255, b: 255, a: 1 }
+    return acc ? over(acc, { ...base, a: 1 }) : { ...base, a: 1 }
   }
   const out = []
   const unknown = []
@@ -139,11 +159,11 @@ const AUDIT = () => {
   return { fails: out, unknown, bright: bright.slice(0, 6) }
 }
 
-const b = await chromium.launch({
-  executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-})
+const SCHEMES = (process.env.AUDIT_SCHEMES ?? 'light').split(',')
+
+const b = await chromium.launch()
 for (const [name, url] of TARGETS) {
-  for (const scheme of ['light']) {
+  for (const scheme of SCHEMES) {
     const ctx = await b.newContext({
       viewport: { width: 1440, height: 1000 },
       colorScheme: scheme,

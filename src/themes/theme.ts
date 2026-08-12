@@ -445,17 +445,20 @@ const componentStyles = {
   MuiStepIcon: {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
-        // 番号は既定で白。未到達ステップの円は grey.400 なので 1.88:1 まで
-        // 落ちる。円の色は MUI 既定のまま（控えめに見せる意図がある）、
-        // 番号側を実測で決める
+        // 番号は既定で白。未到達ステップの円は MUI 7 では text.disabled
+        // なので、ライトでは 1.88:1 まで落ちる。円の色は MUI 既定のまま
+        // （控えめに見せる意図がある）、番号側を実測で決める。
+        // completed は CheckCircle を描くため .MuiStepIcon-text を持たない
         '& .MuiStepIcon-text': {
-          fill: bestContrast(colorData.grey[400], ON_SURFACE_INKS),
+          fill: bestContrast(
+            theme.palette.mode === 'dark'
+              ? colorData.dark.text.disabled
+              : colorData.text.disabled,
+            ON_SURFACE_INKS
+          ),
         },
         '&.Mui-active .MuiStepIcon-text': {
           fill: theme.palette.primary.contrastText,
-        },
-        '&.Mui-completed .MuiStepIcon-text': {
-          fill: theme.palette.success.contrastText,
         },
       }),
     },

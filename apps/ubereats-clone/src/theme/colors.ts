@@ -25,14 +25,22 @@ export const UE_STAR = '#fbbf24'
 export const UE_ON_GREEN = bestContrast(UE_GREEN, ON_SURFACE_INKS)
 
 /**
- * 白地にワードマークとして置くグリーン。
+ * ワードマークとして面に置くグリーン。
  *
  * ブランドの #06C167 は白に対して 2.38:1 で、18.66px 以上の太字
  * （WCAG の「大きい文字」）に必要な 3:1 に届かない。
- * ブランド色は変えられないので、白地に置くときだけ明度を寄せる。
+ * 一方でダークの paper (#27272a) の上では 6.26:1 出るので補正は要らない。
+ * 面はモードで変わるため、置く面を渡して都度決める。
  */
-export const UE_GREEN_ON_LIGHT = ensureContrast(
-  UE_GREEN,
-  '#FFFFFF',
-  CONTRAST_THRESHOLD.largeText
-)
+const wordmarkCache = new Map<string, string>()
+
+export const ueWordmarkColor = (surface: string): string => {
+  const hit = wordmarkCache.get(surface)
+  if (hit !== undefined) return hit
+  const value = ensureContrast(UE_GREEN, surface, CONTRAST_THRESHOLD.largeText)
+  wordmarkCache.set(surface, value)
+  return value
+}
+
+/** 白地に置く場合の値（後方互換） */
+export const UE_GREEN_ON_LIGHT = ueWordmarkColor('#FFFFFF')

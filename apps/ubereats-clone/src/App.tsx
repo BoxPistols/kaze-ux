@@ -38,7 +38,7 @@ import { OrderHistoryPage } from '~/pages/OrderHistoryPage'
 import { OrderTrackingPage } from '~/pages/OrderTrackingPage'
 import { ProfilePage } from '~/pages/ProfilePage'
 import { RestaurantPage } from '~/pages/RestaurantPage'
-import { UE_GREEN, UE_GREEN_LIGHT, UE_GREEN_ON_LIGHT } from '~/theme/colors'
+import { UE_GREEN, UE_GREEN_LIGHT, ueWordmarkColor } from '~/theme/colors'
 import { ueDarkTheme, ueLightTheme } from '~/theme/ueTheme'
 
 type ThemeMode = 'light' | 'dark'
@@ -194,8 +194,10 @@ const AppContent = ({
                 <Box
                   component='span'
                   // ブランドの緑をそのまま白地に置くと 2.38:1。
-                  // 文字として置くときだけ明度を寄せる
-                  sx={{ color: UE_GREEN_ON_LIGHT }}>
+                  // 面はモードで変わるので、置く面を渡して都度決める
+                  sx={(t) => ({
+                    color: ueWordmarkColor(t.palette.background.paper),
+                  })}>
                   Eats
                 </Box>
               </Typography>

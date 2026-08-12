@@ -195,9 +195,9 @@ export const MiniCalendar = ({
               },
               '& .MuiPickersDay-dayOutsideMonth': {
                 // 当月外は控えめに見せたいが、grey.400 は白地で 1.88:1 で
-                // 読めない。日付は「無効」ではなく情報なので基準を満たす段に置く
+                // 読めない。日付は「無効」ではなく情報なので基準を満たす段に置く。
+                // opacity で更に薄めると合成後に 3.3〜4.5:1 まで落ちるため使わない
                 color: 'text.secondary',
-                opacity: 0.75,
               },
             }}
             value={currentDate}
