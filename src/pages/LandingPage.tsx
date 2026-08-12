@@ -3,7 +3,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Typography, alpha, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
@@ -896,10 +896,12 @@ export const LandingPage = () => {
                         ['transform', 'box-shadow'],
                         'macro'
                       ),
-                      boxShadow: '0 4px 20px rgba(0,87,184,0.25)',
+                      boxShadow: (t) =>
+                        `0 4px 20px ${alpha(t.palette.primary.main, 0.25)}`,
                       '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 30px rgba(0,87,184,0.35)',
+                        boxShadow: (t) =>
+                          `0 8px 30px ${alpha(t.palette.primary.main, 0.35)}`,
                       },
                     }}>
                     <AutoStoriesIcon sx={{ fontSize: 18 }} />
@@ -1245,7 +1247,8 @@ export const LandingPage = () => {
                   textDecoration: 'none',
                   transition: motionOf(['transform', 'box-shadow']),
                   '&:hover': {
-                    boxShadow: '0 4px 16px rgba(0,87,184,0.25)',
+                    boxShadow: (t) =>
+                      `0 4px 16px ${alpha(t.palette.primary.main, 0.25)}`,
                   },
                 }}>
                 Storybook で試す

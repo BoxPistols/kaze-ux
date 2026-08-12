@@ -9,6 +9,7 @@ import {
   Alert,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
 import { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -712,7 +713,7 @@ const TouchTargetsDemo = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: `0 0 0 4px ${color}33`,
+                    boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
                     transition: motionOf(['transform'], 'short'),
                     cursor: 'pointer',
                     '&:hover': {
@@ -740,7 +741,7 @@ const TouchTargetsDemo = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: `0 0 0 4px ${color}33`,
+                    boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
                     opacity: 0.7,
                   }}>
                   <Typography
@@ -787,7 +788,7 @@ const TouchTargetsDemo = () => {
                   justifyContent: 'center',
                   mx: 'auto',
                   mb: 1.5,
-                  boxShadow: `0 0 0 4px ${color}33`,
+                  boxShadow: `0 0 0 4px ${alpha(color, 0.2)}`,
                 }}>
                 <Typography
                   variant='caption'

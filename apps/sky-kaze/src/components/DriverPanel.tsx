@@ -44,9 +44,7 @@ import {
 } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
 import { floatingPanelSx, floatingPanelEmphasizedSx } from '~/utils/panelStyles'
-import {
-  readableOnTint,
-} from '~/utils/readableStatusColor'
+import { readableOnTint } from '~/utils/readableStatusColor'
 
 const formatEta = (seconds: number | null): string => {
   if (seconds === null) return '--:--'

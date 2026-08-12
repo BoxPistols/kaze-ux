@@ -49,9 +49,7 @@ import {
   logiForeground,
   logiForegroundLarge,
 } from '~/theme/colors'
-import {
-  readableOnTint,
-} from '~/utils/readableStatusColor'
+import { readableOnTint } from '~/utils/readableStatusColor'
 
 interface CheckItem {
   id: string
