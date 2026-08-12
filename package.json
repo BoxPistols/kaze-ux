@@ -76,7 +76,8 @@
     "build:sky-kaze": "pnpm --filter sky-kaze build",
     "build:gh-pages:sky-kaze": "pnpm --filter sky-kaze build:gh-pages",
     "preview:sky-kaze": "pnpm --filter sky-kaze preview",
-    "audit:contrast": "node scripts/audit-contrast.mjs"
+    "audit:contrast": "node scripts/audit-contrast.mjs",
+    "check:brand": "node scripts/check-brand-terms.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
