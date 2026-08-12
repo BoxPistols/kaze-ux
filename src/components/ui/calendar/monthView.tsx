@@ -32,7 +32,7 @@ const getTypeColor = (type: string) => {
       return '#1976d2' // primary
     case '整備':
       return '#ed6c02' // warning
-    case '飛行':
+    case '配送':
       return '#2e7d32' // success
     default:
       return '#9e9e9e' // grey

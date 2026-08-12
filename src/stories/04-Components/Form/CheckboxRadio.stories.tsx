@@ -63,14 +63,14 @@ const RadioDemo = () => {
         <FormControlLabel value='auto' control={<Radio />} label='自動実行' />
         <FormControlLabel value='manual' control={<Radio />} label='手動操作' />
         <FormControlLabel
-          value='hover'
+          value='standby'
           control={<Radio />}
-          label='ホバリング'
+          label='待機'
         />
         <FormControlLabel
           value='emergency'
           control={<Radio disabled />}
-          label='緊急着陸（無効）'
+          label='緊急停止（無効）'
         />
       </RadioGroup>
     </FormControl>

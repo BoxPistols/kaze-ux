@@ -335,7 +335,7 @@ function TouchTargetsShowcase() {
       size: 56,
       usage: '安全上重要な操作のタッチターゲット',
       examples:
-        '緊急停止、重要な操作の確認、ミッション中止などのクリティカル制御',
+        '緊急停止、重要な操作の確認、配送中止などのクリティカル制御',
       color: 'error',
     },
   ]
@@ -540,7 +540,7 @@ function TouchTargetsShowcase() {
         <Stack spacing={1}>
           <Typography variant='caption' color='text.secondary'>
             -
-            緊急停止・離着陸などの安全上重要な操作は56px以上のタッチターゲットを使用する
+            緊急停止・積み下ろしなどの安全上重要な操作は56px以上のタッチターゲットを使用する
           </Typography>
           <Typography variant='caption' color='text.secondary'>
             - 屋外での直射日光下やグローブ着用時の操作性を考慮する

@@ -276,7 +276,7 @@ export const Interactive: StoryObj = {
 const SettingsContent = () => {
   const [settings, setSettings] = useState({
     autoRun: true,
-    geoFence: true,
+    areaBoundary: true,
     weatherAlert: false,
     darkMode: false,
   })
@@ -309,14 +309,14 @@ const SettingsContent = () => {
           <Divider component='li' />
           <ListItem>
             <ListItemText
-              primary='ジオフェンス'
-              secondary='制限区域の境界警告を有効化'
+              primary='配送エリア境界'
+              secondary='担当エリア外に出た場合に通知'
             />
             <ListItemSecondaryAction>
               <Switch
                 edge='end'
-                checked={settings.geoFence}
-                onChange={() => handleToggle('geoFence')}
+                checked={settings.areaBoundary}
+                onChange={() => handleToggle('areaBoundary')}
               />
             </ListItemSecondaryAction>
           </ListItem>

@@ -353,7 +353,7 @@ const BreadcrumbPatternsContent = () => (
             タスク計画
           </Link>
           <Link underline='hover' color='inherit' component='button'>
-            FL-2024-042
+            DL-2024-042
           </Link>
           <Typography color='text.primary'>ルート編集</Typography>
         </Breadcrumbs>
@@ -379,7 +379,7 @@ const BreadcrumbPatternsContent = () => (
             タスク管理
           </Link>
           <Chip
-            label='FL-2024-042'
+            label='DL-2024-042'
             size='small'
             color='primary'
             variant='outlined'

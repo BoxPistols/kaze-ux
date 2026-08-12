@@ -70,10 +70,10 @@ const deviceModels = [
 
 /** タスク目的 */
 const taskPurposes = [
-  { value: 'inspection', label: '点検' },
-  { value: 'survey', label: '調査' },
-  { value: 'monitoring', label: 'モニタリング' },
   { value: 'delivery', label: '配送' },
+  { value: 'pickup', label: '集荷' },
+  { value: 'transfer', label: '拠点間輸送' },
+  { value: 'inspection', label: '車両点検' },
   { value: 'test', label: 'テスト' },
 ]
 
@@ -84,7 +84,7 @@ const taskPurposes = [
 interface TaskPlanFormState {
   taskName: string
   deviceModel: string
-  pilot: string
+  driver: string
   departure: string
   destination: string
   taskDate: string
@@ -96,7 +96,7 @@ interface TaskPlanFormState {
 const initialTaskPlan: TaskPlanFormState = {
   taskName: '',
   deviceModel: '',
-  pilot: '',
+  driver: '',
   departure: '',
   destination: '',
   taskDate: '',
@@ -145,7 +145,7 @@ const BasicFormContent = () => {
               <Grid size={{ xs: 12 }}>
                 <TextField
                   label='タスク名'
-                  placeholder='例: 東京湾岸エリア定期点検'
+                  placeholder='例: 東京湾岸エリア定期便'
                   required
                   fullWidth
                   value={form.taskName}
@@ -153,17 +153,17 @@ const BasicFormContent = () => {
                 />
               </Grid>
 
-              {/* 使用機体 */}
+              {/* 使用車両 */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth required>
-                  <InputLabel>使用機体</InputLabel>
+                  <InputLabel>使用車両</InputLabel>
                   <Select
                     value={form.deviceModel}
                     onChange={handleSelectChange('deviceModel')}
                     displayEmpty>
                     <MenuItem value='' disabled>
                       <Typography color='text.secondary'>
-                        機体を選択してください
+                        車両を選択してください
                       </Typography>
                     </MenuItem>
                     {deviceModels.map((model) => (
@@ -183,8 +183,8 @@ const BasicFormContent = () => {
                   placeholder='例: 山田 太郎'
                   required
                   fullWidth
-                  value={form.pilot}
-                  onChange={handleChange('pilot')}
+                  value={form.driver}
+                  onChange={handleChange('driver')}
                 />
               </Grid>
 
@@ -192,7 +192,7 @@ const BasicFormContent = () => {
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label='出発地点'
-                  placeholder='例: 新木場ベース'
+                  placeholder='例: 新木場デポ'
                   required
                   fullWidth
                   value={form.departure}
@@ -597,7 +597,7 @@ const InlineEditFormContent = () => {
 
       <Card>
         <CardHeader
-          title='機体詳細'
+          title='車両詳細'
           action={
             !isEditing ? (
               <IconButton
@@ -675,6 +675,6 @@ const InlineEditFormContent = () => {
 }
 
 export const InlineEditForm: StoryObj = {
-  name: '機体詳細（インライン編集）',
+  name: '車両詳細（インライン編集）',
   render: () => <InlineEditFormContent />,
 }

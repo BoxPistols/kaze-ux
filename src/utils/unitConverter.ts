@@ -6,7 +6,7 @@
 import type {
   DistanceUnit,
   SpeedUnit,
-  AltitudeUnit,
+  HeightUnit,
   TemperatureUnit,
   PressureUnit,
   CoordinateFormat,
@@ -51,14 +51,14 @@ const SPEED_LABELS: Record<SpeedUnit, string> = {
   knots: 'kt',
 }
 
-// 高度変換（メートル基準）
-const ALTITUDE_CONVERSIONS: Record<AltitudeUnit, number> = {
+// 高さ変換（メートル基準）
+const HEIGHT_CONVERSIONS: Record<HeightUnit, number> = {
   meters: 1,
   feet: 3.28084,
 }
 
-// 高度単位のラベル
-const ALTITUDE_LABELS: Record<AltitudeUnit, string> = {
+// 高さ単位のラベル
+const HEIGHT_LABELS: Record<HeightUnit, string> = {
   meters: 'm',
   feet: 'ft',
 }
@@ -131,22 +131,22 @@ export const formatSpeed = (
 }
 
 /**
- * 高度を変換（メートルから指定単位へ）
+ * 高さを変換（メートルから指定単位へ）
  */
-export const convertAltitude = (meters: number, unit: AltitudeUnit): number => {
-  return meters * ALTITUDE_CONVERSIONS[unit]
+export const convertHeight = (meters: number, unit: HeightUnit): number => {
+  return meters * HEIGHT_CONVERSIONS[unit]
 }
 
 /**
- * 高度をフォーマット
+ * 高さをフォーマット
  */
-export const formatAltitude = (
+export const formatHeight = (
   meters: number,
-  unit: AltitudeUnit,
+  unit: HeightUnit,
   decimals: number = 0
 ): string => {
-  const value = convertAltitude(meters, unit)
-  const label = ALTITUDE_LABELS[unit]
+  const value = convertHeight(meters, unit)
+  const label = HEIGHT_LABELS[unit]
   return `${value.toFixed(decimals)}${label}`
 }
 
@@ -295,8 +295,8 @@ export const createUnitFormatter = (settings: UnitSettings) => {
       formatDistance(meters, settings.distance, decimals),
     speed: (ms: number, decimals?: number) =>
       formatSpeed(ms, settings.speed, decimals),
-    altitude: (meters: number, decimals?: number) =>
-      formatAltitude(meters, settings.altitude, decimals),
+    height: (meters: number, decimals?: number) =>
+      formatHeight(meters, settings.height, decimals),
     temperature: (celsius: number, decimals?: number) =>
       formatTemperature(celsius, settings.temperature, decimals),
     pressure: (hPa: number, decimals?: number) =>
@@ -308,7 +308,7 @@ export const createUnitFormatter = (settings: UnitSettings) => {
     labels: {
       distance: DISTANCE_LABELS[settings.distance],
       speed: SPEED_LABELS[settings.speed],
-      altitude: ALTITUDE_LABELS[settings.altitude],
+      height: HEIGHT_LABELS[settings.height],
       temperature: TEMPERATURE_LABELS[settings.temperature],
       pressure: PRESSURE_LABELS[settings.pressure],
     },
@@ -317,7 +317,7 @@ export const createUnitFormatter = (settings: UnitSettings) => {
     convert: {
       distance: (meters: number) => convertDistance(meters, settings.distance),
       speed: (ms: number) => convertSpeed(ms, settings.speed),
-      altitude: (meters: number) => convertAltitude(meters, settings.altitude),
+      height: (meters: number) => convertHeight(meters, settings.height),
       temperature: (celsius: number) =>
         convertTemperature(celsius, settings.temperature),
       pressure: (hPa: number) => convertPressure(hPa, settings.pressure),
@@ -332,7 +332,7 @@ export const createUnitFormatter = (settings: UnitSettings) => {
 export const unitLabels = {
   distance: DISTANCE_LABELS,
   speed: SPEED_LABELS,
-  altitude: ALTITUDE_LABELS,
+  height: HEIGHT_LABELS,
   temperature: TEMPERATURE_LABELS,
   pressure: PRESSURE_LABELS,
 }

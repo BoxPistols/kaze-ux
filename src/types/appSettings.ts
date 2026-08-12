@@ -10,8 +10,8 @@ export type DistanceUnit =
 // 速度の単位
 export type SpeedUnit = 'ms' | 'kmh' | 'mph' | 'knots'
 
-// 高度の単位
-export type AltitudeUnit = 'meters' | 'feet'
+// 高さの単位
+export type HeightUnit = 'meters' | 'feet'
 
 // 温度の単位
 export type TemperatureUnit = 'celsius' | 'fahrenheit'
@@ -57,7 +57,7 @@ export type TimezoneOption =
 export interface UnitSettings {
   distance: DistanceUnit
   speed: SpeedUnit
-  altitude: AltitudeUnit
+  height: HeightUnit
   temperature: TemperatureUnit
   pressure: PressureUnit
   coordinates: CoordinateFormat
@@ -131,7 +131,7 @@ export const APP_PRESETS: Record<
     units: {
       distance: 'meters',
       speed: 'ms',
-      altitude: 'meters',
+      height: 'meters',
       temperature: 'celsius',
       pressure: 'hPa',
       coordinates: 'decimal',
@@ -159,7 +159,7 @@ export const APP_PRESETS: Record<
     units: {
       distance: 'feet',
       speed: 'mph',
-      altitude: 'feet',
+      height: 'feet',
       temperature: 'fahrenheit',
       pressure: 'inHg',
       coordinates: 'decimal',
@@ -187,7 +187,7 @@ export const APP_PRESETS: Record<
     units: {
       distance: 'meters',
       speed: 'kmh',
-      altitude: 'meters',
+      height: 'meters',
       temperature: 'celsius',
       pressure: 'hPa',
       coordinates: 'decimal',
@@ -215,7 +215,7 @@ export const APP_PRESETS: Record<
     units: {
       distance: 'kilometers',
       speed: 'kmh',
-      altitude: 'meters',
+      height: 'meters',
       temperature: 'celsius',
       pressure: 'hPa',
       coordinates: 'dms',

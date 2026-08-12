@@ -39,9 +39,9 @@ interface Project {
 const mockProjects: Project[] = [
   {
     id: '1',
-    name: '東京湾岸エリア点検',
+    name: '東京湾岸エリア定期便',
     status: '進行中',
-    description: '東京湾岸の施設点検プロジェクト',
+    description: '東京湾岸エリアの定期配送ルート',
     location: '東京都江東区',
     startDate: '2024-01-01',
     endDate: '2024-03-31',
@@ -50,9 +50,9 @@ const mockProjects: Project[] = [
   },
   {
     id: '2',
-    name: '山間部測量調査',
+    name: '中継拠点間輸送',
     status: '計画中',
-    description: '山間部の地形測量プロジェクト',
+    description: '内陸デポ間の幹線輸送プロジェクト',
     location: '長野県松本市',
     startDate: '2024-02-01',
     endDate: '2024-04-30',
@@ -61,9 +61,9 @@ const mockProjects: Project[] = [
   },
   {
     id: '3',
-    name: '農地モニタリング',
+    name: '地方集荷ルート',
     status: '完了',
-    description: '農地の定期モニタリングプロジェクト',
+    description: '地方拠点からの定期集荷プロジェクト',
     location: '新潟県新潟市',
     startDate: '2023-10-01',
     endDate: '2023-12-31',
@@ -72,9 +72,9 @@ const mockProjects: Project[] = [
   },
   {
     id: '4',
-    name: '都市部インフラ点検',
+    name: '都市部ラストマイル配送',
     status: '進行中',
-    description: '都市インフラの点検・調査',
+    description: '市街地の小口配送オペレーション',
     location: '大阪府大阪市',
     startDate: '2024-01-15',
     endDate: '2024-06-30',
@@ -155,7 +155,7 @@ const ProjectTable = ({
                 </TableSortLabel>
               </TableCell>
               <TableCell width='10%'>メンバー</TableCell>
-              <TableCell width='10%'>機体</TableCell>
+              <TableCell width='10%'>車両</TableCell>
               <TableCell width='8%'>ステータス</TableCell>
               <TableCell align='right' width='8%'>
                 アクション

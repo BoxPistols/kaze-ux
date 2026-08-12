@@ -339,7 +339,7 @@ const PracticalPatternsContent = () => {
                 <InputLabel>ステータス</InputLabel>
                 <Select label='ステータス' defaultValue=''>
                   <MenuItem value=''>すべて</MenuItem>
-                  <MenuItem value='active'>運航中</MenuItem>
+                  <MenuItem value='active'>稼働中</MenuItem>
                   <MenuItem value='standby'>待機中</MenuItem>
                   <MenuItem value='maintenance'>メンテナンス</MenuItem>
                 </Select>
@@ -431,7 +431,7 @@ const PracticalPatternsContent = () => {
           {/* 詳細コンテンツ */}
           <Box sx={{ p: 2, flex: 1, overflow: 'auto' }}>
             <Stack spacing={3}>
-              {/* 機体情報 */}
+              {/* 車両情報 */}
               <Box>
                 <Stack
                   direction='row'
@@ -443,7 +443,7 @@ const PracticalPatternsContent = () => {
                     Device-Alpha
                   </Typography>
                 </Stack>
-                <Chip label='運航中' color='success' size='small' />
+                <Chip label='稼働中' color='success' size='small' />
               </Box>
 
               <Divider />
