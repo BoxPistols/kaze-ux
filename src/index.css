@@ -61,9 +61,10 @@
   --kaze-ink-mist: rgba(247, 244, 238, 0.04);
 }
 
-/* Dark Theme Colors — colorToken.ts (Dracula scheme) と同期 */
-/* === CSS Variables available for Tailwind utility classes === */
-/* These variables can be used as: bg-[var(--color-primary)] text-[var(--color-primary-foreground)] */
+/* --color-* は createCssVars() が注入する（冒頭の注記を参照）。
+   Tailwind からは bg-[var(--color-primary)] のように参照できる。
+   かつてここにライト/ダークの定義が並んでいたが、MUI 側と二重管理に
+   なっていたため削除した。見出しだけが残っていたので整理する。 */
 
 body {
   overscroll-behavior: none;
@@ -72,8 +73,8 @@ body {
 /* テーマ切替トランジション */
 html[data-theme-transitioning] body {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color var(--motion-duration-long) var(--motion-ease-standard),
+    color var(--motion-duration-long) var(--motion-ease-standard);
 }
 
 main > main {

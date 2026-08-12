@@ -171,5 +171,25 @@ export const reducedMotionOverrides = {
   },
 }
 
+/**
+ * モーションの CSS 変数。
+ *
+ * 素の CSS からは TypeScript のトークンを import できないため、
+ * `.css` の中では値を直に書くしかなかった（実際、全アプリの
+ * `index.css` に `0.3s ease` が写経されていた）。変数として配れば、
+ * `sx` からも `.css` からも同じ一つの値を参照できる。
+ */
+export const createMotionCssVars = (): Record<string, string> => ({
+  ...Object.fromEntries(
+    Object.entries(kazeEasing).map(([k, v]) => [`--motion-ease-${k}`, v])
+  ),
+  ...Object.fromEntries(
+    Object.entries(kazeDuration).map(([k, v]) => [
+      `--motion-duration-${k}`,
+      `${v}ms`,
+    ])
+  ),
+})
+
 export type KazeEasing = keyof typeof kazeEasing
 export type KazeDuration = keyof typeof kazeDuration

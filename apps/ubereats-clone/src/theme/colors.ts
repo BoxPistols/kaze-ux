@@ -1,6 +1,8 @@
 /**
- * UberEats Clone ブランドカラー定数
- * Uber Eats Japan のデザインに準拠
+ * KazeEats ブランドカラー定数
+ *
+ * フードデリバリーの一般的な配色（明るいグリーンを主役に、
+ * 墨の面をアクセントに置く）を Kaze の実測ルールに載せたもの。
  */
 import { ON_SURFACE_INKS } from '@/themes/colorToken'
 import {

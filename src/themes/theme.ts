@@ -26,7 +26,12 @@ import {
   elevation,
 } from './elevation'
 import { createFocusVisibleOverrides } from './focus'
-import { kazeTransitions, motionOf, reducedMotionOverrides } from './motion'
+import {
+  createMotionCssVars,
+  kazeTransitions,
+  motionOf,
+  reducedMotionOverrides,
+} from './motion'
 import {
   fontSizesVariant,
   typographyComponentsOverrides,
@@ -72,7 +77,7 @@ const withCssVars = (base: typeof componentStyles, colors: ThemeColors) => ({
   MuiCssBaseline: {
     styleOverrides: {
       ...base.MuiCssBaseline.styleOverrides,
-      ':root': createCssVars(colors),
+      ':root': { ...createCssVars(colors), ...createMotionCssVars() },
     },
   },
 })
@@ -860,7 +865,10 @@ const cssVarsComponentStyles = {
       ...componentStyles.MuiCssBaseline.styleOverrides,
       // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
       // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
-      ':root': createCssVars(createLightThemeColors('kaze')),
+      ':root': {
+        ...createCssVars(createLightThemeColors('kaze')),
+        ...createMotionCssVars(),
+      },
       '[data-mui-color-scheme="dark"], .dark': {
         ...createDarkSchemeElevationOverrides()[
           '[data-mui-color-scheme="dark"], .dark'

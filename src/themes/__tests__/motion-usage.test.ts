@@ -45,6 +45,20 @@ const sourceFiles = ROOTS.flatMap((root) => collect(resolve(root))).filter(
   (file) => !ALLOWLIST.has(file)
 )
 
+/** `.css` は別の形をしているので、走査も判定も分ける */
+const collectCss = (dir: string, out: string[] = []): string[] => {
+  for (const entry of readdirSync(dir)) {
+    if (SKIP_DIRS.has(entry)) continue
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) {
+      collectCss(full, out)
+    } else if (entry.endsWith('.css')) {
+      out.push(full)
+    }
+  }
+  return out
+}
+
 /**
  * 直前の行に付いた個別の除外指定。
  *
@@ -90,5 +104,36 @@ describe('モーションの禁止パターン', () => {
     // プロパティ名が先行する `transition: 'opacity 150ms ease'` も拾う
     const hits = findMatches(/transition:\s*['"`][^'"`]*\b\d+(?:\.\d+)?m?s\b/)
     expect(hits, `\n${format(hits)}`).toEqual([])
+  })
+})
+
+/**
+ * 素の CSS は上の検査を素通りしていた。
+ *
+ * 上のパターンは TS の文字列リテラルを狙って引用符を要求し、かつ 1 行で
+ * 完結する前提だった。CSS の宣言は引用符が無く複数行にまたがるため、
+ * 全アプリの `index.css` に写経された `0.3s ease` が 4 件とも残っていた。
+ * 宣言を `;` まで連結してから見る。
+ */
+describe('CSS のモーション', () => {
+  const cssFiles = ROOTS.flatMap((root) => collectCss(resolve(root)))
+
+  it('走査対象の .css を見つけている', () => {
+    expect(cssFiles.length).toBeGreaterThan(0)
+  })
+
+  it('transition に秒数を直書きしていない（--motion-* 変数を使う）', () => {
+    const hits: string[] = []
+    for (const file of cssFiles) {
+      const css = readFileSync(file, 'utf8')
+      for (const m of css.matchAll(/transition:[^;}]*/g)) {
+        if (!/\b\d+(?:\.\d+)?m?s\b/.test(m[0])) continue
+        const line = css.slice(0, m.index).split('\n').length
+        hits.push(
+          `${file.replace(resolve('.'), '.')}:${line} ${m[0].replace(/\s+/g, ' ').trim()}`
+        )
+      }
+    }
+    expect(hits, `\n${hits.join('\n')}`).toEqual([])
   })
 })

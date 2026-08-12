@@ -90,6 +90,6 @@ body {
 
 html[data-theme-transitioning] body {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color var(--motion-duration-long) var(--motion-ease-standard),
+    color var(--motion-duration-long) var(--motion-ease-standard);
 }

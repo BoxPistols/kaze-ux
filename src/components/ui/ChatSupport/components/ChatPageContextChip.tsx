@@ -30,7 +30,7 @@ export const ChatPageContextChip = ({
         bgcolor:
           theme.palette.mode === 'dark'
             ? alpha(theme.palette.primary.main, 0.3)
-            : 'rgba(63,81,181,0.08)',
+            : alpha(theme.palette.primary.main, 0.08),
         borderBottom: '1px solid',
         borderColor: 'divider',
         position: 'sticky',
