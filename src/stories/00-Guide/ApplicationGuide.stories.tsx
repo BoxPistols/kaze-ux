@@ -630,8 +630,8 @@ const ApplicationGuideContent = () => {
             : 'linear-gradient(160deg, #edf8f9 0%, #e0f4f5 40%, #f0fafb 100%)',
           border: 1,
           borderColor: isDark
-            ? 'rgba(14,173,184,0.15)'
-            : 'rgba(14,173,184,0.1)',
+            ? 'rgba(0,87,184,0.15)'
+            : 'rgba(0,87,184,0.1)',
         }}>
         <Box
           sx={{

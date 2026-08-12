@@ -59,7 +59,7 @@ export const ChatHeader = ({
       sx={{
         bgcolor:
           theme.palette.mode === 'dark'
-            ? 'rgba(14,173,184,0.55)'
+            ? 'rgba(0,87,184,0.55)'
             : 'primary.main',
         color: '#ffffff',
         backdropFilter: 'blur(12px)',

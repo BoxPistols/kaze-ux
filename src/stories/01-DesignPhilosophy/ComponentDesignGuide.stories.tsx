@@ -1329,8 +1329,8 @@ const VariablesContent = () => {
                         bgcolor:
                           slotIcon === key
                             ? isDark
-                              ? 'rgba(14,173,184,0.15)'
-                              : 'rgba(14,173,184,0.06)'
+                              ? 'rgba(0,87,184,0.15)'
+                              : 'rgba(0,87,184,0.06)'
                             : 'transparent',
                         display: 'flex',
                         justifyContent: 'center',

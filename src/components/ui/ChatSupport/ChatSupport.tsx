@@ -242,24 +242,24 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             sx={{
               bgcolor:
                 theme.palette.mode === 'dark'
-                  ? 'rgba(14,173,184,0.5)'
-                  : 'rgba(14,173,184,0.85)',
+                  ? 'rgba(0,87,184,0.5)'
+                  : 'rgba(0,87,184,0.85)',
               color: '#fff',
               backdropFilter: 'blur(16px)',
               boxShadow:
                 theme.palette.mode === 'dark'
                   ? '0 8px 32px rgba(0,0,0,0.4)'
-                  : '0 8px 32px rgba(14,173,184,0.3)',
+                  : '0 8px 32px rgba(0,87,184,0.3)',
               border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.18)'}`,
               '&:hover': {
                 bgcolor:
                   theme.palette.mode === 'dark'
-                    ? 'rgba(14,173,184,0.65)'
-                    : 'rgba(14,173,184,0.95)',
+                    ? 'rgba(0,87,184,0.65)'
+                    : 'rgba(0,87,184,0.95)',
                 boxShadow:
                   theme.palette.mode === 'dark'
                     ? '0 8px 32px rgba(0,0,0,0.5)'
-                    : '0 8px 32px rgba(14,173,184,0.45)',
+                    : '0 8px 32px rgba(0,87,184,0.45)',
               },
             }}>
             <BookConciergeIcon size={24} />

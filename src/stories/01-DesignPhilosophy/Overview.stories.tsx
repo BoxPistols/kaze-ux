@@ -97,7 +97,7 @@ const DesignPhilosophyOverview = () => {
           border: 1,
           borderColor: isDark
             ? 'rgba(100,130,255,0.12)'
-            : 'rgba(14,173,184,0.08)',
+            : 'rgba(0,87,184,0.08)',
         }}>
         {/* 装飾: グリッドドット */}
         <Box

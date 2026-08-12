@@ -16,12 +16,19 @@ import {
 } from '@/utils/appLinks'
 import type { DevPorts } from '@/utils/appLinks'
 
+// アンビエント（オーブ・粒子・グロー）で使うブランド色の rgba プレフィックス。
+// theme.palette からは alpha 付き文字列を組めないため、ここで一度だけ定義する。
+// 値は colorToken.ts の primary と一致させる（#0057B8 / #00458F / #3D82D2）
+const BRAND_RGBA = 'rgba(0,87,184,'
+const BRAND_DEEP_RGBA = 'rgba(0,69,143,'
+const BRAND_SOFT_RGBA = 'rgba(61,130,210,'
+
 // ヒーロー背景 — グラデーションオーブ + グリッドライン + パーティクル
 const HeroBackground = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  const teal = isDark ? 'rgba(14,173,184,' : 'rgba(14,173,184,'
-  const teal2 = isDark ? 'rgba(10,138,148,' : 'rgba(60,192,200,'
+  const teal = BRAND_RGBA
+  const teal2 = isDark ? BRAND_DEEP_RGBA : BRAND_SOFT_RGBA
 
   return (
     <Box
@@ -232,8 +239,8 @@ const ProductCard = ({
           overflow: 'hidden',
           '&:hover': {
             boxShadow: isDark
-              ? '0 12px 40px rgba(14,173,184,0.15)'
-              : '0 12px 40px rgba(14,173,184,0.12)',
+              ? '0 12px 40px rgba(0,87,184,0.15)'
+              : '0 12px 40px rgba(0,87,184,0.12)',
             borderColor: 'primary.main',
           },
         }}>
@@ -357,8 +364,8 @@ const BauhausDivider = ({
 }) => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
-  // Kaze 骨格 3 色。teal 主役 + asagi/beni をアクセントに（画面 5% 以下）
-  const teal = 'rgba(14,173,184,'
+  // Kaze 骨格 3 色。ブランド青が主役 + asagi/beni をアクセントに（画面 5% 以下）
+  const teal = BRAND_RGBA
   const asagi = 'rgba(91,143,185,' // #5B8FB9
   const beni = 'rgba(227,78,58,' // #E34E3A
   const ref = useRef(null)
@@ -885,10 +892,10 @@ export const LandingPage = () => {
                       fontSize: '0.9rem',
                       textDecoration: 'none',
                       transition: 'all 0.3s ease',
-                      boxShadow: '0 4px 20px rgba(14,173,184,0.25)',
+                      boxShadow: '0 4px 20px rgba(0,87,184,0.25)',
                       '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 30px rgba(14,173,184,0.35)',
+                        boxShadow: '0 8px 30px rgba(0,87,184,0.35)',
                       },
                     }}>
                     <AutoStoriesIcon sx={{ fontSize: 18 }} />
@@ -1231,7 +1238,7 @@ export const LandingPage = () => {
                   textDecoration: 'none',
                   transition: 'all 0.2s',
                   '&:hover': {
-                    boxShadow: '0 4px 16px rgba(14,173,184,0.25)',
+                    boxShadow: '0 4px 16px rgba(0,87,184,0.25)',
                   },
                 }}>
                 Storybook で試す

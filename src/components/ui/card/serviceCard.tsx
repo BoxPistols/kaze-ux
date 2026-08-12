@@ -68,8 +68,8 @@ export const ServiceCard = ({
         '&:hover': {
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 12px 40px rgba(14,173,184,0.15)'
-              : '0 12px 40px rgba(14,173,184,0.12)',
+              ? '0 12px 40px rgba(0,87,184,0.15)'
+              : '0 12px 40px rgba(0,87,184,0.12)',
           borderColor: 'primary.main',
         },
       }}>
