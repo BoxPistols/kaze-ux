@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
+import { ON_SURFACE_INKS } from '@/themes/colorToken'
 import { bestContrast, ensureContrast } from '@/themes/contrast'
 import { darkTheme, lightTheme } from '@/themes/theme'
 
@@ -23,7 +24,7 @@ declare module '@mui/material/styles' {
 }
 
 /** 塗り面に乗せる文字色は白固定にせず実測で選ぶ（明るいオレンジに白は乗らない） */
-const onSurface = (bg: string) => bestContrast(bg, ['#ffffff', '#0A0A0A'])
+const onSurface = (bg: string) => bestContrast(bg, ON_SURFACE_INKS)
 
 const logiColors = {
   logiOrange: {

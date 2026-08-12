@@ -1,4 +1,8 @@
-import { ensureContrast } from '@/themes/contrast'
+import { composite, ensureContrast, parseColor } from '@/themes/contrast'
+
+import { PANEL_SURFACE, PANEL_SURFACE_EMPHASIZED } from './panelStyles'
+
+import { LOGI_NAVY } from '~/theme/colors'
 
 /**
  * ステータス色を「置かれる面で読める明度」に補正する。
@@ -15,18 +19,60 @@ import { ensureContrast } from '@/themes/contrast'
  * color: (theme) => readableStatusColor(STATUS_COLORS[s.status], theme.palette.mode)
  */
 
+/** パネルの下に敷かれている面。ダークは地図のネイビー、ライトは白 */
+const BENEATH_PANEL = { dark: LOGI_NAVY, light: '#FFFFFF' } as const
+
+const toHex = ({ r, g, b }: { r: number; g: number; b: number }) =>
+  `#${[r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')}`
+
 /**
- * ステータス色を置く面の実効背景。
+ * パネルの実効背景色。
  *
- * ダークは Card の実描画色 (#1E293B)、ライトは白。theme.palette.background
- * ではなく実測値を使うのは、sky-kaze のパネルが独自の背景を持つため。
+ * パネルは半透明 (`rgba(10, 15, 28, 0.92)`) なので、宣言値をそのまま
+ * 背景として測ると実際の描画色と食い違う。下地に合成して solid に直す。
+ * 標準と強調で不透明度が違うため、コントラストが不利になる標準側を基準にする。
  */
+const effectiveBackground = (mode: 'light' | 'dark') =>
+  toHex(
+    composite(parseColor(PANEL_SURFACE[mode]), parseColor(BENEATH_PANEL[mode]))
+  )
+
 const PANEL_BACKGROUND = {
-  dark: '#1E293B',
-  light: '#FFFFFF',
+  dark: effectiveBackground('dark'),
+  light: effectiveBackground('light'),
 } as const
+
+// 補正結果は color × mode の有限集合にしかならない。sx コールバックから
+// 呼ばれるため再レンダーのたびに 100 回ループを回す可能性がある
+const cache = new Map<string, string>()
 
 export const readableStatusColor = (
   color: string,
   mode: 'light' | 'dark'
-): string => ensureContrast(color, PANEL_BACKGROUND[mode])
+): string => {
+  const key = `${mode}:${color}`
+  const hit = cache.get(key)
+  if (hit !== undefined) return hit
+  const value = ensureContrast(color, PANEL_BACKGROUND[mode])
+  cache.set(key, value)
+  return value
+}
+
+/** 強調パネルの実効背景（監査・テスト用に公開する） */
+export const PANEL_BACKGROUNDS = {
+  standard: PANEL_BACKGROUND,
+  emphasized: {
+    dark: toHex(
+      composite(
+        parseColor(PANEL_SURFACE_EMPHASIZED.dark),
+        parseColor(BENEATH_PANEL.dark)
+      )
+    ),
+    light: toHex(
+      composite(
+        parseColor(PANEL_SURFACE_EMPHASIZED.light),
+        parseColor(BENEATH_PANEL.light)
+      )
+    ),
+  },
+} as const

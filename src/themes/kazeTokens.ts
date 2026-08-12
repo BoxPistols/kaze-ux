@@ -8,9 +8,12 @@
  * 参照: src/stories/01-DesignPhilosophy/KazeSkeleton.stories.tsx
  */
 
+import { BRAND_BLUE } from './colorToken'
+
 export const kazeTokens = {
   color: {
-    kazeTeal: '#0EADB8',
+    // ブランド色は colorToken.ts が単一ソース。ここで値を持つと二重定義になる
+    kazeBlue: BRAND_BLUE,
     sumi: '#0A0A0A',
     washi: '#F7F4EE',
     asagi: '#5B8FB9',
@@ -69,7 +72,7 @@ export const KAZE_GOOGLE_FONTS_HREF =
  * :root や scope element に展開して使う。
  */
 export const kazeCssVars: Record<string, string> = {
-  '--kaze-teal': kazeTokens.color.kazeTeal,
+  '--kaze-blue': kazeTokens.color.kazeBlue,
   '--kaze-sumi': kazeTokens.color.sumi,
   '--kaze-washi': kazeTokens.color.washi,
   '--kaze-asagi': kazeTokens.color.asagi,

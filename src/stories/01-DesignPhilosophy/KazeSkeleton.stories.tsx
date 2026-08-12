@@ -1,3 +1,5 @@
+import { kazeTokens } from '@/themes/kazeTokens'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /**
@@ -15,16 +17,17 @@ const FONT_IMPORT =
   '&family=IBM+Plex+Mono:wght@400;500;600' +
   '&display=swap'
 
+// 値は kazeTokens.ts が単一ソース。この Story は表示に必要な別名を張るだけ
 const tokens = {
-  kazeTeal: '#0EADB8',
-  sumi: '#0A0A0A',
-  washi: '#F7F4EE',
-  asagi: '#5B8FB9',
-  beni: '#E34E3A',
-  washiInk: 'rgba(10, 10, 10, 0.88)',
-  washiMute: 'rgba(10, 10, 10, 0.54)',
-  washiHair: 'rgba(10, 10, 10, 0.12)',
-  washiMist: 'rgba(10, 10, 10, 0.04)',
+  kazeBlue: kazeTokens.color.kazeBlue,
+  sumi: kazeTokens.color.sumi,
+  washi: kazeTokens.color.washi,
+  asagi: kazeTokens.color.asagi,
+  beni: kazeTokens.color.beni,
+  washiInk: kazeTokens.ink.primary,
+  washiMute: kazeTokens.ink.muted,
+  washiHair: kazeTokens.ink.hair,
+  washiMist: kazeTokens.ink.mist,
 }
 
 // 骨格案を scope 内だけで強制するためのスタイル文字列。
@@ -34,7 +37,7 @@ const scopedCss = `
   @import url('${FONT_IMPORT}');
 
   [data-kaze-skeleton] {
-    --kaze-teal: ${tokens.kazeTeal};
+    --kaze-blue: ${tokens.kazeBlue};
     --sumi: ${tokens.sumi};
     --washi: ${tokens.washi};
     --asagi: ${tokens.asagi};
@@ -81,7 +84,7 @@ const scopedCss = `
   }
 
   [data-kaze-skeleton] ::selection {
-    background: var(--kaze-teal);
+    background: var(--kaze-blue);
     color: var(--washi);
   }
 
@@ -189,7 +192,7 @@ const Hero = () => (
         left: '-2vw',
         fontSize: 'clamp(280px, 40vw, 560px)',
         lineHeight: 0.78,
-        color: tokens.kazeTeal,
+        color: tokens.kazeBlue,
         opacity: 0.08,
         userSelect: 'none',
         animation: 'kazeDrift 24s var(--ease-kaze) infinite alternate',
@@ -241,7 +244,7 @@ const Hero = () => (
             animation: 'kazeRise 720ms var(--ease-kaze) 240ms both',
           }}>
           Written in ink. Carried by wind. Kaze{' '}
-          <span className='mono' style={{ color: tokens.kazeTeal }}>
+          <span className='mono' style={{ color: tokens.kazeBlue }}>
             (/kaze/)
           </span>{' '}
           is a design skeleton that commits to four foundations — typography,
@@ -429,7 +432,7 @@ const ColorSection = () => {
     {
       name: 'Kaze Teal',
       jp: '風',
-      hex: tokens.kazeTeal,
+      hex: tokens.kazeBlue,
       role: 'Primary / Action',
       ink: tokens.washi,
       bordered: false,
@@ -600,7 +603,7 @@ const RadiusSection = () => {
       demo: (
         <div
           style={{
-            background: tokens.kazeTeal,
+            background: tokens.kazeBlue,
             color: tokens.washi,
             borderRadius: 24,
             padding: '24px 28px',
@@ -814,7 +817,7 @@ const MotionSection = () => (
             key={e.label}
             type='button'
             style={{
-              background: e.good ? tokens.kazeTeal : 'transparent',
+              background: e.good ? tokens.kazeBlue : 'transparent',
               color: tokens.washi,
               border: e.good ? 'none' : '1px solid rgba(247,244,238,0.3)',
               borderRadius: 2,
@@ -909,7 +912,7 @@ const CommitmentSection = () => {
               className='display'
               style={{
                 fontSize: 32,
-                color: tokens.kazeTeal,
+                color: tokens.kazeBlue,
                 letterSpacing: '-0.02em',
               }}>
               {c.num}
@@ -921,7 +924,7 @@ const CommitmentSection = () => {
                   fontSize: 10,
                   letterSpacing: '0.24em',
                   textTransform: 'uppercase',
-                  color: tokens.kazeTeal,
+                  color: tokens.kazeBlue,
                   marginBottom: 6,
                 }}>
                 Keep

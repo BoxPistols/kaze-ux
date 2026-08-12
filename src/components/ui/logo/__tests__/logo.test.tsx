@@ -61,14 +61,24 @@ describe('シンボルの構造', () => {
       (p) => p.getAttribute('d') ?? ''
     )
     expect(ds).toHaveLength(2)
-    const startX = ds.map((d) => Number(d.match(/^M(\d+)/)?.[1]))
+    // 整数だけを見る正規表現だと、パスの書式が変わったとき NaN になり、
+    // NaN !== NaN で検証せずに通ってしまう
+    const startX = ds.map((d) => Number(d.match(/^M\s*(-?\d+(?:\.\d+)?)/)?.[1]))
+    for (const x of startX) {
+      expect(x, '起点 X を抽出できていない').not.toBeNaN()
+    }
     expect(startX[0], '起点が同じでは対称になる').not.toBe(startX[1])
   })
 
   it('角丸を持たない（装飾を排す）', () => {
-    const { container } = renderLogo(<KazeLogo />)
-    const surface = svgOf(container).querySelector('rect')
-    expect(surface?.getAttribute('rx')).toBeNull()
+    // tone を明示しないと面が描かれず、最初の rect が帯になる
+    const { container } = renderLogo(<KazeLogo tone='brand' />)
+    const rects = [...svgOf(container).querySelectorAll('rect')]
+    expect(rects, '面 + 帯').toHaveLength(2)
+    for (const rect of rects) {
+      expect(rect.getAttribute('rx')).toBeNull()
+      expect(rect.getAttribute('ry')).toBeNull()
+    }
   })
 
   it('影・グラデーションを持たない', () => {
@@ -118,19 +128,26 @@ describe('最小サイズ', () => {
 describe('クリアスペース', () => {
   // sx は emotion のクラスを生成するため、インライン style ではなく算出値を読む
   const paddingOf = (container: HTMLElement) =>
-    getComputedStyle(container.firstElementChild as HTMLElement).padding
+    Number.parseFloat(
+      getComputedStyle(container.firstElementChild as HTMLElement).padding
+    )
 
   it('既定では余白を持たない', () => {
     const { container } = renderLogo(<KazeLogo size={40} />)
-    expect(paddingOf(container)).toBe('0px')
+    expect(paddingOf(container)).toBe(0)
   })
 
   it('withClearSpace で一辺の 25% を四辺に確保する', () => {
     const size = 40
     const { container } = renderLogo(<KazeLogo size={size} withClearSpace />)
-    expect(paddingOf(container)).toBe(`${size * LOGO_CLEAR_SPACE_RATIO}px`)
+    expect(paddingOf(container)).toBeCloseTo(size * LOGO_CLEAR_SPACE_RATIO)
   })
 })
+
+// ink / inverse は tone を明示するため、置かれる面も固定値で表す。
+// auto はテーマから面を決めるので、そちらはテーマ値で検証する
+const LIGHT_SURFACE = '#ffffff'
+const DARK_SURFACE = '#0A0A0A'
 
 describe('配色', () => {
   it('brand は塗り面を持ち、図形は面に対して本文 AA を満たす', () => {
@@ -157,19 +174,22 @@ describe('配色', () => {
   it('ink は明るい面で、inverse は暗い面で AA を満たす', () => {
     const ink = renderLogo(<KazeLogo tone='ink' />)
     expect(
-      contrastRatio(shapeColorOf(ink.container), '#ffffff')
+      contrastRatio(shapeColorOf(ink.container), LIGHT_SURFACE)
     ).toBeGreaterThanOrEqual(4.5)
 
     const inv = renderLogo(<KazeLogo tone='inverse' />)
     expect(
-      contrastRatio(shapeColorOf(inv.container), '#0A0A0A')
+      contrastRatio(shapeColorOf(inv.container), DARK_SURFACE)
     ).toBeGreaterThanOrEqual(4.5)
   })
 
   it('auto はライトで ink、ダークで inverse を選ぶ', () => {
     const light = renderLogo(<KazeLogo tone='auto' />, lightTheme)
     expect(
-      contrastRatio(shapeColorOf(light.container), '#ffffff')
+      contrastRatio(
+        shapeColorOf(light.container),
+        lightTheme.palette.background.default
+      )
     ).toBeGreaterThanOrEqual(4.5)
 
     const dark = renderLogo(<KazeLogo tone='auto' />, darkTheme)

@@ -19,122 +19,48 @@ import {
 import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// --- ソースデータの直接読み込み ---
-// テーマファイルは MUI ランタイムに依存するため、値を直接定義
+import {
+  createLightThemeColors,
+  createDarkThemeColors,
+} from '../src/themes/colorToken'
+
+import type { ColorSet, ThemeColors } from '../src/themes/colorToken'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = resolve(__dirname, '..', 'design-tokens')
 
-// colorToken.ts の createThemeColors 相当
-const lightColors = {
-  primary: {
-    main: '#0EADB8',
-    dark: '#0A8A94',
-    light: '#3CC0C8',
-    lighter: '#b0dfe3',
-    contrastText: '#ffffff',
-  },
-  secondary: {
-    main: '#696881',
-    dark: '#424242',
-    light: '#757575',
-    lighter: '#FAFAFA',
-    contrastText: '#ffffff',
-  },
-  success: {
-    main: '#46ab4a',
-    dark: '#3f7f42',
-    light: '#6db770',
-    lighter: '#d4e9d4',
-    contrastText: '#ffffff',
-  },
-  info: {
-    main: '#1dafc2',
-    dark: '#277781',
-    light: '#43bfcf',
-    lighter: '#bde8ee',
-    contrastText: '#ffffff',
-  },
-  warning: {
-    main: '#eb8117',
-    dark: '#EF6C00',
-    light: '#dd9c3c',
-    lighter: '#FFF3E0',
-    contrastText: '#ffffff',
-  },
-  error: {
-    main: '#da3737',
-    dark: '#c63535',
-    light: '#dc4e4e',
-    lighter: '#FFEBEE',
-    contrastText: '#ffffff',
-  },
-  text: { primary: '#1a1a2e', secondary: '#4a5568', disabled: '#bdbdbd' },
-  background: { default: '#f8fafc', paper: '#ffffff' },
-  divider: 'rgba(0, 0, 0, 0.08)',
+// 色は colorToken.ts が単一ソース。ここで値を書き写すと必ず同期が切れる
+// （実際、以前の手書き定義は dark.success を #7cd07f、実テーマは #6dce72 だった）
+const toExportShape = (c: ThemeColors) => {
+  const set = (cs: ColorSet) => ({
+    main: cs.main,
+    dark: cs.dark,
+    light: cs.light,
+    lighter: cs.lighter,
+    contrastText: cs.contrastText,
+    // 前景（文字・アイコン）として使う色。Figma 側でも面と前景を区別する
+    textContrast: cs.textContrast ?? cs.main,
+  })
+  return {
+    primary: set(c.primary),
+    secondary: set(c.secondary),
+    success: set(c.success),
+    info: set(c.info),
+    warning: set(c.warning),
+    error: set(c.error),
+    text: {
+      primary: c.text.primary,
+      secondary: c.text.secondary,
+      disabled: c.text.disabled,
+    },
+    background: { default: c.background.default, paper: c.background.paper },
+    divider: c.divider,
+  }
 }
 
-const darkColors = {
-  primary: {
-    main: '#4DD8E0',
-    dark: '#2CB8C2',
-    light: '#7AE6EC',
-    lighter: '#1a3a3e',
-    contrastText: '#0c2628',
-  },
-  secondary: {
-    main: '#a0a1b8',
-    dark: '#6a6a6a',
-    light: '#b5b5b5',
-    lighter: '#454550',
-    contrastText: '#ffffff',
-  },
-  success: {
-    main: '#7cd07f',
-    dark: '#4caf50',
-    light: '#97dc9a',
-    lighter: '#2d4a2e',
-    contrastText: '#1a2e1a',
-  },
-  info: {
-    main: '#4dd4e8',
-    dark: '#1ba8b9',
-    light: '#7ae3f0',
-    lighter: '#1d3d42',
-    contrastText: '#0d2528',
-  },
-  warning: {
-    main: '#ffb74d',
-    dark: '#ff9800',
-    light: '#ffcc80',
-    lighter: '#4a3520',
-    contrastText: '#2d1f0d',
-  },
-  error: {
-    main: '#f07070',
-    dark: '#e53935',
-    light: '#f5a0a0',
-    lighter: '#4a2828',
-    contrastText: '#2d1515',
-  },
-  text: { primary: '#f5f5f7', secondary: '#b0b5c0', disabled: '#9e9e9e' },
-  background: { default: '#18181b', paper: '#27272a' },
-  divider: 'rgba(255, 255, 255, 0.08)',
-}
-
-const grey = {
-  50: '#fafafa',
-  100: '#f5f5f5',
-  200: '#eeeeee',
-  300: '#e0e0e0',
-  400: '#bdbdbd',
-  500: '#9e9e9e',
-  600: '#757575',
-  700: '#4e4e4e',
-  800: '#3a3a3a',
-  850: '#323232',
-  900: '#292929',
-}
+const lightColors = toExportShape(createLightThemeColors('kaze'))
+const darkColors = toExportShape(createDarkThemeColors('kaze'))
+const grey = createLightThemeColors('kaze').grey
 
 // typography.ts
 const baseFontSize = 14

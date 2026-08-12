@@ -523,7 +523,7 @@ const productExtensions = [
   },
   {
     name: 'SaaS Dashboard',
-    color: '#0EADB8',
+    color: 'primary.textContrast',
     description: '業務管理ダッシュボード',
     items: [
       {
@@ -704,7 +704,7 @@ const ApplicationGuideContent = () => {
             },
             {
               name: 'SaaS Dashboard',
-              color: '#0EADB8',
+              color: 'primary.textContrast',
               desc: '業務管理ダッシュボード',
               path: 'apps/saas-dashboard/',
             },
@@ -966,7 +966,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
 // 各プロダクトのブランドカラー:
 // KazeLogistics: LOGI_ORANGE (#E87A1E) + LOGI_NAVY
 // KazeEats:      UE_GREEN   (#06C167)
-// SaaS Dashboard: primary.main (#0EADB8) をそのまま使用`}
+// SaaS Dashboard: primary.main をそのまま使用`}
         </CodeBlock>
 
         <Grid container spacing={2.5}>
@@ -983,7 +983,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
             },
             {
               name: 'SaaS Dashboard',
-              color: '#0EADB8',
+              color: 'primary.textContrast',
               method: '共通 ThemeProvider をそのまま使用',
             },
           ].map((t) => (

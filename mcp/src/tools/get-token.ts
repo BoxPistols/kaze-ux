@@ -1,7 +1,7 @@
 /**
  * get_token ツール
  * ドットパスでデザイントークンを検索
- * 例: color.light.primary.main → { "$value": "#0EADB8", "$type": "color" }
+ * 例: color.light.primary.main → { "$value": "#0057B8", "$type": "color" }
  */
 
 import { loadTokens, resolveTokenPath } from '../utils/loader.js'

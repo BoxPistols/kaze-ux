@@ -63,8 +63,9 @@ const statusStyles: Record<
   },
   active: {
     backgroundColor: 'success.light',
-    // success.light は明るい塗り面。文字は実測で決まる contrastText を使う
-    color: 'success.contrastText',
+    // 面が success.light なので、main 基準の contrastText では基準がずれる。
+    // light 面に対して実測した onLight を使う
+    color: 'success.onLight',
     borderColor: 'success.main',
   },
   inactive: {

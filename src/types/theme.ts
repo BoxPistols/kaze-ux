@@ -9,9 +9,11 @@ import type { PaletteOptions, Theme as MuiTheme } from '@mui/material/styles'
 declare module '@mui/material/styles' {
   interface PaletteColor {
     textContrast?: string
+    onLight?: string
   }
   interface SimplePaletteColorOptions {
     textContrast?: string
+    onLight?: string
   }
 }
 

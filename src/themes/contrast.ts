@@ -53,7 +53,13 @@ export const parseColor = (input: string): Rgb => {
 
   const rgb = value.match(/^rgba?\(([^)]+)\)$/i)
   if (rgb) {
-    const parts = rgb[1].split(',').map((p) => Number.parseFloat(p.trim()))
+    const tokens = rgb[1].split(',').map((p) => p.trim())
+    // parseFloat は '100%' を 100 と読む。パーセント表記を黙って
+    // 誤解釈すると、透明度を無視した高いコントラスト比を返してしまう
+    if (tokens.some((t) => t.endsWith('%'))) {
+      throw new Error(`解釈できない色（% 表記は未対応）: ${input}`)
+    }
+    const parts = tokens.map((p) => Number.parseFloat(p))
     if (parts.length < 3 || parts.some(Number.isNaN)) {
       throw new Error(`解釈できない色: ${input}`)
     }
@@ -127,12 +133,13 @@ export const contrastLevel = (
  * 候補のうち、背景に対して最もコントラストの高い色を返す。
  *
  * 塗り面の文字色を決めるのに使う。ブランド色は明度がまちまちで、
- * 白を一律に乗せると明るい色（Kaze のティール #0EADB8 は白に対して
- * 2.73:1）で破綻する。どちらが読めるかは目分量ではなく実測で決める。
+ * 白を一律に乗せると明るい色（KazeEats のグリーン #06C167 は白に対して
+ * 2.38:1）で破綻する。どちらが読めるかは目分量ではなく実測で決める。
  */
 export const bestContrast = (
   background: string,
-  candidates: readonly string[]
+  // 初期値なしの reduce は空配列で TypeError になる。非空を型で保証する
+  candidates: readonly [string, ...string[]]
 ): string =>
   candidates.reduce((best, candidate) =>
     contrastRatio(candidate, background) > contrastRatio(best, background)
@@ -175,7 +182,7 @@ const hslToHex = ({ h, s, l }: { h: number; s: number; l: number }) => {
  * 背景に対して目標コントラストを満たすまで、色相・彩度を保ったまま
  * 明度だけを動かす。
  *
- * ブランド色をそのまま文字に使うと読めない（Kaze のティールは白地で
+ * ブランド色をそのまま文字に使うと読めない（info の #1dafc2 は白地で
  * 2.61:1）が、別の色に差し替えるとブランドが失われる。色相を保って
  * 明度だけ動かせば、ブランドの気配を残したまま可読性を確保できる。
  *
@@ -220,7 +227,8 @@ export const ensureContrast = (
  */
 export const pickReadable = (
   background: string,
-  candidates: readonly string[],
+  // 空配列だと戻り型 string に反して undefined を返す。非空を型で保証する
+  candidates: readonly [string, ...string[]],
   minimum: number = CONTRAST_THRESHOLD.text
 ): string => {
   let best = candidates[0]

@@ -12,10 +12,8 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* === MUI Theme Variables Integration === */
+/* === ベース組版（色は CssBaseline 経由でテーマが注入する） === */
 :root {
-  /* Light Theme Colors — colorToken.ts (Blue/Kaze scheme) と同期 */
-
   font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -27,9 +25,9 @@
   /* === Kaze 骨格 CSS 変数 (v0) ===
    * 値の TypeScript ミラー: src/themes/kazeTokens.ts
    * 既存 --color-* とは独立した additive な namespace。
-   * opt-in で使用: var(--kaze-teal), var(--kaze-r-sharp), etc.
+   * opt-in で使用: var(--kaze-blue), var(--kaze-r-sharp), etc.
    */
-  --kaze-teal: #0eadb8;
+  --kaze-blue: #0057b8;
   --kaze-sumi: #0a0a0a;
   --kaze-washi: #f7f4ee;
   --kaze-asagi: #5b8fb9;

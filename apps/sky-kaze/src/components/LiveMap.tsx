@@ -10,6 +10,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { elevation } from '@/themes/elevation'
+import { motionOf } from '@/themes/motion'
 
 import { HUBS, HUB_TYPE_LABELS, SHIPMENTS } from '~/data/logistics'
 import {
@@ -179,7 +180,7 @@ export const LiveMap = () => {
 
     el.innerHTML += `
       <svg viewBox="0 0 44 44" width="44" height="44" class="driver-svg"
-        style="transition:transform var(--kaze-dur-macro, 240ms) var(--kaze-ease, cubic-bezier(0.33,0,0,1));">
+        style="transition:${motionOf(['transform'], 'macro', 'enter')};">
         <!-- インシデント時のパルスリング -->
         <circle class="pulse-ring" cx="22" cy="22" r="16"
           fill="none" stroke="#EF4444" stroke-width="2"

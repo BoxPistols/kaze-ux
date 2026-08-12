@@ -23,6 +23,7 @@
  * 一度崩れると全体の品位が落ちる。判断の余地を残さないよう、
  * 余白・最小サイズ・配色・禁止事項を数値で固定する。
  */
+import { BRAND_BLUE } from '../../../themes/colorToken'
 
 /** SVG のデザイングリッド（この座標系で全ての比率を定義する） */
 export const LOGO_GRID = 32
@@ -95,8 +96,8 @@ export type LogoVariant = (typeof LOGO_VARIANTS)[number]
  * 各色は塗り面として使い、線の色は実測で決まる（明るい面には墨が乗る）。
  */
 export const LOGO_PRODUCTS = {
-  /** Kaze Design System 本体。空気・空を意味する青 */
-  kaze: '#0057B8',
+  /** Kaze Design System 本体。テーマの primary と同一の値を指す */
+  kaze: BRAND_BLUE,
   /** KazeEats */
   eats: '#E4002B',
   /** KazeLogistics */

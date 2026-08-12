@@ -9,6 +9,14 @@ export interface ColorSet {
   lighter: string
   textContrast?: string
   contrastText: string
+  /**
+   * `light` の塗り面に乗せる文字色。
+   *
+   * `contrastText` は `main` を基準に測った値なので、`light` の面に
+   * 乗せると基準が食い違う。今の値では偶然成立していても、`main` を
+   * 動かした瞬間に無言で破綻する。面ごとに前景を持つ。
+   */
+  onLight: string
 }
 
 export interface GreyShades extends Record<string, string> {
@@ -74,14 +82,31 @@ export interface ThemeColors {
  *
  * 墨 (#0A0A0A) は kazeTokens.color.sumi と同値。純白と墨の 2 択にして、
  * どちらを使うかは実測で決める。
+ *
+ * アプリ側の塗り面（UE のグリーン、Logistics のオレンジ等）でも同じ 2 択を
+ * 使う。候補を各所で書き直すと、墨の値を変えたときに食い違う
  */
-const ON_SURFACE_INKS = ['#ffffff', '#0A0A0A'] as const
+export const ON_SURFACE_INKS: readonly [string, ...string[]] = [
+  '#ffffff',
+  '#0A0A0A',
+]
+
+/**
+ * ブランドの基準色。
+ *
+ * ロゴのシンボルとテーマの primary が同じ値を指すための単一ソース。
+ * バウハウスの三原色から採った青で、白文字が 6.87:1 出る（旧ティール
+ * #0EADB8 は 2.73:1 しか出ず、塗り面に白を乗せられなかった）。
+ *
+ * ロゴ側の参照: src/components/ui/logo/logoRules.ts
+ */
+export const BRAND_BLUE = '#0057B8'
 
 /**
  * 色を「前景」として使うときに選ぶべき variant。
  *
- * Kaze のブランドティール #0EADB8 は明るい色で、白地に対して 2.73:1 しか
- * 出ない。塗り面（背景）としては美しく成立するが、アイコン・細線・
+ * セマンティック色の main は明度がまちまちで、明るいもの（info #1dafc2 は
+ * 白地に対して 2.61:1）は塗り面としては成立しても、アイコン・細線・
  * テキストなど前景に使うと視認できない。
  *
  * そのため用途で variant を使い分ける:
@@ -99,7 +124,7 @@ export const foregroundVariant = (
 /**
  * ColorSet に「前景として使う色」(textContrast) を埋める。
  *
- * `color: 'primary.main'` と書くとブランドティールがそのまま文字色になり、
+ * `color: 'info.main'` と書くと明るい main がそのまま文字色になり、
  * 白地で 2.61:1 しか出ない。かといって使う側に variant の選択を強いると
  * 必ず漏れる。テーマ側で `primary.textContrast` を用意し、
  * 文字・アイコンにはそれを使う運用にする。
@@ -128,18 +153,20 @@ const createColorSet = (
   dark: string,
   light: string,
   lighter: string,
-  textContrast?: string,
-  contrastText?: string
+  // textContrast と contrastText は名前も型も似ている。位置引数で並べると
+  // 取り違えてもコンパイルが通り、無言で誤った色になる
+  opts: { textContrast?: string; contrastText?: string } = {}
 ): ColorSet => ({
   main,
   dark,
   light,
   lighter,
-  textContrast,
+  textContrast: opts.textContrast,
   // 白を一律に乗せると明るいブランド色で破綻する
-  // (Kaze のティール #0EADB8 に白は 2.73:1、墨なら 7.69:1)。
+  // (旧ブランドティール #0EADB8 に白は 2.73:1、墨なら 7.25:1)。
   // 明示指定が無ければ実測でコントラストの高い方を選ぶ
-  contrastText: contrastText ?? bestContrast(main, ON_SURFACE_INKS),
+  contrastText: opts.contrastText ?? bestContrast(main, ON_SURFACE_INKS),
+  onLight: bestContrast(light, ON_SURFACE_INKS),
 })
 
 const greyShades: GreyShades = {
@@ -179,8 +206,8 @@ export const SCHEME_META: SchemeMeta[] = [
   {
     id: 'kaze',
     name: 'Kaze',
-    description: 'クールティール系',
-    preview: '#0EADB8',
+    description: 'クールブルー系',
+    preview: BRAND_BLUE,
   },
   // monotone: 実装済みだがUI調整中のため非表示。有効化する場合は下記を解除
   // { id: 'monotone', name: 'Monotone', description: '低彩度ニュートラル', preview: '#1a1a1e' },
@@ -208,7 +235,8 @@ interface SchemeEnv {
 
 /** ライトテーマのベースセマンティックカラー(スキーム共通) */
 const lightSemanticColors = {
-  primary: createColorSet('#0EADB8', '#0A8A94', '#3CC0C8', '@@lighter@@'),
+  // ロゴと同じ青。dark は前景・hover 用に落とした段、light は面の淡い段
+  primary: createColorSet(BRAND_BLUE, '#00458F', '#3D82D2', '@@lighter@@'),
   secondary: createColorSet('#696881', '#424242', '#757575', '@@lighter@@'),
   // success/info/warning/error は固有のlighterを持つ（スキーム色で上書きしない）
   success: createColorSet('#46ab4a', '#3f7f42', '#6db770', '#e8f5e9'),
@@ -249,9 +277,9 @@ const lightSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#7c6c9a', dark: '#3d2d5e', disabled: '#d0c4e0' },
     divider: 'rgba(100, 60, 160, 0.10)',
   },
-  // Kaze Light: クールティール系(現行デフォルト)
+  // Kaze Light: クールブルー系(現行デフォルト)
   kaze: {
-    lighter: '#b0dfe3',
+    lighter: '#c2d9f2',
     background: { default: '#f8fafc', paper: '#ffffff' },
     text: {
       primary: '#1a1a2e',
@@ -338,74 +366,44 @@ const darkSemanticBase = {
   // 色相・彩度を保ったまま明度だけ上げた
   secondary: createColorSet('#a0a0b8', '#8080a0', '#b4b4c8', '@@lighter@@'),
   // success/info/warning/error は固有のlighterを持つ（Alert背景等で使用）
-  success: createColorSet(
-    '#6dce72',
-    '#52b856',
-    '#90dd94',
-    '#1a3a1a',
-    undefined,
-    '#1a2e1a'
-  ),
-  info: createColorSet(
-    '#4dd4e6',
-    '#30c0d4',
-    '#78e0ee',
-    '#0d2a30',
-    undefined,
-    '#0d2528'
-  ),
-  warning: createColorSet(
-    '#f0a050',
-    '#e08c38',
-    '#f5b878',
-    '#2d2010',
-    undefined,
-    '#2d1f0d'
-  ),
+  success: createColorSet('#6dce72', '#52b856', '#90dd94', '#1a3a1a', {
+    contrastText: '#1a2e1a',
+  }),
+  info: createColorSet('#4dd4e6', '#30c0d4', '#78e0ee', '#0d2a30', {
+    contrastText: '#0d2528',
+  }),
+  warning: createColorSet('#f0a050', '#e08c38', '#f5b878', '#2d2010', {
+    contrastText: '#2d1f0d',
+  }),
   error: createColorSet(
     // Dracula の paper 上で 3.92:1 だったため明度を上げた
     '#f18282',
     '#e05050',
     '#f59090',
     '#2d1515',
-    undefined,
-    '#2d1515'
+    { contrastText: '#2d1515' }
   ),
 }
 
-// スキーム別プライマリカラー（全スキームでティール系を共有）
-// Dracula: 紫灰背景に映えるやや彩度高めのティール
-// Kaze: Zinc背景に合うスタンダードティール
-// Monotone: 低彩度背景に合う落ち着いたティール
+// スキーム別プライマリカラー（全スキームで青系を共有）
+// ライトの #0057B8 は暗い面では沈むため、色相を保ったまま明度を上げた段を使う。
+// Dracula: 紫灰背景に馴染むやや紫寄りの青
+// Kaze: Zinc背景に合うニュートラルな青
+// Monotone: 低彩度背景に合う彩度を落とした青
 const darkSchemePrimaryMap: Record<ColorScheme, ColorSet> = {
-  dracula: createColorSet(
-    '#50D8D8',
-    '#38C0C0',
-    '#7AE8E8',
-    '@@lighter@@',
-    undefined,
-    '#1a2e2e'
-  ),
-  kaze: createColorSet(
-    '#4DD8E0',
-    '#2CB8C2',
-    '#7AE6EC',
-    '@@lighter@@',
-    undefined,
-    '#0c2628'
-  ),
-  monotone: createColorSet(
-    '#68C8CC',
-    '#50B0B4',
-    '#90D8DC',
-    '@@lighter@@',
-    undefined,
-    '#1a2e2e'
-  ),
+  dracula: createColorSet('#7FA8F8', '#5E8CE8', '#A6C4FB', '@@lighter@@', {
+    contrastText: '#101a33',
+  }),
+  kaze: createColorSet('#5AA9FF', '#3B8CE8', '#8CC4FF', '@@lighter@@', {
+    contrastText: '#06182e',
+  }),
+  monotone: createColorSet('#86ADD9', '#688FBC', '#A8C6E6', '@@lighter@@', {
+    contrastText: '#121b28',
+  }),
 }
 
 const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
-  // Dracula: 紫灰がかった暗い背景 + ティールアクセント
+  // Dracula: 紫灰がかった暗い背景 + ブルーアクセント
   dracula: {
     lighter: '#44475A',
     background: { default: '#282A36', paper: '#343746' },
@@ -426,9 +424,9 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     icon: { light: '#6272A4', dark: '#F8F8F2', disabled: '#44475A' },
     divider: 'rgba(98, 114, 164, 0.15)',
   },
-  // Kaze: Zinc系ニュートラル + ティールプライマリ
+  // Kaze: Zinc系ニュートラル + ブループライマリ
   kaze: {
-    lighter: '#1a3a3e',
+    lighter: '#152a44',
     background: { default: '#18181b', paper: '#27272a' },
     text: { primary: '#e4e4e7', secondary: '#a1a1aa', disabled: '#71717a' },
     action: {
@@ -453,7 +451,7 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     text: { primary: '#d0d0d4', secondary: '#8c8f97', disabled: '#606068' },
     action: {
       hover: 'rgba(255, 255, 255, 0.04)',
-      selected: 'rgba(104, 200, 204, 0.12)',
+      selected: 'rgba(134, 173, 217, 0.12)',
       disabled: 'rgba(255, 255, 255, 0.26)',
       active: 'rgba(255, 255, 255, 0.54)',
     },

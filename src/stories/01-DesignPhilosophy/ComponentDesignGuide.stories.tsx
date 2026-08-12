@@ -326,7 +326,7 @@ const PrinciplesContent = () => {
       color: 'primary' as const,
       summary: '一箇所を直せば全部直る仕組み',
       detail:
-        'トークンやマスターコンポーネントを介して変更を集約する。色=#0EADB8ではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
+        'トークンやマスターコンポーネントを介して変更を集約する。色=#0057B8ではなくprimary.mainで参照すれば、トークン変更だけで全UIが更新される。',
       example:
         'Figmaの色指定 → トークン名(primary.main)で指定し、カラーコード直書きを避ける',
     },

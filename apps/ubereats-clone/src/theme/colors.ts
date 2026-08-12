@@ -2,6 +2,7 @@
  * UberEats Clone ブランドカラー定数
  * Uber Eats Japan のデザインに準拠
  */
+import { ON_SURFACE_INKS } from '@/themes/colorToken'
 import { bestContrast } from '@/themes/contrast'
 
 export const UE_GREEN = '#06C167'
@@ -17,4 +18,4 @@ export const UE_STAR = '#fbbf24'
  * ブランドグリーンは明るく、白文字だと 2.38:1 しか出ない。ブランド色は
  * 変えられないため、文字側を実測で決める（墨なら 8:1 前後）。
  */
-export const UE_ON_GREEN = bestContrast(UE_GREEN, ['#ffffff', '#0A0A0A'])
+export const UE_ON_GREEN = bestContrast(UE_GREEN, ON_SURFACE_INKS)

@@ -30,7 +30,7 @@ const DesignPhilosophyOverview = () => {
     values: [
       {
         title: '信頼感',
-        color: '#0EADB8',
+        color: 'primary.textContrast',
         attributes: ['安心感', '分かりやすさ', '高品質', '責任感', '現場目線'],
       },
       {

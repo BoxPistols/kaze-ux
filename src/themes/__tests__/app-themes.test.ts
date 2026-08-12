@@ -72,6 +72,8 @@ describe('プロダクトテーマがエレベーション体系を継承して�
   }
 
   it('ダークのプロダクトテーマにリムライトが乗っている', () => {
+    // モードで絞り込む形なので、対象が消えるとアサーション 0 件で成功する
+    expect.hasAssertions()
     for (const [name, t, mode] of brandThemes) {
       if (mode !== 'dark') continue
       expect(t.shadows[elevation.raised], name).toContain('inset')
@@ -79,6 +81,7 @@ describe('プロダクトテーマがエレベーション体系を継承して�
   })
 
   it('ライトのプロダクトテーマは寒色ニュートラルの影を使う', () => {
+    expect.hasAssertions()
     for (const [name, t, mode] of brandThemes) {
       if (mode !== 'light') continue
       expect(t.shadows[elevation.raised], name).toContain('rgba(15, 23, 42,')
@@ -88,7 +91,11 @@ describe('プロダクトテーマがエレベーション体系を継承して�
 
 describe('ブランド差し替えが目的どおり効いている', () => {
   it('sky-kaze は primary をロジ・オレンジに差し替える', () => {
-    expect(logiLightTheme.palette.primary.main).not.toBe('#0EADB8')
+    // ブランド色をハードコードすると、Kaze 側の primary を変えたときに
+    // 差し替えの検証にならないまま通過する
+    expect(logiLightTheme.palette.primary.main).not.toBe(
+      theme.palette.primary.main
+    )
     expect(logiLightTheme.palette.logiOrange.main).toBeTruthy()
   })
 

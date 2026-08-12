@@ -286,8 +286,11 @@ const Typographies = () => {
             から算出。32px は約 -0.022em、10px は約 +0.010em になります。
           </Typography>
           <Typography variant='body2'>
-            <b>行送り</b>: display帯 (24px以上) は 1.2、見出し帯 (16-22px) は
-            1.3、小見出し帯 (14px以下) は 1.4、本文は 1.6。
+            <b>行送り</b>: 同じサイズでも variant で異なります。displayLarge /
+            displayMedium / displaySmall は 1.2、h1-h4 と xxl は 1.3、h5 / h6 は
+            1.4。本文の body1 (14px) / body2 (12px) は 1.6
+            ですが、同じサイズ帯の md / sm / xs は 1.4 です。読み物か UI
+            ラベルかで使い分けます。
           </Typography>
           <Typography variant='body2'>
             <b>ウェイト</b>: display帯は 600 (semibold)。大きい文字で 700

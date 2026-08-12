@@ -44,11 +44,17 @@ export {
   LOGO_CLEAR_SPACE_RATIO,
   LOGO_GRID,
   LOGO_MIN_SIZE,
+  LOGO_PRODUCTS,
   LOGO_PROHIBITIONS,
   LOGO_TONES,
   LOGO_VARIANTS,
 } from './components/ui/logo'
-export type { KazeLogoProps, LogoTone, LogoVariant } from './components/ui/logo'
+export type {
+  KazeLogoProps,
+  LogoProduct,
+  LogoTone,
+  LogoVariant,
+} from './components/ui/logo'
 export type { AppTheme } from './types/theme'
 export {
   CONTRAST_THRESHOLD,
@@ -56,6 +62,7 @@ export {
   contrastLevel,
   contrastRatio,
   contrastRatioOf,
+  ensureContrast,
   pickReadable,
 } from './themes/contrast'
 export { createShadows, elevation } from './themes/elevation'

@@ -324,51 +324,49 @@ const ProhibitionsContent = () => (
       ))}
     </Grid>
 
-    <Section title='' description=''>
-      <Box sx={{ mt: 6 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
-          やってはいけない例
-        </Typography>
-        <Grid container spacing={4}>
-          {(
+    <Box sx={{ mt: 6 }}>
+      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        やってはいけない例
+      </Typography>
+      <Grid container spacing={4}>
+        {(
+          [
+            ['縦横比を変える', { transform: 'scaleX(1.6)' }],
+            ['回転させる', { transform: 'rotate(-15deg)' }],
             [
-              ['縦横比を変える', { transform: 'scaleX(1.6)' }],
-              ['回転させる', { transform: 'rotate(-15deg)' }],
-              [
-                '影を加える',
-                { filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' },
-              ],
-              ['背景に埋没させる', { opacity: 0.25 }],
-            ] as const
-          ).map(([label, style]) => (
-            <Grid key={label} size={{ xs: 6, md: 3 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: 120,
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'error.main',
-                  mb: 1,
-                  overflow: 'hidden',
-                }}>
-                <Box sx={style} aria-hidden>
-                  <KazeLogo size={56} title='' />
-                </Box>
+              '影を加える',
+              { filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' },
+            ],
+            ['背景に埋没させる', { opacity: 0.25 }],
+          ] as const
+        ).map(([label, style]) => (
+          <Grid key={label} size={{ xs: 6, md: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 120,
+                bgcolor: 'action.hover',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'error.main',
+                mb: 1,
+                overflow: 'hidden',
+              }}>
+              <Box sx={style} aria-hidden>
+                <KazeLogo size={56} title='' />
               </Box>
-              <Typography
-                variant='caption'
-                sx={{ color: 'error.textContrast', fontWeight: 600 }}>
-                × {label}
-              </Typography>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    </Section>
+            </Box>
+            <Typography
+              variant='caption'
+              sx={{ color: 'error.textContrast', fontWeight: 600 }}>
+              × {label}
+            </Typography>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   </Box>
 )
 

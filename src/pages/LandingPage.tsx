@@ -767,13 +767,12 @@ export const LandingPage = () => {
                     sx={{
                       width: 48,
                       height: 48,
-                      borderRadius: 3,
-                      background:
-                        'linear-gradient(135deg, #0EADB8 0%, #0A8A94 100%)',
+                      // favicon と同じロックアップ。単色の正方形に白のシンボル。
+                      // グラデーション・角丸・色付きの光彩はレギュレーションで排す
+                      bgcolor: 'primary.main',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 4px 20px rgba(14,173,184,0.3)',
                     }}>
                     <KazeLogo size={28} tone='inverse' title='' />
                   </Box>

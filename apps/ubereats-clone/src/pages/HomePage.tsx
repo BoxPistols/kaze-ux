@@ -16,7 +16,7 @@ import { elevation } from '@/themes/elevation'
 import { motionOf } from '@/themes/motion'
 
 import { restaurants, categories } from '~/data/restaurants'
-import { UE_GREEN, UE_GREEN_DARK, UE_STAR } from '~/theme/colors'
+import { UE_GREEN, UE_GREEN_DARK, UE_ON_GREEN, UE_STAR } from '~/theme/colors'
 import { formatPrice } from '~/utils/format'
 
 export const HomePage = () => {

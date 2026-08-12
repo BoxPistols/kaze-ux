@@ -118,7 +118,16 @@ const Symbol = ({
   )
 }
 
-const Wordmark = ({ size, tone }: { size: number; tone: LogoTone }) => {
+const Wordmark = ({
+  size,
+  tone,
+  hidden,
+}: {
+  size: number
+  tone: LogoTone
+  /** シンボルが名前を持つ場合、ワードマークは読み上げを重複させる */
+  hidden?: boolean
+}) => {
   const theme = useTheme()
 
   const color =
@@ -131,6 +140,7 @@ const Wordmark = ({ size, tone }: { size: number; tone: LogoTone }) => {
   return (
     <Box
       component='span'
+      aria-hidden={hidden || undefined}
       sx={{
         color,
         // シンボルの主線と光学的に揃うよう、グリッドに対する比で決める
@@ -180,6 +190,8 @@ export const KazeLogo = ({
 
   return (
     <Box
+      // title='' は「装飾」の意思表示。シンボルだけでなくワードマークも隠す
+      aria-hidden={title === '' || undefined}
       sx={[
         {
           display: 'inline-flex',
@@ -198,7 +210,12 @@ export const KazeLogo = ({
         />
       )}
       {variant !== 'symbol' && (
-        <Wordmark size={resolvedSize} tone={resolvedTone} />
+        <Wordmark
+          size={resolvedSize}
+          tone={resolvedTone}
+          // horizontal ではシンボルの aria-label が名前を提供する
+          hidden={variant === 'horizontal'}
+        />
       )}
     </Box>
   )
