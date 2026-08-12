@@ -9,6 +9,11 @@ import eslintPluginTailwindCSS from 'eslint-plugin-tailwindcss'
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
+import {
+  DS_EQUIVALENT,
+  RESTRICTED_MUI_IMPORTS,
+} from './scripts/ds-equivalents.mjs'
+
 export default tseslint.config({
   ignores: [
     '**/node_modules',
@@ -202,6 +207,30 @@ export default tseslint.config({
       }
     ],
     ...eslintPluginReactHooks.configs.recommended.rules,
+  },
+}, {
+  // プロダクト側から MUI を直に取らせない（DS に同等品があるものだけ）
+  //
+  // 対象はアプリと LP だけ。DS 本体 (src/components) は MUI を包む側なので
+  // 当然 MUI を import する。Storybook の story も比較のために直に使う。
+  //
+  // 一覧は scripts/ds-equivalents.mjs が単一ソース。計測 (pnpm ds:adoption)
+  // と同じ表を見るので、片方だけ更新されて食い違うことがない。
+  name: 'kaze/ds-first',
+  files: ['apps/*/src/**/*.{ts,tsx}', 'src/pages/**/*.{ts,tsx}'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        // 名前ごとに 1 エントリにする。まとめて 1 つの message にすると
+        // 対応表 20 件分が毎回出て、肝心の置き換え先が読み取れない
+        paths: RESTRICTED_MUI_IMPORTS.map((name) => ({
+          name: '@mui/material',
+          importNames: [name],
+          message: `DS の ${DS_EQUIVALENT[name]} を使ってください。レイアウト原始要素 (Box / Grid / Stack / Typography 等) は対象外です。`,
+        })),
+      },
+    ],
   },
 }, {
   name: 'eslint-config-prettier',
