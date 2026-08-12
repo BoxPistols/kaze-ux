@@ -38,6 +38,7 @@ import {
   SHORTCUT_METADATA,
   formatShortcutLabel,
 } from '../chatSupportConstants'
+import { DAILY_LIMIT, remainingUses } from '../dailyUsageLimit'
 
 import type { ChatSupportConfig, ShortcutActionId } from '../chatSupportTypes'
 
@@ -77,6 +78,8 @@ export const ChatSettings = ({
   onResetApiKey,
 }: ChatSettingsProps) => {
   const theme = useTheme()
+  // 設定パネルを開いた時点の値。送信のたびに更新する必要はない
+  const remaining = remainingUses()
 
   return (
     <Box sx={{ p: 3, flexGrow: 1, overflowY: 'auto' }}>
@@ -115,6 +118,20 @@ export const ChatSettings = ({
                     AI対話モード
                   </Typography>
                 </Stack>
+                {/* 残りが尽きてから初めて知る形にしない。
+                    自分のキーを登録する動機もここで示す */}
+                <Typography
+                  variant='caption'
+                  color={remaining === 0 ? 'warning.main' : 'text.secondary'}
+                  sx={{ display: 'block', mt: 0.5, lineHeight: 1.6 }}>
+                  {/* JSX の改行は半角スペースになる。日本語の文中で折ると
+                      「変わると リセット」のように空きが入るため 1 式にする */}
+                  {`本日の残り ${remaining} / ${DAILY_LIMIT} 回（日付が変わるとリセット）${
+                    remaining === 0
+                      ? '。自分のAPIキーを登録すると制限なしで使えます'
+                      : ''
+                  }`}
+                </Typography>
               </>
             ) : (
               <>

@@ -10,6 +10,12 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import { callAI, extractContent } from '../chatAiService'
 import { DEFAULT_API_KEY, SYSTEM_PROMPT } from '../chatSupportConstants'
 import {
+  consumeUse,
+  isLimitReached,
+  isUsingDefaultKey,
+  limitReachedMessage,
+} from '../dailyUsageLimit'
+import {
   buildSemanticContext,
   findSemanticFaqAnswer,
   getEmbeddingIndex,
@@ -177,6 +183,28 @@ export const useChatMessage = ({
     [addBotMessage, buildPageContextAnswer]
   )
 
+  /**
+   * デフォルトキーの日次上限に達しているか。
+   *
+   * 到達していたら AI を呼ばず、案内文と FAQ 回答を 1 通で返す。
+   * 「送っても何も起きない」状態にはしない。
+   */
+  const blockedByDailyLimit = useCallback(
+    (query: string): boolean => {
+      if (!isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) return false
+      if (!isLimitReached()) return false
+
+      const faqAnswer = findFaqAnswer(query)
+      addBotMessage(
+        faqAnswer
+          ? `${limitReachedMessage()}\n\n---\n\nFAQ から回答します:\n\n${trimFaqAnswer(faqAnswer)}`
+          : limitReachedMessage()
+      )
+      return true
+    },
+    [config.apiKey, addBotMessage]
+  )
+
   const handleDownload = useCallback(() => {
     const lines = [
       '# Concierge - チャット履歴',
@@ -221,6 +249,11 @@ export const useChatMessage = ({
         respondWithFaq(userText)
         return
       }
+      if (blockedByDailyLimit(userText)) return
+
+      // API を呼ぶ直前に数える。成功時だけ数えると、失敗が返り続ける
+      // 状況で上限が効かず、コストを抑えるという目的を果たせない
+      if (isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) consumeUse()
 
       setIsTyping(true)
       try {
@@ -271,6 +304,7 @@ export const useChatMessage = ({
       contextualPrompt,
       addBotMessage,
       respondWithFaq,
+      blockedByDailyLimit,
     ]
   )
 
@@ -289,6 +323,8 @@ export const useChatMessage = ({
         respondWithFaq(query)
         return
       }
+      if (blockedByDailyLimit(query)) return
+      if (isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) consumeUse()
 
       setIsTyping(true)
       semanticSearch(config.apiKey, query)
@@ -337,6 +373,7 @@ export const useChatMessage = ({
       contextualPrompt,
       addBotMessage,
       respondWithFaq,
+      blockedByDailyLimit,
     ]
   )
 
