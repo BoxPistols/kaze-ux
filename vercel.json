@@ -1,10 +1,22 @@
 {
   "buildCommand": "node scripts/vercel-build.mjs",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/ubereats",
+      "destination": "/kaze-eats/",
+      "permanent": true
+    },
+    {
+      "source": "/ubereats/:path*",
+      "destination": "/kaze-eats/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/storybook/(.*)", "destination": "/storybook/$1" },
     { "source": "/saas/(.*)", "destination": "/saas/$1" },
-    { "source": "/ubereats/(.*)", "destination": "/ubereats/$1" },
+    { "source": "/kaze-eats/(.*)", "destination": "/kaze-eats/$1" },
     { "source": "/sky-kaze/(.*)", "destination": "/sky-kaze/$1" }
   ]
 }

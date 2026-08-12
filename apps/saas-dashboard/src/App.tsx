@@ -151,10 +151,10 @@ const menuItems: SidebarMenuItem[] = [
     description: '配送監視',
   },
   {
-    id: 'ubereats',
+    id: 'kaze-eats',
     label: 'KazeEats',
     icon: <RestaurantIcon />,
-    href: APP_LINKS.ubereats(),
+    href: APP_LINKS.kazeEats(),
     category: 'APPS',
     description: 'フードデリバリー',
   },

@@ -133,7 +133,7 @@ kaze-ux/
 │   └── assets/                  静的アセット
 ├── apps/                        デモアプリケーション
 │   ├── saas-dashboard/          SaaS Dashboard (CRUD, DataGrid, Calendar, Map)
-│   ├── ubereats-clone/          KazeEats (レストラン検索, カート, 注文)
+│   ├── kaze-eats/          KazeEats (レストラン検索, カート, 注文)
 │   └── sky-kaze/                KazeLogistics (配送監視, リアルタイム地図)
 ├── packages/
 │   └── system-design-export/    CLI: テーマ → W3C DTCG トークン変換
@@ -357,7 +357,7 @@ CRUD 操作、MUI DataGrid、カレンダー、マップを備えた SaaS 管理
 - Vite + React + TypeScript
 - メインライブラリのコンポーネントとテーマを共有
 
-### KazeEats (`apps/ubereats-clone/`)
+### KazeEats (`apps/kaze-eats/`)
 
 レストラン検索、カート管理、注文フローを実装したフードデリバリーアプリデモ。
 
@@ -434,7 +434,7 @@ Storybook のコンポーネント情報を MCP 経由で外部ツールに公�
 1. LP (sandbox) → dist/
 2. Storybook → dist/storybook/
 3. SaaS Dashboard → dist/saas/
-4. KazeEats → dist/ubereats/
+4. KazeEats → dist/kaze-eats/
 5. KazeLogistics → dist/sky-kaze/
 ```
 
@@ -443,7 +443,7 @@ URL リライト:
 ```json
 { "source": "/storybook/(.*)", "destination": "/storybook/$1" }
 { "source": "/saas/(.*)", "destination": "/saas/$1" }
-{ "source": "/ubereats/(.*)", "destination": "/ubereats/$1" }
+{ "source": "/kaze-eats/(.*)", "destination": "/kaze-eats/$1" }
 { "source": "/sky-kaze/(.*)", "destination": "/sky-kaze/$1" }
 ```
 
@@ -595,7 +595,7 @@ Flat config 形式。以下のプラグインを使用:
 │  /           → LP (Vite sandbox)                      │
 │  /storybook/ → Storybook 10                           │
 │  /saas/      → SaaS Dashboard                         │
-│  /ubereats/  → KazeEats                               │
+│  /kaze-eats/  → KazeEats                               │
 │  /sky-kaze/  → KazeLogistics                          │
 └─────────────────────────────────────────────────────┘
          ↑ scripts/vercel-build.mjs

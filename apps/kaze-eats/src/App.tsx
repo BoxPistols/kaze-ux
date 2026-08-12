@@ -49,12 +49,18 @@ import { keDarkTheme, keLightTheme } from '~/theme/keTheme'
 type ThemeMode = 'light' | 'dark'
 
 // hookUseTheme ではなく独自管理: KazeEats は専用テーマ (keLightTheme/keDarkTheme) を使用し、
-// localStorage キーも 'ubereats-theme' で他アプリと分離するため。
+// localStorage キーも他アプリと分離するため。
 // SaaS Dashboard は共通 ThemeProvider + CssVarsProvider を利用するが、
-// 本アプリは UE ブランドカラー専用のため独立した ThemeProvider/useState で管理する。
+// 本アプリはブランドカラー専用のため独立した ThemeProvider/useState で管理する。
+const THEME_STORAGE_KEY = 'kaze-eats-theme'
+/** 改名前のキー。読むだけで書かない（次回保存で新キーに移る） */
+const LEGACY_THEME_STORAGE_KEY = 'ubereats-theme'
+
 const getInitialMode = (): ThemeMode => {
   if (typeof window === 'undefined') return 'light'
-  const saved = localStorage.getItem('ubereats-theme')
+  const saved =
+    localStorage.getItem(THEME_STORAGE_KEY) ??
+    localStorage.getItem(LEGACY_THEME_STORAGE_KEY)
   if (saved === 'dark' || saved === 'light') return saved
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
@@ -258,7 +264,7 @@ const AppContent = ({
             </IconButton>
 
             {/* アプリ切替 */}
-            <AppSwitcher currentApp='ubereats' />
+            <AppSwitcher currentApp='kaze-eats' />
           </Box>
         </Toolbar>
       </AppBar>
@@ -326,7 +332,7 @@ const App = () => {
   const toggleMode = useCallback(() => {
     setMode((prev) => {
       const next = prev === 'dark' ? 'light' : 'dark'
-      localStorage.setItem('ubereats-theme', next)
+      localStorage.setItem(THEME_STORAGE_KEY, next)
       return next
     })
   }, [])

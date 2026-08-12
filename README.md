@@ -31,7 +31,7 @@ MUI + Tailwind CSS + Storybook で構築したデザインシステム。
 | ------------------ | --------------------------------------------------- | ------------- |
 | **Storybook**      | コンポーネントカタログ・デザインガイド・AI チャット | `/storybook/` |
 | **SaaS Dashboard** | CRUD・データテーブル・カレンダー・マップ            | `/saas/`      |
-| **KazeEats**       | レストラン検索・カート・注文フロー                  | `/ubereats/`  |
+| **KazeEats**       | レストラン検索・カート・注文フロー                  | `/kaze-eats/` |
 | **KazeLogistics**  | 配送監視・地図・リアルタイムダッシュボード          | `/sky-kaze/`  |
 
 ## Quick Start
@@ -48,7 +48,7 @@ pnpm dev:all
 # 個別アプリ起動
 pnpm dev              # LP
 pnpm dev:dashboard    # SaaS Dashboard
-pnpm dev:ubereats     # KazeEats
+pnpm dev:kaze-eats     # KazeEats
 pnpm dev:sky-kaze     # KazeLogistics
 ```
 
@@ -70,7 +70,7 @@ kaze-ux/
     utils/             ユーティリティ
   apps/
     saas-dashboard/    SaaS Dashboard アプリ
-    ubereats-clone/    KazeEats アプリ
+    kaze-eats/    KazeEats アプリ
     sky-kaze/          KazeLogistics アプリ
   packages/
     system-design-export/  CLI: テーマ → W3C DTCG トークン変換
@@ -232,7 +232,7 @@ dist/
   index.html        ← LP（sandbox モード）
   storybook/         ← Storybook
   saas/              ← SaaS Dashboard
-  ubereats/          ← KazeEats
+  kaze-eats/          ← KazeEats
   sky-kaze/          ← KazeLogistics
 ```
 

@@ -47,11 +47,11 @@ const APP_LIST: AppEntry[] = [
     getUrl: APP_LINKS.skyKaze,
   },
   {
-    id: 'ubereats',
+    id: 'kaze-eats',
     label: 'KazeEats',
     desc: 'フードデリバリー',
     icon: <RestaurantIcon />,
-    getUrl: APP_LINKS.ubereats,
+    getUrl: APP_LINKS.kazeEats,
   },
   {
     id: 'saas',

@@ -96,7 +96,7 @@ This project uses both Japanese and English:
 | テーマ/カラー変更    | + `src/themes/colorToken.ts` + `design-tokens/tokens.json`         |
 | 新コンポーネント追加 | + `foundations/prohibited.md` + `foundations/design_philosophy.md` |
 | Storybook Story 作成 | + `src/stories/` の既存 Story を参照                               |
-| プロダクト画面構築   | + `apps/saas-dashboard/` or `apps/ubereats-clone/`                 |
+| プロダクト画面構築   | + `apps/saas-dashboard/` or `apps/kaze-eats/`                      |
 
 ### 禁止パターン（要約）
 

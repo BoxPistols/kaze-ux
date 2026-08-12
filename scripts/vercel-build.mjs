@@ -7,7 +7,7 @@
  *   index.html        ← LP（sandbox モード）
  *   storybook/         ← Storybook
  *   saas/              ← SaaS Dashboard
- *   ubereats/          ← KazeEats
+ *   kaze-eats/         ← KazeEats
  *   sky-kaze/          ← KazeLogistics
  */
 
@@ -36,10 +36,10 @@ run('cd apps/saas-dashboard && VITE_BASE_PATH=/saas/ npx vite build')
 mkdirSync('dist/saas', { recursive: true })
 cpSync('apps/saas-dashboard/dist', 'dist/saas', { recursive: true })
 
-// 4. UberEats Clone → base=/ubereats/ で vite build のみ
-run('cd apps/ubereats-clone && VITE_BASE_PATH=/ubereats/ npx vite build')
-mkdirSync('dist/ubereats', { recursive: true })
-cpSync('apps/ubereats-clone/dist', 'dist/ubereats', { recursive: true })
+// 4. KazeEats → base=/kaze-eats/ で vite build のみ
+run('cd apps/kaze-eats && VITE_BASE_PATH=/kaze-eats/ npx vite build')
+mkdirSync('dist/kaze-eats', { recursive: true })
+cpSync('apps/kaze-eats/dist', 'dist/kaze-eats', { recursive: true })
 
 // 5. KazeLogistics → base=/sky-kaze/ で vite build のみ
 run('cd apps/sky-kaze && VITE_BASE_PATH=/sky-kaze/ npx vite build')
@@ -50,5 +50,5 @@ console.log('\n✅ Vercel build complete')
 console.log('  /           → LP')
 console.log('  /storybook/ → Storybook')
 console.log('  /saas/      → SaaS Dashboard')
-console.log('  /ubereats/  → KazeEats')
+console.log('  /kaze-eats/ → KazeEats')
 console.log('  /sky-kaze/  → KazeLogistics')

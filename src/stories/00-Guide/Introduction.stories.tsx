@@ -675,7 +675,7 @@ const IntroductionContent = () => {
               label: 'KazeEats',
               desc: 'フードデリバリーUI',
               icon: <RestaurantIcon />,
-              href: APP_LINKS.ubereats(),
+              href: APP_LINKS.kazeEats(),
             },
             {
               label: 'Kaze Dashboard',
