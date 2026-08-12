@@ -40,34 +40,75 @@ export default {
         // CSS Variables based colors (theme-aware)
         primary: {
           DEFAULT: 'var(--color-primary)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-primary-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-primary)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-primary-ink)',
           foreground: 'var(--color-primary-foreground)',
           light: 'var(--color-primary-light)',
           dark: 'var(--color-primary-dark)',
         },
         secondary: {
           DEFAULT: 'var(--color-secondary)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-secondary-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-secondary)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-secondary-ink)',
+          dark: 'var(--color-secondary-dark)',
           foreground: 'var(--color-secondary-foreground)',
         },
         success: {
           DEFAULT: 'var(--color-success)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-success-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-success)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-success-ink)',
+          dark: 'var(--color-success-dark)',
           foreground: 'var(--color-success-foreground)',
           light: 'var(--color-success-light)',
           border: 'var(--color-success-border)',
         },
         error: {
           DEFAULT: 'var(--color-error)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-error-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-error)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-error-ink)',
+          dark: 'var(--color-error-dark)',
           foreground: 'var(--color-error-foreground)',
           light: 'var(--color-error-light)',
           border: 'var(--color-error-border)',
         },
         warning: {
           DEFAULT: 'var(--color-warning)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-warning-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-warning)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-warning-ink)',
+          dark: 'var(--color-warning-dark)',
           foreground: 'var(--color-warning-foreground)',
           light: 'var(--color-warning-light)',
           border: 'var(--color-warning-border)',
         },
         info: {
           DEFAULT: 'var(--color-info)',
+          // MUI の palette と同じ名前でも引けるようにする。
+          // CVA コンポーネントは bg-info-main と書いており、
+          // DEFAULT だけでは解決せず背景が一切当たらなかった
+          main: 'var(--color-info)',
+          // 文字・アイコン用。面用の main とは別の段
+          ink: 'var(--color-info-ink)',
+          dark: 'var(--color-info-dark)',
           foreground: 'var(--color-info-foreground)',
           light: 'var(--color-info-light)',
           border: 'var(--color-info-border)',

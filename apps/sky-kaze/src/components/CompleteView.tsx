@@ -29,7 +29,7 @@ import {
   INCIDENT_LABELS,
   INCIDENT_COLORS,
 } from '~/data/simulation'
-import { LOGI_ORANGE } from '~/theme/colors'
+import { LOGI_ORANGE, logiForegroundLarge } from '~/theme/colors'
 
 // メモ用の型
 interface ShipmentNote {
@@ -162,7 +162,10 @@ export const CompleteView = () => {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
                       fontSize: '36px',
-                      color: kpi.color,
+                      // 36px は WCAG の「大きい文字」。ブランド色のままでは
+                      // 白地で 3:1 に届かないため明度だけ寄せる
+                      color: (t) =>
+                        logiForegroundLarge(kpi.color, t.palette.mode),
                       lineHeight: 1,
                       mb: 0.75,
                     }}>
@@ -295,7 +298,7 @@ export const CompleteView = () => {
                       {driverIncidents.length > 0 && (
                         <Box
                           component='span'
-                          sx={{ color: 'error.main', ml: 1 }}>
+                          sx={{ color: 'error.textContrast', ml: 1 }}>
                           異常 {driverIncidents.length}件
                         </Box>
                       )}
@@ -380,7 +383,10 @@ export const CompleteView = () => {
                             }}>
                             {inc.resolved ? (
                               <CheckCircleIcon
-                                sx={{ fontSize: 18, color: 'success.main' }}
+                                sx={{
+                                  fontSize: 18,
+                                  color: 'success.textContrast',
+                                }}
                               />
                             ) : (
                               <ErrorOutlineIcon sx={{ fontSize: 18, color }} />
@@ -540,7 +546,7 @@ export const CompleteView = () => {
                           display: 'block',
                           fontSize: '13px',
                           mt: 0.5,
-                          color: 'info.main',
+                          color: 'info.textContrast',
                           fontStyle: 'italic',
                         }}>
                         メモ: {note.note}
@@ -591,7 +597,7 @@ export const CompleteView = () => {
                       size='small'
                       disabled={isInvoiced}
                       onClick={() => handleInvoice(s.id)}
-                      sx={isInvoiced ? { color: 'success.main' } : {}}>
+                      sx={isInvoiced ? { color: 'success.textContrast' } : {}}>
                       <DescriptionIcon sx={{ fontSize: 16 }} />
                     </IconButton>
                   </Box>

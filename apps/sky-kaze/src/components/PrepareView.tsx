@@ -44,8 +44,14 @@ import {
   type Shipment,
 } from '~/data/logistics'
 import { useSimulation } from '~/data/simulation'
-import { LOGI_ORANGE } from '~/theme/colors'
-import { readableStatusColor } from '~/utils/readableStatusColor'
+import {
+  LOGI_ORANGE,
+  logiForeground,
+  logiForegroundLarge,
+} from '~/theme/colors'
+import {
+  readableOnTint,
+} from '~/utils/readableStatusColor'
 
 interface CheckItem {
   id: string
@@ -228,7 +234,10 @@ export const PrepareView = () => {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 800,
                       fontSize: '36px',
-                      color: kpi.color,
+                      // 36px は WCAG の「大きい文字」。ブランド色のまま白地に
+                      // 置くと 2.15〜2.8:1 しか出ないため、明度だけ寄せる
+                      color: (t) =>
+                        logiForegroundLarge(kpi.color, t.palette.mode),
                       lineHeight: 1,
                       mb: 1.5,
                     }}>
@@ -392,7 +401,8 @@ export const PrepareView = () => {
                           fontFamily: "'JetBrains Mono', monospace",
                           fontWeight: 700,
                           fontSize: '14px',
-                          color: LOGI_ORANGE,
+                          color: (t) =>
+                            logiForeground(LOGI_ORANGE, t.palette.mode),
                         }}>
                         {s.trackingNo}
                       </Typography>
@@ -430,10 +440,12 @@ export const PrepareView = () => {
                       size='small'
                       sx={{
                         bgcolor: alpha(STATUS_COLORS[s.status], 0.12),
+                        // Chip は面に自身の色を 12% 敷く。パネル基準で測ると
+                        // その分ずれるので、実際に描かれる面を合成して測る
                         color: (theme) =>
-                          readableStatusColor(
+                          readableOnTint(
                             STATUS_COLORS[s.status],
-                            theme.palette.mode
+                            theme.palette.background.paper
                           ),
                         fontWeight: 600,
                         justifySelf: 'start',
@@ -532,7 +544,10 @@ export const PrepareView = () => {
                           }}>
                           {done ? (
                             <CheckCircleIcon
-                              sx={{ fontSize: 22, color: 'success.main' }}
+                              sx={{
+                                fontSize: 22,
+                                color: 'success.textContrast',
+                              }}
                             />
                           ) : (
                             <RadioButtonUncheckedIcon

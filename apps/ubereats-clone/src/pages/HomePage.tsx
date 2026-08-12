@@ -216,8 +216,11 @@ export const HomePage = () => {
                         left: 0,
                         right: 0,
                         height: '50%',
+                        // 写真の明るさは制御できない。最悪ケース（白い写真）
+                        // でも上に乗る文字が基準を満たす濃さにする。
+                        // 0.6 だと半透明の副次テキストが 4.07:1 まで落ちた
                         background:
-                          'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
+                          'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
                       }}
                     />
                     <Box
@@ -255,7 +258,7 @@ export const HomePage = () => {
                       </Typography>
                       <Typography
                         variant='body2'
-                        sx={{ color: 'rgba(255,255,255,0.75)' }}>
+                        sx={{ color: 'rgba(255,255,255,0.85)' }}>
                         ({r.reviewCount}+)
                       </Typography>
                     </Box>

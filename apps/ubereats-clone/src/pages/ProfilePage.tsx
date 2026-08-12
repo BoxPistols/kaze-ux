@@ -29,13 +29,13 @@ const orderStats = [
     label: 'Deliveries',
     value: '42',
     icon: <LocalShippingIcon aria-hidden='true' />,
-    color: 'success.main',
+    color: 'success.textContrast',
   },
   {
     label: 'Avg Rating',
     value: '4.8',
     icon: <StarIcon aria-hidden='true' />,
-    color: 'warning.main',
+    color: 'warning.textContrast',
   },
 ]
 

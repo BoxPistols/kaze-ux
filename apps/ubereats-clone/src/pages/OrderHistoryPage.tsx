@@ -219,7 +219,7 @@ export const OrderHistoryPage = () => {
                   height: 44,
                   borderRadius: 2,
                   bgcolor: (theme) => alpha(theme.palette.success.main, 0.08),
-                  color: 'success.main',
+                  color: 'success.textContrast',
                   flexShrink: 0,
                 }}>
                 <Typography
@@ -253,7 +253,7 @@ export const OrderHistoryPage = () => {
                   height: 44,
                   borderRadius: 2,
                   bgcolor: (theme) => alpha(theme.palette.warning.main, 0.08),
-                  color: 'warning.main',
+                  color: 'warning.textContrast',
                   flexShrink: 0,
                 }}>
                 <LocalShippingIcon fontSize='small' aria-hidden='true' />

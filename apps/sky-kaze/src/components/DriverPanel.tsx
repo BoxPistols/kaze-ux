@@ -44,7 +44,9 @@ import {
 } from '~/data/simulation'
 import { LOGI_ORANGE } from '~/theme/colors'
 import { floatingPanelSx, floatingPanelEmphasizedSx } from '~/utils/panelStyles'
-import { readableStatusColor } from '~/utils/readableStatusColor'
+import {
+  readableOnTint,
+} from '~/utils/readableStatusColor'
 
 const formatEta = (seconds: number | null): string => {
   if (seconds === null) return '--:--'
@@ -512,10 +514,11 @@ export const DriverPanel = () => {
                 fontSize: '13px',
                 fontWeight: 700,
                 bgcolor: alpha(STATUS_COLORS[shipment.status], 0.12),
+                // Chip は面に自身の色を 12% 敷く。実際に描かれる面で測る
                 color: (theme) =>
-                  readableStatusColor(
+                  readableOnTint(
                     STATUS_COLORS[shipment.status],
-                    theme.palette.mode
+                    theme.palette.background.paper
                   ),
               }}
             />

@@ -34,22 +34,22 @@ const kpiIconConfig: Record<
   projects: {
     icon: <FolderIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(38, 66, 190, 0.08)',
-    color: 'primary.main',
+    color: 'primary.textContrast',
   },
   contacts: {
     icon: <ContactsIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(29, 175, 194, 0.08)',
-    color: 'info.main',
+    color: 'info.textContrast',
   },
   revenue: {
     icon: <AttachMoneyIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(70, 171, 74, 0.08)',
-    color: 'success.main',
+    color: 'success.textContrast',
   },
   tasks: {
     icon: <TaskAltIcon fontSize='small' aria-hidden='true' />,
     bgColor: 'rgba(235, 129, 23, 0.08)',
-    color: 'warning.main',
+    color: 'warning.textContrast',
   },
 }
 
@@ -70,12 +70,14 @@ const activityTypeColors: Record<string, string> = {
   system: 'default',
 }
 
+// ドットは非テキストの UI 部品なので 3:1 が要る。main は面のための色で、
+// 淡い背景に置くと届かない（success #46ab4a は 2.71:1）
 const activityDotColors: Record<string, string> = {
-  project: 'primary.main',
-  task: 'success.main',
-  contact: 'info.main',
-  invoice: 'warning.main',
-  team: 'secondary.main',
+  project: 'primary.textContrast',
+  task: 'success.textContrast',
+  contact: 'info.textContrast',
+  invoice: 'warning.textContrast',
+  team: 'secondary.textContrast',
   system: 'text.disabled',
 }
 
@@ -157,12 +159,12 @@ export const DashboardPage = () => {
                         }}>
                         {kpi.change > 0 ? (
                           <TrendingUpIcon
-                            sx={{ fontSize: 16, color: 'success.main' }}
+                            sx={{ fontSize: 16, color: 'success.textContrast' }}
                             aria-hidden='true'
                           />
                         ) : (
                           <TrendingDownIcon
-                            sx={{ fontSize: 16, color: 'error.main' }}
+                            sx={{ fontSize: 16, color: 'error.textContrast' }}
                             aria-hidden='true'
                           />
                         )}
@@ -170,7 +172,9 @@ export const DashboardPage = () => {
                           variant='caption'
                           sx={{
                             color:
-                              kpi.change > 0 ? 'success.main' : 'error.main',
+                              kpi.change > 0
+                                ? 'success.textContrast'
+                                : 'error.textContrast',
                             fontWeight: 600,
                           }}>
                           {kpi.change > 0 ? '+' : ''}
@@ -224,7 +228,7 @@ export const DashboardPage = () => {
                   href='/projects'
                   variant='caption'
                   sx={{
-                    color: 'primary.main',
+                    color: 'primary.textContrast',
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'none',

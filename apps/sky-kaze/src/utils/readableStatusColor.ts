@@ -76,3 +76,28 @@ export const PANEL_BACKGROUNDS = {
     ),
   },
 } as const
+
+const tintCache = new Map<string, string>()
+
+/**
+ * 淡く色を敷いた面（Chip の `alpha(color, 0.12)` など）に置く文字色。
+ *
+ * `readableStatusColor` はフローティングパネルの面を基準にする。
+ * Chip はその上にさらに自身の色を薄く敷くので、基準が一段ずれる。
+ * 実際に描かれる面を合成してから測らないと、4.0:1 前後で止まる。
+ */
+export const readableOnTint = (
+  color: string,
+  surface: string,
+  tintAlpha = 0.12
+): string => {
+  const key = `${surface}:${tintAlpha}:${color}`
+  const hit = tintCache.get(key)
+  if (hit !== undefined) return hit
+  const tinted = toHex(
+    composite({ ...parseColor(color), a: tintAlpha }, parseColor(surface))
+  )
+  const value = ensureContrast(color, tinted)
+  tintCache.set(key, value)
+  return value
+}

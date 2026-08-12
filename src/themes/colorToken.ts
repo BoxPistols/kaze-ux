@@ -1,6 +1,6 @@
 import { amber, blue, pink } from '@mui/material/colors'
 
-import { bestContrast, ensureContrast } from './contrast'
+import { CONTRAST_THRESHOLD, bestContrast, ensureContrast } from './contrast'
 import { focusRingColor } from './focus'
 
 export interface ColorSet {
@@ -130,6 +130,19 @@ export const foregroundVariant = (
  * 必ず漏れる。テーマ側で `primary.textContrast` を用意し、
  * 文字・アイコンにはそれを使う運用にする。
  */
+/**
+ * 前景色に持たせる余裕。
+ *
+ * ちょうど 4.5:1 で止めると余裕がゼロになり、その色を淡い tint の上に
+ * 置いた瞬間に基準を割る。実測すると `success.textContrast` を
+ * `success.lighter` に重ねた「+12%」が 4.49:1 で、0.01 足りなかった。
+ *
+ * 前景は素の背景の上だけに置かれるとは限らない。Chip・Alert・
+ * ハイライト行など、薄く色を敷いた面に乗ることの方が多い。
+ * 素の面に対して少し濃いめに決めておけば、その分がそのまま余裕になる。
+ */
+const TEXT_CONTRAST_HEADROOM = 1.2
+
 const withTextContrast = (
   cs: ColorSet,
   mode: 'light' | 'dark',
@@ -144,8 +157,13 @@ const withTextContrast = (
   // ダークは明るい文字なので明るい paper が厳しい）、片方だけを基準に
   // すると、もう一方の面に置いたときに AA を割る。
   textContrast: ensureContrast(
-    ensureContrast(foregroundVariant(cs, mode), background.paper),
-    background.default
+    ensureContrast(
+      foregroundVariant(cs, mode),
+      background.paper,
+      CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM
+    ),
+    background.default,
+    CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM
   ),
 })
 
@@ -520,36 +538,53 @@ export const createDarkThemeColors = (
 export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-primary': c.primary.main,
   '--color-primary-foreground': c.primary.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-primary-ink': c.primary.textContrast ?? c.primary.main,
   '--color-primary-light': c.primary.light,
   '--color-primary-light-foreground': c.primary.onLight,
   '--color-primary-dark': c.primary.dark,
 
   '--color-secondary': c.secondary.main,
   '--color-secondary-foreground': c.secondary.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-secondary-ink': c.secondary.textContrast ?? c.secondary.main,
+  '--color-secondary-dark': c.secondary.dark,
 
   '--color-success': c.success.main,
   '--color-success-foreground': c.success.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-success-ink': c.success.textContrast ?? c.success.main,
   '--color-success-light': c.success.light,
   '--color-success-light-foreground': c.success.onLight,
   '--color-success-border': c.success.dark,
+  '--color-success-dark': c.success.dark,
 
   '--color-error': c.error.main,
   '--color-error-foreground': c.error.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-error-ink': c.error.textContrast ?? c.error.main,
   '--color-error-light': c.error.light,
   '--color-error-light-foreground': c.error.onLight,
   '--color-error-border': c.error.dark,
+  '--color-error-dark': c.error.dark,
 
   '--color-warning': c.warning.main,
   '--color-warning-foreground': c.warning.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-warning-ink': c.warning.textContrast ?? c.warning.main,
   '--color-warning-light': c.warning.light,
   '--color-warning-light-foreground': c.warning.onLight,
   '--color-warning-border': c.warning.dark,
+  '--color-warning-dark': c.warning.dark,
 
   '--color-info': c.info.main,
   '--color-info-foreground': c.info.contrastText,
+  // 面ではなく文字・アイコンとして使う色（実測で決まる）
+  '--color-info-ink': c.info.textContrast ?? c.info.main,
   '--color-info-light': c.info.light,
   '--color-info-light-foreground': c.info.onLight,
   '--color-info-border': c.info.dark,
+  '--color-info-dark': c.info.dark,
 
   '--color-background': c.background.default,
   '--color-background-paper': c.background.paper,

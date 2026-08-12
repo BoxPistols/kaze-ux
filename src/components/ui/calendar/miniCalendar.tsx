@@ -57,7 +57,10 @@ const MiniCalendarDay = (props: MiniCalendarDayProps) => {
     // 月間カレンダーと同様に「土=青 / 日=赤」
     // 選択中/当月外はMUIの標準スタイルを優先する
     !selected && !outsideCurrentMonth && (isSunday || isSaturday)
-      ? { color: isSunday ? 'error.main' : 'info.main' }
+      ? // main は面のための色。文字に使うと白地で 2.6〜3.4:1 しか出ない
+        {
+          color: isSunday ? 'error.textContrast' : 'info.textContrast',
+        }
       : {},
     ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
   ]
@@ -173,14 +176,14 @@ export const MiniCalendar = ({
               // 週開始曜日に応じた土曜/日曜の色付け
               [`& .MuiDayCalendar-weekDayLabel:nth-of-type(${weekdayPositions.saturday})`]:
                 {
-                  color: 'info.main',
+                  color: 'info.textContrast',
                 },
               [`& .MuiDayCalendar-weekDayLabel:nth-of-type(${weekdayPositions.sunday})`]:
                 {
-                  color: 'error.main',
+                  color: 'error.textContrast',
                 },
               '& .MuiPickersArrowSwitcher-button': {
-                color: 'secondary.main',
+                color: 'secondary.textContrast',
               },
               '& .MuiPickersCalendarHeader-root': {
                 my: 1,
@@ -191,7 +194,10 @@ export const MiniCalendar = ({
                 m: 0,
               },
               '& .MuiPickersDay-dayOutsideMonth': {
-                color: 'grey.400',
+                // 当月外は控えめに見せたいが、grey.400 は白地で 1.88:1 で
+                // 読めない。日付は「無効」ではなく情報なので基準を満たす段に置く
+                color: 'text.secondary',
+                opacity: 0.75,
               },
             }}
             value={currentDate}

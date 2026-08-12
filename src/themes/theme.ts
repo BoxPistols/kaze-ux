@@ -407,6 +407,28 @@ const componentStyles = {
           borderColor: theme.palette.divider,
         },
       }),
+      // MUI 既定の outlined Chip は文字色に main を使う。main は面のための
+      // 色なので、白地に置くと届かない (warning は 2.73:1)。
+      // 複合セレクタ (&.MuiChip-outlinedWarning) は sx より詳細度が高く
+      // 使う側の指定を握り潰すため、スロット単位で上書きする
+      outlinedPrimary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.primary.textContrast,
+      }),
+      outlinedSecondary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.secondary.textContrast,
+      }),
+      outlinedSuccess: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.success.textContrast,
+      }),
+      outlinedError: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.error.textContrast,
+      }),
+      outlinedWarning: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.warning.textContrast,
+      }),
+      outlinedInfo: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.info.textContrast,
+      }),
       sizeSmall: {
         height: 20,
         fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠

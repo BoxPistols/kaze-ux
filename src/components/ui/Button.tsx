@@ -15,14 +15,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary-main text-white hover:bg-primary-dark',
-        destructive: 'bg-error-main text-white hover:bg-error-dark',
+        default:
+          'bg-primary-main text-primary-foreground hover:bg-primary-dark',
+        destructive: 'bg-error-main text-error-foreground hover:bg-error-dark',
         outline:
           'border border-gray-300 bg-transparent hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-100',
-        secondary: 'bg-secondary-main text-white hover:bg-secondary-dark',
+        secondary:
+          'bg-secondary-main text-secondary-foreground hover:bg-secondary-dark',
         ghost:
           'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-slate-700 dark:hover:text-gray-100',
-        link: 'text-primary-main underline-offset-4 hover:underline',
+        // 文字として使うので、面用の main ではなく実測済みの前景色を使う
+        link: 'text-primary-ink underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
