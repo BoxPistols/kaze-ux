@@ -234,7 +234,7 @@ const ProductCard = ({
           borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
           bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)',
           backdropFilter: 'blur(8px)',
-          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+          transition: motionOf(['border-color', 'box-shadow'], 'short'),
           cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
@@ -1351,7 +1351,7 @@ export const LandingPage = () => {
                   fontSize: '0.9rem',
                   color: 'text.secondary',
                   textDecoration: 'none',
-                  transition: 'color 0.2s',
+                  transition: motionOf(['color'], 'short'),
                   '&:hover': { color: 'primary.textContrast' },
                 }}>
                 {link.label}

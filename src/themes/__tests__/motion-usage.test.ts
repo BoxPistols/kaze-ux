@@ -45,17 +45,34 @@ const sourceFiles = ROOTS.flatMap((root) => collect(resolve(root))).filter(
   (file) => !ALLOWLIST.has(file)
 )
 
+/**
+ * 直前の行に付いた個別の除外指定。
+ *
+ * イージング曲線そのものを見せるデモのように、時間を固定して
+ * イージングだけを変える必要がある箇所を、理由付きで通す。
+ * ファイル単位で除外すると、その中の新しい違反まで見逃す。
+ */
+const ALLOW_MARKER = 'motion-usage-allow'
+
 const findMatches = (pattern: RegExp) =>
   sourceFiles.flatMap((file) => {
     const lines = readFileSync(file, 'utf8').split('\n')
     return lines
       .map((line, i) => ({ file, line: i + 1, text: line.trim() }))
-      .filter(({ text }) => pattern.test(text))
+      .filter(({ text, line }) => {
+        if (!pattern.test(text)) return false
+        // 直前のコメントブロック（最大 3 行）にマーカーがあれば通す
+        const preceding = lines.slice(Math.max(0, line - 4), line - 1)
+        return !preceding.some((l) => l.includes(ALLOW_MARKER))
+      })
   })
 
 const format = (hits: { file: string; line: number; text: string }[]) =>
   hits
-    .map(({ file, line, text }) => `${file.replace(resolve('.'), '.')}:${line} ${text}`)
+    .map(
+      ({ file, line, text }) =>
+        `${file.replace(resolve('.'), '.')}:${line} ${text}`
+    )
     .join('\n')
 
 describe('モーションの禁止パターン', () => {
@@ -70,7 +87,8 @@ describe('モーションの禁止パターン', () => {
 
   it('transition に秒数を直書きしていない（motionOf を使う）', () => {
     // 'all' を伴わない `transition: '0.3s ease'` のような直書きも同じ問題を持つ
-    const hits = findMatches(/transition:\s*['"`][\d.]+m?s\b/)
+    // プロパティ名が先行する `transition: 'opacity 150ms ease'` も拾う
+    const hits = findMatches(/transition:\s*['"`][^'"`]*\b\d+(?:\.\d+)?m?s\b/)
     expect(hits, `\n${format(hits)}`).toEqual([])
   })
 })

@@ -4,6 +4,7 @@
 // - モデル名表示
 
 import {
+  alpha,
   Avatar,
   Box,
   IconButton,
@@ -59,7 +60,7 @@ export const ChatHeader = ({
       sx={{
         bgcolor:
           theme.palette.mode === 'dark'
-            ? 'rgba(0,87,184,0.55)'
+            ? alpha(theme.palette.primary.main, 0.55)
             : 'primary.main',
         color: '#ffffff',
         backdropFilter: 'blur(12px)',

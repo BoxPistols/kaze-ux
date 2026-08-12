@@ -10,6 +10,8 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 import { AccountMenu } from './accountMenu'
 import { SIDEBAR_WIDTH } from './constants'
 import { MenuCategory } from './menuCategory'
@@ -99,7 +101,7 @@ export const Sidebar = ({
       sx={{
         width: isOpen ? openWidth : closedWidth,
         flexShrink: 0,
-        transition: 'width 0.3s ease',
+        transition: motionOf(['width'], 'long'),
         '& .MuiDrawer-paper': {
           width: isOpen ? openWidth : closedWidth,
           boxSizing: 'border-box',
@@ -114,7 +116,7 @@ export const Sidebar = ({
           transform: 'none !important',
           height: '100vh',
           maxHeight: '100vh',
-          transition: 'width 0.3s ease',
+          transition: motionOf(['width'], 'long'),
         },
       }}>
       <Box

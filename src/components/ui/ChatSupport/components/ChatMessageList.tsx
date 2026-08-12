@@ -1,6 +1,7 @@
 // メッセージリスト + クイックサジェスト + タイピングインジケーター
 
 import {
+  alpha,
   Avatar,
   Box,
   Chip,
@@ -94,7 +95,7 @@ export const ChatMessageList = ({
                   borderTopRightRadius: isUser ? '2px' : '12px',
                   bgcolor: isUser
                     ? theme.palette.mode === 'dark'
-                      ? 'rgba(0,87,184,0.45)'
+                      ? alpha(theme.palette.primary.main, 0.45)
                       : 'primary.main'
                     : theme.palette.mode === 'dark'
                       ? 'rgba(255,255,255,0.06)'
@@ -285,7 +286,7 @@ export const ChatMessageList = ({
                 borderColor:
                   theme.palette.mode === 'dark'
                     ? 'rgba(255,255,255,0.12)'
-                    : 'rgba(0,87,184,0.3)',
+                    : alpha(theme.palette.primary.main, 0.3),
                 color:
                   theme.palette.mode === 'dark'
                     ? 'rgba(255,255,255,0.6)'
@@ -294,7 +295,7 @@ export const ChatMessageList = ({
                   bgcolor:
                     theme.palette.mode === 'dark'
                       ? 'rgba(255,255,255,0.06)'
-                      : 'rgba(0,87,184,0.06)',
+                      : alpha(theme.palette.primary.main, 0.06),
                   borderColor:
                     theme.palette.mode === 'dark'
                       ? 'rgba(255,255,255,0.25)'

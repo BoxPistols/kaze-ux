@@ -13,6 +13,7 @@ import type { ReactNode } from 'react'
 
 import { IconButton } from '@/components/ui/icon-button'
 import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
 import { APP_LINKS } from '@/utils/appLinks'
 
 type AppEntry = {
@@ -151,7 +152,7 @@ export const AppSwitcher = ({ currentApp }: AppSwitcherProps) => {
                   '&:hover': {
                     bgcolor: isCurrent ? 'action.selected' : 'action.hover',
                   },
-                  transition: 'background-color 0.15s ease',
+                  transition: motionOf(['background-color'], 'micro'),
                 }}>
                 <Box
                   sx={{

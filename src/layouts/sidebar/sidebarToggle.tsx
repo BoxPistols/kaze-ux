@@ -3,6 +3,8 @@ import { Fab, Tooltip, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import type { SxProps, Theme } from '@mui/material'
 
+import { motionOf } from '@/themes/motion'
+
 import { SIDEBAR_WIDTH } from './constants'
 
 interface SidebarToggleProps {
@@ -49,7 +51,7 @@ export const SidebarToggle = ({ isOpen, onToggle, sx }: SidebarToggleProps) => {
           border: '1px solid',
           borderColor: 'divider',
           boxShadow: 1,
-          transition: 'left 0.3s ease',
+          transition: motionOf(['left'], 'long'),
           ...sx,
         }}>
         {isOpen ? <Close /> : <Menu />}

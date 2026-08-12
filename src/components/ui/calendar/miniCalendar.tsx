@@ -19,6 +19,7 @@ import {
 import { useMemo, useState } from 'react'
 
 import { useCalendarSettings } from '@/hooks'
+import { motionOf } from '@/themes/motion'
 
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/ja'
@@ -133,7 +134,7 @@ export const MiniCalendar = ({
                 minWidth: 0,
                 maxWidth: isOpen ? '100%' : 0,
                 opacity: isOpen ? 1 : 0,
-                transition: 'max-width 200ms ease, opacity 200ms ease',
+                transition: motionOf(['max-width', 'opacity'], 'short'),
               }}>
               {headerText}
             </Typography>

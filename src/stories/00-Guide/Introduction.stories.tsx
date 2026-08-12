@@ -19,6 +19,7 @@ import {
 import { useTheme } from '@mui/material/styles'
 
 import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
 import { APP_LINKS } from '@/utils/appLinks'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -339,7 +340,7 @@ const IntroductionContent = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s',
+                  transition: motionOf(['border-color'], 'short'),
                   '&:hover': {
                     borderColor: isDark
                       ? 'rgba(255,255,255,0.16)'
@@ -702,7 +703,7 @@ const IntroductionContent = () => {
                     : 'rgba(0,0,0,0.08)',
                   textDecoration: 'none',
                   color: 'inherit',
-                  transition: 'border-color 0.2s, background 0.2s',
+                  transition: motionOf(['border-color', 'background'], 'short'),
                   '&:hover': {
                     borderColor: 'primary.main',
                     bgcolor: isDark

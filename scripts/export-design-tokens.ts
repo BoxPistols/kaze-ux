@@ -38,6 +38,8 @@ const toExportShape = (c: ThemeColors) => {
     light: cs.light,
     lighter: cs.lighter,
     contrastText: cs.contrastText,
+    // `light` の塗り面に乗せる前景色。contrastText は main 基準なので別枠で出す
+    onLight: cs.onLight,
     // 前景（文字・アイコン）として使う色。Figma 側でも面と前景を区別する
     textContrast: cs.textContrast ?? cs.main,
   })
@@ -58,9 +60,10 @@ const toExportShape = (c: ThemeColors) => {
   }
 }
 
-const lightColors = toExportShape(createLightThemeColors('kaze'))
+const lightSource = createLightThemeColors('kaze')
+const lightColors = toExportShape(lightSource)
 const darkColors = toExportShape(createDarkThemeColors('kaze'))
-const grey = createLightThemeColors('kaze').grey
+const grey = lightSource.grey
 
 // typography.ts
 const baseFontSize = 14

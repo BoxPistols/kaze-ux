@@ -306,10 +306,12 @@ export const ResourceTable = <T extends { id: string | number }>({
               borderColor: 'divider',
             },
             '& .MuiDataGrid-columnHeader': {
-              // DataGrid 既定の青い実線を消すが、フォーカスの所在は残す。
-              // outline を消すだけだとキーボード操作で現在地が分からなくなる
-              '&:focus': { outline: 'none' },
-              '&:focus-visible': focusRing('var(--color-ring)'),
+              // DataGrid の既定アウトラインは :focus-within に当たる。
+              // 消すだけだとキーボード操作で現在地が分からなくなるため、
+              // 中の要素がキーボードフォーカスを持つときだけリングを出す
+              '&:focus, &:focus-within': { outline: 'none' },
+              '&:focus-visible, &:focus-within:has(:focus-visible)':
+                focusRing('var(--color-ring)'),
             },
             '& .MuiDataGrid-row': {
               cursor: onRowClick ? 'pointer' : 'default',
@@ -328,8 +330,9 @@ export const ResourceTable = <T extends { id: string | number }>({
               alignItems: 'center',
               borderBottom: 1,
               borderColor: 'divider',
-              '&:focus': { outline: 'none' },
-              '&:focus-visible': focusRing('var(--color-ring)'),
+              '&:focus, &:focus-within': { outline: 'none' },
+              '&:focus-visible, &:focus-within:has(:focus-visible)':
+                focusRing('var(--color-ring)'),
             },
             '& .MuiDataGrid-footerContainer': {
               borderTop: 1,

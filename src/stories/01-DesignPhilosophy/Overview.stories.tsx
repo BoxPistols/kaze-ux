@@ -1,6 +1,8 @@
 import { Box, Typography, Grid, Stack } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
+import { motionOf } from '@/themes/motion'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta = {
@@ -263,7 +265,7 @@ const DesignPhilosophyOverview = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s',
+                  transition: motionOf(['border-color'], 'short'),
                   '&:hover': {
                     borderColor: value.color,
                   },
@@ -357,7 +359,7 @@ const DesignPhilosophyOverview = () => {
                   borderColor: isDark
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(0,0,0,0.08)',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                  transition: motionOf(['border-color', 'box-shadow'], 'short'),
                   '&:hover': {
                     borderColor: isDark
                       ? 'rgba(255,255,255,0.15)'

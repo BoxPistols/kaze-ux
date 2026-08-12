@@ -185,7 +185,13 @@ const greyShades: GreyShades = {
 }
 
 // ===== カラースキーム (Light/Dark 共通) =====
-export type ColorScheme = 'dracula' | 'kaze' | 'monotone'
+/**
+ * 実装済みのスキーム一覧。
+ * テストや監査が全スキームを走査するための単一ソース。
+ * ここに足すだけで検査対象に入る（手書きの列挙だと取りこぼす）
+ */
+export const COLOR_SCHEMES = ['dracula', 'kaze', 'monotone'] as const
+export type ColorScheme = (typeof COLOR_SCHEMES)[number]
 /** 後方互換エイリアス */
 export type DarkColorScheme = ColorScheme
 
@@ -515,6 +521,7 @@ export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-primary': c.primary.main,
   '--color-primary-foreground': c.primary.contrastText,
   '--color-primary-light': c.primary.light,
+  '--color-primary-light-foreground': c.primary.onLight,
   '--color-primary-dark': c.primary.dark,
 
   '--color-secondary': c.secondary.main,
@@ -523,21 +530,25 @@ export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-success': c.success.main,
   '--color-success-foreground': c.success.contrastText,
   '--color-success-light': c.success.light,
+  '--color-success-light-foreground': c.success.onLight,
   '--color-success-border': c.success.dark,
 
   '--color-error': c.error.main,
   '--color-error-foreground': c.error.contrastText,
   '--color-error-light': c.error.light,
+  '--color-error-light-foreground': c.error.onLight,
   '--color-error-border': c.error.dark,
 
   '--color-warning': c.warning.main,
   '--color-warning-foreground': c.warning.contrastText,
   '--color-warning-light': c.warning.light,
+  '--color-warning-light-foreground': c.warning.onLight,
   '--color-warning-border': c.warning.dark,
 
   '--color-info': c.info.main,
   '--color-info-foreground': c.info.contrastText,
   '--color-info-light': c.info.light,
+  '--color-info-light-foreground': c.info.onLight,
   '--color-info-border': c.info.dark,
 
   '--color-background': c.background.default,

@@ -4,6 +4,7 @@ import { Box } from '@mui/material'
 import { LAYOUT_CONSTANTS } from '@/constants/layout'
 import { Header } from '@/layouts/header'
 import { SideNav } from '@/layouts/sideNav'
+import { motionOf } from '@/themes/motion'
 
 type LayoutProps = {
   open?: boolean
@@ -38,7 +39,7 @@ const Layout = ({
           marginLeft: `${actualSideNavWidth}px`,
           // ヘッダーの高さに基づいてマージンを設定
           marginTop: `${LAYOUT_CONSTANTS.HEADER.HEIGHT}px`,
-          transition: 'margin-left 0.3s ease-in-out',
+          transition: motionOf(['margin-left'], 'long'),
           width: `calc(100% - ${actualSideNavWidth}px)`,
           height: `calc(100vh - ${LAYOUT_CONSTANTS.HEADER.HEIGHT}px)`,
           overflow: 'auto',

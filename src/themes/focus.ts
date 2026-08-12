@@ -39,12 +39,26 @@ export const FOCUS_RING_OFFSET = 2
 export const focusRingColor = (
   brand: string,
   background: { default: string; paper: string }
-): string =>
-  ensureContrast(
-    ensureContrast(brand, background.paper, CONTRAST_THRESHOLD.ui),
-    background.default,
-    CONTRAST_THRESHOLD.ui
-  )
+): string => {
+  const meets = (color: string) =>
+    contrastRatio(color, background.paper) >= CONTRAST_THRESHOLD.ui &&
+    contrastRatio(color, background.default) >= CONTRAST_THRESHOLD.ui
+
+  // ensureContrast を paper → default と続けて当てると、後段の調整で
+  // 前段の条件が崩れうる。両面を同時に満たすまで、厳しい側へ寄せ直す
+  let color = brand
+  for (let i = 0; i < 8 && !meets(color); i++) {
+    const harder =
+      contrastRatio(color, background.paper) <
+      contrastRatio(color, background.default)
+        ? background.paper
+        : background.default
+    const next = ensureContrast(color, harder, CONTRAST_THRESHOLD.ui)
+    if (next === color) break // これ以上動かせない（明度が振り切っている）
+    color = next
+  }
+  return color
+}
 
 /** リング 1 個分のスタイル */
 export const focusRing = (color: string) => ({

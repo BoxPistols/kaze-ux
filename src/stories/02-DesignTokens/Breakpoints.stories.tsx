@@ -233,7 +233,7 @@ const BreakpointScaleDemo = () => {
                       ? theme.palette.primary.main
                       : 'text.disabled',
                     borderRadius: 1,
-                    transition: 'background-color 0.3s ease',
+                    transition: motionOf(['background-color'], 'long'),
                   }}
                 />
               </Box>
@@ -363,7 +363,7 @@ const BreakpointScaleDemo = () => {
               width: 3,
               bgcolor: 'error.main',
               zIndex: 1,
-              transition: 'left 0.15s ease',
+              transition: motionOf(['left'], 'micro'),
               '&::after': {
                 content: '""',
                 position: 'absolute',
@@ -713,7 +713,7 @@ const TouchTargetsDemo = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     boxShadow: `0 0 0 4px ${color}33`,
-                    transition: 'transform 0.2s ease',
+                    transition: motionOf(['transform'], 'short'),
                     cursor: 'pointer',
                     '&:hover': {
                       transform: 'scale(1.05)',

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 
 import { DrawerHeader } from '@/layouts/util'
 import { colorData } from '@/themes/colorToken'
+import { motionOf } from '@/themes/motion'
 import { theme } from '@/themes/theme'
 
 type SideNavProps = {
@@ -43,7 +44,7 @@ export const SideNav = ({ open, width }: SideNavProps) => {
           color: theme.palette.grey[200],
           overflowX: 'hidden',
           overflowY: 'auto',
-          transition: 'width 0.3s',
+          transition: motionOf(['width'], 'long'),
           border: 'none',
           zIndex: 1001,
           opacity: open ? 0.92 : 1,
@@ -73,7 +74,7 @@ export const SideNav = ({ open, width }: SideNavProps) => {
               primary={item.text}
               sx={{
                 opacity: open ? 1 : 0,
-                transition: 'opacity 0.3s',
+                transition: motionOf(['opacity'], 'long'),
                 marginLeft: '8px',
                 '& .MuiListItemText-primary': {
                   fontSize: '0.8rem',

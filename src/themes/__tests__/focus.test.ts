@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { createDarkThemeColors, createLightThemeColors } from '../colorToken'
+import {
+  COLOR_SCHEMES,
+  createDarkThemeColors,
+  createLightThemeColors,
+} from '../colorToken'
 import { CONTRAST_THRESHOLD, contrastRatioOf } from '../contrast'
 import {
   FOCUS_RING_OFFSET,
@@ -9,10 +13,6 @@ import {
   focusRing,
   focusRingColor,
 } from '../focus'
-
-import type { ColorScheme } from '../colorToken'
-
-const SCHEMES: ColorScheme[] = ['dracula', 'kaze', 'monotone']
 
 /**
  * フォーカスリングは「意匠を理由に消せない」種類の要素なので、
@@ -32,12 +32,12 @@ describe('フォーカスリングの形', () => {
     expect(ring.outline).toBe(`${FOCUS_RING_WIDTH}px solid #ff0000`)
     expect(ring.outlineOffset).toBe(`${FOCUS_RING_OFFSET}px`)
     // box-shadow や border で描くと、要素の寸法や重なりに影響が出る
-    expect(Object.keys(ring)).toEqual(['outline', 'outlineOffset'])
+    expect(Object.keys(ring).sort()).toEqual(['outline', 'outlineOffset'])
   })
 })
 
 describe('フォーカスリングの色', () => {
-  for (const scheme of SCHEMES) {
+  for (const scheme of COLOR_SCHEMES) {
     for (const mode of ['light', 'dark'] as const) {
       it(`${scheme}/${mode}: 地と紙の両面で UI 基準 (3:1) を満たす`, () => {
         const c =

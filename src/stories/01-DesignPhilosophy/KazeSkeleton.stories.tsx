@@ -1,4 +1,5 @@
 import { kazeTokens } from '@/themes/kazeTokens'
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -492,7 +493,7 @@ const ColorSection = () => {
               flexDirection: 'column',
               justifyContent: 'space-between',
               border: s.bordered ? `1px solid ${tokens.washiHair}` : 'none',
-              transition: 'transform 240ms cubic-bezier(0.33, 0, 0, 1)',
+              transition: motionOf(['transform'], 'macro', 'enter'),
               cursor: 'default',
             }}
             onMouseEnter={(e) => {
@@ -826,6 +827,7 @@ const MotionSection = () => (
               cursor: 'pointer',
               position: 'relative',
               overflow: 'hidden',
+              // motion-usage-allow: イージングの比較デモ。時間は固定する
               transition: `transform 240ms ${e.ease}`,
               textAlign: 'left',
             }}

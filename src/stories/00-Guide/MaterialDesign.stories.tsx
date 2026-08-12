@@ -582,7 +582,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
               height: 24,
               bgcolor: 'primary.main',
               borderRadius: 0.5,
-              transition: 'width 0.3s ease',
+              transition: motionOf(['width'], 'long'),
               minWidth: 4,
             }}
           />

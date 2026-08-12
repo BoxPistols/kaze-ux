@@ -5,6 +5,7 @@ import { action } from 'storybook/actions'
 import { LAYOUT_CONSTANTS } from '@/constants/layout'
 import { Header } from '@/layouts/header'
 import { SideNav } from '@/layouts/sideNav'
+import { motionOf } from '@/themes/motion'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -34,7 +35,7 @@ const LayoutDemo = ({
           p: 3,
           marginLeft: open ? '32px' : 0,
           marginTop: `${LAYOUT_CONSTANTS.HEADER.HEIGHT}px`,
-          transition: 'margin-left 0.3s',
+          transition: motionOf(['margin-left'], 'long'),
           height: `calc(100vh - ${LAYOUT_CONSTANTS.HEADER.HEIGHT}px)`,
           overflow: 'auto',
         }}>

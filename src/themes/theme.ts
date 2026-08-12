@@ -474,7 +474,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         '& .MuiTableRow-root': {
-          transition: 'background-color 0.15s ease',
+          transition: motionOf(['background-color'], 'micro'),
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },
@@ -566,7 +566,10 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.contrastText,
+        // 面は primary.light。contrastText は primary.main 基準で測った値なので
+        // ここでは基準がずれる（白文字が 3.95:1 まで落ちていた）。
+        // light 面に対して実測した onLight を使う
+        color: theme.palette.primary.onLight,
         fontWeight: 600,
         fontSize: fontSizesVariant.sm,
       }),
@@ -598,7 +601,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         borderRadius: 8,
-        transition: 'background-color 0.15s ease, color 0.15s ease',
+        transition: motionOf(['background-color', 'color'], 'micro'),
         '&:hover': {
           backgroundColor: theme.palette.action.hover,
         },

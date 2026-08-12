@@ -17,6 +17,8 @@ import {
 } from '@mui/material'
 import { useRef, useState, type ReactNode } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 export interface SplitButtonOption {
   /** オプションの値 */
   value: string
@@ -165,7 +167,7 @@ export const SplitButton = ({
           aria-haspopup='menu'>
           <ArrowDropDownIcon
             sx={{
-              transition: 'transform 0.2s',
+              transition: motionOf(['transform'], 'short'),
               transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
             }}
           />

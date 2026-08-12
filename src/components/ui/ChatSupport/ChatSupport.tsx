@@ -2,8 +2,10 @@
 // ロジックは hooks/ に、UI は components/ に分割済み。
 // このファイルはレイアウト構成のみを担当する (~170行)。
 
-import { Box, Fab, Paper, Slide, Zoom, useTheme } from '@mui/material'
+import { alpha, Box, Fab, Paper, Slide, Zoom, useTheme } from '@mui/material'
 import { useCallback } from 'react'
+
+import { motionOf } from '@/themes/motion'
 
 import BookConciergeIcon from './BookConciergeIcon'
 import { ChatHeader } from './components/ChatHeader'
@@ -213,7 +215,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
               display: { xs: 'none', sm: 'flex' },
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'background-color 0.2s',
+              transition: motionOf(['background-color'], 'short'),
               '&:hover': {
                 bgcolor:
                   theme.palette.mode === 'dark'
@@ -242,24 +244,24 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             sx={{
               bgcolor:
                 theme.palette.mode === 'dark'
-                  ? 'rgba(0,87,184,0.5)'
-                  : 'rgba(0,87,184,0.85)',
+                  ? alpha(theme.palette.primary.main, 0.5)
+                  : alpha(theme.palette.primary.main, 0.85),
               color: '#fff',
               backdropFilter: 'blur(16px)',
               boxShadow:
                 theme.palette.mode === 'dark'
                   ? '0 8px 32px rgba(0,0,0,0.4)'
-                  : '0 8px 32px rgba(0,87,184,0.3)',
+                  : `0 8px 32px ${alpha(theme.palette.primary.main, 0.3)}`,
               border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.18)'}`,
               '&:hover': {
                 bgcolor:
                   theme.palette.mode === 'dark'
-                    ? 'rgba(0,87,184,0.65)'
-                    : 'rgba(0,87,184,0.95)',
+                    ? alpha(theme.palette.primary.main, 0.65)
+                    : alpha(theme.palette.primary.main, 0.95),
                 boxShadow:
                   theme.palette.mode === 'dark'
                     ? '0 8px 32px rgba(0,0,0,0.5)'
-                    : '0 8px 32px rgba(0,87,184,0.45)',
+                    : `0 8px 32px ${alpha(theme.palette.primary.main, 0.45)}`,
               },
             }}>
             <BookConciergeIcon size={24} />
@@ -345,7 +347,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
                       ? 'rgba(255,255,255,0.1)'
                       : 'rgba(0,0,0,0.12)',
                   opacity: 0.5,
-                  transition: 'opacity 0.2s',
+                  transition: motionOf(['opacity'], 'short'),
                   '&:hover': { opacity: 1 },
                 }}
               />

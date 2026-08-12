@@ -9,6 +9,8 @@ import {
 import { styled } from '@mui/material/styles'
 import { type ReactNode, useEffect, useState } from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 export interface CustomAccordionProps {
   /** ハイライト表示するかどうか */
   highlight?: boolean
@@ -41,7 +43,7 @@ const StyledAccordion = styled(
       ? `${theme.palette.primary.main}08`
       : `${theme.palette.primary.main}15`
     : theme.palette.background.paper,
-  transition: 'background-color 0.2s ease, border-color 0.2s ease',
+  transition: motionOf(['background-color', 'border-color'], 'short'),
   overflow: 'hidden',
   '&:hover': {
     borderColor:
@@ -66,7 +68,7 @@ const StyledAccordionSummary = styled((props: AccordionSummaryProps) => (
       theme.palette.mode === 'light'
         ? theme.palette.grey[700]
         : theme.palette.grey[400],
-    transition: 'transform 0.2s ease',
+    transition: motionOf(['transform'], 'short'),
     '&.Mui-expanded': {
       transform: 'rotate(180deg)',
     },

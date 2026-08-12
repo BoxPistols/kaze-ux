@@ -64,6 +64,7 @@ export const ThemeToggle = () => {
           },
           transition: motionOf([
             'background-color',
+            'color',
             'box-shadow',
             'border-color',
           ]),

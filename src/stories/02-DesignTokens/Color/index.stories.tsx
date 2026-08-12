@@ -11,6 +11,7 @@ import { useCallback, useState } from 'react'
 
 import { colorData } from '@/themes/colorToken'
 import type { ColorSet, GreyShades, ThemeColors } from '@/themes/colorToken'
+import { motionOf } from '@/themes/motion'
 import { darkTheme, lightTheme } from '@/themes/theme'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -142,7 +143,7 @@ const ColorChip = ({
         borderRadius: 2,
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'box-shadow 0.15s ease, transform 0.15s ease',
+        transition: motionOf(['box-shadow', 'transform'], 'micro'),
         '&:hover': {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           transform: 'translateY(-1px)',

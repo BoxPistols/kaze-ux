@@ -10,6 +10,8 @@ import {
 import { Link } from 'react-router-dom'
 import type React from 'react'
 
+import { motionOf } from '@/themes/motion'
+
 import type { MenuItem } from './types'
 
 /**
@@ -108,7 +110,7 @@ export const MenuItemButton = ({
           sx={{
             color: 'inherit',
             transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
+            transition: motionOf(['transform'], 'short'),
           }}>
           <ExpandIcon sx={{ fontSize: '1rem' }} />
         </IconButton>

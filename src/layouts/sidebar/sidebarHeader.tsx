@@ -3,6 +3,7 @@ import { Box, IconButton, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 import { KazeLogo } from '@/components/ui/logo'
+import { motionOf } from '@/themes/motion'
 
 /**
  * サイドバーヘッダーコンポーネントのProps型定義
@@ -83,7 +84,7 @@ export const SidebarHeader = ({
                 '&:hover': {
                   opacity: 0.8,
                 },
-                transition: 'opacity 0.2s ease',
+                transition: motionOf(['opacity'], 'short'),
               }}>
               {appName}
             </Typography>
@@ -123,7 +124,7 @@ export const SidebarHeader = ({
               '&:hover': {
                 opacity: 0.8,
               },
-              transition: 'opacity 0.2s ease',
+              transition: motionOf(['opacity'], 'short'),
             }}>
             <Logo size={24} />
           </Box>
