@@ -1,3 +1,10 @@
+# 実在ブランド名の混入チェック（最初に、最速で）
+# public リポジトリなので、push した時点で履歴から取得可能になる。
+# CI (pull_request) が回るのは push のあとで、そのときには既に公開されている。
+# 「作業ツリーを直しても消えない」のを避けるには、この段階で止めるしかない
+echo "🔍 Checking for real brand names..."
+pnpm run check:brand
+
 echo "🧪 Running tests..."
 pnpm run test:all
 

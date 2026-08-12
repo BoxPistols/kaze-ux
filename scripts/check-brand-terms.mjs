@@ -17,7 +17,8 @@
  * 使い方:
  *   node scripts/check-brand-terms.mjs
  *
- * 個別に許可したい行には、同じ行に `brand-check-allow` を含むコメントを置く。
+ * 個別に許可したい行には、同じ行に通す語を書いたコメントを置く。
+ *   例: // brand-check-allow: ubereats — 旧キー互換
  */
 
 import { execSync } from 'node:child_process'
@@ -46,6 +47,13 @@ const DENY_TERMS = [
   { term: '出前館', kind: 'raw' },
   { term: 'マクドナルド', kind: 'raw' },
   { term: 'スターバックス', kind: 'raw' },
+  { term: '大阪王将', kind: 'raw' },
+  { term: '吉野家', kind: 'raw' },
+  { term: 'すき家', kind: 'raw' },
+  // 物流
+  { term: 'ヤマト運輸', kind: 'raw' },
+  { term: '佐川急便', kind: 'raw' },
+  { term: '日本通運', kind: 'raw' },
   // 電子部品・半導体
   { term: 'tdk', kind: 'ascii' },
   { term: 'kyocera', kind: 'ascii' },
@@ -57,32 +65,40 @@ const DENY_TERMS = [
   { term: 'murata manufacturing', kind: 'ascii' },
   { term: '村田製作所', kind: 'raw' },
   // サーバー・ネットワーク・電源
+  { term: 'dell', kind: 'ascii' },
   { term: 'poweredge', kind: 'ascii' },
   { term: 'proliant', kind: 'ascii' },
   { term: 'thinkpad', kind: 'ascii' },
+  { term: 'apc', kind: 'ascii' },
   { term: 'smart-ups', kind: 'ascii' },
   { term: 'cisco', kind: 'ascii' },
   { term: 'juniper networks', kind: 'ascii' },
   // 自動車・部品
   { term: 'denso', kind: 'ascii' },
-  // 姓と衝突するため会社を特定する形で持つ
+  // カタカナの社名は姓と衝突しない
+  { term: 'トヨタ', kind: 'raw' },
+  { term: '日産', kind: 'raw' },
+  // 姓と衝突するため会社を特定する形で持つ（Honda / Murata は
+  // サンプルの連絡先に同じ姓の人物がいる）
   { term: 'honda motor', kind: 'ascii' },
   { term: 'toyota motor', kind: 'ascii' },
   { term: 'nissan motor', kind: 'ascii' },
   { term: 'robert bosch', kind: 'ascii' },
-  { term: 'トヨタ自動車', kind: 'raw' },
-  { term: '日産自動車', kind: 'raw' },
 ]
 
 /**
  * 行にマーカーを置けない形式（JSON 等）のための明示的な許可。
  *
  * 「なぜ残しているか」を必ず書く。理由を書けないものは残さない。
+ *
+ * `contains` で行を絞る。ファイル単位で通すと、そのファイルのどこに
+ * 別の実在名を書いても以後ずっと見えなくなる。
  */
 const ALLOWED_OCCURRENCES = [
   {
     file: 'vercel.json',
     term: 'ubereats',
+    contains: '"source": "/ubereats',
     reason: '旧公開パスからのリダイレクト元。消すと既存リンクが 404 になる',
   },
 ]
@@ -90,24 +106,45 @@ const ALLOWED_OCCURRENCES = [
 /**
  * 検査対象の拡張子。
  *
- * バイナリとロックファイルは対象外。ビルド成果物も見ない
- * （ソースを直せば消えるものなので、二重に落ちても情報が増えない）。
+ * テキストとして読めるものは基本的に見る。特に:
+ * - `.mdx` は Storybook のドキュメントページ。**公開される面そのもの**で、
+ *   ここを外していると一番読まれる場所が検査されない
+ * - `.svg` はテキストで、実在ブランドのロゴが入るならここ。
+ *   docs/mock-data-policy.md が「ロゴも同じ」と書いている以上、外せない
+ *
+ * 大文字の拡張子 (README.MD 等) を取りこぼさないよう i を付ける。
+ * macOS は既定で大文字小文字を区別しないため、実際に起こりうる。
  */
-const TARGET_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|json|md|html|yml|yaml)$/
+const TARGET_EXT =
+  /\.(ts|tsx|js|jsx|mjs|cjs|mdx|md|mdc|css|json|html|svg|yml|yaml|sh|txt)$/i
 
+/**
+ * 走査から外すパス。
+ *
+ * node_modules / dist / gh-pages / storybook-static / coverage は
+ * .gitignore に載っており --exclude-standard が先に落とすので、ここには要らない。
+ * 残すのは「追跡されているが見たくないもの」だけ。
+ */
 const EXCLUDED_PATHS = [
-  'node_modules/',
-  'dist/',
-  'gh-pages/',
-  'storybook-static/',
-  'coverage/',
   'pnpm-lock.yaml',
   // このファイル自身が一覧を持っている
   'scripts/check-brand-terms.mjs',
 ]
 
-/** 同じ行にこれがあれば意図的な記述として通す */
-const ALLOW_MARKER = 'brand-check-allow'
+/**
+ * 意図的な記述として通すマーカー。
+ *
+ * **通す語を必ず書かせる。** 素の目印だけで行ごと通すと、その行は以後
+ * 一覧のすべての語に対する盲点になり、あとから別の実在名を書いても気づけない。
+ * 照合は完全一致（`honda motorized` では `honda motor` を通さない）。
+ *
+ *   const KEY = 'ubereats-theme' // brand-check-allow: ubereats — 旧キー互換
+ */
+const ALLOW_MARKER = /brand-check-allow:?\s*([^\n]*?)(?:—|-->|\*\/|$)/gi
+
+/** その行で明示的に許可された語を集める（複数書ける） */
+const allowedTermsOn = (line) =>
+  [...line.matchAll(ALLOW_MARKER)].map((m) => m[1].trim().toLowerCase())
 
 /**
  * 追跡済みに加えて未追跡（.gitignore 対象を除く）も見る。
@@ -123,23 +160,90 @@ const listFiles = () =>
     .split('\n')
     .filter(Boolean)
     .filter((f) => TARGET_EXT.test(f))
-    .filter((f) => !EXCLUDED_PATHS.some((p) => f.startsWith(p) || f === p))
+    .filter((f) => !EXCLUDED_PATHS.some((p) => f.startsWith(p)))
 
-const buildMatcher = ({ term, kind }) =>
+/**
+ * 正規表現に埋め込む前にメタ文字を殺す。
+ *
+ * 一覧に `amazon.com` のような語を足すと `.` が任意 1 文字になって
+ * `amazonXcom` に当たり、`c++` のような語を足すと読み込み時に
+ * SyntaxError で検査そのものが動かなくなる。どちらも無言で壊れる。
+ */
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&')
+
+/**
+ * 区切りを 1 つの半角空白に均す。
+ *
+ * `Uber-Eats` `Uber_Eats` `Uber  Eats` `Uber\nEats` はどれも同じものを
+ * 指すのに、素の一致では別物になる。**元の不具合そのものがハイフン形
+ * (`ubereats-clone` / `ubereats-theme`) だった**ので、ここを揃えないと
+ * 同じ形の再発を取り逃す。
+ *
+ * 語の側も同じ規則で均すため、`smart-ups` は `smart ups` として照合される。
+ */
+const normalize = (s) => s.replace(/[-_\s]+/g, ' ')
+
+const buildMatcher = (term) =>
+  // 英数の前後が単語構成文字でないことだけを見る。\b はハイフンを含む語で
+  // 意図しない位置に入る
+  new RegExp(`(^|[^a-z0-9])${escapeRegExp(term)}([^a-z0-9]|$)`, 'gi')
+
+const matchers = DENY_TERMS.map(({ term, kind }) =>
   kind === 'ascii'
-    ? // 英数の前後が単語構成文字でないことだけを見る。\b は
-      // ハイフンを含む語 (smart-ups) で意図しない位置に入る
-      new RegExp(
-        `(^|[^a-z0-9])${term.replace(/[-]/g, '\\-')}([^a-z0-9]|$)`,
-        'i'
-      )
-    : new RegExp(term)
+    ? { term, kind, re: buildMatcher(normalize(term)) }
+    : { term, kind, re: new RegExp(escapeRegExp(term), 'g') }
+)
 
-const matchers = DENY_TERMS.map((t) => ({ ...t, re: buildMatcher(t) }))
+/**
+ * 区切りを均した本文と、そこから元の位置へ戻すための対応表を作る。
+ *
+ * 行ごとに切ってから均すと、`Juniper\nNetworks` のように**改行で折り返された
+ * 複合語**が別々の行になって当たらない。Prettier は散文を普通に折り返すので、
+ * これは起こる。ファイル全体を均してから照合し、当たった位置を行番号へ戻す。
+ */
+const normalizeWithMap = (content) => {
+  let text = ''
+  const offsets = []
+  let i = 0
+  while (i < content.length) {
+    if (/[-_\s]/.test(content[i])) {
+      const start = i
+      while (i < content.length && /[-_\s]/.test(content[i])) i++
+      text += ' '
+      offsets.push(start)
+    } else {
+      text += content[i]
+      offsets.push(i)
+      i++
+    }
+  }
+  return { text, offsets }
+}
+
+/** 元の文字位置から行番号 (1 始まり) を引く */
+const makeLineLookup = (content) => {
+  const starts = [0]
+  for (let i = 0; i < content.length; i++) {
+    if (content[i] === '\n') starts.push(i + 1)
+  }
+  return (offset) => {
+    let lo = 0
+    let hi = starts.length - 1
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1
+      if (starts[mid] <= offset) lo = mid
+      else hi = mid - 1
+    }
+    return lo + 1
+  }
+}
 
 const findings = []
+// 走査したファイルの集合をそのまま報告に使う。二度数えると、
+// 間に増減があったときに「検査した数」と実際がずれる
+const files = listFiles()
 
-for (const file of listFiles()) {
+for (const file of files) {
   let content
   try {
     content = readFileSync(file, 'utf8')
@@ -147,27 +251,56 @@ for (const file of listFiles()) {
     continue
   }
   const lines = content.split('\n')
-  for (const [i, line] of lines.entries()) {
-    if (line.includes(ALLOW_MARKER)) continue
-    for (const { term, re } of matchers) {
-      const allowed = ALLOWED_OCCURRENCES.some(
-        (a) => a.file === file && a.term === term
-      )
-      if (!allowed && re.test(line)) {
-        findings.push({
-          file,
-          line: i + 1,
-          term,
-          text: line.trim().slice(0, 120),
-        })
+  const lineOf = makeLineLookup(content)
+  const { text: normalized, offsets } = normalizeWithMap(content)
+  // 行ごとの許可語（複数書ける）。行に目印が無ければ空
+  const markersByLine = lines.map((l) =>
+    l.includes('brand-check-allow') ? allowedTermsOn(l) : []
+  )
+
+  for (const { term, kind, re } of matchers) {
+    // 日本語は区切りの均しが意味を持たないので元の本文で見る
+    const haystack = kind === 'ascii' ? normalized : content
+    re.lastIndex = 0
+    for (const m of haystack.matchAll(re)) {
+      const startInSource = kind === 'ascii' ? (offsets[m.index] ?? 0) : m.index
+      const endInSource =
+        kind === 'ascii'
+          ? (offsets[m.index + m[0].length - 1] ?? startInSource)
+          : m.index + m[0].length - 1
+
+      const firstLine = lineOf(startInSource)
+      const lastLine = lineOf(endInSource)
+
+      // 折り返された語は複数行にまたがる。どの行の目印でも通す
+      let allowedByMarker = false
+      for (let ln = firstLine; ln <= lastLine && !allowedByMarker; ln++) {
+        allowedByMarker = markersByLine[ln - 1].includes(term.toLowerCase())
       }
+      if (allowedByMarker) continue
+
+      const rawLine = lines[firstLine - 1] ?? ''
+      const allowed = ALLOWED_OCCURRENCES.some(
+        (a) =>
+          a.file === file &&
+          a.term === term &&
+          (!a.contains || rawLine.includes(a.contains))
+      )
+      if (allowed) continue
+
+      findings.push({
+        file,
+        line: firstLine,
+        term,
+        text: rawLine.trim().slice(0, 120),
+      })
     }
   }
 }
 
 if (findings.length === 0) {
   console.log(
-    `✅ 実在ブランド名の混入なし (${DENY_TERMS.length} 語を ${listFiles().length} ファイルで検査)`
+    `✅ 実在ブランド名の混入なし (${DENY_TERMS.length} 語を ${files.length} ファイルで検査)`
   )
   process.exit(0)
 }
@@ -182,7 +315,8 @@ console.error(
     '',
     'サンプルデータには架空の企業名・製品名を使ってください。',
     '書き方は docs/mock-data-policy.md を参照。',
-    `意図的な記述なら、同じ行に ${ALLOW_MARKER} を含むコメントを付けてください。`,
+    '意図的な記述なら、同じ行に通す語を書いたコメントを付けてください。',
+    "  例: const KEY = 'ubereats-theme' // brand-check-allow: ubereats — 旧キー互換",
   ].join('\n')
 )
 process.exit(1)
