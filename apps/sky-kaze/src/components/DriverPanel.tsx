@@ -5,14 +5,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CloseIcon from '@mui/icons-material/Close'
 import SpeedIcon from '@mui/icons-material/Speed'
-import {
-  Box,
-  Typography,
-  Chip,
-  alpha,
-  keyframes,
-  useMediaQuery,
-} from '@mui/material'
+import { Box, Typography, alpha, keyframes, useMediaQuery } from '@mui/material'
 import { useMemo } from 'react'
 
 // インシデント行の赤パルスアニメーション
@@ -27,6 +20,7 @@ const shimmer = keyframes`
   100% { transform: translateX(100%); }
 `
 
+import { CustomChip } from '@/components/ui/chip'
 import { IconButton } from '@/components/ui/icon-button'
 import { motionOf } from '@/themes/motion'
 
@@ -172,7 +166,7 @@ export const DriverPanel = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
-                  <Chip
+                  <CustomChip
                     label={DRIVER_STATUS_LABEL[dp.status]}
                     size='small'
                     sx={{
@@ -271,7 +265,7 @@ export const DriverPanel = () => {
       <Box sx={{ px: 2, py: 1.5 }}>
         {/* ステータス + 速度 + ETA */}
         <Box sx={{ display: 'flex', gap: 1, mb: 1.5, flexWrap: 'wrap' }}>
-          <Chip
+          <CustomChip
             label={DRIVER_STATUS_LABEL[selected.status]}
             size='small'
             sx={{
@@ -503,7 +497,7 @@ export const DriverPanel = () => {
               </Typography>
             </Box>
 
-            <Chip
+            <CustomChip
               label={STATUS_LABELS[shipment.status]}
               size='small'
               sx={{

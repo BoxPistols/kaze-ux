@@ -9,10 +9,11 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import ReplayIcon from '@mui/icons-material/Replay'
 import StarIcon from '@mui/icons-material/Star'
-import { Box, Grid, Typography, TextField, alpha } from '@mui/material'
+import { Box, Grid, Typography, alpha } from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
@@ -620,7 +621,11 @@ export const CompleteView = () => {
         }}
         submitText='追加'
         submitDisabled={!noteText.trim()}>
-        <TextField
+        {/* placeholder はラベルの代わりにならない（フォーカスすると消え、
+            支援技術にも名前として渡らない）。DS の CustomTextField は
+            ラベルを必須にしているので、ここで明示する */}
+        <CustomTextField
+          label='メモ'
           autoFocus
           fullWidth
           multiline
