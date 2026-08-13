@@ -975,7 +975,7 @@ export const LandingPage = () => {
                   {repositoryUrl && (
                     <Box
                       component='a'
-                      href={repositoryUrl ?? undefined}
+                      href={repositoryUrl}
                       target='_blank'
                       rel='noopener noreferrer'
                       sx={{
