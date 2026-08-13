@@ -205,6 +205,7 @@ const preview: Preview = {
             'How to Use',
             'MUI + Tailwind CSS',
             'For Designers',
+            'Governance',
             'Component Development',
             'Ergonomics',
             'HTML CSS Basics',

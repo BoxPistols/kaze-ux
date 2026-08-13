@@ -11,9 +11,20 @@
  *
  *   pnpm ds:adoption          一覧を表示
  *   pnpm ds:adoption --strict 未準拠が 1 件でもあれば exit 1
+ *   pnpm ds:adoption --json   証明ページが読む JSON を書き出す
+ *
+ * --json の出力先は src/stories/00-Guide/ds-adoption.generated.json。
+ * 証明ページに数字を直書きすると、書いた直後のコミットで古くなり、
+ * 古い数字を人に見せる事故になる。ページは必ずこの生成物を読む。
  */
 
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
+import {
+  readFileSync,
+  readdirSync,
+  statSync,
+  existsSync,
+  writeFileSync,
+} from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -122,6 +133,7 @@ const analyze = (dir) => {
 }
 
 const strict = process.argv.includes('--strict')
+const emitJson = process.argv.includes('--json')
 const pad = (s, n) => String(s).padEnd(n)
 const rows = TARGETS.map(([app, dir]) => ({ app, ...analyze(dir) }))
 
@@ -167,6 +179,39 @@ if (sites.length) {
     '\n  レイアウト原始要素 (Box / Grid / Stack / Typography 等) は',
     'DS に同等品が無いため対象外です。'
   )
+}
+
+if (emitJson) {
+  const out = {
+    // 数字は再現可能な観測にする。生成日時は入れない（差分が毎回出るのと、
+    // 「いつ測ったか」より「同じコマンドで再現できること」の方が強い）
+    command: 'pnpm ds:adoption --json',
+    apps: rows.map((r) => {
+      const b = [...r.bypass.values()].reduce((a, c) => a + c, 0)
+      const denom = r.dsUse + b
+      return {
+        app: r.app,
+        dsUse: r.dsUse,
+        bypass: b,
+        rate: denom ? Number(((r.dsUse / denom) * 100).toFixed(1)) : null,
+      }
+    }),
+    totals: {
+      dsUse: totalDs,
+      bypass: totalBypass,
+      rate: total ? Number(((totalDs / total) * 100).toFixed(1)) : null,
+    },
+    dsOnly: dsOnlyTotal,
+    violations: sites.map((s2) => ({
+      file: s2.file,
+      line: s2.line,
+      used: s2.name,
+      shouldUse: DS_EQUIVALENT[s2.name],
+    })),
+  }
+  const dest = join(ROOT, 'src/stories/00-Guide/ds-adoption.generated.json')
+  writeFileSync(dest, JSON.stringify(out, null, 2) + '\n')
+  console.log(`  → ${dest.replace(ROOT + '/', '')} を書き出しました`)
 }
 
 if (strict && sites.length) {
