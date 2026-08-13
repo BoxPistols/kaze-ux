@@ -50,6 +50,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
+    "postbuild-storybook": "node scripts/sanitize-manifests.mjs",
     "build-all": "pnpm run build-storybook",
     "build:gh-pages": "vite build --mode gh-pages",
     "build:gh-pages:storybook": "storybook build -o gh-pages/storybook",
@@ -79,7 +80,8 @@
     "audit:contrast": "node scripts/audit-contrast.mjs",
     "check:brand": "node scripts/check-brand-terms.mjs",
     "ds:adoption": "node scripts/ds-adoption.mjs",
-    "capture:products": "node scripts/capture-products.mjs"
+    "capture:products": "node scripts/capture-products.mjs",
+    "check:anon": "node scripts/check-anonymity.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
