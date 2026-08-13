@@ -17,6 +17,7 @@
  */
 
 import { execSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -81,10 +82,14 @@ const deriveIdentity = () => {
   return [...values].map((value) => ({
     value,
     // URL とメールはそれ自体が十分に固有なので素の部分一致でよい。
-    // 素の名前は単語の一部に埋もれるので境界を要求する
+    // 素の名前は単語の一部に埋もれるので境界を要求する。
+    //
+    // どちらも大文字小文字を無視する。GitHub のアカウント名は表記を変えても
+    // 同じアカウントに解決するため、小文字で書かれた 1 箇所が
+    // 検査を素通りすれば匿名化は破れる（区別する実装で実際に素通りした）
     re: /@|:\/\//.test(value)
-      ? null
-      : new RegExp(`(?<![A-Za-z0-9])${escape(value)}(?![A-Za-z0-9])`),
+      ? new RegExp(escape(value), 'i')
+      : new RegExp(`(?<![A-Za-z0-9])${escape(value)}(?![A-Za-z0-9])`, 'i'),
   }))
 }
 
@@ -100,7 +105,26 @@ const GENERIC_RULES = [
     re: /https?:\/\/(www\.)?(twitter\.com|x\.com|linkedin\.com\/in|facebook\.com|instagram\.com|note\.com|qiita\.com|zenn\.dev)\/[A-Za-z0-9_./-]+/gi,
     why: '個人のソーシャルへの導線',
   },
+  // 資格情報。身元の問題ではなく事故そのものなので、匿名化と一緒に必ず見る。
+  //
+  // これが無かったために、本番の Storybook バンドルに OpenAI の実キーが
+  // 平文で配信されていながら、この検査は緑を返し続けた。ローカルの成果物は
+  // 同じ位置が空文字になるため、ソース走査・git 履歴走査・ローカル成果物走査は
+  // すべて偽陰性になる（本番 URL に当てて初めて出る）。
+  {
+    id: 'secret',
+    redact: true,
+    re: /\b(?:sk-(?:proj|ant|svcacct|live|test)-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{40,}|AIza[A-Za-z0-9_-]{30,}|(?:pk|sk)\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|gh[pousr]_[A-Za-z0-9]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16})\b/g,
+    why: 'API キー・アクセストークンがバンドルに焼き込まれている',
+  },
 ]
+
+/** 資格情報を、特定はできるが再利用はできない形に落とす */
+const redact = (secret) =>
+  `${secret.slice(0, 8)}… (${secret.length} 文字 / sha256:${createHash('sha256')
+    .update(secret)
+    .digest('hex')
+    .slice(0, 12)})`
 
 const walk = (dir, out = []) => {
   if (!existsSync(dir)) return out
@@ -139,13 +163,11 @@ for (const target of present) {
     }
     const rel = file.replace(ROOT + '/', '')
 
-    for (const { value, re } of identity) {
+    for (const { re } of identity) {
       // URL / メールは素の部分一致、素の名前は単語境界で見る。
       // 境界を見ないと、架空の人名 "Daichi Saito" の中の "aito" のような
       // 部分一致を拾って誤検出になる（実際に一度そうなった）
-      const hit = re ? re.test(content) : content.includes(value)
-      if (re) re.lastIndex = 0
-      if (hit) findings.push({ file: rel, rule: 'identity' })
+      if (re.test(content)) findings.push({ file: rel, rule: 'identity' })
     }
     for (const rule of GENERIC_RULES) {
       rule.re.lastIndex = 0
@@ -153,7 +175,10 @@ for (const target of present) {
         findings.push({
           file: rel,
           rule: rule.id,
-          hit: m[0].slice(0, 80),
+          // 資格情報は値そのものを出さない。どのキーかを特定できるだけの
+          // 情報（接頭・長さ・ハッシュ先頭）に落とす。検査ログが二次的な
+          // 漏洩経路になっては本末転倒なので
+          hit: rule.redact ? redact(m[0]) : m[0].slice(0, 80),
           why: rule.why,
         })
       }

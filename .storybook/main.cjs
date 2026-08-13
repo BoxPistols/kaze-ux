@@ -95,15 +95,24 @@ const config = {
         },
       },
       // 環境変数をdefineに追加
+      //
+      // 資格情報は build（configType === 'PRODUCTION'）では常に空にする。
+      // define した値はバンドルに平文で焼き込まれ、配信された時点で
+      // 無認証の GET で誰でも取得できるため、共有ビルドに載せてはいけない。
+      // 環境変数の設定漏れに頼らず、ビルド種別で機械的に落とす。
+      // 公開ビルドで AI を動かす場合は VITE_API_BASE のバックエンド経由か、
+      // 利用者が自分のキーを入力する運用（設定パネル）を使う。
       define: {
         'import.meta.env.VITE_APP_PASSWORD': JSON.stringify(
           freshEnv.VITE_APP_PASSWORD || ''
         ),
         'import.meta.env.VITE_MAPBOX_ACCESS_TOKEN': JSON.stringify(
-          freshEnv.VITE_MAPBOX_ACCESS_TOKEN || ''
+          configType === 'PRODUCTION'
+            ? ''
+            : freshEnv.VITE_MAPBOX_ACCESS_TOKEN || ''
         ),
         'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(
-          freshEnv.VITE_OPENAI_API_KEY || ''
+          configType === 'PRODUCTION' ? '' : freshEnv.VITE_OPENAI_API_KEY || ''
         ),
         'import.meta.env.VITE_OPENAI_MODEL': JSON.stringify(
           freshEnv.VITE_OPENAI_MODEL || 'gpt-5.6-luna'

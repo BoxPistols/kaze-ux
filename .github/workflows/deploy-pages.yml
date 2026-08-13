@@ -84,10 +84,12 @@ jobs:
           fi
 
       # Storybookのビルド
+      # 資格情報はビルドに渡さない。define した値はバンドルに平文で残り、
+      # 配信された時点で無認証の GET で取得できる。AI を動かす場合は
+      # VITE_API_BASE のバックエンド経由か、利用者自身のキー入力を使う。
       - name: Build Storybook
         if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'storybook'
         env:
-          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
           VITE_OPENAI_MODEL: 'gpt-4.1-nano'
         run: |
           pnpm run build-storybook
