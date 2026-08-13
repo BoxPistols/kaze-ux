@@ -9,7 +9,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import ReplayIcon from '@mui/icons-material/Replay'
 import StarIcon from '@mui/icons-material/Star'
-import { Box, Grid, Typography, alpha } from '@mui/material'
+import { Box, Grid, Typography, alpha, useTheme } from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -20,6 +20,7 @@ import { CustomChip } from '@/components/ui/chip'
 import { ConfirmDialog } from '@/components/ui/dialog'
 import { FormDialog } from '@/components/ui/dialog'
 import { IconButton } from '@/components/ui/icon-button'
+import { StatCard } from '@/components/ui/stat-card'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
 import { motionOf } from '@/themes/motion'
 
@@ -39,6 +40,7 @@ interface ShipmentNote {
 }
 
 export const CompleteView = () => {
+  const mode = useTheme().palette.mode
   const deliveryCount = useSimulation((s) => s.deliveryCount)
   const incidents = useSimulation((s) => s.incidents)
   const elapsedSeconds = useSimulation((s) => s.elapsedSeconds)
@@ -150,36 +152,13 @@ export const CompleteView = () => {
             },
           ].map((kpi) => (
             <Grid key={kpi.label} size={{ xs: 12, md: 4 }}>
-              <Card>
-                <CardContent className='p-6'>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ fontSize: '13px', mb: 1 }}>
-                    {kpi.label}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: 800,
-                      fontSize: '36px',
-                      // 36px は WCAG の「大きい文字」。ブランド色のままでは
-                      // 白地で 3:1 に届かないため明度だけ寄せる
-                      color: (t) =>
-                        logiForegroundLarge(kpi.color, t.palette.mode),
-                      lineHeight: 1,
-                      mb: 0.75,
-                    }}>
-                    {kpi.value}
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ fontSize: '15px' }}>
-                    {kpi.sub}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <StatCard
+                label={kpi.label}
+                value={kpi.value}
+                caption={kpi.sub}
+                // ブランド色のままでは白地で 3:1 に届かないため明度だけ寄せる
+                accentColor={logiForegroundLarge(kpi.color, mode)}
+              />
             </Grid>
           ))}
         </Grid>

@@ -12,6 +12,7 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
+import { EmptyState } from '@/components/ui/feedback'
 import { elevation } from '@/themes/elevation'
 import { motionOf } from '@/themes/motion'
 
@@ -460,41 +461,25 @@ export const HomePage = () => {
             ))}
             {filteredRestaurants.length === 0 && (
               <Grid size={12}>
-                <Box
-                  sx={{
-                    textAlign: 'center',
-                    py: 10,
-                    px: 3,
-                  }}>
-                  <SearchIcon
-                    sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }}
-                    aria-hidden='true'
-                  />
-                  <Typography
-                    variant='h6'
-                    color='text.secondary'
-                    sx={{ fontWeight: 600, mb: 0.5 }}>
-                    No restaurants found
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 3 }}>
-                    Try a different search or category
-                  </Typography>
-                  <Button
-                    variant='outline'
-                    onClick={() => {
-                      setSearch('')
-                      setSelectedCategory('all')
-                    }}>
-                    <ArrowForwardIcon
-                      sx={{ fontSize: 18, mr: 0.5 }}
-                      aria-hidden='true'
-                    />
-                    View all restaurants
-                  </Button>
-                </Box>
+                <EmptyState
+                  icon={<SearchIcon />}
+                  title='No restaurants found'
+                  description='Try a different search or category'
+                  action={
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setSearch('')
+                        setSelectedCategory('all')
+                      }}>
+                      <ArrowForwardIcon
+                        sx={{ fontSize: 18, mr: 0.5 }}
+                        aria-hidden='true'
+                      />
+                      View all restaurants
+                    </Button>
+                  }
+                />
               </Grid>
             )}
           </Grid>

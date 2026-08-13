@@ -92,8 +92,14 @@ export { CustomToaster } from './toast'
 export { CustomTooltip } from './tooltip'
 
 // Feedback components
-export { NotFoundView } from './feedback'
-export type { NotFoundViewProps } from './feedback'
+export { NotFoundView, EmptyState } from './feedback'
+export type { NotFoundViewProps, EmptyStateProps } from './feedback'
+export { StatCard } from './stat-card'
+export type {
+  StatCardProps,
+  StatCardTrend,
+  StatCardProgress,
+} from './stat-card'
 
 // Icon components
 export type { CustomIconProps } from './icon'
