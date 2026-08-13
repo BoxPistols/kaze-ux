@@ -30,8 +30,6 @@ export interface StatCardTrend {
    * 既定は up=良い。反転させたいときに false を渡す
    */
   upIsGood?: boolean
-  /** 「vs last month」のような but 期間の説明。小片の外に出す */
-  caption?: string
 }
 
 export interface StatCardProgress {
@@ -44,7 +42,10 @@ export interface StatCardProps {
   label: string
   /** 主役の数値。文字列も取る（`8/12` や `¥1,200,000` のため） */
   value: string | number
-  /** 数値の下に置く補足。trend / progress と併用できる */
+  /**
+   * 数値の下に置く補足。「vs last month」「平均 ¥1,200/件」など。
+   * trend / progress と併用できる（同じ場所を奪い合わない）
+   */
   caption?: string
   /** 前期比などの増減 */
   trend?: StatCardTrend
@@ -86,9 +87,14 @@ export const StatCard = ({
   interactive = false,
   sx,
 }: StatCardProps) => {
+  // 0 除算だけでなく負値も潰す。負のまま aria-valuenow に載ると
+  // 支援技術には範囲外として伝わる
   const pct =
     progress && progress.max > 0
-      ? Math.min(100, Math.round((progress.value / progress.max) * 100))
+      ? Math.min(
+          100,
+          Math.max(0, Math.round((progress.value / progress.max) * 100))
+        )
       : 0
 
   const trendIsPositive = trend
@@ -175,20 +181,15 @@ export const StatCard = ({
               </Box>
             )}
 
-            {trend?.caption && (
-              <Typography
-                variant='caption'
-                color='text.secondary'
-                sx={{ display: 'block', mt: 0.5, fontSize: '0.72rem' }}>
-                {trend.caption}
-              </Typography>
-            )}
-
-            {caption && !trend && (
+            {caption && (
               <Typography
                 variant='body2'
                 color='text.secondary'
-                sx={{ mt: 1, fontSize: '0.9rem' }}>
+                sx={{
+                  display: 'block',
+                  mt: trend ? 0.5 : 1,
+                  fontSize: trend ? '0.72rem' : '0.9rem',
+                }}>
                 {caption}
               </Typography>
             )}

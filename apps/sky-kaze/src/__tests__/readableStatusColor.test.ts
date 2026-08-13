@@ -5,7 +5,12 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { CONTRAST_THRESHOLD, contrastRatioOf } from '@/themes/contrast'
+import {
+  CONTRAST_THRESHOLD,
+  composite,
+  contrastRatioOf,
+  parseColor,
+} from '@/themes/contrast'
 
 import {
   PANEL_BACKGROUNDS,
@@ -63,23 +68,41 @@ describe('readableStatusColor', () => {
   })
 })
 
+/** 実装と同じ手順で「実際に描かれる面」を作る */
+const tintedSurface = (color: string, surface: string, alpha = 0.12) => {
+  const c = composite({ ...parseColor(color), a: alpha }, parseColor(surface))
+  return `#${[c.r, c.g, c.b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')}`
+}
+
 describe('readableOnTint', () => {
-  it('自身の色を薄く敷いた面の上でも本文 AA を満たす', () => {
-    // Chip は面に alpha 0.12 で自分の色を敷く。素のパネル面で測ると
-    // 足りているように見えて、実際に描かれる面では割れる
-    const surface = '#FFFFFF'
-    for (const color of Object.values(STATUS_COLORS)) {
-      const ink = readableOnTint(color, surface)
-      const tinted = surface // 合成後の面は関数内部で作られる
-      expect(contrastRatioOf(ink, tinted), color).toBeGreaterThan(0)
+  it.each(['#FFFFFF', '#242424'])(
+    '%s の上に色を薄く敷いた面で本文 AA を満たす',
+    (surface) => {
+      // Chip は面に alpha 0.12 で自分の色を敷く。素の面で測ると
+      // 足りているように見えて、実際に描かれる面では割れる。
+      // **合成後の面に対して測らないと、この関数の意味を検証していない**
+      for (const color of Object.values(STATUS_COLORS)) {
+        const ink = readableOnTint(color, surface)
+        expect(
+          contrastRatioOf(ink, tintedSurface(color, surface)),
+          `${surface} / ${color}`
+        ).toBeGreaterThanOrEqual(CONTRAST_THRESHOLD.text)
+      }
     }
+  )
+
+  it('補正しなければ届かない色がある（関数が実際に効いている）', () => {
+    const surface = '#FFFFFF'
+    const raw = Object.values(STATUS_COLORS).map((c) =>
+      contrastRatioOf(c, tintedSurface(c, surface))
+    )
+    expect(Math.min(...raw)).toBeLessThan(CONTRAST_THRESHOLD.text)
   })
 
-  it('tint の濃さを変えると結果も変わりうる', () => {
+  it('tint が濃いほど面が沈むので、文字側も変わる', () => {
     const light = readableOnTint('#F59E0B', '#FFFFFF', 0.12)
-    const heavy = readableOnTint('#F59E0B', '#FFFFFF', 0.5)
-    expect(typeof light).toBe('string')
-    expect(typeof heavy).toBe('string')
+    const heavy = readableOnTint('#F59E0B', '#FFFFFF', 0.6)
+    expect(light).not.toBe(heavy)
   })
 
   it('同じ入力には同じ値を返す', () => {

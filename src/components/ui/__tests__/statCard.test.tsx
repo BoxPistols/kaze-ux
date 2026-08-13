@@ -80,7 +80,8 @@ describe('StatCard', () => {
         <StatCard
           label='Active Projects'
           value={11}
-          trend={{ direction: 'up', value: '+12%', caption: 'vs last month' }}
+          trend={{ direction: 'up', value: '+12%' }}
+          caption='vs last month'
         />
       )
       expect(screen.getByText('+12%')).toBeInTheDocument()
@@ -111,17 +112,26 @@ describe('StatCard', () => {
       expect(screen.getByText('平均 ¥1,200/件')).toBeInTheDocument()
     })
 
-    it('trend があるときは caption を出さない（同じ場所を奪い合わせない）', () => {
+    it('trend と caption は併用できる（型が併用可と書いている以上、出す）', () => {
       renderCard(
         <StatCard
           label='売上合計'
           value='¥86,000'
-          caption='平均 ¥1,200/件'
+          caption='vs last month'
           trend={{ direction: 'up', value: '+8%' }}
         />
       )
       expect(screen.getByText('+8%')).toBeInTheDocument()
-      expect(screen.queryByText('平均 ¥1,200/件')).not.toBeInTheDocument()
+      expect(screen.getByText('vs last month')).toBeInTheDocument()
+    })
+
+    it('progress が負でも 0% に丸める', () => {
+      renderCard(
+        <StatCard label='戻り' value='-1' progress={{ value: -5, max: 10 }} />
+      )
+      expect(
+        screen.getByRole('progressbar').getAttribute('aria-valuenow')
+      ).toBe('0')
     })
   })
 

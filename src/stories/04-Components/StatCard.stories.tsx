@@ -45,7 +45,8 @@ export const WithTrend: Story = {
   args: {
     label: 'Active Contacts',
     value: 12,
-    trend: { direction: 'up', value: '+8%', caption: 'vs last month' },
+    trend: { direction: 'up', value: '+8%' },
+    caption: 'vs last month',
     icon: <FolderIcon color='primary' />,
   },
 }
@@ -58,12 +59,8 @@ export const TrendWhereUpIsBad: Story = {
   args: {
     label: 'インシデント',
     value: 5,
-    trend: {
-      direction: 'up',
-      value: '+2 件',
-      caption: '前週比',
-      upIsGood: false,
-    },
+    trend: { direction: 'up', value: '+2 件', upIsGood: false },
+    caption: '前週比',
   },
 }
 
@@ -98,7 +95,8 @@ export const Interactive: Story = {
   args: {
     label: 'Total Tasks',
     value: 38,
-    trend: { direction: 'down', value: '-3%', caption: 'vs last week' },
+    trend: { direction: 'down', value: '-3%' },
+    caption: 'vs last week',
     interactive: true,
   },
 }

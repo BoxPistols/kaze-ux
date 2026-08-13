@@ -107,8 +107,8 @@ export const DashboardPage = () => {
                 trend={{
                   direction: kpi.change > 0 ? 'up' : 'down',
                   value: `${kpi.change > 0 ? '+' : ''}${kpi.change}%`,
-                  caption: kpi.changeLabel,
                 }}
+                caption={kpi.changeLabel}
                 icon={
                   <Box
                     sx={{
