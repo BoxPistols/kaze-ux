@@ -82,10 +82,14 @@ const deriveIdentity = () => {
   return [...values].map((value) => ({
     value,
     // URL とメールはそれ自体が十分に固有なので素の部分一致でよい。
-    // 素の名前は単語の一部に埋もれるので境界を要求する
+    // 素の名前は単語の一部に埋もれるので境界を要求する。
+    //
+    // どちらも大文字小文字を無視する。GitHub のアカウント名は表記を変えても
+    // 同じアカウントに解決するため、小文字で書かれた 1 箇所が
+    // 検査を素通りすれば匿名化は破れる（区別する実装で実際に素通りした）
     re: /@|:\/\//.test(value)
-      ? null
-      : new RegExp(`(?<![A-Za-z0-9])${escape(value)}(?![A-Za-z0-9])`),
+      ? new RegExp(escape(value), 'i')
+      : new RegExp(`(?<![A-Za-z0-9])${escape(value)}(?![A-Za-z0-9])`, 'i'),
   }))
 }
 
@@ -159,13 +163,11 @@ for (const target of present) {
     }
     const rel = file.replace(ROOT + '/', '')
 
-    for (const { value, re } of identity) {
+    for (const { re } of identity) {
       // URL / メールは素の部分一致、素の名前は単語境界で見る。
       // 境界を見ないと、架空の人名 "Daichi Saito" の中の "aito" のような
       // 部分一致を拾って誤検出になる（実際に一度そうなった）
-      const hit = re ? re.test(content) : content.includes(value)
-      if (re) re.lastIndex = 0
-      if (hit) findings.push({ file: rel, rule: 'identity' })
+      if (re.test(content)) findings.push({ file: rel, rule: 'identity' })
     }
     for (const rule of GENERIC_RULES) {
       rule.re.lastIndex = 0
