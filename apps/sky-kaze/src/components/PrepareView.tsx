@@ -9,12 +9,12 @@ import {
   Box,
   CircularProgress,
   Grid,
-  LinearProgress,
   Step,
   StepLabel,
   Stepper,
   Typography,
   alpha,
+  useTheme,
 } from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
 import { FormDialog } from '@/components/ui/dialog'
+import { StatCard } from '@/components/ui/stat-card'
 import { SectionTitle } from '@/components/ui/text/sectionTitle'
 import { motionOf } from '@/themes/motion'
 
@@ -99,6 +100,7 @@ const PriorityChip = ({ priority }: { priority: Shipment['priority'] }) => {
 }
 
 export const PrepareView = () => {
+  const mode = useTheme().palette.mode
   const setViewMode = useSimulation((s) => s.setViewMode)
   const play = useSimulation((s) => s.play)
   const [checked, setChecked] = useState<Set<string>>(new Set())
@@ -231,48 +233,14 @@ export const PrepareView = () => {
             },
           ].map((kpi) => (
             <Grid key={kpi.label} size={{ xs: 6, md: 3 }}>
-              <Card>
-                <CardContent className='p-5'>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ fontSize: '13px', mb: 1 }}>
-                    {kpi.label}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: 800,
-                      fontSize: '36px',
-                      // 36px は WCAG の「大きい文字」。ブランド色のまま白地に
-                      // 置くと 2.15〜2.8:1 しか出ないため、明度だけ寄せる
-                      color: (t) =>
-                        logiForegroundLarge(kpi.color, t.palette.mode),
-                      lineHeight: 1,
-                      mb: 1.5,
-                    }}>
-                    {kpi.value}
-                  </Typography>
-                  {/* ミニプログレスバー */}
-                  <LinearProgress
-                    variant='determinate'
-                    value={
-                      kpi.max > 0
-                        ? Math.round((kpi.current / kpi.max) * 100)
-                        : 0
-                    }
-                    sx={{
-                      height: 4,
-                      borderRadius: 2,
-                      bgcolor: alpha(kpi.color, 0.12),
-                      '& .MuiLinearProgress-bar': {
-                        borderRadius: 2,
-                        bgcolor: kpi.color,
-                      },
-                    }}
-                  />
-                </CardContent>
-              </Card>
+              <StatCard
+                label={kpi.label}
+                value={kpi.value}
+                progress={{ value: kpi.current, max: kpi.max }}
+                // 36px は WCAG の「大きい文字」。ブランド色のまま白地に
+                // 置くと 2.15〜2.8:1 しか出ないため、明度だけ寄せた値を渡す
+                accentColor={logiForegroundLarge(kpi.color, mode)}
+              />
             </Grid>
           ))}
         </Grid>

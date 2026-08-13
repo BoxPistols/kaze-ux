@@ -12,6 +12,7 @@ import { CustomTextField } from '@/components/Form/CustomTextField'
 import { Button } from '@/components/ui/Button'
 import { LoadingButton } from '@/components/ui/button/loadingButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { EmptyState } from '@/components/ui/feedback'
 import { IconButton } from '@/components/ui/icon-button'
 import { toast } from '@/components/ui/toast'
 
@@ -67,26 +68,16 @@ export const CartPage = () => {
             <ArrowBackIcon />
           </IconButton>
         </Box>
-        <Box sx={{ textAlign: 'center', py: 10 }}>
-          <ShoppingCartOutlinedIcon
-            sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }}
-            aria-hidden='true'
-          />
-          <Typography
-            variant='h5'
-            sx={{ fontWeight: 700, mb: 1, letterSpacing: '-0.01em' }}>
-            Your cart is empty
-          </Typography>
-          <Typography
-            variant='body1'
-            color='text.secondary'
-            sx={{ mb: 4, maxWidth: 360, mx: 'auto' }}>
-            Add items from a restaurant to get started
-          </Typography>
-          <Button variant='default' onClick={() => navigate('/')}>
-            Browse Restaurants
-          </Button>
-        </Box>
+        <EmptyState
+          icon={<ShoppingCartOutlinedIcon />}
+          title='Your cart is empty'
+          description='Add items from a restaurant to get started'
+          action={
+            <Button variant='default' onClick={() => navigate('/')}>
+              Browse Restaurants
+            </Button>
+          }
+        />
       </Box>
     )
   }

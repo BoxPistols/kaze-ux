@@ -3,8 +3,6 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import ContactsIcon from '@mui/icons-material/Contacts'
 import FolderIcon from '@mui/icons-material/Folder'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
-import TrendingDownIcon from '@mui/icons-material/TrendingDown'
-import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import { Box, Grid, Typography, LinearProgress } from '@mui/material'
 import dayjs from 'dayjs'
 import { useState } from 'react'
@@ -15,11 +13,10 @@ import { MiniCalendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { CustomChip } from '@/components/ui/chip'
 import { Fab } from '@/components/ui/fab'
+import { StatCard } from '@/components/ui/stat-card'
 import { StatusTag } from '@/components/ui/tag'
 import type { StatusType } from '@/components/ui/tag'
 import { PageHeader } from '@/components/ui/text'
-import { elevation } from '@/themes/elevation'
-import { KAZE_EYEBROW, KAZE_PRINT } from '@/themes/kazeMixins'
 import { motionOf } from '@/themes/motion'
 
 import { activities } from '~/data/activity'
@@ -103,108 +100,31 @@ export const DashboardPage = () => {
           const iconConfig = kpiIconConfig[kpi.icon]
           return (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.id}>
-              <Card
-                sx={{
-                  // 影スケールが mode 別に生成されるため light/dark 分岐は不要
-                  transition: motionOf(
-                    ['box-shadow', 'transform', 'border-color'],
-                    'short'
-                  ),
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: (theme) => theme.shadows[elevation.floating],
-                  },
-                }}>
-                <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
+              <StatCard
+                interactive
+                label={kpi.title}
+                value={kpi.value}
+                trend={{
+                  direction: kpi.change > 0 ? 'up' : 'down',
+                  value: `${kpi.change > 0 ? '+' : ''}${kpi.change}%`,
+                  caption: kpi.changeLabel,
+                }}
+                icon={
                   <Box
                     sx={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 2,
                       display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: iconConfig.bgColor,
+                      color: iconConfig.color,
                     }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        sx={{
-                          ...KAZE_EYEBROW,
-                          mb: 0.75,
-                          fontSize: '0.68rem',
-                          color: 'text.secondary',
-                        }}>
-                        {kpi.title}
-                      </Typography>
-                      <Typography
-                        variant='h4'
-                        sx={{
-                          ...KAZE_PRINT,
-                          fontSize: { xs: '1.9rem', sm: '2.2rem' },
-                          letterSpacing: '-0.025em',
-                        }}>
-                        {kpi.value}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          mt: 1.5,
-                          gap: 0.5,
-                          bgcolor:
-                            kpi.change > 0
-                              ? 'rgba(70, 171, 74, 0.08)'
-                              : 'rgba(218, 55, 55, 0.08)',
-                          px: 1,
-                          py: 0.25,
-                          borderRadius: 1,
-                        }}>
-                        {kpi.change > 0 ? (
-                          <TrendingUpIcon
-                            sx={{ fontSize: 16, color: 'success.textContrast' }}
-                            aria-hidden='true'
-                          />
-                        ) : (
-                          <TrendingDownIcon
-                            sx={{ fontSize: 16, color: 'error.textContrast' }}
-                            aria-hidden='true'
-                          />
-                        )}
-                        <Typography
-                          variant='caption'
-                          sx={{
-                            color:
-                              kpi.change > 0
-                                ? 'success.textContrast'
-                                : 'error.textContrast',
-                            fontWeight: 600,
-                          }}>
-                          {kpi.change > 0 ? '+' : ''}
-                          {kpi.change}%
-                        </Typography>
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          sx={{ fontSize: '0.7rem' }}>
-                          {kpi.changeLabel}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box
-                      sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: iconConfig.bgColor,
-                        color: iconConfig.color,
-                        flexShrink: 0,
-                      }}>
-                      {iconConfig.icon}
-                    </Box>
+                    {iconConfig.icon}
                   </Box>
-                </CardContent>
-              </Card>
+                }
+              />
             </Grid>
           )
         })}
