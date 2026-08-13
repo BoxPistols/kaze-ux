@@ -1,9 +1,20 @@
 name: Deploy to GitHub Pages
 
+# 【一時的な措置】main への push で自動デプロイしない。
+#
+# GitHub Pages の URL はホスト名がそのままアカウント名になる
+# (`https://<アカウント名>.github.io/<リポジトリ名>/`)。
+# 成果物を匿名で共有している間は、この URL 自体が本人への導線になる。
+# 共有面は Vercel に一本化する。
+#
+# 【元に戻すとき】匿名で共有する必要がなくなったら、下の `push:` の
+# コメントを外すだけでよい。Pages 側の設定も再度有効にすること
+# (`gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow`)。
+# 手動実行 (workflow_dispatch) は残してあるので、設定を戻せばすぐ配信できる。
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
     inputs:
       deploy_target:
