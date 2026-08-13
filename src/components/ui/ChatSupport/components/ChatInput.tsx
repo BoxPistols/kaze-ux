@@ -7,7 +7,8 @@ interface ChatInputProps {
   message: string
   isTyping: boolean
   submitShortcutLabel: string
-  hasApiKey: boolean
+  /** AI 対話が使えるか（自前キー or バックエンドの共有枠） */
+  aiAvailable: boolean
   inputRef: React.RefObject<HTMLInputElement | null>
   onMessageChange: (v: string) => void
   onKeyDown: (e: React.KeyboardEvent) => void
@@ -18,7 +19,7 @@ export const ChatInput = ({
   message,
   isTyping,
   submitShortcutLabel,
-  hasApiKey,
+  aiAvailable,
   inputRef,
   onMessageChange,
   onKeyDown,
@@ -52,7 +53,7 @@ export const ChatInput = ({
           maxRows={8}
           inputRef={inputRef}
           placeholder={
-            hasApiKey
+            aiAvailable
               ? `質問を入力... (${submitShortcutLabel}で送信)`
               : `FAQモード: 質問を入力... (${submitShortcutLabel}で送信)`
           }

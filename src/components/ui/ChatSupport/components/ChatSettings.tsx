@@ -30,6 +30,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 
+import { isBackendMode } from '../chatAiService'
 import {
   DEFAULT_API_KEY,
   DEFAULT_MODEL,
@@ -100,7 +101,9 @@ export const ChatSettings = ({
             現在の設定
           </Typography>
           {isUsingDefaultKey ? (
-            DEFAULT_API_KEY ? (
+            // 共有枠の供給元は「焼き込まれた既定キー」か「バックエンド」。
+            // 本番は既定キーが空なので、これを見ないと常に FAQ 表記になる
+            DEFAULT_API_KEY || isBackendMode() ? (
               <>
                 <Typography
                   variant='caption'

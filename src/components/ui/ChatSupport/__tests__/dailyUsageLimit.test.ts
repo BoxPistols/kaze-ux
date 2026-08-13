@@ -8,6 +8,7 @@ import {
   consumeUse,
   isLimitReached,
   isUsingDefaultKey,
+  isUsingSharedQuota,
   limitReachedMessage,
   localDateKey,
   readUsage,
@@ -138,5 +139,35 @@ describe('上限メッセージ', () => {
     expect(msg).toContain(String(DAILY_LIMIT))
     expect(msg).toContain('API キー')
     expect(msg).toContain('設定')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// isUsingSharedQuota — 共有枠（無料枠）を使っているかの判定
+//
+// 本番ビルドは既定キーを空にするため、既定キーとの一致では判定できない。
+// バックエンドがキーを持つ場合、ブラウザ側にキーが無いのが正常な状態になる。
+// ---------------------------------------------------------------------------
+
+describe('isUsingSharedQuota', () => {
+  it('自前キーがあれば対象外（バックエンド経由でも無制限）', () => {
+    expect(isUsingSharedQuota('sk-own', '', true)).toBe(false)
+    expect(isUsingSharedQuota('sk-own', 'sk-default', false)).toBe(false)
+  })
+
+  it('キーが無くバックエンド経由なら対象（本番の無料枠）', () => {
+    // 既定キーが空でも共有枠は成立する。この経路が無いと本番で一度も数えない
+    expect(isUsingSharedQuota('', '', true)).toBe(true)
+    expect(isUsingSharedQuota(undefined, '', true)).toBe(true)
+  })
+
+  it('バックエンドが無くても既定キーが焼き込まれていれば対象（従来動作）', () => {
+    expect(isUsingSharedQuota('', 'sk-default', false)).toBe(true)
+    expect(isUsingSharedQuota('sk-default', 'sk-default', false)).toBe(true)
+  })
+
+  it('供給元がどこにも無ければ対象外（FAQ のみで AI を呼ばない）', () => {
+    expect(isUsingSharedQuota('', '', false)).toBe(false)
+    expect(isUsingSharedQuota(undefined, '', false)).toBe(false)
   })
 })

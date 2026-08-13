@@ -1,6 +1,15 @@
 // レート制限
-// - Upstash Redis 設定があれば slidingWindow で本番運用
-// - 設定がない場合は in-memory フォールバック（開発専用）
+//
+// 現行構成では外部ストアを使わないため、実際に動くのは in-memory 経路。
+// サーバーレスは呼び出しごとにインスタンスが変わるので、これで止まるのは
+// 「同じインスタンスに連続で当たったバースト」だけで、利用者ごとの通算回数は
+// 数えられない。回数の目安はクライアント側 (dailyUsageLimit.ts) が持ち、
+// 請求額の天井は OpenAI 側の予算上限で設ける。
+//
+// UPSTASH_REDIS_REST_URL / _TOKEN を設定すれば slidingWindow の本実装に
+// 切り替わり、そこで初めて IP ごとの厳密な上限になる。導入しない限りは
+// 上の前提で運用する。
+//
 // - IP ベース、X-Vercel-Forwarded-For を優先
 
 import { Ratelimit } from '@upstash/ratelimit'
@@ -10,7 +19,7 @@ import { Redis } from '@upstash/redis'
 // 設定
 // ---------------------------------------------------------------------------
 
-const DEFAULT_DAILY_LIMIT = 30
+const DEFAULT_DAILY_LIMIT = 20
 const DAILY_LIMIT = (() => {
   const raw = process.env.DAILY_LIMIT
   if (!raw) return DEFAULT_DAILY_LIMIT
@@ -55,7 +64,7 @@ const getUpstashRatelimit = (): Ratelimit | null => {
 }
 
 // ---------------------------------------------------------------------------
-// In-memory フォールバック（開発専用）
+// In-memory カウンタ（外部ストア未設定時の実経路。バースト抑止のみ）
 // ---------------------------------------------------------------------------
 
 interface InMemoryEntry {
@@ -63,6 +72,7 @@ interface InMemoryEntry {
   resetAt: number
 }
 
+// インスタンスに紐づくため、スケールアウトすると各インスタンスが別々に数える
 const inMemoryStore = new Map<string, InMemoryEntry>()
 const DAY_MS = 24 * 60 * 60 * 1000
 

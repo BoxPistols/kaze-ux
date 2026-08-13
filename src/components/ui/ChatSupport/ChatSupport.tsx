@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 import { motionOf } from '@/themes/motion'
 
 import BookConciergeIcon from './BookConciergeIcon'
+import { isBackendMode } from './chatAiService'
 import { ChatHeader } from './components/ChatHeader'
 import { ChatInput } from './components/ChatInput'
 import { ChatMessageList } from './components/ChatMessageList'
@@ -170,7 +171,7 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
             message={message}
             isTyping={isTyping}
             submitShortcutLabel={submitShortcutLabel}
-            hasApiKey={!!config.apiKey}
+            aiAvailable={!!config.apiKey || isBackendMode()}
             inputRef={inputRef}
             onMessageChange={setMessage}
             onKeyDown={(e) => handleKeyDown(e, onSend)}

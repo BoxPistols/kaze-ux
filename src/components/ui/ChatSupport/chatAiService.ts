@@ -1,8 +1,9 @@
 // ChatSupport AI API呼び出しサービス（AI SDK v6 + ハイブリッドモード）
 //
-// モード切替:
-// - VITE_API_BASE が設定されていれば → バックエンドプロキシ (/api/ai) 経由
-// - 設定されていなければ → ブラウザから AI SDK 直接呼び出し（旧来動作）
+// モード切替 (resolveBackendMode):
+// - 本番ビルド → 常にバックエンドプロキシ経由 (同一オリジンの /api/ai)
+// - VITE_API_BASE 設定時 → そのオリジンのプロキシ経由 (別オリジン運用)
+// - どちらでもない (開発) → ブラウザから AI SDK 直接呼び出し
 //
 // バックエンド経由のメリット:
 // - APIキーがブラウザに露出しない（サーバー env vars に保管）
@@ -21,7 +22,23 @@ import type { ChatSupportConfig } from './chatSupportTypes'
 // ---------------------------------------------------------------------------
 
 const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined) || ''
-const isBackendMode = (): boolean => API_BASE.length > 0
+
+/**
+ * バックエンド (api/ai.ts) 経由で呼ぶかどうか。
+ *
+ * 本番ビルドでは常に true にする。VITE_API_BASE の設定漏れ 1 回で AI が
+ * 無言で動かなくなる形にしない（本番ビルドで資格情報を機械的に空にして
+ * いるのと同じ理由。.storybook/main.cjs 参照）。
+ *
+ * 同一オリジン配信なので API_BASE は空のままでよく、fetch は相対
+ * `/api/ai` になる。別オリジンのバックエンドへ向けたいときだけ
+ * VITE_API_BASE を設定する。
+ */
+export const resolveBackendMode = (apiBase: string, isProd: boolean): boolean =>
+  apiBase.length > 0 || isProd
+
+export const isBackendMode = (): boolean =>
+  resolveBackendMode(API_BASE, import.meta.env.PROD === true)
 
 // ---------------------------------------------------------------------------
 // 構造化エラー: UI 側でクォータ表示・自前キー入力 CTA を出すために型で区別
@@ -135,7 +152,7 @@ const callViaBackend = async (
     }
     throw new AIQuotaError(
       data.remaining ?? 0,
-      data.limit ?? 30,
+      data.limit ?? 20,
       data.reset ?? 0
     )
   }

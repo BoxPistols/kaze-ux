@@ -1,19 +1,24 @@
 /**
- * デフォルト API キー利用時の 1 日あたり回数制限。
+ * 共有枠 (無料枠) 利用時の 1 日あたり回数制限。
  *
  * 自分のキーを登録する利点が無いと、共有キーだけが使われてコストが読めない。
  * 「無制限に使えること」を自前キーの利点にする。
  *
- * 制限の対象はデフォルトキーを使っているときだけで、
+ * 制限の対象は共有枠を使っているときだけで、
  * - 自前キーを登録している人は無制限（現状維持）
- * - デフォルトキーが未設定（FAQ モード）は AI を呼ばないので対象外
+ * - 共有枠の供給元がどこにも無ければ AI を呼ばないので対象外（FAQ モード）
  *
- * 記録はブラウザの localStorage なので、消せば回避できる。サーバーを
- * 持たない構成での抑止としてはこれが上限で、厳密な保証ではない。
+ * 記録はブラウザの localStorage に置く。バックエンド (api/ai.ts) は存在するが
+ * 共有ストレージを持たないため、サーバー側に「利用者ごとの通算回数」を置けない
+ * (Vercel のサーバーレスは呼び出しごとにインスタンスが変わり、in-memory の
+ * カウンタは残らない)。
+ *
+ * したがってこの上限が止められるのは通常利用だけで、シークレットウィンドウを
+ * 開けば新しい 20 回が始まる。請求額の天井は OpenAI 側の予算上限で設ける。
  */
 
 /** 1 日あたりの上限回数 */
-export const DAILY_LIMIT = 30
+export const DAILY_LIMIT = 20
 
 export const USAGE_STORAGE_KEY = 'storybook_chat_usage'
 
@@ -120,6 +125,28 @@ export const isUsingDefaultKey = (
   apiKey: string | undefined,
   defaultApiKey: string
 ): boolean => Boolean(defaultApiKey) && (!apiKey || apiKey === defaultApiKey)
+
+/**
+ * 共有枠（無料枠）を使っているかどうか。回数制限の対象はこれ。
+ *
+ * `isUsingDefaultKey` はバンドルに焼き込まれた既定キーがある前提の判定で、
+ * 本番ビルドでは既定キーを空にしているため常に false になる。バックエンド
+ * 経由ではキーはサーバーが持っていてブラウザからは見えないので、
+ * 「既定キーと一致するか」では判定できない。
+ *
+ * 判定はこの 2 段:
+ *   1. 自前キーを登録している → 無制限（対象外）
+ *   2. そうでなく、共有枠の供給元がある（バックエンド経由 or 既定キーあり）→ 対象
+ */
+export const isUsingSharedQuota = (
+  apiKey: string | undefined,
+  defaultApiKey: string,
+  backendMode: boolean
+): boolean => {
+  const hasOwnKey = Boolean(apiKey) && apiKey !== defaultApiKey
+  if (hasOwnKey) return false
+  return backendMode || Boolean(defaultApiKey)
+}
 
 /** 上限到達時に出す案内文 */
 export const limitReachedMessage = (): string =>
