@@ -17,10 +17,11 @@
  */
 
 import { execSync } from 'node:child_process'
-import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import { SECRET_PATTERN, redactSecret } from './lib/secret-patterns.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DEFAULT_TARGETS = ['dist', 'storybook-static']
@@ -114,17 +115,13 @@ const GENERIC_RULES = [
   {
     id: 'secret',
     redact: true,
-    re: /\b(?:sk-(?:proj|ant|svcacct|live|test)-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{40,}|AIza[A-Za-z0-9_-]{30,}|(?:pk|sk)\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|gh[pousr]_[A-Za-z0-9]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16})\b/g,
+    // パターンの単一ソースは scripts/lib/secret-patterns.mjs。
+    // 本番 URL を見る check-live-secrets.mjs と同じものを使う。
+    // 片方だけに足すと「片方の検査では緑」を作れてしまう
+    re: new RegExp(`\\b(?:${SECRET_PATTERN})\\b`, 'g'),
     why: 'API キー・アクセストークンがバンドルに焼き込まれている',
   },
 ]
-
-/** 資格情報を、特定はできるが再利用はできない形に落とす */
-const redact = (secret) =>
-  `${secret.slice(0, 8)}… (${secret.length} 文字 / sha256:${createHash('sha256')
-    .update(secret)
-    .digest('hex')
-    .slice(0, 12)})`
 
 const walk = (dir, out = []) => {
   if (!existsSync(dir)) return out
@@ -178,7 +175,7 @@ for (const target of present) {
           // 資格情報は値そのものを出さない。どのキーかを特定できるだけの
           // 情報（接頭・長さ・ハッシュ先頭）に落とす。検査ログが二次的な
           // 漏洩経路になっては本末転倒なので
-          hit: rule.redact ? redact(m[0]) : m[0].slice(0, 80),
+          hit: rule.redact ? redactSecret(m[0]) : m[0].slice(0, 80),
           why: rule.why,
         })
       }

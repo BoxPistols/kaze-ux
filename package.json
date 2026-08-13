@@ -81,7 +81,9 @@
     "check:brand": "node scripts/check-brand-terms.mjs",
     "ds:adoption": "node scripts/ds-adoption.mjs",
     "capture:products": "node scripts/capture-products.mjs",
-    "check:anon": "node scripts/check-anonymity.mjs"
+    "check:anon": "node scripts/check-anonymity.mjs",
+    "check:live": "node scripts/check-live-secrets.mjs",
+    "check:share": "pnpm run check:anon && pnpm run check:live"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
