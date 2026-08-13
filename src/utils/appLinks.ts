@@ -97,7 +97,17 @@ export const APP_LINKS = {
   saas: () => resolve('saas', '/saas/'),
   kazeEats: () => resolve('kazeEats', '/kaze-eats/'),
   skyKaze: () => resolve('skyKaze', '/sky-kaze/'),
-  github: () => 'https://github.com/BoxPistols/kaze-ux',
+  /**
+   * ソースの公開先。**既定は未設定（＝リンクを出さない）。**
+   *
+   * この成果物は第三者へ URL で共有することがあり、その際に運営者個人へ
+   * 辿れる導線を残さない。URL をコードに直接書くと、共有用ビルドにも
+   * 必ず載る（実際に dist と storybook-static の両方に混入していた）。
+   *
+   * 出したい場合だけ `VITE_PUBLIC_REPO_URL` を与える。未設定なら
+   * `null` を返し、呼び出し側はリンク自体を描画しない。
+   */
+  repository: (): string | null => import.meta.env.VITE_PUBLIC_REPO_URL || null,
 }
 
 // ---------------------------------------------------------------------------

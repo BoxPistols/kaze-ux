@@ -713,6 +713,8 @@ const SECTION_LEAD_SX = {
 
 // メインLPコンポーネント
 export const LandingPage = () => {
+  // 未設定なら null。ソース公開先への導線は既定で出さない
+  const repositoryUrl = APP_LINKS.repository()
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
   const containerRef = useRef<HTMLDivElement>(null)
@@ -970,39 +972,41 @@ export const LandingPage = () => {
                     <AutoStoriesIcon sx={{ fontSize: 18 }} />
                     Storybook
                   </Box>
-                  <Box
-                    component='a'
-                    href={APP_LINKS.github()}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: 3.5,
-                      py: 1.5,
-                      borderRadius: 2,
-                      border: '1px solid',
-                      borderColor: isDark
-                        ? 'rgba(255,255,255,0.12)'
-                        : 'rgba(0,0,0,0.12)',
-                      color: 'text.primary',
-                      fontWeight: 600,
-                      fontSize: '0.9rem',
-                      textDecoration: 'none',
-                      transition: motionOf(
-                        ['transform', 'box-shadow'],
-                        'macro'
-                      ),
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        color: 'primary.textContrast',
-                        transform: 'translateY(-2px)',
-                      },
-                    }}>
-                    <GitHubIcon sx={{ fontSize: 18 }} />
-                    GitHub
-                  </Box>
+                  {repositoryUrl && (
+                    <Box
+                      component='a'
+                      href={repositoryUrl ?? undefined}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        px: 3.5,
+                        py: 1.5,
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: isDark
+                          ? 'rgba(255,255,255,0.12)'
+                          : 'rgba(0,0,0,0.12)',
+                        color: 'text.primary',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        textDecoration: 'none',
+                        transition: motionOf(
+                          ['transform', 'box-shadow'],
+                          'macro'
+                        ),
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                          color: 'primary.textContrast',
+                          transform: 'translateY(-2px)',
+                        },
+                      }}>
+                      <GitHubIcon sx={{ fontSize: 18 }} />
+                      GitHub
+                    </Box>
+                  )}
                 </Box>
               </motion.div>
             </Box>
@@ -1185,8 +1189,8 @@ export const LandingPage = () => {
                 step: '03',
                 title: 'コードを書く',
                 desc: 'pnpm install して開発開始。CLAUDE.md を読めば AI エージェントも DS 準拠コードを生成できます。',
-                link: APP_LINKS.github(),
-                linkLabel: 'GitHub',
+                link: repositoryUrl,
+                linkLabel: repositoryUrl ? 'GitHub' : undefined,
               },
             ].map((item, i) => (
               <motion.div
@@ -1233,21 +1237,23 @@ export const LandingPage = () => {
                     }}>
                     {item.desc}
                   </Typography>
-                  <Box
-                    component='a'
-                    href={item.link}
-                    {...(item.link.startsWith('http')
-                      ? { target: '_blank', rel: 'noopener noreferrer' }
-                      : {})}
-                    sx={{
-                      fontSize: '0.95rem',
-                      fontWeight: 600,
-                      color: 'primary.textContrast',
-                      textDecoration: 'none',
-                      '&:hover': { textDecoration: 'underline' },
-                    }}>
-                    {item.linkLabel} →
-                  </Box>
+                  {item.link && (
+                    <Box
+                      component='a'
+                      href={item.link}
+                      {...(item.link.startsWith('http')
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
+                      sx={{
+                        fontSize: '0.95rem',
+                        fontWeight: 600,
+                        color: 'primary.textContrast',
+                        textDecoration: 'none',
+                        '&:hover': { textDecoration: 'underline' },
+                      }}>
+                      {item.linkLabel} →
+                    </Box>
+                  )}
                 </Box>
               </motion.div>
             ))}
@@ -1404,7 +1410,10 @@ export const LandingPage = () => {
               { label: 'Storybook', href: APP_LINKS.storybook() },
               { label: 'SaaS Demo', href: APP_LINKS.saas() },
               { label: 'KazeEats', href: APP_LINKS.kazeEats() },
-              { label: 'GitHub', href: APP_LINKS.github() },
+              // 公開先が設定されている時だけ出す（既定は出さない）
+              ...(repositoryUrl
+                ? [{ label: 'Source', href: repositoryUrl }]
+                : []),
             ].map((link) => (
               <Box
                 key={link.label}
