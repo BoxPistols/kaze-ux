@@ -1,0 +1,36 @@
+{
+  "command": "pnpm ds:adoption --json",
+  "apps": [
+    {
+      "app": "saas-dashboard",
+      "dsUse": 204,
+      "bypass": 0,
+      "rate": 100
+    },
+    {
+      "app": "kaze-eats",
+      "dsUse": 95,
+      "bypass": 0,
+      "rate": 100
+    },
+    {
+      "app": "sky-kaze",
+      "dsUse": 57,
+      "bypass": 0,
+      "rate": 100
+    },
+    {
+      "app": "LP (src/pages)",
+      "dsUse": 0,
+      "bypass": 0,
+      "rate": null
+    }
+  ],
+  "totals": {
+    "dsUse": 356,
+    "bypass": 0,
+    "rate": 100
+  },
+  "dsOnly": 53,
+  "violations": []
+}
