@@ -102,7 +102,7 @@ export const DateTimePicker = ({
           <Typography
             component='label'
             variant='body2'
-            sx={{ fontWeight: 500, color: 'text.primary' }}>
+            sx={{ fontWeight: 400, color: 'text.primary' }}>
             {label}
             {required && <RequiredMark>*</RequiredMark>}
           </Typography>

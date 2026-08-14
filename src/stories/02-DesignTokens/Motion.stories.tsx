@@ -117,7 +117,7 @@ const EasingCurveCard = ({
       <Stack spacing={2}>
         {/* ヘッダー */}
         <Box>
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
+          <Typography variant='h6' sx={{ fontWeight: 700 }}>
             {name}
           </Typography>
           <Typography variant='body2' color='text.secondary'>
@@ -128,7 +128,7 @@ const EasingCurveCard = ({
             sx={{
               fontFamily: 'monospace',
               color: 'primary.main',
-              fontWeight: 600,
+              fontWeight: 700,
               display: 'block',
               mt: 0.5,
             }}>
@@ -203,7 +203,7 @@ const EasingCurveCard = ({
               x={svgWidth / 2}
               y={svgHeight - 2}
               textAnchor='middle'
-              fontSize='10'
+              fontSize='12'
               fill={theme.palette.text.secondary}>
               時間
             </text>
@@ -211,7 +211,7 @@ const EasingCurveCard = ({
               x={4}
               y={svgHeight / 2}
               textAnchor='middle'
-              fontSize='10'
+              fontSize='12'
               fill={theme.palette.text.secondary}
               transform={`rotate(-90, 8, ${svgHeight / 2})`}>
               進捗
@@ -363,7 +363,7 @@ const EasingCurves = () => {
           borderColor: 'divider',
           borderRadius: 3,
         }}>
-        <Typography variant='h6' sx={{ fontWeight: 600, mb: 0.5 }}>
+        <Typography variant='h6' sx={{ fontWeight: 700, mb: 0.5 }}>
           イージング値一覧 (CSS)
         </Typography>
         <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
@@ -389,7 +389,7 @@ const EasingCurves = () => {
             <Box key={group}>
               <Typography
                 variant='subtitle2'
-                sx={{ fontWeight: 600, mb: 0.25 }}>
+                sx={{ fontWeight: 700, mb: 0.25 }}>
                 {group}
               </Typography>
               <Typography
@@ -419,7 +419,7 @@ const EasingCurves = () => {
                     />
                     <Typography
                       variant='body2'
-                      sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
+                      sx={{ fontFamily: 'monospace', fontWeight: 400 }}>
                       {easings[key]}
                     </Typography>
                   </Box>
@@ -472,7 +472,7 @@ const DurationBar = ({
         sx={{ minWidth: 120, display: 'flex', alignItems: 'center', gap: 1 }}>
         <Typography
           variant='body2'
-          sx={{ fontWeight: 600, fontFamily: 'monospace' }}>
+          sx={{ fontWeight: 700, fontFamily: 'monospace' }}>
           {durationMs}ms
         </Typography>
         {isFromTheme && (
@@ -527,9 +527,9 @@ const DurationBar = ({
             top: '50%',
             transform: 'translateY(-50%)',
             fontFamily: 'monospace',
-            fontWeight: 600,
+            fontWeight: 700,
             color: 'text.secondary',
-            fontSize: '0.7rem',
+            fontSize: '0.86rem',
             zIndex: 1,
             mixBlendMode: 'difference',
           }}>
@@ -610,7 +610,7 @@ const DurationScale = () => {
           borderColor: 'divider',
           borderRadius: 3,
         }}>
-        <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='h6' sx={{ fontWeight: 700, mb: 2 }}>
           テーマ定義値
         </Typography>
         <Grid container spacing={2}>
@@ -634,7 +634,7 @@ const DurationScale = () => {
                 />
                 <Typography
                   variant='body2'
-                  sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                  sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                   {value}ms
                 </Typography>
               </Box>
@@ -734,7 +734,7 @@ const InteractiveDemo = () => {
               borderColor: 'divider',
               borderRadius: 3,
             }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h6' sx={{ fontWeight: 700, mb: 3 }}>
               設定
             </Typography>
 
@@ -749,13 +749,13 @@ const InteractiveDemo = () => {
                   {Object.entries(easingOptions).map(([key, value]) => (
                     <MenuItem key={key} value={key}>
                       <Box>
-                        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                        <Typography variant='body2' sx={{ fontWeight: 700 }}>
                           {key}
                         </Typography>
                         <Typography
                           variant='caption'
                           color='text.secondary'
-                          sx={{ fontFamily: 'monospace', fontSize: '0.65rem' }}>
+                          sx={{ fontFamily: 'monospace', fontSize: '0.86rem' }}>
                           {value}
                         </Typography>
                       </Box>
@@ -799,7 +799,7 @@ const InteractiveDemo = () => {
                   variant='body2'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     color: 'primary.main',
                     wordBreak: 'break-all',
                   }}>
@@ -841,7 +841,7 @@ const InteractiveDemo = () => {
                 borderColor: 'divider',
                 borderRadius: 3,
               }}>
-              <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='h6' sx={{ fontWeight: 700, mb: 2 }}>
                 横移動
               </Typography>
               <Box
@@ -900,7 +900,7 @@ const InteractiveDemo = () => {
                 borderColor: 'divider',
                 borderRadius: 3,
               }}>
-              <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='h6' sx={{ fontWeight: 700, mb: 2 }}>
                 スケール変化
               </Typography>
               <Box
@@ -940,7 +940,7 @@ const InteractiveDemo = () => {
                 borderColor: 'divider',
                 borderRadius: 3,
               }}>
-              <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='h6' sx={{ fontWeight: 700, mb: 2 }}>
                 フェード
               </Typography>
               <Box
@@ -971,7 +971,7 @@ const InteractiveDemo = () => {
                   }}>
                   <Typography
                     variant='caption'
-                    sx={{ color: 'white', fontWeight: 600 }}>
+                    sx={{ color: 'white', fontWeight: 700 }}>
                     Fade In
                   </Typography>
                 </Box>
@@ -988,7 +988,7 @@ const InteractiveDemo = () => {
                 borderColor: 'divider',
                 borderRadius: 3,
               }}>
-              <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='h6' sx={{ fontWeight: 700, mb: 2 }}>
                 イージング比較 (同一デュレーション: {selectedDuration}ms)
               </Typography>
               <Stack spacing={2}>
@@ -997,7 +997,7 @@ const InteractiveDemo = () => {
                     <Typography
                       variant='caption'
                       color='text.secondary'
-                      sx={{ fontWeight: 600, mb: 0.5, display: 'block' }}>
+                      sx={{ fontWeight: 700, mb: 0.5, display: 'block' }}>
                       {key}
                     </Typography>
                     <Box

@@ -134,13 +134,10 @@ export const typography = {
     '5xl': '3rem', // 48px
     '6xl': '3.75rem', // 60px
   },
+  // ウェイトは 2 値のみ。中間値を持たせると、どれが正か決められなくなる
   fontWeight: {
-    light: 300,
     normal: 400,
-    medium: 500,
-    semibold: 600,
     bold: 700,
-    extrabold: 800,
   },
   lineHeight: {
     tight: 1.25,

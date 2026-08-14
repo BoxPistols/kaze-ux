@@ -44,7 +44,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 3 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -61,7 +61,7 @@ const WhereChip = ({ children }: { children: React.ReactNode }) => (
     label={children}
     size='small'
     variant='outlined'
-    sx={{ fontWeight: 600, fontSize: '0.75rem' }}
+    sx={{ fontWeight: 700, fontSize: '0.86rem' }}
   />
 )
 
@@ -92,7 +92,7 @@ const Step = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontWeight: 800,
+            fontWeight: 700,
             fontSize: '0.875rem',
             flexShrink: 0,
           }}>
@@ -223,7 +223,7 @@ const GettingStartedContent = () => {
                 <TableCell>
                   <WhereChip>{row.area}</WhereChip>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>{row.what}</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>{row.what}</TableCell>
                 <TableCell color='text.secondary'>{row.detail}</TableCell>
               </TableRow>
             ))}
@@ -284,7 +284,7 @@ const GettingStartedContent = () => {
           <TableBody>
             {vocabulary.map((v) => (
               <TableRow key={v.word}>
-                <TableCell sx={{ fontWeight: 600 }}>{v.word}</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>{v.word}</TableCell>
                 <TableCell color='text.secondary'>{v.meaning}</TableCell>
               </TableRow>
             ))}
@@ -331,7 +331,7 @@ const GettingStartedContent = () => {
                 label={n.for}
                 size='small'
                 color='primary'
-                sx={{ mb: 1.5, fontWeight: 600, fontSize: '0.7rem' }}
+                sx={{ mb: 1.5, fontWeight: 700, fontSize: '0.86rem' }}
               />
               <Typography sx={{ fontWeight: 700, mb: 0.5 }}>
                 {n.title}

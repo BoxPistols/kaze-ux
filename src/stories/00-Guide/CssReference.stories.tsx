@@ -34,7 +34,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -68,14 +68,14 @@ const PropertyTable = ({
             <TableCell>
               <Typography
                 variant='body2'
-                sx={{ fontFamily: 'monospace', fontSize: 11, fontWeight: 600 }}>
+                sx={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 700 }}>
                 {r.property}
               </Typography>
             </TableCell>
             <TableCell>
               <Typography
                 variant='body2'
-                sx={{ fontFamily: 'monospace', fontSize: 11 }}>
+                sx={{ fontFamily: 'monospace', fontSize: 12 }}>
                 {r.values}
               </Typography>
             </TableCell>
@@ -122,7 +122,7 @@ const BorderRadiusDemo = () => (
         />
         <Typography
           variant='caption'
-          sx={{ fontFamily: 'monospace', fontSize: 10 }}>
+          sx={{ fontFamily: 'monospace', fontSize: 12 }}>
           {b.label}
         </Typography>
       </Box>
@@ -162,7 +162,7 @@ const ShadowDemo = () => {
           />
           <Typography
             variant='caption'
-            sx={{ fontFamily: 'monospace', fontSize: 10 }}>
+            sx={{ fontFamily: 'monospace', fontSize: 12 }}>
             {s.label}
           </Typography>
         </Box>
@@ -200,7 +200,7 @@ const TransitionDemo = () => {
           />
           <Typography
             variant='caption'
-            sx={{ fontFamily: 'monospace', fontSize: 10 }}>
+            sx={{ fontFamily: 'monospace', fontSize: 12 }}>
             {t.label}
           </Typography>
         </Box>
@@ -226,7 +226,7 @@ const OpacityDemo = () => (
         />
         <Typography
           variant='caption'
-          sx={{ fontFamily: 'monospace', fontSize: 10 }}>
+          sx={{ fontFamily: 'monospace', fontSize: 12 }}>
           {o}
         </Typography>
       </Box>
@@ -256,7 +256,7 @@ const CssReferenceContent = () => {
               ? 'linear-gradient(135deg, rgba(103,58,183,0.08) 0%, rgba(0,150,136,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(103,58,183,0.04) 0%, rgba(0,150,136,0.04) 100%)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           CSS プロパティ リファレンス
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -958,7 +958,7 @@ const CssReferenceContent = () => {
                     label={u.unit}
                     size='small'
                     variant='outlined'
-                    sx={{ fontFamily: 'monospace', fontSize: 11 }}
+                    sx={{ fontFamily: 'monospace', fontSize: 12 }}
                   />
                 </TableCell>
                 <TableCell>

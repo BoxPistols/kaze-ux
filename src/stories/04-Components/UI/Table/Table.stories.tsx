@@ -127,7 +127,7 @@ export const Default: StoryObj<typeof Table> = {
           {deviceRows.map((row) => (
             <TableRow key={row.id} hover>
               <TableCell>
-                <Typography variant='body2' fontWeight={500}>
+                <Typography variant='body2' fontWeight={400}>
                   {row.name}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -152,7 +152,7 @@ export const Default: StoryObj<typeof Table> = {
                         : row.battery >= 30
                           ? 'warning.main'
                           : 'error.main',
-                    fontWeight: 600,
+                    fontWeight: 700,
                   }}>
                   {row.battery}%
                 </Typography>

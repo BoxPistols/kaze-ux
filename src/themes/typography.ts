@@ -25,7 +25,6 @@ declare module '@mui/material/styles' {
     ml: React.CSSProperties
     md: React.CSSProperties
     sm: React.CSSProperties
-    xs: React.CSSProperties
   }
 
   interface TypographyVariantsOptions {
@@ -41,7 +40,6 @@ declare module '@mui/material/styles' {
     ml?: React.CSSProperties
     md?: React.CSSProperties
     sm?: React.CSSProperties
-    xs?: React.CSSProperties
   }
 }
 
@@ -57,7 +55,6 @@ declare module '@mui/material/Typography' {
     ml: true
     md: true
     sm: true
-    xs: true
   }
 }
 
@@ -72,7 +69,6 @@ declare module '@mui/material/styles' {
     ml?: CSSProperties
     md?: CSSProperties
     sm?: CSSProperties
-    xs?: CSSProperties
   }
 }
 
@@ -93,16 +89,22 @@ export const fontSizesVariant = {
   lg: pxToRem(18),
   ml: pxToRem(16),
   md: pxToRem(14),
+  // 12px が下限。これ未満は用途を問わず使わない。
+  // 以前は xs: pxToRem(10) があったが 9.94px になり規約を満たさず、
+  // 12px に上げると sm と同値になるため variant ごと廃止した
   sm: pxToRem(12),
-  xs: pxToRem(10), // 最小サイズ（特殊用途のみ）
 }
 
+// ウェイトは 2 値のみ。normal か bold か、それ以外は無い。
+//
+// 中間ウェイト（500 / 600 / 800 等）を許すと、同じ「少し強調」に対して
+// 書き手ごとに違う数値が入り、どれが正なのか誰にも分からなくなる。
+// 実際 528 箇所の直書きに 200/300/380/400/420/500/600/700/800/900 の
+// 10 種類が混在し、380 や 420 のように由来を説明できない値まであった。
 const fontWeight = {
-  bold: 700,
-  semibold: 600,
-  medium: 500,
   normal: 400,
-}
+  bold: 700,
+} as const
 
 const lineHeight = {
   large: 1.8,
@@ -144,12 +146,11 @@ export const letterSpacingVariant = {
   ml: trackingFor(16),
   md: trackingFor(14),
   sm: trackingFor(12),
-  xs: trackingFor(10),
 }
 
 /** display 帯 (24px 以上): 太字は大きいほど重く見えるため semibold + 詰めた行送り */
 const display = {
-  fontWeight: fontWeight.semibold,
+  fontWeight: fontWeight.bold,
   lineHeight: lineHeight.tight,
 }
 
@@ -166,14 +167,14 @@ const headingSmall = {
 }
 
 /**
- * サイズ帯 (xxl - xs): 寸法だけを与え、太さは呼び出し側の裁量に残す。
+ * サイズ帯 (xxl - sm): 寸法だけを与え、太さは呼び出し側の裁量に残す。
  *
  * 以前は xxl/xl/lg だけが bold + 行送り 1.3、ml 以下が normal + 1.4 で、
  * 同じ命名軸の途中で太さが切り替わっていた。結果として、見出しに使う側は
  * 必ず fontWeight を書き足し（serviceCard は variant='md' に 600 を追加）、
  * サイズ帯に使う側は太さを打ち消す必要があった。
  *
- * 意味 (h1-h6 / display) と寸法 (xxl-xs) を別の軸として扱い、
+ * 意味 (h1-h6 / display) と寸法 (xxl-sm) を別の軸として扱い、
  * 寸法側は太さを主張しない。
  */
 const sizeOnly = {
@@ -186,9 +187,11 @@ export const typographyOptions: TypographyOptions = {
   htmlFontSize: baseFontSize,
   fontSize: baseFontSize,
   fontFamily: 'Inter, Noto Sans JP, Helvetica, Arial, sans-serif',
-  fontWeightLight: 300,
+  // MUI 自身のスケールも 2 値に潰す。theme.typography.fontWeightMedium を
+  // 参照している箇所があり、ここが 500 のままだと描画に 500 が残る
+  fontWeightLight: 400,
   fontWeightRegular: 400,
-  fontWeightMedium: 500,
+  fontWeightMedium: 400,
   fontWeightBold: 700,
   allVariants: {
     fontFamily: 'Inter, Noto Sans JP, Helvetica, Arial, sans-serif',
@@ -246,18 +249,20 @@ export const typographyOptions: TypographyOptions = {
   // 行送り 1.4・weight 400 の同値だった。名前が 4 つあって見た目が 1 つでは
   // 段として機能しないため、呼び出し側は毎回 sx で打ち消していた。
   // 見出しと本文の間を埋める段として、それぞれに役割を与える。
-  /** 見出しに添える導入文。本文よりわずかに大きく、やや重い */
+  /** 見出しに添える導入文。本文より一段大きく、bold で立てる */
   subtitle1: {
     fontSize: fontSizesVariant.ml,
-    fontWeight: fontWeight.medium,
+    fontWeight: fontWeight.bold,
     lineHeight: lineHeight.small,
     letterSpacing: letterSpacingVariant.ml,
   },
-  /** 小見出しに添える補足。本文と同じ寸法で、太さだけで区別する */
+  /** 小見出しに添える補足。本文と同じ寸法で、太さ (bold) だけで区別する */
   subtitle2: {
     fontSize: fontSizesVariant.md,
-    fontWeight: fontWeight.medium,
-    lineHeight: lineHeight.small,
+    fontWeight: fontWeight.bold,
+    // h5 も md + bold。見出しは行送りを締め (small)、副題は文として
+    // 読ませるので緩める (medium)。ウェイトが 2 値なので太さでは分けられない
+    lineHeight: lineHeight.medium,
     letterSpacing: letterSpacingVariant.md,
   },
   /** 図版の説明・補助テキスト。最小フォントサイズ 12px 原則に準拠 */
@@ -275,14 +280,14 @@ export const typographyOptions: TypographyOptions = {
    */
   overline: {
     fontSize: fontSizesVariant.sm,
-    fontWeight: fontWeight.medium,
+    fontWeight: fontWeight.normal,
     lineHeight: lineHeight.small,
     letterSpacing: '0.1em',
     textTransform: 'uppercase',
   },
   button: {
     fontSize: fontSizesVariant.md,
-    fontWeight: fontWeight.medium, // ラベルは本文より一段重く、押せる面に見せる
+    fontWeight: fontWeight.normal, // ラベルは本文より一段重く、押せる面に見せる
     lineHeight: lineHeight.medium,
     letterSpacing: letterSpacingVariant.md,
     textTransform: 'none',
@@ -332,11 +337,6 @@ export const typographyOptions: TypographyOptions = {
     letterSpacing: letterSpacingVariant.sm,
     ...sizeOnly,
   },
-  xs: {
-    fontSize: fontSizesVariant.xs,
-    letterSpacing: letterSpacingVariant.xs,
-    ...sizeOnly,
-  },
 }
 
 export const typographyComponentsOverrides = {
@@ -365,7 +365,6 @@ export const typographyComponentsOverrides = {
         ml: 'p',
         md: 'p',
         sm: 'p',
-        xs: 'p',
       },
     },
     styleOverrides: {

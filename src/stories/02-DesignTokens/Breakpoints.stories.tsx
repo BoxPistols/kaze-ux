@@ -145,12 +145,12 @@ const BreakpointScaleDemo = () => {
           label={currentBp}
           color='primary'
           size='small'
-          sx={{ fontWeight: 600, ml: 0.5 }}
+          sx={{ fontWeight: 700, ml: 0.5 }}
         />
       </Alert>
 
       {/* ----- カスタムブレークポイント一覧 ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
         カスタムブレークポイント
       </Typography>
 
@@ -193,14 +193,14 @@ const BreakpointScaleDemo = () => {
                       label='ACTIVE'
                       color='primary'
                       size='small'
-                      sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                      sx={{ fontWeight: 700, fontSize: '0.86rem' }}
                     />
                   )}
                 </Box>
                 <Box sx={{ textAlign: 'right' }}>
                   <Typography
                     variant='body2'
-                    sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                    sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                     {value}px{upper ? ` - ${upper}` : '+'}
                   </Typography>
                 </Box>
@@ -246,7 +246,7 @@ const BreakpointScaleDemo = () => {
       <Divider sx={{ mb: 5 }} />
 
       {/* ----- MUI ブレークポイントマッピング ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
         MUI ブレークポイントマッピング
       </Typography>
 
@@ -274,7 +274,7 @@ const BreakpointScaleDemo = () => {
                   }}>
                   <Typography
                     variant='body2'
-                    sx={{ fontWeight: 600, fontFamily: 'monospace' }}>
+                    sx={{ fontWeight: 700, fontFamily: 'monospace' }}>
                     {key}
                   </Typography>
                   <Typography
@@ -290,7 +290,7 @@ const BreakpointScaleDemo = () => {
       </Paper>
 
       {/* ----- 全体スケールバー（セグメント表示） ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
         ブレークポイントスケール
       </Typography>
 
@@ -345,7 +345,7 @@ const BreakpointScaleDemo = () => {
                   sx={{
                     fontWeight: 700,
                     color: isActive ? 'white' : 'text.secondary',
-                    fontSize: '0.7rem',
+                    fontSize: '0.86rem',
                     textTransform: 'uppercase',
                   }}>
                   {label}
@@ -394,7 +394,7 @@ const BreakpointScaleDemo = () => {
                   position: 'absolute',
                   left: `${pos}%`,
                   fontFamily: 'monospace',
-                  fontSize: '0.65rem',
+                  fontSize: '0.86rem',
                   color: 'text.secondary',
                   transform: 'translateX(-50%)',
                 }}>
@@ -498,12 +498,12 @@ const ContainerWidthsDemo = () => {
                     label={key}
                     size='small'
                     variant='outlined'
-                    sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}
+                    sx={{ fontFamily: 'monospace', fontSize: '0.86rem' }}
                   />
                 </Box>
                 <Typography
                   variant='body2'
-                  sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                  sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                   {typeof value === 'number' ? `${value}px` : value}
                 </Typography>
               </Box>
@@ -540,8 +540,8 @@ const ContainerWidthsDemo = () => {
                     variant='caption'
                     sx={{
                       color: 'white',
-                      fontWeight: 600,
-                      fontSize: '0.65rem',
+                      fontWeight: 700,
+                      fontSize: '0.86rem',
                     }}>
                     {typeof value === 'number' ? `${value}px` : '100%'}
                   </Typography>
@@ -554,7 +554,7 @@ const ContainerWidthsDemo = () => {
 
       {/* サイズ比較 */}
       <Box sx={{ mt: 6 }}>
-        <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
           サイズ比較
         </Typography>
         <Paper elevation={0} sx={{ p: 3, bgcolor: 'action.hover' }}>
@@ -683,7 +683,7 @@ const TouchTargetsDemo = () => {
                 variant='body2'
                 sx={{
                   fontFamily: 'monospace',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   mb: 1,
                 }}>
                 {value}px
@@ -725,7 +725,7 @@ const TouchTargetsDemo = () => {
                     sx={{
                       color: 'white',
                       fontWeight: 700,
-                      fontSize: '0.6rem',
+                      fontSize: '0.86rem',
                     }}>
                     {value}
                   </Typography>
@@ -749,7 +749,7 @@ const TouchTargetsDemo = () => {
                     sx={{
                       color: 'white',
                       fontWeight: 700,
-                      fontSize: '0.6rem',
+                      fontSize: '0.86rem',
                     }}>
                     {value}
                   </Typography>
@@ -762,7 +762,7 @@ const TouchTargetsDemo = () => {
 
       {/* 横並び比較 */}
       <Box sx={{ mt: 6 }}>
-        <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
           サイズ比較
         </Typography>
         <Paper
@@ -795,12 +795,12 @@ const TouchTargetsDemo = () => {
                   sx={{
                     color: 'white',
                     fontWeight: 700,
-                    fontSize: '0.6rem',
+                    fontSize: '0.86rem',
                   }}>
                   {value}
                 </Typography>
               </Box>
-              <Typography variant='caption' sx={{ fontWeight: 600 }}>
+              <Typography variant='caption' sx={{ fontWeight: 700 }}>
                 {label}
               </Typography>
               <Typography
@@ -885,12 +885,12 @@ const ResponsiveDemoView = () => {
           label={currentBp}
           color='primary'
           size='small'
-          sx={{ fontWeight: 600, ml: 0.5 }}
+          sx={{ fontWeight: 700, ml: 0.5 }}
         />
       </Alert>
 
       {/* ----- パターン 1: xs=12, md=6, lg=4 ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 1 }}>
         パターン 1
       </Typography>
       <Typography
@@ -913,7 +913,7 @@ const ResponsiveDemoView = () => {
       <Divider sx={{ mb: 5 }} />
 
       {/* ----- パターン 2: xs=12, sm=6, md=4, lg=3 ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 1 }}>
         パターン 2
       </Typography>
       <Typography
@@ -936,7 +936,7 @@ const ResponsiveDemoView = () => {
       <Divider sx={{ mb: 5 }} />
 
       {/* ----- パターン 3: サイドバーレイアウト ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 1 }}>
         パターン 3 (サイドバーレイアウト)
       </Typography>
       <Typography
@@ -988,7 +988,7 @@ const ResponsiveDemoView = () => {
       </Grid>
 
       {/* ----- ブレークポイント別カラム数リファレンス ----- */}
-      <Typography variant='h5' gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
         ブレークポイント別カラム数リファレンス
       </Typography>
       <Paper elevation={0} sx={{ p: 3, bgcolor: 'action.hover' }}>

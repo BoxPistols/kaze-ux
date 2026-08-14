@@ -59,7 +59,7 @@ export const WelcomeOverlay = () => {
           sx={{
             color: '#fff',
             fontSize: '14px',
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '0.01em',
           }}>
           再生ボタンを押すとシミュレーション開始

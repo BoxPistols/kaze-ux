@@ -128,7 +128,7 @@ const BasicFormContent = () => {
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         タスク計画登録フォーム
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -363,7 +363,7 @@ const SettingsFormContent = () => {
 
   return (
     <Box sx={{ maxWidth: 700, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         設定ページ
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -377,7 +377,7 @@ const SettingsFormContent = () => {
           <Stack spacing={5}>
             {/* セクション1: 通知設定 */}
             <Box>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 700, mb: 2 }}>
                 通知設定
               </Typography>
               <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -418,7 +418,7 @@ const SettingsFormContent = () => {
 
             {/* セクション2: 表示設定 */}
             <Box>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 700, mb: 2 }}>
                 表示設定
               </Typography>
               <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -468,7 +468,7 @@ const SettingsFormContent = () => {
 
             {/* セクション3: 安全設定 */}
             <Box>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 700, mb: 2 }}>
                 安全設定
               </Typography>
               <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -587,7 +587,7 @@ const InlineEditFormContent = () => {
 
   return (
     <Box sx={{ maxWidth: 700, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         インライン編集フォーム
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -645,10 +645,10 @@ const InlineEditFormContent = () => {
                     <Typography
                       variant='body2'
                       color='text.secondary'
-                      sx={{ fontWeight: 500, minWidth: 140 }}>
+                      sx={{ fontWeight: 400, minWidth: 140 }}>
                       {field.label}
                     </Typography>
-                    <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                    <Typography variant='body2' sx={{ fontWeight: 400 }}>
                       {data[field.key]}
                     </Typography>
                   </Box>

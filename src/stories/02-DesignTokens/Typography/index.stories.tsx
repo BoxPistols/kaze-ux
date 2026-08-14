@@ -96,7 +96,6 @@ const TypeScaleShowcase = () => {
     { variant: 'ml', label: 'ML', usage: '中表示 16px' },
     { variant: 'md', label: 'MD', usage: '標準 14px（基準）' },
     { variant: 'sm', label: 'SM', usage: '小 12px（最小本文）' },
-    { variant: 'xs', label: 'XS', usage: '最小 10px（特殊用途）' },
   ]
 
   const TypeRow = ({ variant, label, usage }: TypeRowProps) => {
@@ -129,7 +128,7 @@ const TypeScaleShowcase = () => {
         <Box sx={{ minWidth: 180, flexShrink: 0 }}>
           <Typography
             variant='body2'
-            sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}>
+            sx={{ fontWeight: 700, color: 'text.primary', mb: 0.5 }}>
             {label}
           </Typography>
           <Stack direction='row' spacing={1} flexWrap='wrap'>
@@ -184,7 +183,7 @@ const TypeScaleShowcase = () => {
       </Typography>
 
       {/* 見出しスケール */}
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
         見出し (Headings)
       </Typography>
       <Paper
@@ -196,7 +195,7 @@ const TypeScaleShowcase = () => {
       </Paper>
 
       {/* 本文・ユーティリティ */}
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
         本文・ユーティリティ (Body & Utility)
       </Typography>
       <Paper
@@ -208,7 +207,7 @@ const TypeScaleShowcase = () => {
       </Paper>
 
       {/* カスタムサイズ */}
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
         カスタムサイズバリアント
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
@@ -233,27 +232,24 @@ export const Default: StoryObj = {
 // --- ストーリー2: フォントウェイト ---
 
 const FontWeightShowcase = () => {
+  // ウェイトは 2 値のみ。中間値（300 / 500 / 600 / 800）は廃止した。
+  //
+  // 以前は 5 段あったが、実装では 200/300/380/400/420/500/600/700/800/900 の
+  // 10 種類が 528 箇所に混在していた。段が多いほど「少し強調」に対する答えが
+  // 人によって変わり、レビューで判断できなくなる。
   const weights = [
-    {
-      value: 300,
-      label: 'Light',
-      token: 'fontWeightLight',
-      usage: '装飾テキスト',
-    },
     {
       value: 400,
       label: 'Regular',
       token: 'fontWeightRegular',
-      usage: '本文テキスト',
+      usage: '本文・ラベル・補助テキスト',
     },
     {
-      value: 500,
-      label: 'Medium',
-      token: 'fontWeightMedium',
-      usage: 'ラベル・強調',
+      value: 700,
+      label: 'Bold',
+      token: 'fontWeightBold',
+      usage: '見出し・強調',
     },
-    { value: 600, label: 'SemiBold', token: '-', usage: '見出し・重要ラベル' },
-    { value: 700, label: 'Bold', token: 'fontWeightBold', usage: '見出し' },
   ]
 
   const sampleText = '空を舞台に人とテクノロジーの調和で The quick brown fox'
@@ -282,7 +278,7 @@ const FontWeightShowcase = () => {
               '&:last-child': { borderBottom: 'none' },
             }}>
             <Box sx={{ minWidth: 140, flexShrink: 0 }}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 {w.label}
               </Typography>
               <Typography
@@ -349,7 +345,7 @@ const LineHeightShowcase = () => {
                 justifyContent='space-between'
                 alignItems='center'
                 sx={{ mb: 2 }}>
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {lh.label}
                 </Typography>
                 <Chip label={lh.usage} size='small' variant='outlined' />
@@ -402,13 +398,13 @@ const SizeTokenTable = () => {
             borderBottom: '1px solid',
             borderColor: 'divider',
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 120 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 120 }}>
             トークン名
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 140 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 140 }}>
             rem値 (px換算)
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, flex: 1 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, flex: 1 }}>
             プレビュー
           </Typography>
         </Box>
@@ -433,7 +429,7 @@ const SizeTokenTable = () => {
                 variant='body2'
                 sx={{
                   fontFamily: 'monospace',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   minWidth: 120,
                   color: 'primary.main',
                 }}>
@@ -528,7 +524,7 @@ const FontFamilyShowcase = () => {
               justifyContent='space-between'
               alignItems='center'
               sx={{ mb: 2 }}>
-              <Typography variant='h5' sx={{ fontWeight: 600 }}>
+              <Typography variant='h5' sx={{ fontWeight: 700 }}>
                 {f.name}
               </Typography>
               <Chip

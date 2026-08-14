@@ -91,8 +91,8 @@ export const MapPage = () => {
                   px: 1,
                   py: 0.25,
                   borderRadius: 1,
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
                 }}>
                 <PeopleIcon sx={{ fontSize: 14 }} aria-hidden='true' />
                 {offices.reduce((sum, o) => sum + o.employees, 0)}
@@ -126,7 +126,7 @@ export const MapPage = () => {
                     <LocationOnIcon sx={{ fontSize: 20 }} aria-hidden='true' />
                   </Box>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography variant='body2' sx={{ fontWeight: 700 }}>
                       {office.name}
                     </Typography>
                     <Typography variant='caption' color='text.secondary'>
@@ -135,7 +135,7 @@ export const MapPage = () => {
                   </Box>
                   <Typography
                     variant='caption'
-                    sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                    sx={{ fontWeight: 400, color: 'text.secondary' }}>
                     {office.employees}
                   </Typography>
                 </Box>

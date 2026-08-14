@@ -77,7 +77,7 @@ export const SettingsPage = () => {
               }}>
               <UserAvatar name={name} size='medium' color='primary' />
               <Box>
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {name}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -236,7 +236,7 @@ export const SettingsPage = () => {
       <CardContent className='p-0'>
         <CustomAccordion
           summary={
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               API Settings
             </Typography>
           }
@@ -259,7 +259,7 @@ export const SettingsPage = () => {
         />
         <CustomAccordion
           summary={
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               Webhook Settings
             </Typography>
           }
@@ -276,7 +276,7 @@ export const SettingsPage = () => {
         />
         <CustomAccordion
           summary={
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               Data Export
             </Typography>
           }
@@ -298,7 +298,7 @@ export const SettingsPage = () => {
           summary={
             <Typography
               variant='body2'
-              sx={{ fontWeight: 500, color: 'error.textContrast' }}>
+              sx={{ fontWeight: 400, color: 'error.textContrast' }}>
               Danger Zone
             </Typography>
           }

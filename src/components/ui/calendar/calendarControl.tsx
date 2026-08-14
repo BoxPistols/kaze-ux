@@ -73,7 +73,7 @@ export const CalendarControl = ({
           <Typography
             variant='h5'
             sx={{
-              fontWeight: '600',
+              fontWeight: 700,
               color: 'text.primary',
               ml: 1,
             }}>

@@ -42,7 +42,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -76,7 +76,7 @@ const ReactBasicsContent = () => {
               ? 'linear-gradient(135deg, rgba(97,218,251,0.08) 0%, rgba(33,150,243,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(97,218,251,0.04) 0%, rgba(33,150,243,0.04) 100%)',
         }}>
-        <Typography variant='h3' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h3' sx={{ fontWeight: 700, mb: 1 }}>
           React 基礎
         </Typography>
         <Typography variant='h6' color='text.secondary' sx={{ mb: 2 }}>
@@ -210,7 +210,7 @@ const ServiceCard = ({
               </Typography>
             </Paper>
             <Box>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 {item.title}
               </Typography>
               <Typography
@@ -223,7 +223,7 @@ const ServiceCard = ({
                 variant='caption'
                 sx={{
                   color: 'info.main',
-                  fontWeight: 500,
+                  fontWeight: 400,
                 }}>
                 Figma対応: {item.figma}
               </Typography>
@@ -240,9 +240,9 @@ const ServiceCard = ({
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>Figma</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>React</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>説明</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>Figma</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>React</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>説明</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -262,7 +262,7 @@ const ServiceCard = ({
             ].map((row) => (
               <TableRow key={row[0]}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {row[0]}
                   </Typography>
                 </TableCell>

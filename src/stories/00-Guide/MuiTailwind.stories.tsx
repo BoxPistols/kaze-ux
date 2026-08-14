@@ -42,7 +42,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -73,7 +73,7 @@ const MuiTailwindContent = () => {
               ? 'linear-gradient(135deg, rgba(33,150,243,0.08) 0%, rgba(76,175,80,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(33,150,243,0.04) 0%, rgba(76,175,80,0.04) 100%)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           MUI + Tailwind CSS 統合ガイド
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -96,9 +96,9 @@ const MuiTailwindContent = () => {
             <style>{`
               .at-text { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
               .at-title { font-size: 14px; font-weight: 700; fill: #fff; }
-              .at-file { font-size: 11px; fill: rgba(255,255,255,0.7); font-family: ui-monospace, monospace; }
+              .at-file { font-size: 12px; fill: rgba(255,255,255,0.7); font-family: ui-monospace, monospace; }
               .at-label { font-size: 12px; fill: ${theme.palette.text.primary}; }
-              .at-code { font-size: 11px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
+              .at-code { font-size: 12px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
               .at-arrow { stroke: ${theme.palette.primary.main}; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
             `}</style>
             <marker
@@ -385,7 +385,7 @@ const MuiTailwindContent = () => {
               alignItems='center'
               sx={{ mb: 1.5 }}>
               <Chip label='MUI sx prop' color='primary' size='small' />
-              <Typography variant='body1' sx={{ fontWeight: 600 }}>
+              <Typography variant='body1' sx={{ fontWeight: 700 }}>
                 推奨
               </Typography>
             </Stack>
@@ -419,7 +419,7 @@ const MuiTailwindContent = () => {
               alignItems='center'
               sx={{ mb: 1.5 }}>
               <Chip label='Tailwind className' color='success' size='small' />
-              <Typography variant='body1' sx={{ fontWeight: 600 }}>
+              <Typography variant='body1' sx={{ fontWeight: 700 }}>
                 補助的に使用
               </Typography>
             </Stack>
@@ -479,7 +479,7 @@ Tailwind の className は純HTML要素や、MUI を使わない箇所で使用�
 
 // テーマ値の参照
 <Paper sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
-  <Typography sx={{ color: 'primary.main', fontWeight: 600 }}>
+  <Typography sx={{ color: 'primary.main', fontWeight: 700 }}>
     テーマカラー参照
   </Typography>
 </Paper>
@@ -498,7 +498,7 @@ Tailwind の className は純HTML要素や、MUI を使わない箇所で使用�
       <CodeBlock>
         {`// 純HTML要素 → Tailwind className を使用
 <div className="flex gap-2 p-6">
-  <span className="text-primary font-semibold">
+  <span className="text-primary font-bold">
     Tailwindカラー
   </span>
 </div>
@@ -873,7 +873,7 @@ cn('p-4', 'p-6')
                     sx={{
                       fontFamily: 'monospace',
                       fontSize: 12,
-                      fontWeight: 500,
+                      fontWeight: 400,
                     }}>
                     {row.file}
                   </Typography>
@@ -957,7 +957,7 @@ const SxPlayground = ({
 }: SxPlaygroundArgs) => {
   return (
     <Box sx={{ maxWidth: 960, mx: 'auto', px: 3 }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         MUI sx prop Playground
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>

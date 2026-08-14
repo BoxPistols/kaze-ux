@@ -72,13 +72,13 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
     ref
   ) => {
     const baseSx = kaze
-      ? { ...KAZE_STAMP, '&.Mui-selected': { fontWeight: 600 } }
+      ? { ...KAZE_STAMP, '&.Mui-selected': { fontWeight: 700 } }
       : {
           textTransform: 'none' as const,
           borderRadius: 1.5,
           transition: motionOf(['background-color', 'color', 'border-color']),
           '&.Mui-selected': {
-            fontWeight: 600,
+            fontWeight: 700,
           },
         }
 

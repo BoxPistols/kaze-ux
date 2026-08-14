@@ -146,7 +146,6 @@ const Typographies = () => {
       note: 'body2相当',
     },
     {
-      variant: 'xs',
       note: '最小サイズ（10px）。特殊用途のみ推奨',
     },
   ]

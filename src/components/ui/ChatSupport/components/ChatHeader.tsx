@@ -91,7 +91,7 @@ export const ChatHeader = ({
           <Box>
             <Typography
               variant='subtitle2'
-              sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+              sx={{ fontWeight: 700, lineHeight: 1.2 }}>
               {showSettings
                 ? 'AI設定'
                 : currentStory

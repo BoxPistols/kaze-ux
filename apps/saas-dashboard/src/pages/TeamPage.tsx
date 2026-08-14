@@ -145,7 +145,7 @@ export const TeamPage = () => {
                     }
                   />
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                    <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
                       {member.name}
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>

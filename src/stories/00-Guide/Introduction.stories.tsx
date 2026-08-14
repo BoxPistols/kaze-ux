@@ -42,7 +42,7 @@ const SectionLabel = ({ children }: { children: string }) => (
   <Typography
     variant='overline'
     sx={{
-      fontSize: 11,
+      fontSize: 12,
       fontWeight: 700,
       letterSpacing: '0.1em',
       color: 'primary.main',
@@ -64,7 +64,7 @@ const SectionTitle = ({
     <Typography
       sx={{
         fontSize: { xs: 22, sm: 26 },
-        fontWeight: 800,
+        fontWeight: 700,
         letterSpacing: '-0.02em',
         lineHeight: 1.3,
       }}>
@@ -291,7 +291,7 @@ const IntroductionContent = () => {
           variant='overline'
           sx={{
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '0.12em',
             color: isDark ? 'primary.light' : 'primary.main',
             mb: 2,
@@ -301,7 +301,7 @@ const IntroductionContent = () => {
         </Typography>
         <Typography
           sx={{
-            fontWeight: 800,
+            fontWeight: 700,
             fontSize: { xs: 28, sm: 40 },
             letterSpacing: '-0.03em',
             lineHeight: 1.15,
@@ -394,7 +394,7 @@ const IntroductionContent = () => {
                 label={c.name}
                 color={c.color}
                 size='small'
-                sx={{ fontWeight: 600, minWidth: 130 }}
+                sx={{ fontWeight: 700, minWidth: 130 }}
               />
               <Typography
                 sx={{ fontSize: 14, lineHeight: 1.8, color: 'text.secondary' }}>
@@ -508,7 +508,7 @@ const IntroductionContent = () => {
                   variant='outlined'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: 12,
                   }}
                 />
@@ -519,7 +519,7 @@ const IntroductionContent = () => {
         <InfoCallout title='ショートカットのカスタマイズ'>
           <Box
             component='span'
-            sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+            sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
             Cmd + Shift + ,
           </Box>{' '}
           （Windows: Ctrl + Shift + ,）で設定画面を開き、「Keyboard
@@ -582,7 +582,7 @@ const IntroductionContent = () => {
                   variant='outlined'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: 12,
                   }}
                 />
@@ -594,7 +594,7 @@ const IntroductionContent = () => {
                   variant='outlined'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: 12,
                   }}
                 />
@@ -638,7 +638,7 @@ const IntroductionContent = () => {
           {techStack.map((t) => (
             <TableRow key={t.name}>
               <TableCell>
-                <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                   {t.name}
                 </Typography>
               </TableCell>

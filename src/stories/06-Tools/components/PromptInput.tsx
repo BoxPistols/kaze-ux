@@ -147,7 +147,7 @@ export const PromptInput = ({ onGenerate, isGenerating }: PromptInputProps) => {
       <Typography
         variant='caption'
         color='text.secondary'
-        sx={{ mt: 1, display: 'block', fontSize: 11, opacity: 0.7 }}>
+        sx={{ mt: 1, display: 'block', fontSize: 12, opacity: 0.7 }}>
         {modKey} + Enter で送信 / プリセットをクリックで即時生成
       </Typography>
     </Box>

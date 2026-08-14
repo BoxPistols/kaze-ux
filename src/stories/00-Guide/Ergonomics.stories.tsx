@@ -39,7 +39,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -69,7 +69,7 @@ const FittsLawDemo = () => {
           <Button
             variant='outlined'
             size='small'
-            sx={{ minWidth: 40, minHeight: 24, fontSize: 10, px: 1 }}
+            sx={{ minWidth: 40, minHeight: 24, fontSize: 12, px: 1 }}
             onClick={() => setClicks((p) => ({ ...p, small: p.small + 1 }))}>
             小
           </Button>
@@ -129,7 +129,7 @@ const ContrastDemo = () => {
               color: s.fg,
               borderRadius: 0.5,
               fontSize: 13,
-              fontWeight: 600,
+              fontWeight: 700,
               border: '1px solid',
               borderColor:
                 theme.palette.mode === 'dark' ? 'grey.700' : 'grey.300',
@@ -178,7 +178,7 @@ const TouchTargetDemo = () => (
             border: '2px dashed',
             borderColor: t.status === 'OK' ? 'success.main' : 'error.main',
             borderRadius: 1,
-            fontSize: 10,
+            fontSize: 12,
           }}>
           <TouchAppIcon sx={{ fontSize: t.size * 0.5 }} />
         </IconButton>
@@ -189,7 +189,7 @@ const TouchTargetDemo = () => (
           label={t.status}
           size='small'
           color={t.status === 'OK' ? 'success' : 'error'}
-          sx={{ mt: 0.5, height: 20, fontSize: 11 }}
+          sx={{ mt: 0.5, height: 20, fontSize: 12 }}
         />
       </Box>
     ))}
@@ -207,7 +207,7 @@ const CognitiveLoadDemo = () => (
         sx={{ px: 3.5, py: 3, borderRadius: 2, borderColor: 'error.main' }}>
         <Typography
           variant='body2'
-          sx={{ fontWeight: 600, mb: 1.5, color: 'error.main' }}>
+          sx={{ fontWeight: 700, mb: 1.5, color: 'error.main' }}>
           NG: 認知負荷が高い
         </Typography>
         <Stack spacing={1}>
@@ -241,7 +241,7 @@ const CognitiveLoadDemo = () => (
         sx={{ px: 3.5, py: 3, borderRadius: 2, borderColor: 'success.main' }}>
         <Typography
           variant='body2'
-          sx={{ fontWeight: 600, mb: 1.5, color: 'success.main' }}>
+          sx={{ fontWeight: 700, mb: 1.5, color: 'success.main' }}>
           OK: 認知負荷が低い
         </Typography>
         <Stack spacing={1}>
@@ -378,7 +378,7 @@ const ErgonomicsContent = () => {
               ? 'linear-gradient(135deg, rgba(255,152,0,0.08) 0%, rgba(233,30,99,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(255,152,0,0.04) 0%, rgba(233,30,99,0.04) 100%)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           UI と人間工学
         </Typography>
         <Typography variant='body1' color='text.secondary'>

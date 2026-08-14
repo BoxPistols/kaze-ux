@@ -33,7 +33,7 @@ export const Default: StoryObj<typeof Paper> = {
   },
   render: (args) => (
     <Paper {...args} sx={{ p: 4, maxWidth: 400 }}>
-      <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
         Paper コンテンツ
       </Typography>
       <Typography variant='body2' color='text.secondary'>

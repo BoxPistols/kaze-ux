@@ -77,7 +77,7 @@ export const SideNav = ({ open, width }: SideNavProps) => {
                 transition: motionOf(['opacity'], 'long'),
                 marginLeft: '8px',
                 '& .MuiListItemText-primary': {
-                  fontSize: '0.8rem',
+                  fontSize: '0.86rem',
                   textAlign: 'left',
                   fontWeight: theme.typography.fontWeightBold,
                 },

@@ -62,7 +62,7 @@ export const RegisterForm = ({
           mt: { xs: 8, sm: 12, md: 20 },
           mb: 4,
         }}>
-        <Typography component='h1' variant='h5' fontWeight={600}>
+        <Typography component='h1' variant='h5' fontWeight={700}>
           {title}
         </Typography>
       </Box>

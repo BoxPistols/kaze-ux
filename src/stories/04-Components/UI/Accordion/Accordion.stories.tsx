@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    summary: <Typography fontWeight={500}>クリックして展開</Typography>,
+    summary: <Typography fontWeight={400}>クリックして展開</Typography>,
     details: (
       <Typography color='text.secondary'>
         アコーディオンの詳細コンテンツです。展開アイコンをクリックすることで表示されます。

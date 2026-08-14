@@ -184,7 +184,7 @@ export const ProjectsPage = () => {
             value={params.value}
             sx={{ flex: 1, height: 6, borderRadius: 3 }}
           />
-          <span style={{ fontSize: '0.75rem', minWidth: 32 }}>
+          <span style={{ fontSize: '0.86rem', minWidth: 32 }}>
             {params.value}%
           </span>
         </Box>

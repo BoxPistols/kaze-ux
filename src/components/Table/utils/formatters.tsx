@@ -17,7 +17,7 @@ export const formatCellValue = (value: unknown): React.ReactNode => {
           py: 0.5,
           borderRadius: 1,
           fontSize: '0.875rem',
-          fontWeight: 'medium',
+          fontWeight: 400,
           bgcolor: value ? 'success.lighter' : 'error.lighter',
           color: theme.palette.grey[700],
         }}>

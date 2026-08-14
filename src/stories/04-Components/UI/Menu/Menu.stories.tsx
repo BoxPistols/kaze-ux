@@ -80,7 +80,7 @@ const BasicContent = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         基本メニュー
       </Typography>
 
@@ -114,7 +114,7 @@ const WithIconsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         アイコン付きメニュー
       </Typography>
 
@@ -208,7 +208,7 @@ const PracticalContent = () => {
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         実用パターン
       </Typography>
 
@@ -216,7 +216,7 @@ const PracticalContent = () => {
         {/* 編集メニュー */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               編集メニュー
             </Typography>
             <Button
@@ -272,7 +272,7 @@ const PracticalContent = () => {
         {/* ユーザーアクション */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               ユーザーメニュー
             </Typography>
             <Button variant='text' onClick={contextMenu.handleClick}>
@@ -304,7 +304,7 @@ const PracticalContent = () => {
             <Typography
               variant='body2'
               sx={{
-                fontWeight: 600,
+                fontWeight: 700,
                 p: 2,
                 borderBottom: 1,
                 borderColor: 'divider',

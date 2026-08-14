@@ -9,7 +9,7 @@ import type { Theme } from '@mui/material/styles'
 // styled-components
 const TextStyled = styled(Typography)(() => ({
   fontSize: 14,
-  fontWeight: 500,
+  fontWeight: 400,
 }))
 
 const BoxStyled = styled('div')(() => ({

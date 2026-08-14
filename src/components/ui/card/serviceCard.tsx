@@ -102,7 +102,7 @@ export const ServiceCard = ({
           </Box>
         )}
         <Box sx={{ flex: 1 }}>
-          <Typography variant='md' fontWeight={600} component='h3'>
+          <Typography variant='md' fontWeight={700} component='h3'>
             {title}
           </Typography>
           {description && (

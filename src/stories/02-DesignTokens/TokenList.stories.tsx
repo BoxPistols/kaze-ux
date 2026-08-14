@@ -65,12 +65,12 @@ const TokenOverview = () => {
           <Paper
             variant='outlined'
             sx={{ p: 4, borderRadius: 2, height: '100%' }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
               カラーパレット
             </Typography>
 
             {/* セマンティックカラー */}
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               セマンティックカラー
             </Typography>
             <Stack direction='row' spacing={1} sx={{ mb: 3 }} flexWrap='wrap'>
@@ -87,7 +87,7 @@ const TokenOverview = () => {
                   />
                   <Typography
                     variant='caption'
-                    sx={{ fontSize: '0.625rem', color: 'text.secondary' }}>
+                    sx={{ fontSize: '0.86rem', color: 'text.secondary' }}>
                     {c.name}
                   </Typography>
                 </Box>
@@ -95,7 +95,7 @@ const TokenOverview = () => {
             </Stack>
 
             {/* グレースケール */}
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               グレースケール
             </Typography>
             <Stack direction='row' spacing={0.5} sx={{ mb: 3 }}>
@@ -113,7 +113,7 @@ const TokenOverview = () => {
             </Stack>
 
             {/* テキスト・背景 */}
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               テキスト & 背景
             </Typography>
             <Stack direction='row' spacing={1}>
@@ -142,7 +142,7 @@ const TokenOverview = () => {
                   />
                   <Typography
                     variant='caption'
-                    sx={{ fontSize: '0.5625rem', color: 'text.secondary' }}>
+                    sx={{ fontSize: '0.86rem', color: 'text.secondary' }}>
                     {t.label}
                   </Typography>
                 </Box>
@@ -156,7 +156,7 @@ const TokenOverview = () => {
           <Paper
             variant='outlined'
             sx={{ p: 4, borderRadius: 2, height: '100%' }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
               タイポグラフィ
             </Typography>
 
@@ -165,7 +165,7 @@ const TokenOverview = () => {
                 <Typography variant='body2' color='text.secondary'>
                   フォントファミリー
                 </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400 }}>
                   Inter, Noto Sans JP
                 </Typography>
               </Box>
@@ -175,7 +175,7 @@ const TokenOverview = () => {
                 </Typography>
                 <Typography
                   variant='body2'
-                  sx={{ fontWeight: 500, fontFamily: 'monospace' }}>
+                  sx={{ fontWeight: 400, fontFamily: 'monospace' }}>
                   {typographyOptions.fontSize}px
                 </Typography>
               </Box>
@@ -185,7 +185,7 @@ const TokenOverview = () => {
                 </Typography>
                 <Typography
                   variant='body2'
-                  sx={{ fontWeight: 500, fontFamily: 'monospace' }}>
+                  sx={{ fontWeight: 400, fontFamily: 'monospace' }}>
                   12px
                 </Typography>
               </Box>
@@ -193,7 +193,7 @@ const TokenOverview = () => {
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               サイズスケール
             </Typography>
             <Stack spacing={0.5}>
@@ -245,7 +245,7 @@ const TokenOverview = () => {
           <Paper
             variant='outlined'
             sx={{ p: 4, borderRadius: 2, height: '100%' }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
               スペーシング
             </Typography>
 
@@ -288,7 +288,7 @@ const TokenOverview = () => {
           <Paper
             variant='outlined'
             sx={{ p: 4, borderRadius: 2, height: '100%' }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
               エレベーション
             </Typography>
 
@@ -324,7 +324,7 @@ const TokenOverview = () => {
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               角丸
             </Typography>
             <Stack direction='row' spacing={1.5}>
@@ -340,7 +340,7 @@ const TokenOverview = () => {
                   />
                   <Typography
                     variant='caption'
-                    sx={{ fontFamily: 'monospace', fontSize: '0.625rem' }}>
+                    sx={{ fontFamily: 'monospace', fontSize: '0.86rem' }}>
                     {r}px
                   </Typography>
                 </Box>
@@ -354,7 +354,7 @@ const TokenOverview = () => {
           <Paper
             variant='outlined'
             sx={{ p: 4, borderRadius: 2, height: '100%' }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
               ブレークポイント
             </Typography>
 
@@ -363,7 +363,7 @@ const TokenOverview = () => {
                 <Box
                   key={name}
                   sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {name}
                   </Typography>
                   <Typography
@@ -377,7 +377,7 @@ const TokenOverview = () => {
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               コンテナ幅
             </Typography>
             <Stack spacing={0.5}>
@@ -397,7 +397,7 @@ const TokenOverview = () => {
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
               タッチターゲット
             </Typography>
             <Stack direction='row' spacing={1.5}>
@@ -417,13 +417,13 @@ const TokenOverview = () => {
                     }}>
                     <Typography
                       variant='caption'
-                      sx={{ fontFamily: 'monospace', fontSize: '0.5625rem' }}>
+                      sx={{ fontFamily: 'monospace', fontSize: '0.86rem' }}>
                       {size}
                     </Typography>
                   </Box>
                   <Typography
                     variant='caption'
-                    sx={{ fontSize: '0.5625rem', color: 'text.secondary' }}>
+                    sx={{ fontSize: '0.86rem', color: 'text.secondary' }}>
                     {name}
                   </Typography>
                 </Box>

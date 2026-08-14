@@ -120,7 +120,7 @@ export const LiveMap = () => {
         width:22px;height:22px;border-radius:50%;
         background:rgba(15,23,42,0.75);border:2px solid ${color};
         display:flex;align-items:center;justify-content:center;
-        font-size:9px;font-weight:700;color:${color};
+        font-size:12px;font-weight:700;color:${color};
         font-family:'JetBrains Mono',monospace;cursor:pointer;
       `
       el.textContent = hub.code.split('-')[0]

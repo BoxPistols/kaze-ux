@@ -41,7 +41,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -74,7 +74,7 @@ const MaterialDesignContent = () => {
               ? 'linear-gradient(135deg, rgba(33,150,243,0.08) 0%, rgba(70,171,74,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(33,150,243,0.04) 0%, rgba(70,171,74,0.04) 100%)',
         }}>
-        <Typography variant='h3' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h3' sx={{ fontWeight: 700, mb: 1 }}>
           Material Design 概要
         </Typography>
         <Typography variant='h6' color='text.secondary' sx={{ mb: 2 }}>
@@ -116,7 +116,7 @@ const MaterialDesignContent = () => {
                 size='small'
                 sx={{ mb: 1.5 }}
               />
-              <Typography variant='body2' sx={{ fontWeight: 600, mb: 0.5 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700, mb: 0.5 }}>
                 {item.title}
               </Typography>
               <Typography variant='body1' color='text.secondary'>
@@ -169,7 +169,7 @@ const MaterialDesignContent = () => {
               ? 'rgba(33,150,243,0.06)'
               : 'rgba(33,150,243,0.03)',
         }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 0.5 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 0.5 }}>
           Kaze UX方針
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -207,10 +207,10 @@ const MaterialDesignContent = () => {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>MUI トークン</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>値</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>用途</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>ビジュアル</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>MUI トークン</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>値</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>用途</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>ビジュアル</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -231,7 +231,7 @@ const MaterialDesignContent = () => {
                   />
                 </TableCell>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     {item.px}
                   </Typography>
                 </TableCell>
@@ -298,7 +298,7 @@ const MaterialDesignContent = () => {
               <Box sx={{ px: 2, py: 1.5 }}>
                 <Typography
                   variant='body2'
-                  sx={{ fontWeight: 600, fontSize: 12 }}>
+                  sx={{ fontWeight: 700, fontSize: 12 }}>
                   {item.name}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -316,8 +316,8 @@ const MaterialDesignContent = () => {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>機能</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>説明</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>機能</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>説明</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -336,7 +336,7 @@ const MaterialDesignContent = () => {
             ].map((row) => (
               <TableRow key={row[0]}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {row[0]}
                   </Typography>
                 </TableCell>
@@ -408,7 +408,7 @@ const ElevationPlayground = ({
   showOutline,
 }: ElevationArgs) => (
   <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
       Elevation Playground
     </Typography>
     <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
@@ -444,7 +444,7 @@ const ElevationPlayground = ({
           borderRadius,
           transition: motionOf(['border-radius', 'box-shadow'], 'macro'),
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 0.5 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 0.5 }}>
           {elevation}
         </Typography>
         <Typography variant='body2' color='text.secondary'>
@@ -500,7 +500,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
   const px = spacingValue * 8
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         8px Grid Spacing
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
@@ -524,7 +524,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
       </Paper>
       <Stack spacing={3}>
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             Padding のプレビュー
           </Typography>
           <Paper
@@ -541,14 +541,14 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
                 p: 2,
                 borderRadius: 1,
                 textAlign: 'center',
-                fontWeight: 600,
+                fontWeight: 700,
               }}>
               spacing({spacingValue}) = {px}px padding
             </Box>
           </Paper>
         </Box>
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             Gap のプレビュー
           </Typography>
           <Stack
@@ -565,7 +565,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
                   p: 1.5,
                   borderRadius: 1,
                   textAlign: 'center',
-                  fontWeight: 600,
+                  fontWeight: 700,
                 }}>
                 {n}
               </Box>
@@ -573,7 +573,7 @@ const SpacingDemoPlayground = ({ spacingValue }: SpacingPlaygroundArgs) => {
           </Stack>
         </Box>
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             バーで比較
           </Typography>
           <Box

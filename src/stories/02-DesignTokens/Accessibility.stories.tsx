@@ -158,20 +158,20 @@ function ContrastRatiosShowcase() {
             borderBottom: '1px solid',
             borderColor: 'divider',
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 60 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 60 }}>
             判定
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 200 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 200 }}>
             前景色 / 背景色
           </Typography>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, flex: 1, minWidth: 240 }}>
+            sx={{ fontWeight: 700, flex: 1, minWidth: 240 }}>
             表示サンプル
           </Typography>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, minWidth: 280, textAlign: 'right' }}>
+            sx={{ fontWeight: 700, minWidth: 280, textAlign: 'right' }}>
             備考
           </Typography>
         </Box>
@@ -205,7 +205,7 @@ function ContrastRatiosShowcase() {
               <Typography
                 variant='caption'
                 sx={{
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: pair.passesAA ? 'success.main' : 'warning.main',
                 }}>
                 {pair.passesAA ? 'AA' : '参考'}
@@ -218,7 +218,7 @@ function ContrastRatiosShowcase() {
                 variant='body2'
                 sx={{
                   fontFamily: 'monospace',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: 'primary.main',
                 }}>
                 {pair.foregroundLabel}
@@ -240,10 +240,10 @@ function ContrastRatiosShowcase() {
                   border: '1px solid',
                   borderColor: 'divider',
                 }}>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700 }}>
                   サンプルテキスト Aa
                 </Typography>
-                <Typography sx={{ fontSize: '0.857rem' }}>
+                <Typography sx={{ fontSize: '0.86rem' }}>
                   補足テキスト 12px sample text
                 </Typography>
               </Box>
@@ -269,7 +269,7 @@ function ContrastRatiosShowcase() {
           borderRadius: 2,
           bgcolor: 'action.hover',
         }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
           WCAG AA コントラスト比の基準
         </Typography>
         <Stack spacing={1}>
@@ -378,7 +378,7 @@ function TouchTargetsShowcase() {
                   variant='caption'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     color: `${spec.color}.main`,
                     bgcolor: `${spec.color}.lighter`,
                     px: 1.5,
@@ -487,7 +487,7 @@ function TouchTargetsShowcase() {
 
       {/* サイズ比較図 */}
       <Paper variant='outlined' sx={{ mt: 4, p: 4, borderRadius: 2 }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 3 }}>
           サイズ比較
         </Typography>
         <Stack direction='row' spacing={4} sx={{ alignItems: 'flex-end' }}>
@@ -509,8 +509,8 @@ function TouchTargetsShowcase() {
                 <Typography
                   sx={{
                     fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
                     color: `${spec.color}.main`,
                   }}>
                   {spec.size}
@@ -533,7 +533,7 @@ function TouchTargetsShowcase() {
           borderRadius: 2,
           bgcolor: 'action.hover',
         }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
           業務運用における注意事項
         </Typography>
         <Stack spacing={1}>
@@ -640,12 +640,6 @@ function FontSizesShowcase() {
       usage: 'body2/caption相当、補助テキスト、テーブルセル、チップ',
       highlight: 'minimum',
     },
-    {
-      variant: 'xs',
-      px: 10,
-      rem: `${(10 / baseFontSize).toFixed(2)}rem`,
-      usage: '特殊用途のみ（バッジ、極小ラベル）- 通常は使用しない',
-    },
   ]
 
   return (
@@ -674,21 +668,21 @@ function FontSizesShowcase() {
             borderBottom: '1px solid',
             borderColor: 'divider',
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 130 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 130 }}>
             バリアント
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 70 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 70 }}>
             サイズ
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 80 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 80 }}>
             rem値
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, flex: 1 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, flex: 1 }}>
             サンプル
           </Typography>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, minWidth: 240, textAlign: 'right' }}>
+            sx={{ fontWeight: 700, minWidth: 240, textAlign: 'right' }}>
             用途
           </Typography>
         </Box>
@@ -721,7 +715,7 @@ function FontSizesShowcase() {
                   variant='body2'
                   sx={{
                     fontFamily: 'monospace',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     color: 'primary.main',
                   }}>
                   {entry.variant}
@@ -736,7 +730,7 @@ function FontSizesShowcase() {
                       px: 1,
                       py: 0.25,
                       borderRadius: 0.5,
-                      fontSize: '0.65rem',
+                      fontSize: '0.86rem',
                     }}>
                     BASE
                   </Typography>
@@ -751,7 +745,7 @@ function FontSizesShowcase() {
                       px: 1,
                       py: 0.25,
                       borderRadius: 0.5,
-                      fontSize: '0.65rem',
+                      fontSize: '0.86rem',
                     }}>
                     MIN
                   </Typography>
@@ -809,14 +803,14 @@ function FontSizesShowcase() {
 
       {/* MUI標準バリアントとの対応表 */}
       <Paper variant='outlined' sx={{ mt: 4, p: 4, borderRadius: 2 }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 3 }}>
           MUI標準バリアントとの対応
         </Typography>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography
               variant='caption'
-              sx={{ fontWeight: 600, mb: 2, display: 'block' }}>
+              sx={{ fontWeight: 700, mb: 2, display: 'block' }}>
               見出し系
             </Typography>
             <Stack spacing={1}>
@@ -851,7 +845,7 @@ function FontSizesShowcase() {
                     variant='caption'
                     sx={{
                       fontFamily: 'monospace',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       color: 'primary.main',
                     }}>
                     {mapping.custom} ({mapping.px}px)
@@ -863,7 +857,7 @@ function FontSizesShowcase() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography
               variant='caption'
-              sx={{ fontWeight: 600, mb: 2, display: 'block' }}>
+              sx={{ fontWeight: 700, mb: 2, display: 'block' }}>
               本文系
             </Typography>
             <Stack spacing={1}>
@@ -897,7 +891,7 @@ function FontSizesShowcase() {
                     variant='caption'
                     sx={{
                       fontFamily: 'monospace',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       color: 'primary.main',
                     }}>
                     {mapping.custom} ({mapping.px}px)
@@ -918,7 +912,7 @@ function FontSizesShowcase() {
           borderRadius: 2,
           bgcolor: 'action.hover',
         }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
           フォントサイズの原則
         </Typography>
         <Stack spacing={1}>

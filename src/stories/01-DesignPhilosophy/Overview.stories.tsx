@@ -119,7 +119,7 @@ const DesignPhilosophyOverview = () => {
           variant='overline'
           sx={{
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '0.12em',
             color: isDark ? 'primary.light' : 'primary.main',
             mb: 2,
@@ -130,7 +130,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           variant='h1'
           sx={{
-            fontWeight: 800,
+            fontWeight: 700,
             fontSize: { xs: 32, sm: 44 },
             letterSpacing: '-0.03em',
             lineHeight: 1.15,
@@ -142,7 +142,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           sx={{
             fontSize: { xs: 18, sm: 22 },
-            fontWeight: 300,
+            fontWeight: 400,
             letterSpacing: '0.08em',
             color: isDark ? 'grey.400' : 'grey.600',
           }}>
@@ -155,7 +155,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           variant='overline'
           sx={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.1em',
             color: 'primary.main',
@@ -182,7 +182,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           variant='overline'
           sx={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.1em',
             color: 'primary.main',
@@ -208,7 +208,7 @@ const DesignPhilosophyOverview = () => {
               <Typography
                 sx={{
                   fontSize: { xs: 28, sm: 36 },
-                  fontWeight: 200,
+                  fontWeight: 400,
                   color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
                   lineHeight: 1,
                   fontVariantNumeric: 'tabular-nums',
@@ -235,7 +235,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           variant='overline'
           sx={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.1em',
             color: 'primary.main',
@@ -329,7 +329,7 @@ const DesignPhilosophyOverview = () => {
         <Typography
           variant='overline'
           sx={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.1em',
             color: 'primary.main',
@@ -372,7 +372,7 @@ const DesignPhilosophyOverview = () => {
                 <Typography
                   sx={{
                     fontSize: 32,
-                    fontWeight: 200,
+                    fontWeight: 400,
                     color: isDark
                       ? 'rgba(255,255,255,0.1)'
                       : 'rgba(0,0,0,0.07)',
@@ -394,7 +394,7 @@ const DesignPhilosophyOverview = () => {
                 <Typography
                   sx={{
                     fontSize: 14,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     mb: 1.5,
                     color: isDark ? 'grey.300' : 'grey.700',
                     lineHeight: 1.7,

@@ -110,7 +110,7 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
         disabled={disabled || success}
         sx={{
           textTransform: 'none',
-          fontWeight: 500,
+          fontWeight: 400,
           borderRadius: BUTTON_BORDER_RADIUS,
           transition: BUTTON_TRANSITION,
           // フォントサイズ（1rem=14px基準）: small=約12px, medium=14px, large=約16px

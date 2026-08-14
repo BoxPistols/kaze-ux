@@ -38,7 +38,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -65,7 +65,7 @@ const BoxModelDemo = () => {
         }}>
         <Typography
           variant='caption'
-          sx={{ display: 'block', p: 0.5, fontWeight: 600 }}>
+          sx={{ display: 'block', p: 0.5, fontWeight: 700 }}>
           margin (外側余白)
         </Typography>
         <Box
@@ -76,7 +76,7 @@ const BoxModelDemo = () => {
           }}>
           <Typography
             variant='caption'
-            sx={{ display: 'block', p: 0.5, fontWeight: 600 }}>
+            sx={{ display: 'block', p: 0.5, fontWeight: 700 }}>
             border (境界線)
           </Typography>
           <Box
@@ -90,7 +90,7 @@ const BoxModelDemo = () => {
             }}>
             <Typography
               variant='caption'
-              sx={{ display: 'block', p: 0.5, fontWeight: 600 }}>
+              sx={{ display: 'block', p: 0.5, fontWeight: 700 }}>
               padding (内側余白)
             </Typography>
             <Box
@@ -126,7 +126,7 @@ const FlexboxDemo = () => {
     color: 'primary.contrastText',
     borderRadius: 0.5,
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 700,
   }
 
   const demos: { label: string; sx: Record<string, unknown> }[] = [
@@ -167,7 +167,7 @@ const FlexboxDemo = () => {
           <Paper variant='outlined' sx={{ px: 2.5, py: 2, borderRadius: 2 }}>
             <Typography
               variant='caption'
-              sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+              sx={{ fontWeight: 700, mb: 1, display: 'block' }}>
               {d.label}
             </Typography>
             <Box sx={d.sx}>
@@ -196,7 +196,7 @@ const CssGridDemo = () => {
     color: 'primary.contrastText',
     borderRadius: 0.5,
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 700,
     textAlign: 'center',
   }
 
@@ -206,7 +206,7 @@ const CssGridDemo = () => {
         <Paper variant='outlined' sx={{ px: 2.5, py: 2, borderRadius: 2 }}>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+            sx={{ fontWeight: 700, mb: 1, display: 'block' }}>
             grid-template-columns: repeat(3, 1fr)
           </Typography>
           <Box
@@ -227,7 +227,7 @@ const CssGridDemo = () => {
         <Paper variant='outlined' sx={{ px: 2.5, py: 2, borderRadius: 2 }}>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+            sx={{ fontWeight: 700, mb: 1, display: 'block' }}>
             grid-template-columns: 200px 1fr 1fr
           </Typography>
           <Box
@@ -385,7 +385,7 @@ const HtmlCssContent = () => {
               ? 'linear-gradient(135deg, rgba(0,150,136,0.08) 0%, rgba(33,150,243,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(0,150,136,0.04) 0%, rgba(33,150,243,0.04) 100%)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           HTML / CSS 基礎と近年の動向
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -606,14 +606,14 @@ const HtmlCssContent = () => {
               spacing={1}
               alignItems='center'
               sx={{ mb: 0.5 }}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 {f.feature}
               </Typography>
               <Chip
                 label={f.year}
                 size='small'
                 variant='outlined'
-                sx={{ height: 20, fontSize: 11 }}
+                sx={{ height: 20, fontSize: 12 }}
               />
             </Stack>
             <Typography variant='body1' color='text.secondary' sx={{ mb: 1 }}>
@@ -763,7 +763,7 @@ const FlexboxPlaygroundContent = ({
   const itemSizes = [40, 60, 35, 50, 45, 55, 42, 48]
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         Flexbox Playground
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
@@ -814,7 +814,7 @@ const FlexboxPlaygroundContent = ({
                 justifyContent: 'center',
                 bgcolor: 'primary.light',
                 color: 'primary.contrastText',
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: 14,
                 borderRadius: 1.5,
                 flexShrink: 0,
@@ -896,7 +896,7 @@ const BoxModelPlayground = ({
   const theme = useTheme()
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         Box Model Playground
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
@@ -931,7 +931,7 @@ const BoxModelPlayground = ({
               position: 'absolute',
               top: 4,
               left: 8,
-              fontWeight: 600,
+              fontWeight: 700,
               opacity: 0.7,
             }}>
             margin: {margin * 8}px
@@ -952,7 +952,7 @@ const BoxModelPlayground = ({
                 position: 'absolute',
                 top: 4,
                 left: 8,
-                fontWeight: 600,
+                fontWeight: 700,
                 opacity: 0.7,
               }}>
               padding: {padding * 8}px / border: {borderWidth}px

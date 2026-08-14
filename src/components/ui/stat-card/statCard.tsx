@@ -173,7 +173,7 @@ export const StatCard = ({
                   variant='caption'
                   sx={{
                     color: `${trendColor}.textContrast`,
-                    fontWeight: 600,
+                    fontWeight: 700,
                     whiteSpace: 'nowrap',
                   }}>
                   {trend.value}
@@ -188,7 +188,7 @@ export const StatCard = ({
                 sx={{
                   display: 'block',
                   mt: trend ? 0.5 : 1,
-                  fontSize: trend ? '0.72rem' : '0.9rem',
+                  fontSize: trend ? '0.86rem' : '0.9rem',
                 }}>
                 {caption}
               </Typography>

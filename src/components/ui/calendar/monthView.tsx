@@ -114,7 +114,7 @@ export const MonthView = ({
             <Typography
               variant='body2'
               sx={{
-                fontWeight: 500,
+                fontWeight: 400,
                 color: isSunday(index)
                   ? 'error.main'
                   : isSaturday(index)
@@ -215,7 +215,7 @@ export const MonthView = ({
                           borderRadius: 0.5,
                           bgcolor: `${getTypeTone(schedule.type)}.main`,
                           color: `${getTypeTone(schedule.type)}.contrastText`,
-                          fontSize: '10px',
+                          fontSize: '12px',
                           lineHeight: 1.2,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -233,7 +233,7 @@ export const MonthView = ({
                         variant='caption'
                         sx={{
                           color: 'text.secondary',
-                          fontSize: '10px',
+                          fontSize: '12px',
                           pl: 0.5,
                         }}>
                         +{daySchedules.length - 3}件

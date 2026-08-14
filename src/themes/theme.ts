@@ -48,7 +48,7 @@ const CommomButtonStyles = {
   alignItems: 'center',
   justifyContent: 'center',
   lineHeight: 1.5,
-  fontWeight: 500,
+  fontWeight: 400,
   whiteSpace: 'nowrap',
 }
 
@@ -195,7 +195,7 @@ const componentStyles = {
         transition: 'none',
         pointerEvents: 'auto',
         fontSize: fontSizesVariant.md,
-        fontWeight: 500,
+        fontWeight: 400,
         color: theme.palette.text.primary,
         marginBottom: 4,
         '&.Mui-focused': {
@@ -254,11 +254,40 @@ const componentStyles = {
       }),
     },
   },
+  // MUI 既定のウェイトを 2 値へ寄せる。
+  //
+  // Badge / Slider / StepLabel / DataGrid は MUI 側が fontWeight: 500 を
+  // 持っており、こちらのソースを全部直しても描画には 500 が残る。
+  // ソース走査だけで「0 件」と判断すると必ず取りこぼす（実測で判明した）。
+  MuiBadge: {
+    styleOverrides: {
+      badge: { fontWeight: 700 },
+    },
+  },
+  MuiSlider: {
+    styleOverrides: {
+      valueLabel: { fontWeight: 700 },
+    },
+  },
+  MuiStepLabel: {
+    styleOverrides: {
+      label: {
+        fontWeight: 400,
+        '&.Mui-active, &.Mui-completed': { fontWeight: 700 },
+      },
+    },
+  },
+  MuiDataGrid: {
+    styleOverrides: {
+      columnHeaderTitle: { fontWeight: 700 },
+    },
+  },
   // ツールチップのカスタマイズ
   MuiTooltip: {
     styleOverrides: {
       tooltip: ({ theme }: { theme: Theme }) => ({
         fontSize: fontSizesVariant.md,
+        fontWeight: 400,
         backgroundColor:
           theme.palette.mode === 'dark'
             ? theme.palette.grey[700]
@@ -365,7 +394,7 @@ const componentStyles = {
         borderBottom: `1px solid ${theme.palette.divider}`,
         '& .MuiCardHeader-title': {
           fontSize: fontSizesVariant.md,
-          fontWeight: 600,
+          fontWeight: 700,
           color: theme.palette.text.primary,
         },
         '& .MuiCardHeader-subheader': {
@@ -400,7 +429,7 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         borderRadius: 3,
-        fontWeight: 600,
+        fontWeight: 700,
         fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
         height: 24,
         '& .MuiChip-label': {
@@ -509,7 +538,7 @@ const componentStyles = {
       root: ({ theme }: { theme: Theme }) => ({
         '& .MuiTableCell-head': {
           backgroundColor: theme.palette.action.hover,
-          fontWeight: 600,
+          fontWeight: 700,
           fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
           color: theme.palette.text.secondary,
           textTransform: 'uppercase',
@@ -600,14 +629,14 @@ const componentStyles = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         textTransform: 'none',
-        fontWeight: 500,
+        fontWeight: 400,
         fontSize: fontSizesVariant.sm,
         minHeight: 40,
         padding: '8px 16px',
         color: theme.palette.text.secondary,
         '&.Mui-selected': {
           color: theme.palette.primary.main,
-          fontWeight: 600,
+          fontWeight: 700,
         },
       }),
     },
@@ -621,7 +650,7 @@ const componentStyles = {
         // ここでは基準がずれる（白文字が 3.95:1 まで落ちていた）。
         // light 面に対して実測した onLight を使う
         color: theme.palette.primary.onLight,
-        fontWeight: 600,
+        fontWeight: 700,
         fontSize: fontSizesVariant.sm,
       }),
     },
@@ -697,7 +726,7 @@ const componentStyles = {
       root: ({ theme }: { theme: Theme }) => ({
         padding: '20px 24px 16px',
         fontSize: fontSizesVariant.lg,
-        fontWeight: 600,
+        fontWeight: 700,
         color: theme.palette.text.primary,
         borderBottom: `1px solid ${theme.palette.divider}`,
       }),

@@ -95,7 +95,7 @@ export const CartPage = () => {
 
       <Typography
         variant='h4'
-        sx={{ fontWeight: 800, mb: 0.5, letterSpacing: '-0.02em' }}>
+        sx={{ fontWeight: 700, mb: 0.5, letterSpacing: '-0.02em' }}>
         Checkout
       </Typography>
       <Typography variant='body1' color='text.secondary' sx={{ mb: 4 }}>
@@ -124,7 +124,7 @@ export const CartPage = () => {
                       py: 2,
                     }}>
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                      <Typography variant='body1' sx={{ fontWeight: 700 }}>
                         {item.name}
                       </Typography>
                       <Typography variant='body2' color='text.secondary'>
@@ -255,7 +255,7 @@ export const CartPage = () => {
                 <Typography variant='body2' color='text.secondary'>
                   Subtotal
                 </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400 }}>
                   {formatPrice(subtotal())}
                 </Typography>
               </Box>
@@ -268,7 +268,7 @@ export const CartPage = () => {
                 <Typography variant='body2' color='text.secondary'>
                   Delivery Fee
                 </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400 }}>
                   {formatPrice(deliveryFee)}
                 </Typography>
               </Box>

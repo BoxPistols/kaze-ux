@@ -143,9 +143,12 @@ const Wordmark = ({
       aria-hidden={hidden || undefined}
       sx={{
         color,
-        // シンボルの主線と光学的に揃うよう、グリッドに対する比で決める
-        fontSize: `${size * 0.5}px`,
-        fontWeight: 600,
+        // シンボルの主線と光学的に揃うよう、グリッドに対する比で決める。
+        // ただし 12px を下限とする。size から計算しているので、小さい size を
+        // 渡されると比例して 12px を割る（size=20 で 10px になっていた）。
+        // 計算値は静的検査で捕まえられないため、ここでクランプする
+        fontSize: `${Math.max(12, size * 0.5)}px`,
+        fontWeight: 700,
         // 大きい文字ほど字間を詰める光学調整に合わせる
         letterSpacing: '-0.02em',
         lineHeight: 1,

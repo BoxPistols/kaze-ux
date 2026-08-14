@@ -167,7 +167,7 @@ export const DayView = ({
               }}>
               {getInitials(assignee)}
             </Avatar>
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               {assignee}
             </Typography>
           </Box>
@@ -256,8 +256,8 @@ export const DayView = ({
                           <Typography
                             variant='caption'
                             sx={{
-                              fontWeight: 600,
-                              fontSize: '10px',
+                              fontWeight: 700,
+                              fontSize: '12px',
                               color: 'inherit',
                             }}>
                             {schedule.time}
@@ -265,7 +265,7 @@ export const DayView = ({
                           <Typography
                             variant='caption'
                             sx={{
-                              fontSize: '10px',
+                              fontSize: '12px',
                               color: 'rgba(255,255,255,0.8)',
                             }}>
                             ({schedule.duration})
@@ -275,7 +275,7 @@ export const DayView = ({
                           variant='body2'
                           sx={{
                             fontSize: '12px',
-                            fontWeight: 500,
+                            fontWeight: 400,
                             lineHeight: 1.3,
                             color: 'inherit',
                           }}>
@@ -286,7 +286,7 @@ export const DayView = ({
                             variant='caption'
                             sx={{
                               display: 'block',
-                              fontSize: '10px',
+                              fontSize: '12px',
                               color: 'rgba(255,255,255,0.8)',
                               mt: 0.5,
                             }}>

@@ -193,7 +193,7 @@ export const InvoicesPage = () => {
       headerName: 'Invoice #',
       width: 150,
       renderCell: (params) => (
-        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700 }}>
           {params.value}
         </Typography>
       ),
@@ -205,7 +205,7 @@ export const InvoicesPage = () => {
       headerName: 'Amount',
       width: 130,
       renderCell: (params) => (
-        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700 }}>
           {formatCurrency(params.value)}
         </Typography>
       ),
@@ -313,7 +313,7 @@ export const InvoicesPage = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                  sx={{ fontWeight: 400 }}>
                   Total Invoices
                 </Typography>
               </Box>
@@ -351,7 +351,7 @@ export const InvoicesPage = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                  sx={{ fontWeight: 400 }}>
                   Paid
                 </Typography>
               </Box>
@@ -389,7 +389,7 @@ export const InvoicesPage = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                  sx={{ fontWeight: 400 }}>
                   Pending
                 </Typography>
               </Box>
@@ -427,7 +427,7 @@ export const InvoicesPage = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 500 }}>
+                  sx={{ fontWeight: 400 }}>
                   Overdue
                 </Typography>
               </Box>

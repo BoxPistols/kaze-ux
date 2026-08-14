@@ -97,7 +97,7 @@ export const ChatSettings = ({
           }}>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+            sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
             現在の設定
           </Typography>
           {isUsingDefaultKey ? (
@@ -184,7 +184,7 @@ export const ChatSettings = ({
         <Box>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+            sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
             カスタムAPI設定（任意）
           </Typography>
           <Typography
@@ -219,8 +219,8 @@ export const ChatSettings = ({
                   }}
                   sx={{
                     cursor: 'pointer',
-                    fontWeight: 500,
-                    fontSize: '0.75rem',
+                    fontWeight: 400,
+                    fontSize: '0.86rem',
                   }}
                 />
               )
@@ -276,7 +276,7 @@ export const ChatSettings = ({
                       variant='text'
                       color='warning'
                       onClick={onResetApiKey}
-                      sx={{ minWidth: 0, p: 0.5, fontSize: 11 }}>
+                      sx={{ minWidth: 0, p: 0.5, fontSize: 12 }}>
                       リセット
                     </Button>
                   </Stack>
@@ -291,7 +291,7 @@ export const ChatSettings = ({
           <Typography
             variant='caption'
             color='text.secondary'
-            sx={{ display: 'block', mb: 0.8, fontWeight: 600 }}>
+            sx={{ display: 'block', mb: 0.8, fontWeight: 700 }}>
             AIモデル
           </Typography>
           <TextField
@@ -328,7 +328,7 @@ export const ChatSettings = ({
                         mb: 0.25,
                       }}>
                       {isLocked && <Lock size={12} />}
-                      <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                      <Typography variant='body2' sx={{ fontWeight: 700 }}>
                         {opt.label}
                       </Typography>
                       <Chip
@@ -350,7 +350,7 @@ export const ChatSettings = ({
                         variant='outlined'
                         sx={{
                           height: 18,
-                          fontSize: '0.6rem',
+                          fontSize: '0.86rem',
                           '& .MuiChip-label': { px: 0.75 },
                         }}
                       />
@@ -367,7 +367,7 @@ export const ChatSettings = ({
                           key={uc}
                           variant='caption'
                           sx={{
-                            fontSize: '0.65rem',
+                            fontSize: '0.86rem',
                             color: 'text.disabled',
                             lineHeight: 1.2,
                             '&::before': { content: '"- "' },
@@ -435,7 +435,7 @@ export const ChatSettings = ({
           }}>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+            sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
             APIキーの取得方法
           </Typography>
           <Typography
@@ -482,7 +482,7 @@ export const ChatSettings = ({
             sx={{ mb: 1 }}>
             <Stack direction='row' spacing={1} alignItems='center'>
               <Keyboard size={14} />
-              <Typography variant='caption' sx={{ fontWeight: 600 }}>
+              <Typography variant='caption' sx={{ fontWeight: 700 }}>
                 キーボードショートカット
               </Typography>
             </Stack>
@@ -501,7 +501,7 @@ export const ChatSettings = ({
             sx={{
               width: '100%',
               borderCollapse: 'collapse',
-              '& td': { py: 0.6, fontSize: 11, verticalAlign: 'middle' },
+              '& td': { py: 0.6, fontSize: 12, verticalAlign: 'middle' },
               '& td:first-of-type': { width: 160, pr: 1 },
             }}>
             <tbody>
@@ -518,7 +518,7 @@ export const ChatSettings = ({
                           'aria-label': `${s.desc} のショートカット`,
                           style: {
                             fontFamily: 'monospace',
-                            fontSize: 10,
+                            fontSize: 12,
                             textAlign: 'center',
                             paddingTop: 4,
                             paddingBottom: 4,

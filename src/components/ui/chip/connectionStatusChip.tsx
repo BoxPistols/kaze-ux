@@ -25,7 +25,7 @@ const StyledStatusChip = styled(Chip, {
   paddingRight: theme.spacing(1),
   border: `1px solid ${connected ? theme.palette.success.light : theme.palette.error.light}`,
   height: 28,
-  fontWeight: 500,
+  fontWeight: 400,
   '& .MuiChip-icon': {
     color: 'inherit',
     fontSize: 16,

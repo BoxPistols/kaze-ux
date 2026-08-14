@@ -56,7 +56,7 @@ const BasicContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         基本ダイアログ
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -129,7 +129,7 @@ const SizesContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         サイズバリエーション
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -191,7 +191,7 @@ const PracticalPatternsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         実践パターン
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -209,7 +209,7 @@ const PracticalPatternsContent = () => {
               borderRadius: 2,
               textAlign: 'center',
             }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               削除確認
             </Typography>
             <Button
@@ -231,7 +231,7 @@ const PracticalPatternsContent = () => {
               borderRadius: 2,
               textAlign: 'center',
             }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               フォーム入力
             </Typography>
             <Button variant='contained' onClick={() => setFormOpen(true)}>
@@ -250,7 +250,7 @@ const PracticalPatternsContent = () => {
               borderRadius: 2,
               textAlign: 'center',
             }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               情報表示
             </Typography>
             <Button variant='outlined' onClick={() => setInfoOpen(true)}>
@@ -378,7 +378,7 @@ const PracticalPatternsContent = () => {
                 <Typography variant='body2' color='text.secondary'>
                   {item.label}
                 </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {item.value}
                 </Typography>
               </Stack>

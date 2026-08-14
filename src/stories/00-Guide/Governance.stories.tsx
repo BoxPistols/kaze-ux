@@ -48,7 +48,7 @@ const SectionHeader = ({
     <Typography
       variant='h5'
       component='h2'
-      sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+      sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -107,7 +107,7 @@ const Governance = () => {
       <Typography
         variant='h4'
         component='h1'
-        sx={{ fontWeight: 800, letterSpacing: '-0.02em', mb: 1 }}>
+        sx={{ fontWeight: 700, letterSpacing: '-0.02em', mb: 1 }}>
         プロダクトを追加しても、同じ部品と同じ定義しか使えない
       </Typography>
       <Typography color='text.secondary' sx={{ lineHeight: 1.8 }}>
@@ -131,7 +131,7 @@ const Governance = () => {
             全プロダクト合計
           </Typography>
           <Typography
-            sx={{ fontWeight: 800, fontSize: 40, lineHeight: 1.1, my: 0.5 }}
+            sx={{ fontWeight: 700, fontSize: 40, lineHeight: 1.1, my: 0.5 }}
             color='primary.main'>
             {totals.rate}%
           </Typography>
@@ -144,7 +144,7 @@ const Governance = () => {
             未準拠の箇所
           </Typography>
           <Typography
-            sx={{ fontWeight: 800, fontSize: 40, lineHeight: 1.1, my: 0.5 }}>
+            sx={{ fontWeight: 700, fontSize: 40, lineHeight: 1.1, my: 0.5 }}>
             {violations.length}
           </Typography>
           <Typography variant='body2' color='text.secondary'>

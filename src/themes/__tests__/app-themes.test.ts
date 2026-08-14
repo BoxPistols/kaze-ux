@@ -72,7 +72,7 @@ describe('プロダクトテーマが光学タイポグラフィを継承して�
       )
       expect(t.typography.h1.lineHeight, 'h1 行送り').toBe(1.3)
       expect(t.typography.body1.lineHeight, 'body1 行送り').toBe(1.6)
-      expect(t.typography.button.fontWeight, 'button ウェイト').toBe(500)
+      expect(t.typography.button.fontWeight, 'button ウェイト').toBe(400)
     })
   }
 })
@@ -157,7 +157,7 @@ describe('colorSchemes 版テーマ (saas-dashboard / sky-kaze が使用)', () =
     it(`${name}: 光学タイポグラフィを継承している`, () => {
       expect(t.typography.h1.letterSpacing).toBe(letterSpacingVariant.xxl)
       expect(t.typography.body1.lineHeight).toBe(1.6)
-      expect(t.typography.button.fontWeight).toBe(500)
+      expect(t.typography.button.fontWeight).toBe(400)
     })
 
     it(`${name}: ダークスキームでもリムライトが効く`, () => {

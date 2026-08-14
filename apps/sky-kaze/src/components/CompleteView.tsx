@@ -100,7 +100,7 @@ export const CompleteView = () => {
             <Typography
               variant='xl'
               display='block'
-              sx={{ fontWeight: 800, fontSize: '26px', mb: 0.5 }}>
+              sx={{ fontWeight: 700, fontSize: '26px', mb: 0.5 }}>
               配送結果
             </Typography>
             <Typography
@@ -267,7 +267,7 @@ export const CompleteView = () => {
                   <Box>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, fontSize: '15px' }}>
+                      sx={{ fontWeight: 700, fontSize: '15px' }}>
                       {d.name}
                     </Typography>
                     <Typography
@@ -299,7 +299,7 @@ export const CompleteView = () => {
                     <Typography
                       sx={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontWeight: 600,
+                        fontWeight: 700,
                       }}>
                       {d.rating}
                     </Typography>
@@ -406,7 +406,7 @@ export const CompleteView = () => {
                             }}>
                             <Typography
                               variant='caption'
-                              sx={{ fontWeight: 600, fontSize: '13px' }}>
+                              sx={{ fontWeight: 700, fontSize: '13px' }}>
                               対応: {inc.resolution}
                             </Typography>
                           </Box>
@@ -510,7 +510,7 @@ export const CompleteView = () => {
                   <Box>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 500, fontSize: '15px' }}>
+                      sx={{ fontWeight: 400, fontSize: '15px' }}>
                       {s.contents}
                     </Typography>
                     <Typography
@@ -536,7 +536,7 @@ export const CompleteView = () => {
                   <Typography
                     sx={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: 600,
+                      fontWeight: 700,
                       fontSize: '14px',
                     }}>
                     ¥{s.cost.toLocaleString()}

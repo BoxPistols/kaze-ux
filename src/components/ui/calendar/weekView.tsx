@@ -209,7 +209,7 @@ export const WeekView = ({
                           color: `${getTypeTone(schedule.type)}.contrastText`,
                           borderRadius: 0.5,
                           p: 0.5,
-                          fontSize: '11px',
+                          fontSize: '12px',
                           overflow: 'hidden',
                           cursor: 'pointer',
                           zIndex: scheduleIndex + 1,
@@ -222,8 +222,8 @@ export const WeekView = ({
                           variant='caption'
                           sx={{
                             display: 'block',
-                            fontWeight: 600,
-                            fontSize: '10px',
+                            fontWeight: 700,
+                            fontSize: '12px',
                             color: 'inherit',
                           }}>
                           {schedule.time}
@@ -232,7 +232,7 @@ export const WeekView = ({
                           variant='caption'
                           sx={{
                             display: 'block',
-                            fontSize: '11px',
+                            fontSize: '12px',
                             lineHeight: 1.2,
                             color: 'inherit',
                             overflow: 'hidden',
@@ -246,7 +246,7 @@ export const WeekView = ({
                             variant='caption'
                             sx={{
                               display: 'block',
-                              fontSize: '10px',
+                              fontSize: '12px',
                               color: 'rgba(255,255,255,0.8)',
                               mt: 0.25,
                             }}>

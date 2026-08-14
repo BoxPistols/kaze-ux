@@ -124,7 +124,7 @@ export const RestaurantPage = () => {
           <Typography
             variant='h4'
             sx={{
-              fontWeight: 800,
+              fontWeight: 700,
               color: '#fff',
               mb: 1,
               letterSpacing: '-0.02em',
@@ -155,7 +155,7 @@ export const RestaurantPage = () => {
               />
               <Typography
                 variant='body2'
-                sx={{ color: '#fff', fontWeight: 600 }}>
+                sx={{ color: '#fff', fontWeight: 700 }}>
                 {restaurant.rating}
               </Typography>
               <Typography
@@ -172,7 +172,7 @@ export const RestaurantPage = () => {
                 color: 'rgba(255,255,255,0.9)',
               }}>
               <AccessTimeIcon sx={{ fontSize: 18 }} aria-hidden='true' />
-              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ fontWeight: 400 }}>
                 {restaurant.deliveryTime}
               </Typography>
             </Box>
@@ -184,7 +184,7 @@ export const RestaurantPage = () => {
                 color: 'rgba(255,255,255,0.9)',
               }}>
               <DeliveryDiningIcon sx={{ fontSize: 18 }} aria-hidden='true' />
-              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ fontWeight: 400 }}>
                 {formatPrice(restaurant.deliveryFee)}
               </Typography>
             </Box>
@@ -203,10 +203,10 @@ export const RestaurantPage = () => {
           value={tabValue}
           onChange={(_e, v) => setTabValue(v)}
           sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Tab label='Menu' sx={{ fontWeight: 600 }} />
+          <Tab label='Menu' sx={{ fontWeight: 700 }} />
           <Tab
             label={`Popular (${popularItems.length})`}
-            sx={{ fontWeight: 600 }}
+            sx={{ fontWeight: 700 }}
           />
         </Tabs>
 

@@ -10,8 +10,8 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         ? 'rgba(0, 0, 0, 0.02)'
         : 'rgba(255, 255, 255, 0.03)',
     color: theme.palette.text.secondary,
-    fontSize: '0.75rem',
-    fontWeight: 600,
+    fontSize: '0.86rem',
+    fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
     borderBottom: `1px solid ${theme.palette.divider}`,
