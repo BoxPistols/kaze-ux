@@ -15,6 +15,8 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createOpenAI } from '@ai-sdk/openai'
 import { generateText, type ModelMessage } from 'ai'
 
+import { resolveMaxOutputTokens } from '../../../../lib/maxOutputTokens'
+
 import type { ChatSupportConfig } from './chatSupportTypes'
 
 // ---------------------------------------------------------------------------
@@ -67,30 +69,6 @@ export class AIUserKeyRequiredError extends Error {
 }
 
 // ---------------------------------------------------------------------------
-// 共通: モデル別 maxOutputTokens の決定
-// ---------------------------------------------------------------------------
-
-// Gemini 2.5 系は reasoning tokens を maxOutputTokens に消費するため buffer 加算が必須
-// 不足すると finishReason='length' で本文が空になる
-const GEMINI_REASONING_BUFFER = 1200
-
-const resolveMaxOutputTokens = (model: string, isTest: boolean): number => {
-  const isGemini25 = model.includes('gemini-2.5')
-
-  if (isTest) {
-    // Gemini 2.5 は reasoning 消費で 50 では不足、buffer+最低出力 10 を確保
-    return isGemini25 ? GEMINI_REASONING_BUFFER + 10 : 50
-  }
-  // コスト最適枠（nano / luna）は出力上限を絞る
-  if (model.includes('nano') || model.includes('luna')) return 4000
-  if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
-    return 16000
-  }
-  if (isGemini25) return 4000 + GEMINI_REASONING_BUFFER
-  return 4000
-}
-
-// ---------------------------------------------------------------------------
 // 共通: メッセージ変換
 // ---------------------------------------------------------------------------
 
@@ -138,7 +116,7 @@ const callViaBackend = async (
     body: JSON.stringify({
       messages: messagesPayload,
       model: config.model,
-      maxOutputTokens: resolveMaxOutputTokens(config.model, isTest),
+      maxOutputTokens: resolveMaxOutputTokens(config.model, { isTest }),
     }),
     signal: AbortSignal.timeout(60000),
   })
@@ -206,7 +184,7 @@ const callDirect = async (
   isTest: boolean
 ): Promise<string> => {
   const model = resolveModelDirect(config)
-  const maxOutputTokens = resolveMaxOutputTokens(config.model, isTest)
+  const maxOutputTokens = resolveMaxOutputTokens(config.model, { isTest })
   const abortSignal = AbortSignal.timeout(60000)
 
   const result = await generateText({

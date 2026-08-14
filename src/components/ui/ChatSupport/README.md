@@ -18,7 +18,6 @@ ChatSupport/
   muiKnowledge.ts            # MUI 知識ベース
   embeddingSearch.ts         # セマンティック検索（VectorIndex）
   embeddingService.ts        # OpenAI Embedding API ラッパー
-  writingPatterns.ts         # 記述パターン知識ベース
   useResize.ts               # リサイズ hook（widget / sidebar）
   BookConciergeIcon.tsx      # FAB アイコン
   CodeBlock.tsx              # Markdown コードブロック

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/calendar/calendarControl'
 import { MiniCalendar } from '@/components/ui/calendar/miniCalendar'
 import { MonthView } from '@/components/ui/calendar/monthView'
+import { CalendarSettingsProvider } from '@/providers/CalendarSettingsProvider'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { Dayjs } from 'dayjs'
@@ -58,10 +59,13 @@ const meta: Meta = {
     },
   },
   decorators: [
+    // MiniCalendar / MonthView は useCalendarSettings を呼ぶため Provider が要る
     (Story) => (
-      <Box sx={{ p: 3 }}>
-        <Story />
-      </Box>
+      <CalendarSettingsProvider>
+        <Box sx={{ p: 3 }}>
+          <Story />
+        </Box>
+      </CalendarSettingsProvider>
     ),
   ],
 }

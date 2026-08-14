@@ -14,6 +14,8 @@ import type { StoryGuideEntry } from './storyGuideMap'
 
 let globalIndex: VectorIndex | null = null
 let buildError: string | null = null
+// 構築中の Promise。同時呼び出しを 1 回の構築に合流させる
+let buildPromise: Promise<void> | null = null
 
 export const getEmbeddingIndex = (): VectorIndex | null => globalIndex
 
@@ -133,28 +135,42 @@ const buildMuiKnowledgeEntries = (): IndexEntry[] => {
  */
 export const initEmbeddingIndex = async (apiKey: string): Promise<void> => {
   if (globalIndex?.isReady()) return
+  // isReady() は build 完了後に true になるので、これだけでは構築中の
+  // 二重呼び出し（StrictMode の二重 effect 等）を止められず embedding API を
+  // 二重に叩く。構築中は同じ Promise に合流させる
+  if (buildPromise) return buildPromise
 
-  buildError = null
-  globalIndex = new VectorIndex()
+  buildPromise = (async () => {
+    buildError = null
+    const index = new VectorIndex()
+    globalIndex = index
+
+    try {
+      const entries = [
+        ...buildFaqEntries(),
+        ...buildStoryGuideEntries(),
+        ...buildMuiKnowledgeEntries(),
+      ]
+      console.info(
+        `[Embedding] ${entries.length}件の知識ベースをインデックス化中...`
+      )
+      await index.build(apiKey, entries)
+      console.info(
+        `[Embedding] インデックス構築完了 (${index.getVectorCount()}件)`
+      )
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      buildError = msg
+      console.warn('[Embedding] インデックス構築失敗:', msg)
+      globalIndex = null
+    }
+  })()
 
   try {
-    const entries = [
-      ...buildFaqEntries(),
-      ...buildStoryGuideEntries(),
-      ...buildMuiKnowledgeEntries(),
-    ]
-    console.log(
-      `[Embedding] ${entries.length}件の知識ベースをインデックス化中...`
-    )
-    await globalIndex.build(apiKey, entries)
-    console.log(
-      `[Embedding] インデックス構築完了 (${globalIndex.getVectorCount()}件)`
-    )
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e)
-    buildError = msg
-    console.warn('[Embedding] インデックス構築失敗:', msg)
-    globalIndex = null
+    await buildPromise
+  } finally {
+    // 失敗時は次の呼び出しで再構築できるよう必ず解放する
+    buildPromise = null
   }
 }
 

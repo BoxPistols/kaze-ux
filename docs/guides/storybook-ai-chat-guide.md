@@ -30,7 +30,6 @@ src/components/ui/ChatSupport/
   CodeBlock.tsx            # コードブロック（シンタックスハイライト）
   BookConciergeIcon.tsx    # カスタムアイコン
   useResize.ts             # リサイズハンドラ
-  writingPatterns.ts       # 回答品質パターン
 ```
 
 ## Phase 1: 最小構成（API + UI + Decorator）
