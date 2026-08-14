@@ -183,13 +183,15 @@ const HowToUseContent = () => {
             style={{ fontSize: 12, fill: 'rgba(255,255,255,0.8)' }}>
             Padding: Standard / None
           </text>
+          {/* 白 0.2 だと合成後の面が明るく、上に乗る白の歯車が 4.49:1 で
+              4.5 に 0.01 届かない。面を少し暗くして前景の余裕を作る */}
           <rect
             x='670'
             y='12'
             width='24'
             height='24'
             rx='4'
-            fill='rgba(255,255,255,0.2)'
+            fill='rgba(255,255,255,0.15)'
           />
           <text
             x='676'

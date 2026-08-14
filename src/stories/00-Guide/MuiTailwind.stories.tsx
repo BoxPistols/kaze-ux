@@ -95,8 +95,10 @@ const MuiTailwindContent = () => {
           <defs>
             <style>{`
               .at-text { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-              .at-title { font-size: 14px; font-weight: 700; fill: #fff; }
-              .at-file { font-size: 12px; fill: rgba(255,255,255,0.7); font-family: ui-monospace, monospace; }
+              /* fill は箱ごとに変わるので指定しない。白を固定すると
+                 success.main の上で 2.92:1、0.7 の白は 2.17:1 まで落ちる */
+              .at-title { font-size: 14px; font-weight: 700; }
+              .at-file { font-size: 12px; font-family: ui-monospace, monospace; }
               .at-label { font-size: 12px; fill: ${theme.palette.text.primary}; }
               .at-code { font-size: 12px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
               .at-arrow { stroke: ${theme.palette.primary.main}; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
@@ -124,10 +126,20 @@ const MuiTailwindContent = () => {
             rx='10'
             fill={theme.palette.primary.main}
           />
-          <text x='110' y='38' textAnchor='middle' className='at-text at-title'>
+          <text
+            x='110'
+            y='38'
+            textAnchor='middle'
+            className='at-text at-title'
+            fill={theme.palette.primary.contrastText}>
             MUI Theme
           </text>
-          <text x='110' y='58' textAnchor='middle' className='at-text at-file'>
+          <text
+            x='110'
+            y='58'
+            textAnchor='middle'
+            className='at-text at-file'
+            fill={theme.palette.primary.contrastText}>
             src/themes/theme.ts
           </text>
 
@@ -140,10 +152,20 @@ const MuiTailwindContent = () => {
             rx='10'
             fill={theme.palette.success.main}
           />
-          <text x='360' y='38' textAnchor='middle' className='at-text at-title'>
+          <text
+            x='360'
+            y='38'
+            textAnchor='middle'
+            className='at-text at-title'
+            fill={theme.palette.success.contrastText}>
             CSS Variables
           </text>
-          <text x='360' y='58' textAnchor='middle' className='at-text at-file'>
+          <text
+            x='360'
+            y='58'
+            textAnchor='middle'
+            className='at-text at-file'
+            fill={theme.palette.success.contrastText}>
             src/index.css
           </text>
 
@@ -156,10 +178,20 @@ const MuiTailwindContent = () => {
             rx='10'
             fill={theme.palette.info.main}
           />
-          <text x='610' y='38' textAnchor='middle' className='at-text at-title'>
+          <text
+            x='610'
+            y='38'
+            textAnchor='middle'
+            className='at-text at-title'
+            fill={theme.palette.info.contrastText}>
             Tailwind Config
           </text>
-          <text x='610' y='58' textAnchor='middle' className='at-text at-file'>
+          <text
+            x='610'
+            y='58'
+            textAnchor='middle'
+            className='at-text at-file'
+            fill={theme.palette.info.contrastText}>
             tailwind.config.js
           </text>
 

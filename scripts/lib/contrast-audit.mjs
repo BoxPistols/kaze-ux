@@ -85,25 +85,29 @@ export const CONTRAST_AUDIT = () => {
     const t = el.getBoundingClientRect()
     const cx = t.left + t.width / 2
     const cy = t.top + t.height / 2
-    let best = null
-    let bestArea = Infinity
+    // 文字の中心を覆う図形を、小さい順（＝上に描かれている順）に集める。
+    // 半透明の図形は下の図形と合成しないと正しい面にならない。
+    // DOM 祖先へ直に落とすと、青い帯の上の 20% 白チップを「白」と測る
+    const covering = []
     for (const shape of svg.querySelectorAll(
       'circle,rect,path,ellipse,polygon'
     )) {
       const f = parse(getComputedStyle(shape).fill)
       if (!f || f.a === 0) continue
       const r = shape.getBoundingClientRect()
-      // 文字の中心を覆っているものだけが下地になりうる
       if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) continue
       const area = r.width * r.height
-      if (area > 0 && area < bestArea) {
-        bestArea = area
-        best = f
-      }
+      if (area > 0) covering.push({ f, area })
     }
-    if (!best) return effectiveBg(el)
-    // 図形が半透明なら、その下の面と合成する
-    return best.a >= 1 ? best : over(best, effectiveBg(el))
+    if (covering.length === 0) return effectiveBg(el)
+    covering.sort((a, b) => a.area - b.area)
+    let acc = null
+    for (const { f } of covering) {
+      acc = acc ? over(acc, f) : f
+      if (acc.a >= 1) return acc
+    }
+    // 図形を積んでも不透明にならなければ、その下は DOM の面
+    return over(acc, effectiveBg(el))
   }
 
   const out = []
