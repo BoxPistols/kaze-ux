@@ -84,17 +84,22 @@ const scan = (re: RegExp, judge: (m: RegExpExecArray) => boolean): Hit[] => {
     src.split('\n').forEach((raw, i) => {
       const text = stripComments(raw)
       if (!text) return
-      const rx = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g')
+      const rx = new RegExp(
+        re.source,
+        re.flags.includes('g') ? re.flags : re.flags + 'g'
+      )
       let m: RegExpExecArray | null
       while ((m = rx.exec(text)) !== null) {
-        if (judge(m)) hits.push({ file, line: i + 1, text: text.trim().slice(0, 96) })
+        if (judge(m))
+          hits.push({ file, line: i + 1, text: text.trim().slice(0, 96) })
       }
     })
   }
   return hits
 }
 
-const format = (hits: Hit[]) => hits.map((h) => `${h.file}:${h.line}  ${h.text}`)
+const format = (hits: Hit[]) =>
+  hits.map((h) => `${h.file}:${h.line}  ${h.text}`)
 
 describe('フォントサイズの下限', () => {
   it('走査対象を取りこぼしていない', () => {
@@ -107,7 +112,10 @@ describe('フォントサイズの下限', () => {
       /fontSize: *'([0-9.]+)rem'/,
       (m) => Number.parseFloat(m[1]) * BASE_FONT_SIZE < MIN_PX
     )
-    expect(format(hits), `rem × ${BASE_FONT_SIZE}px が ${MIN_PX}px 未満`).toEqual([])
+    expect(
+      format(hits),
+      `rem × ${BASE_FONT_SIZE}px が ${MIN_PX}px 未満`
+    ).toEqual([])
   })
 
   it(`px 指定が ${MIN_PX}px を下回らない`, () => {
@@ -190,7 +198,9 @@ describe('フォントウェイトの 2 値化', () => {
       .split('\n')
       .map(stripComments)
       .join('\n')
-    const scale = [...src.matchAll(/fontWeight(Light|Regular|Medium|Bold): *([0-9]{3})/g)]
+    const scale = [
+      ...src.matchAll(/fontWeight(Light|Regular|Medium|Bold): *([0-9]{3})/g),
+    ]
     expect(scale.length, 'MUI のウェイトスケールが見つからない').toBe(4)
     const bad = scale
       .filter(([, , w]) => !ALLOWED_WEIGHTS.has(Number.parseInt(w, 10)))
