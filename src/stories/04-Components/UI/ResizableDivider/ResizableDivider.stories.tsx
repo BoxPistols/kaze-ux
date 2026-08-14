@@ -34,7 +34,17 @@ type Story = StoryObj<typeof meta>
 /**
  * パネルの共通コンテンツ
  */
-const PanelContent = ({ label, size }: { label: string; size: number }) => (
+const PanelContent = ({
+  label,
+  size,
+  // 色を敷いた面では合成後が明るくなり、text.secondary では届かないことがある。
+  // 敷く側が前景を指定できるようにする
+  labelColor = 'text.secondary',
+}: {
+  label: string
+  size: number
+  labelColor?: string
+}) => (
   <Box
     sx={{
       display: 'flex',
@@ -44,7 +54,7 @@ const PanelContent = ({ label, size }: { label: string; size: number }) => (
       flexDirection: 'column',
       gap: 1,
     }}>
-    <Typography variant='subtitle2' color='text.secondary'>
+    <Typography variant='subtitle2' color={labelColor}>
       {label}
     </Typography>
     <Typography variant='h6' color='text.primary'>
@@ -228,13 +238,18 @@ const BothDirectionsDemo = () => {
           orientation='horizontal'
         />
 
-        {/* 右下パネル */}
+        {/* 右下パネル。action.selected を敷くと合成後の面が明るくなり、
+            text.secondary では 4.17:1 で 4.5 に届かない（ダーク実測） */}
         <Box
           sx={{
             flex: 1,
             bgcolor: 'action.selected',
           }}>
-          <PanelContent label='右下パネル（自動調整）' size={0} />
+          <PanelContent
+            label='右下パネル（自動調整）'
+            size={0}
+            labelColor='text.primary'
+          />
         </Box>
       </Box>
     </Paper>

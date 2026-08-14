@@ -55,8 +55,14 @@ const NOISE_RATIO = 0.5
  * 実際に踏んだ: 3D 地図の story が 125,970px の差分で「変わった」と判定
  * されたが、実体は地形メッシュの描画ゆらぎだった。1 回の撮り直しが
  * たまたま近いフレームを掴んだため。最大値を採る。
+ *
+ * 3 回でも足りなかった。Drawer の story は同じ版で 4 回撮ると
+ * 0 / 0 / 0 / 2647px と、**4 回に 1 回だけ**ずれる。3 回引いて全部 0 なら
+ * 「本物の変化」に昇格してしまう（実際に 2,204px の誤検出が出た）。
+ * 5 回に増やしても取りこぼしは残るので、判定は必ず自己差分の値と
+ * 併せて読むこと。
  */
-const NOISE_SAMPLES = 3
+const NOISE_SAMPLES = 5
 
 const args = process.argv.slice(2)
 const limitAt = args.indexOf('--limit')
@@ -158,7 +164,16 @@ try {
 
   const browser = await chromium.launch()
   const shoot = async (base, id, file) => {
-    const page = await browser.newPage({ viewport: VIEWPORT })
+    // newPage 自体が失敗しうる（長時間の実行で "Target crashed" を実際に踏んだ）。
+    // try の外に置くと 200 story の途中で全体が落ちる
+    let page
+    try {
+      page = await browser.newPage({ viewport: VIEWPORT })
+    } catch (e) {
+      return `newPage: ${String(e?.message ?? e)
+        .split('\n')[0]
+        .slice(0, 70)}`
+    }
     try {
       await page.goto(`${base}/iframe.html?id=${id}&viewMode=story`, {
         waitUntil: 'load',
@@ -179,7 +194,7 @@ try {
         .split('\n')[0]
         .slice(0, 90)
     } finally {
-      await page.close()
+      await page.close().catch(() => {})
     }
   }
 

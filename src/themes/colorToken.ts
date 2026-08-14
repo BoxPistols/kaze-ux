@@ -445,8 +445,15 @@ const darkSchemeEnvMap: Record<ColorScheme, SchemeEnv> = {
     lighter: '#44475A',
     background: { default: '#282A36', paper: '#343746' },
     // secondary は Dracula の comment 色 (#6272A4) を色相・彩度そのままに
-    // 明度だけ上げたもの。元の値は paper 上で 3.03:1 と AA に届かなかった
-    text: { primary: '#F8F8F2', secondary: '#9ca2c4', disabled: '#6272A4' },
+    // 明度だけ上げたもの。元の値は paper 上で 3.03:1 と AA に届かなかった。
+    //
+    // その後 #9ca2c4 まで上げたが、それでも足りなかった。paper (4.70:1) で
+    // 測って決めていたためで、action.hover / selected を敷いた面に置くと
+    // 合成後が rgb(64,67,80) になり 3.92:1 まで落ちる。テーブル見出しや
+    // Card のラベルなど、色を敷いた面に乗る用途の方が多く、実測で 66 箇所が
+    // 割れていた。tint 面を基準に取り直した値が #aab0cd
+    // (tint 4.59:1 / paper 5.50:1 / default 6.65:1)
+    text: { primary: '#F8F8F2', secondary: '#aab0cd', disabled: '#6272A4' },
     action: {
       hover: 'rgba(248, 248, 242, 0.06)',
       selected: 'rgba(80, 216, 216, 0.15)',

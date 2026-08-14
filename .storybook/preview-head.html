@@ -101,30 +101,64 @@
     font-family: var(--font-family) !important;
   }
 
-  /* Heading styles */
+  /* Heading styles
+     docs ページと story 内の節見出し向け。
+
+     .MuiAccordion-heading を除外しているのは、MUI が a11y のために内部で
+     出す素の h3 にまで !important のライト固定色が当たり、ダークで
+     2.08:1 になっていたため。余白 2em も部品の中に入り込んでいた。
+
+     [class*='Mui'] のような広い除外にはしない。story が
+     <Box component='h3'> で節見出しを書いており、MuiBox-root ごと
+     巻き込んで装飾が消える（VRT で 2 story の崩れとして出た）。
+     他の部品で同じことが起きたら pnpm check:a11y が拾う */
   :where(
-    h1:not(.sb-anchor, .sb-unstyled, .sb-unstyled h1, .MuiTypography-root)
+    h1:not(
+      .sb-anchor,
+      .sb-unstyled,
+      .sb-unstyled h1,
+      .MuiTypography-root,
+      .MuiAccordion-heading
+    )
   ):first-of-type {
     color: var(--color-Storybook) !important;
     margin: 0.75em 0 !important;
   }
 
   :where(
-    h2:not(.sb-anchor, .sb-unstyled, .sb-unstyled h2, .MuiTypography-root)
+    h2:not(
+      .sb-anchor,
+      .sb-unstyled,
+      .sb-unstyled h2,
+      .MuiTypography-root,
+      .MuiAccordion-heading
+    )
   ) {
     color: var(--color-Mui) !important;
     margin: 1.5em 0 1em !important;
   }
 
   :where(
-    h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled h3, .MuiTypography-root)
+    h3:not(
+      .sb-anchor,
+      .sb-unstyled,
+      .sb-unstyled h3,
+      .MuiTypography-root,
+      .MuiAccordion-heading
+    )
   ) {
     color: var(--color-TextSecondary) !important;
     margin: 2em 0 0.75em !important;
   }
 
   :where(
-    h4:not(.sb-anchor, .sb-unstyled, .sb-unstyled h4, .MuiTypography-root)
+    h4:not(
+      .sb-anchor,
+      .sb-unstyled,
+      .sb-unstyled h4,
+      .MuiTypography-root,
+      .MuiAccordion-heading
+    )
   ) {
     color: var(--color-TextSecondary) !important;
     margin: 1em 0 0.5em !important;
