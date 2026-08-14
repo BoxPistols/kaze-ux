@@ -100,7 +100,12 @@ const BasicContent = () => (
       <Grid size={{ xs: 12, md: 4 }}>
         <Card>
           <CardHeader
-            avatar={<Avatar sx={{ bgcolor: 'primary.main' }}>K</Avatar>}
+            avatar={
+              <Avatar
+                sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}>
+                K
+              </Avatar>
+            }
             action={
               <IconButton size='small'>
                 <MoreVertIcon />
@@ -176,7 +181,11 @@ const DeviceStatusContent = () => {
             <Card>
               <CardHeader
                 avatar={
-                  <Avatar sx={{ bgcolor: `${device.statusColor}.main` }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${device.statusColor}.main`,
+                      color: `${device.statusColor}.contrastText`,
+                    }}>
                     <DevicesIcon />
                   </Avatar>
                 }
@@ -340,7 +349,7 @@ const LayoutPatternsContent = () => (
                     variant='caption'
                     sx={{
                       color: stat.change.startsWith('+')
-                        ? 'success.main'
+                        ? 'success.textContrast'
                         : 'text.secondary',
                       fontWeight: 400,
                     }}>

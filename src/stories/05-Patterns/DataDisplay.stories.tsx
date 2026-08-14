@@ -72,9 +72,9 @@ function getStatusColor(
 
 /** バッテリー残量に応じたテキスト色を返す */
 function getBatteryColor(battery: number): string {
-  if (battery >= 70) return 'success.main'
-  if (battery >= 30) return 'warning.main'
-  return 'error.main'
+  if (battery >= 70) return 'success.textContrast'
+  if (battery >= 30) return 'warning.textContrast'
+  return 'error.textContrast'
 }
 
 /** フィルターの選択肢 */

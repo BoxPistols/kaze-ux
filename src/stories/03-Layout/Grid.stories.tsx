@@ -38,8 +38,10 @@ const DemoItem = ({
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      bgcolor: 'primary.light',
-      color: 'primary.contrastText',
+      // contrastText は main の面に対して設計された色。light に重ねると
+      // 3.95:1 で届かない。淡い面には前景用の textContrast を合わせる
+      bgcolor: 'primary.lighter',
+      color: 'primary.textContrast',
       fontWeight: 700,
       fontSize: '0.86rem',
       borderRadius: 1.5,
