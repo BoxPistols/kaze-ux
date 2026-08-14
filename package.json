@@ -86,6 +86,7 @@
     "check:anon": "node scripts/check-anonymity.mjs",
     "check:live": "node scripts/check-live-secrets.mjs",
     "check:typo": "node scripts/check-rendered-typography.mjs",
+    "vrt": "node scripts/vrt.mjs",
     "check:share": "pnpm run check:anon && pnpm run check:live"
   },
   "peerDependencies": {
