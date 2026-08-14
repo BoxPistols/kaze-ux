@@ -87,7 +87,8 @@
     "check:live": "node scripts/check-live-secrets.mjs",
     "check:typo": "node scripts/check-rendered-typography.mjs",
     "vrt": "node scripts/vrt.mjs",
-    "check:share": "pnpm run check:anon && pnpm run check:live"
+    "check:share": "pnpm run check:anon && pnpm run check:live",
+    "check:a11y": "node scripts/check-a11y.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

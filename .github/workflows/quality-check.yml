@@ -179,6 +179,35 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
+      # preview.tsx は axe の自動実行を切っている（開発が重くなるため）。
+      # パネルから手で押せば動くが CI では誰も押さないので、
+      # ビルドした物を実際に描画して測る
+      - name: Install Chromium for a11y check
+        run: pnpm exec playwright install --with-deps chromium
+
+      # 配信と検査を 1 ステップにまとめる。
+      # ステップをまたいで背景プロセスが生きている前提を持たない
+      - name: Check contrast (rendered)
+        run: |
+          # 出力を捨てないと、背景プロセスがステップの stdout を掴んだままになり
+          # ログ収集が EOF を待って終わらない（ローカル実行で実際に詰まった）。
+          # 停止処理は置かない。非対話 bash では背景ジョブがスクリプト自身と
+          # 同じプロセスグループに入るため、グループごと kill すると
+          # ステップ自体が死ぬ（これもローカル実行で踏んだ）。
+          # job の終了時にランナーごと片付くので放置してよい
+          npx --yes http-server storybook-static -p 6099 --silent >/dev/null 2>&1 &
+          ready=0
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:6099/index.json; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            echo "Storybook を配信できませんでした"; exit 1
+          fi
+          pnpm check:a11y
+
   # Change Analysis
   change-analysis:
     name: Change Analysis

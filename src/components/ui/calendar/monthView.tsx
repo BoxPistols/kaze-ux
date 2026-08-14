@@ -115,10 +115,11 @@ export const MonthView = ({
               variant='body2'
               sx={{
                 fontWeight: 400,
+                // main は面のための色。文字に使うと 12px で 2.5〜4.4:1 にしかならない
                 color: isSunday(index)
-                  ? 'error.main'
+                  ? 'error.textContrast'
                   : isSaturday(index)
-                    ? 'info.main'
+                    ? 'info.textContrast'
                     : 'text.primary',
               }}>
               {dayName}
@@ -182,12 +183,14 @@ export const MonthView = ({
                         bgcolor: isToday(date) ? 'primary.main' : 'transparent',
                         color: isToday(date)
                           ? 'primary.contrastText'
-                          : !isCurrentMonth(date)
-                            ? 'text.disabled'
+                          : // 当月外の日付は「無効な操作対象」ではなく読む情報。
+                            // text.disabled では 1.64:1 で読めない
+                            !isCurrentMonth(date)
+                            ? 'text.secondary'
                             : isSunday(dayIndex)
-                              ? 'error.main'
+                              ? 'error.textContrast'
                               : isSaturday(dayIndex)
-                                ? 'info.main'
+                                ? 'info.textContrast'
                                 : 'text.primary',
                         fontWeight: isToday(date) ? 700 : 400,
                       }}>

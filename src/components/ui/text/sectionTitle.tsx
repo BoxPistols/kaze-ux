@@ -29,7 +29,8 @@ export const SectionTitle = ({
             mb: -0.5,
             mr: 1,
             ml: 0,
-            color: theme.palette.error.main,
+            // main は面のための色。18.2px の非太字では 4.38:1 で 4.5 に届かない
+            color: theme.palette.error.textContrast,
             fontSize: '1.3em',
             lineHeight: '1',
             ...(props.sx || {}),
