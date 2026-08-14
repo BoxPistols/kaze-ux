@@ -447,7 +447,7 @@ export const InvoicesPage = () => {
             color={statusFilter === filter.value ? 'primary' : 'default'}
             sx={{
               cursor: 'pointer',
-              fontWeight: statusFilter === filter.value ? 600 : 400,
+              fontWeight: statusFilter === filter.value ? 700 : 400,
             }}
           />
         ))}

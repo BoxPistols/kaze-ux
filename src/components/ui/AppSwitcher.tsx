@@ -177,7 +177,7 @@ export const AppSwitcher = ({ currentApp }: AppSwitcherProps) => {
                     <Typography
                       sx={{
                         fontSize: '14px',
-                        fontWeight: isCurrent ? 700 : 500,
+                        fontWeight: isCurrent ? 700 : 400,
                         color: 'text.primary',
                         lineHeight: 1.3,
                       }}>

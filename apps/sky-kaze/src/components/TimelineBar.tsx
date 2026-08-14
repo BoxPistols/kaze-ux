@@ -166,7 +166,7 @@ export const TimelineBar = () => {
                 py: 0.25,
                 borderRadius: 1,
                 fontSize: '14px',
-                fontWeight: speed === s ? 800 : 700,
+                fontWeight: speed === s ? 700 : 700,
                 fontFamily: "'JetBrains Mono', monospace",
                 cursor: 'pointer',
                 bgcolor: 'transparent',

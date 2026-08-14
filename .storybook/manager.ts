@@ -11,7 +11,7 @@ const logoSvg = `data:image/svg+xml,${encodeURIComponent(
     '<path d="M14 18 A7 7 0 0 0 28 18 Z"/>' +
     '</g>' +
     '<text x="40" y="22" font-family="Inter,sans-serif" font-size="16"' +
-    ' font-weight="600" letter-spacing="-0.3" fill="#e4e9f0">Kaze</text>' +
+    ' font-weight="700" letter-spacing="-0.3" fill="#e4e9f0">Kaze</text>' +
     '</svg>'
 )}`
 

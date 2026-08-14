@@ -132,7 +132,7 @@ export const HomePage = () => {
               color={selectedCategory === cat.id ? 'success' : 'default'}
               sx={{
                 flexShrink: 0,
-                fontWeight: selectedCategory === cat.id ? 600 : 400,
+                fontWeight: selectedCategory === cat.id ? 700 : 400,
                 px: 1,
                 cursor: 'pointer',
               }}

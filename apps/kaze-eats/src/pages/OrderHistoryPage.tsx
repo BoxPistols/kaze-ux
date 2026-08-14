@@ -284,7 +284,7 @@ export const OrderHistoryPage = () => {
             color={statusFilter === filter.value ? 'success' : 'default'}
             sx={{
               cursor: 'pointer',
-              fontWeight: statusFilter === filter.value ? 600 : 400,
+              fontWeight: statusFilter === filter.value ? 700 : 400,
             }}
           />
         ))}

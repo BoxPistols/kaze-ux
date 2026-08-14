@@ -133,7 +133,7 @@ export const HeaderBar = () => {
               <Typography
                 sx={{
                   fontSize: '15px',
-                  fontWeight: active ? 700 : 500,
+                  fontWeight: active ? 700 : 400,
                   lineHeight: 1.3,
                 }}>
                 {tab.label}

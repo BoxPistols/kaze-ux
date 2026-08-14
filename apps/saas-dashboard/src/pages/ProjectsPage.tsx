@@ -243,7 +243,7 @@ export const ProjectsPage = () => {
             color={filter === opt.value ? 'primary' : 'default'}
             sx={{
               cursor: 'pointer',
-              fontWeight: filter === opt.value ? 600 : 400,
+              fontWeight: filter === opt.value ? 700 : 400,
             }}
           />
         ))}
