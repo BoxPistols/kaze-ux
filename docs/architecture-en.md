@@ -312,7 +312,6 @@ ChatSupport.tsx
   ├── muiKnowledge.ts        MUI knowledge base
   ├── chatSupportConstants.ts Constants & configuration
   ├── chatSupportTypes.ts    Type definitions
-  ├── writingPatterns.ts     Writing style patterns
   ├── CodeBlock.tsx          Code block rendering
   ├── BookConciergeIcon.tsx  Icon
   └── useResize.ts           Resize hook

@@ -313,7 +313,6 @@ ChatSupport.tsx
   ├── muiKnowledge.ts        MUI 知識ベース
   ├── chatSupportConstants.ts 定数・設定
   ├── chatSupportTypes.ts    型定義
-  ├── writingPatterns.ts     文体パターン
   ├── CodeBlock.tsx          コードブロック表示
   ├── BookConciergeIcon.tsx  アイコン
   └── useResize.ts           リサイズフック

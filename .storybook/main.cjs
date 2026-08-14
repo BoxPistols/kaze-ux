@@ -86,8 +86,10 @@ const config = {
       },
       // build.target は本番ビルドにしか効かない。dev サーバーの依存事前バンドルは
       // optimizeDeps 側の esbuild が担うため、同じ手当てをこちらにも入れる。
-      // これが無いと @ai-sdk/gateway (addon-mcp 依存) 等の destructuring が
-      // 降格対象になり、`storybook dev` が数千件のエラーで起動に失敗する
+      // これが無いと @ai-sdk/gateway 等の destructuring が降格対象になり、
+      // `storybook dev` が数千件のエラーで起動に失敗する。
+      // @ai-sdk/gateway は addon-mcp ではなく本体依存の ai から来る
+      // （`pnpm why @ai-sdk/gateway` で ai 6.x → @ai-sdk/gateway の 1 経路のみ）
       optimizeDeps: {
         esbuildOptions: {
           target: 'esnext',

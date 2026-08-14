@@ -9,6 +9,7 @@ import { createOpenAI } from '@ai-sdk/openai'
 import { generateText, type ModelMessage } from 'ai'
 
 import { isAllowedOrigin, setCorsHeaders } from '../lib/cors.js'
+import { resolveMaxOutputTokens } from '../lib/maxOutputTokens.js'
 import {
   checkRateLimit,
   getClientIdentifier,
@@ -60,17 +61,6 @@ const resolveModel = (modelId: string, apiKey: string) => {
   }
   const openai = createOpenAI({ apiKey })
   return openai(modelId)
-}
-
-const resolveMaxOutputTokens = (model: string, requested?: number): number => {
-  if (typeof requested === 'number' && requested > 0 && requested <= 32000) {
-    return requested
-  }
-  if (model.includes('nano')) return 4000
-  if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
-    return 16000
-  }
-  return 4000
 }
 
 const toModelMessages = (
@@ -211,7 +201,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await generateText({
       model,
       messages: toModelMessages(body.messages, body.system),
-      maxOutputTokens: resolveMaxOutputTokens(modelId, body.maxOutputTokens),
+      maxOutputTokens: resolveMaxOutputTokens(modelId, {
+        requested: body.maxOutputTokens,
+      }),
       abortSignal: AbortSignal.timeout(45000),
     })
 
