@@ -2,9 +2,10 @@
 /**
  * **描画された** Storybook のコントラストを検査する。
  *
- *   pnpm check:a11y              既定（部品カテゴリのみ）
- *   pnpm check:a11y --all        解説カテゴリも含めて全 story
- *   A11Y_URL=... pnpm check:a11y 配信先を差し替える
+ *   pnpm check:a11y                    既定（部品カテゴリ / light + dark-kaze）
+ *   pnpm check:a11y --all              解説カテゴリも含めて全 story
+ *   A11Y_THEMES=dark-dracula pnpm ...  テーマを指定
+ *   A11Y_URL=... pnpm check:a11y       配信先を差し替える
  *
  * なぜ addon-a11y と別に要るか:
  *
@@ -34,6 +35,21 @@ import { TAP_TARGET_AUDIT } from './lib/tap-target-audit.mjs'
 
 const URL = process.env.A11Y_URL ?? 'http://localhost:6099'
 const SHOW_ALL = process.argv.includes('--all')
+
+/**
+ * 検査するテーマ。
+ *
+ * light だけを測っていた間、ダークの contained Button が 2.46:1 のまま
+ * 半年気づかれなかった。片方だけ測るのは測っていないのとあまり変わらない。
+ *
+ * dark-dracula は既知の未対応があるため既定から外している
+ * （textContrast が X.lighter の面に対して保証されていない構造の問題）。
+ * A11Y_THEMES で明示すれば測れる。
+ */
+const THEMES = (process.env.A11Y_THEMES ?? 'light,dark-kaze')
+  .split(',')
+  .map((t) => t.trim())
+  .filter(Boolean)
 
 /**
  * 意図的に基準外の見本を描く解説カテゴリ。
@@ -108,13 +124,16 @@ let tapTotal = 0
  * 超えることがあり、それで gate が落ちると「たまに落ちるので無視」に
  * なって検査そのものが死ぬ。ただし**再試行しても駄目なら落とす**
  */
-const measure = async (story) => {
+const measure = async (story, theme) => {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      await page.goto(`${URL}/iframe.html?id=${story.id}&viewMode=story`, {
-        waitUntil: 'load',
-        timeout: attempt === 0 ? 20000 : 40000,
-      })
+      await page.goto(
+        `${URL}/iframe.html?id=${story.id}&viewMode=story&globals=theme:${theme}`,
+        {
+          waitUntil: 'load',
+          timeout: attempt === 0 ? 20000 : 40000,
+        }
+      )
       await page.waitForTimeout(400)
 
       // 描画に失敗した story は違反 0 件を返す。確認しないと壊れた画面ほど緑になる
@@ -137,22 +156,22 @@ const measure = async (story) => {
   return null
 }
 
-for (const story of targets) {
-  const measured = await measure(story)
+for (const theme of THEMES) {
+  for (const story of targets) {
+    const measured = await measure(story, theme)
 
-  if (!measured || !measured.r) {
-    empty++
-    const live = measured?.live
-    console.error(
-      `  ⚠ ${story.id}: 描画されていません` +
-        (live
-          ? `（要素 ${live.nodes} / エラー表示 ${live.errorShown}）`
-          : '（読み込みに 2 回失敗）')
-    )
-    continue
-  }
+    if (!measured || !measured.r) {
+      empty++
+      const live = measured?.live
+      console.error(
+        `  ⚠ [${theme}] ${story.id}: 描画されていません` +
+          (live
+            ? `（要素 ${live.nodes} / エラー表示 ${live.errorShown}）`
+            : '（読み込みに 2 回失敗）')
+      )
+      continue
+    }
 
-  {
     const r = measured.r
     checked++
     unknown += r.unknown.length
@@ -161,10 +180,11 @@ for (const story of targets) {
     for (const f of r.fails.filter((x) => !x.disabled)) {
       // 同じ原因（同じ色・同じ要素）は 1 行にまとめる。
       // 文字列を key に入れるとカレンダーの日付が 1 日 1 行になって読めない
-      const key = `${f.got}|${f.need}|${f.label}|${f.color}|${f.bg}`
+      const key = `${theme}|${f.got}|${f.need}|${f.label}|${f.color}|${f.bg}`
       const prev = fails.get(key)
       fails.set(key, {
         ...f,
+        theme,
         n: (prev?.n ?? 0) + 1,
         samples: [...new Set([...(prev?.samples ?? []), f.text])].slice(0, 4),
         where: prev?.where ?? story.title,
@@ -194,15 +214,15 @@ const tapRows = [...tapFails.values()].sort((a, b) => a.h * a.w - b.h * b.w)
 const tapCount = tapRows.reduce((a, r) => a + r.n, 0)
 
 console.log(
-  `${checked} story / コントラスト判定不能 ${unknown} 箇所 / ` +
-    `操作対象 ${tapTotal} 個` +
+  `${THEMES.join(' + ')} / ${checked} 回描画（${targets.length} story × ${THEMES.length} テーマ） / ` +
+    `コントラスト判定不能 ${unknown} 箇所 / 操作対象 ${tapTotal} 個` +
     (skipped ? ` / 解説カテゴリ ${skipped} story は対象外` : '')
 )
 
 if (rows.length) console.log('\nコントラスト:')
 for (const r of rows) {
   console.log(
-    `  ${r.got}:1 (要 ${r.need}) ${r.size}px ×${r.n}  ${r.color} on ${r.bg}\n` +
+    `  [${r.theme}] ${r.got}:1 (要 ${r.need}) ${r.size}px ×${r.n}  ${r.color} on ${r.bg}\n` +
       `      ${r.label} @${r.where}  例: ${r.samples.map((s) => `"${s}"`).join(' ')}`
   )
 }
@@ -244,5 +264,6 @@ if (count || tapCount) {
 }
 
 console.log(
-  `\n✅ コントラスト不足なし / 操作対象はすべて ${MIN_TAP_PX}x${MIN_TAP_PX} 以上`
+  `\n✅ ${THEMES.join(' + ')} すべてでコントラスト不足なし / ` +
+    `操作対象はすべて ${MIN_TAP_PX}x${MIN_TAP_PX} 以上`
 )

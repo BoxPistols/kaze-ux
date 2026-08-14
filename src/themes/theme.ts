@@ -160,13 +160,12 @@ const componentStyles = {
         color: colorData.text.disabled,
         backgroundColor: colorData.grey[300],
       },
+      // 文字色は色ごとの contrastText に任せる（下の contained* スロット）。
+      // ここで白を一括指定していたため、パレットが持つ濃色の contrastText を
+      // 詳細度で握り潰していた。ライトは main が濃紺なので白で成立していたが、
+      // ダークは main が明るい青になり、実測で 2.46:1 (kaze) / 2.37:1 (dracula)
+      // しか出ていなかった
       contained: ({ theme }: { theme: Theme }) => ({
-        '&.MuiButton-contained.MuiButton-root': {
-          color:
-            theme.palette.mode === 'light'
-              ? colorData.text.white
-              : colorData.dark.text.white,
-        },
         '&.MuiButton-contained.MuiButton-root.MuiButton-containedInherit': {
           color: theme.palette.text.primary,
         },
@@ -203,9 +202,18 @@ const componentStyles = {
           const slot = ({ theme }: { theme: Theme }) => ({
             color: theme.palette[key].textContrast,
           })
+          // contained は面が main なので、前景は textContrast ではなく
+          // contrastText（main に対して実測で選ばれた色）を使う。
+          // contained の一括指定と同じ詳細度にして、確実に効かせる
+          const filled = ({ theme }: { theme: Theme }) => ({
+            '&.MuiButton-contained.MuiButton-root': {
+              color: theme.palette[key].contrastText,
+            },
+          })
           return [
             [`text${cap}`, slot],
             [`outlined${cap}`, slot],
+            [`contained${cap}`, filled],
           ]
         })
       ),
