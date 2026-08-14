@@ -23,6 +23,7 @@ import {
   Trash2,
 } from 'lucide-react'
 
+import { isBackendMode } from '../chatAiService'
 import { DEFAULT_API_KEY, DEFAULT_MODEL } from '../chatSupportConstants'
 
 import type {
@@ -176,7 +177,7 @@ export const ChatHeader = ({
             </IconButton>
           </Stack>
           <Typography sx={{ opacity: 0.6, fontSize: 12, whiteSpace: 'nowrap' }}>
-            {!config.apiKey && !DEFAULT_API_KEY
+            {!config.apiKey && !DEFAULT_API_KEY && !isBackendMode()
               ? 'FAQモード'
               : config.model || DEFAULT_MODEL}
           </Typography>

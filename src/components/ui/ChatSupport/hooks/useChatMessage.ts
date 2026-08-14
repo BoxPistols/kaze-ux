@@ -7,12 +7,12 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
 
-import { callAI, extractContent } from '../chatAiService'
+import { callAI, extractContent, isBackendMode } from '../chatAiService'
 import { DEFAULT_API_KEY, SYSTEM_PROMPT } from '../chatSupportConstants'
 import {
   consumeUse,
   isLimitReached,
-  isUsingDefaultKey,
+  isUsingSharedQuota,
   limitReachedMessage,
 } from '../dailyUsageLimit'
 import {
@@ -184,14 +184,15 @@ export const useChatMessage = ({
   )
 
   /**
-   * デフォルトキーの日次上限に達しているか。
+   * 共有枠（無料枠）の日次上限に達しているか。
    *
    * 到達していたら AI を呼ばず、案内文と FAQ 回答を 1 通で返す。
    * 「送っても何も起きない」状態にはしない。
    */
   const blockedByDailyLimit = useCallback(
     (query: string): boolean => {
-      if (!isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) return false
+      if (!isUsingSharedQuota(config.apiKey, DEFAULT_API_KEY, isBackendMode()))
+        return false
       if (!isLimitReached()) return false
 
       const faqAnswer = findFaqAnswer(query)
@@ -245,7 +246,10 @@ export const useChatMessage = ({
       setMessages((prev) => [...prev, newUserMessage])
       clearInput()
 
-      if (!config.apiKey) {
+      // AI を呼べるのは「自前キーがある」か「バックエンドが共有キーを持つ」場合。
+      // バックエンドモードではブラウザ側にキーが無いのが正常なので、
+      // config.apiKey の有無だけで FAQ に落とすと無料枠が一度も動かない。
+      if (!config.apiKey && !isBackendMode()) {
         respondWithFaq(userText)
         return
       }
@@ -253,7 +257,8 @@ export const useChatMessage = ({
 
       // API を呼ぶ直前に数える。成功時だけ数えると、失敗が返り続ける
       // 状況で上限が効かず、コストを抑えるという目的を果たせない
-      if (isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) consumeUse()
+      if (isUsingSharedQuota(config.apiKey, DEFAULT_API_KEY, isBackendMode()))
+        consumeUse()
 
       setIsTyping(true)
       try {
@@ -319,12 +324,14 @@ export const useChatMessage = ({
       }
       setMessages((prev) => [...prev, userMsg])
 
-      if (!config.apiKey) {
+      // handleSend と同じ判定。バックエンドモードではブラウザにキーが無い
+      if (!config.apiKey && !isBackendMode()) {
         respondWithFaq(query)
         return
       }
       if (blockedByDailyLimit(query)) return
-      if (isUsingDefaultKey(config.apiKey, DEFAULT_API_KEY)) consumeUse()
+      if (isUsingSharedQuota(config.apiKey, DEFAULT_API_KEY, isBackendMode()))
+        consumeUse()
 
       setIsTyping(true)
       semanticSearch(config.apiKey, query)

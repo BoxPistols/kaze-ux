@@ -4,6 +4,8 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { resolveBackendMode } from '../chatAiService'
+
 import type { ChatSupportConfig } from '../chatSupportTypes'
 
 // `ai` モジュールの generateText をモック
@@ -418,5 +420,26 @@ describe('callAI (backend mode)', () => {
       const result = await callAI(baseConfig, userMessage)
       expect(result).toContain('トークン上限')
     })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// resolveBackendMode — バックエンド経由にするかの判定
+//
+// 本番ビルドでは VITE_API_BASE 未設定でもバックエンド経由にする。
+// 設定漏れ 1 回で AI が無言で動かなくなる形にしないため。
+// ---------------------------------------------------------------------------
+
+describe('resolveBackendMode', () => {
+  it('本番ビルドなら API_BASE が空でもバックエンド経由（同一オリジンの /api/ai）', () => {
+    expect(resolveBackendMode('', true)).toBe(true)
+  })
+
+  it('開発では API_BASE が空ならブラウザ直呼び（従来動作）', () => {
+    expect(resolveBackendMode('', false)).toBe(false)
+  })
+
+  it('API_BASE が設定されていれば開発でもバックエンド経由（別オリジン用の逃げ道）', () => {
+    expect(resolveBackendMode('https://api.example.com', false)).toBe(true)
   })
 })
