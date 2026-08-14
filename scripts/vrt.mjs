@@ -171,9 +171,13 @@ try {
       })
       await page.waitForTimeout(320)
       await page.screenshot({ path: file })
-      return true
-    } catch {
-      return false
+      return null
+    } catch (e) {
+      // 失敗の理由を捨てない。件数だけだと「何が撮れなかったか」が分からず、
+      // 一番変えた story が落ちていても「差分なし」に見えてしまう
+      return String(e?.message ?? e)
+        .split('\n')[0]
+        .slice(0, 90)
     } finally {
       await page.close()
     }
@@ -197,13 +201,19 @@ try {
 
   console.log(`  ${common.length} story を撮影中...`)
   const diffs = []
-  let failed = 0
+  const failures = []
   for (const id of common) {
     const bf = join(OUT, 'before', `${id}.png`)
     const hf = join(OUT, 'after', `${id}.png`)
     const df = join(OUT, 'diff', `${id}.png`)
-    if (!(await shoot(BASE, id, bf)) || !(await shoot(HEAD, id, hf))) {
-      failed++
+    const beforeErr = await shoot(BASE, id, bf)
+    const headErr = beforeErr ? null : await shoot(HEAD, id, hf)
+    if (beforeErr || headErr) {
+      failures.push({
+        id,
+        side: beforeErr ? '比較元' : '作業ツリー',
+        reason: beforeErr ?? headErr,
+      })
       continue
     }
     const d = pixelDiff(bf, hf, df)
@@ -218,7 +228,8 @@ try {
     const n1 = join(WORK, 'n1.png')
     let worst = -1
     for (let i = 0; i < NOISE_SAMPLES; i++) {
-      if (!(await shoot(HEAD, r.id, n1))) break
+      // shoot は成功で null、失敗で理由の文字列を返す
+      if (await shoot(HEAD, r.id, n1)) break
       const d = pixelDiff(join(OUT, 'after', `${r.id}.png`), n1, noiseFile)
       if (d > worst) worst = d
       // 既にゆらぎと判定できる大きさなら、それ以上測らない
@@ -239,12 +250,23 @@ try {
   )
   const total = VIEWPORT.width * VIEWPORT.height
 
-  console.log(`\n撮影 ${common.length - failed} 件（失敗 ${failed}）`)
-  console.log(`  完全一致 ${common.length - failed - diffs.length} 件`)
+  console.log(
+    `\n撮影 ${common.length - failures.length} 件（失敗 ${failures.length}）`
+  )
+  console.log(`  完全一致 ${common.length - failures.length - diffs.length} 件`)
   console.log(`  見た目が変わった ${real.length} 件`)
   console.log(`  描画のゆらぎ ${noisy.length} 件（自己差分が同程度）`)
   if (added.length) console.log(`  追加された story ${added.length} 件`)
   if (removed.length) console.log(`  削除された story ${removed.length} 件`)
+
+  // 撮影できなかったものは必ず名指しする。件数だけだと、いちばん変えた
+  // story が落ちていても「差分なし」に見えてしまう
+  if (failures.length) {
+    console.log('\n撮影できなかった story（未検証。差分なしとみなせない）:')
+    for (const f of failures) {
+      console.log(`  ${f.id}  [${f.side}] ${f.reason}`)
+    }
+  }
 
   if (real.length) {
     console.log('\n見た目が変わった story（差分の大きい順）:')
@@ -285,14 +307,24 @@ try {
     '',
     `| | 件数 |`,
     `| --- | --- |`,
-    `| 撮影 | ${common.length - failed} |`,
-    `| 完全一致 | ${common.length - failed - diffs.length} |`,
+    `| 撮影 | ${common.length - failures.length} |`,
+    `| 完全一致 | ${common.length - failures.length - diffs.length} |`,
     `| 見た目が変わった | ${real.length} |`,
     `| 描画のゆらぎ | ${noisy.length} |`,
-    `| 撮影失敗 | ${failed} |`,
+    `| 撮影失敗 | ${failures.length} |`,
     `| 追加された story | ${added.length} |`,
     `| 削除された story | ${removed.length} |`,
     '',
+    ...(failures.length
+      ? [
+          '## 撮影できなかった（未検証）',
+          '',
+          '| story | 側 | 理由 |',
+          '| --- | --- | --- |',
+          ...failures.map((f) => `| ${f.id} | ${f.side} | ${f.reason} |`),
+          '',
+        ]
+      : []),
     ...(real.length
       ? [
           '## 見た目が変わった',
@@ -343,13 +375,14 @@ try {
         baseSha: sh(`git rev-parse ${BASE_REF}`),
         headSha: sh('git rev-parse HEAD'),
         viewport: VIEWPORT,
-        shot: common.length - failed,
-        identical: common.length - failed - diffs.length,
+        shot: common.length - failures.length,
+        identical: common.length - failures.length - diffs.length,
         changed: real,
         noisy,
         added,
         removed,
-        failed,
+        failed: failures.length,
+        failures,
       },
       null,
       2

@@ -5,6 +5,13 @@ import { breakpointValues } from '@/themes/breakpoints'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
+/** WCAG 2.2 SC 2.5.8 の最小操作対象 (24x24) */
+const LINK_TAP_TARGET = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  minHeight: 24,
+} as const
+
 const meta: Meta = {
   title: 'Layout/Grid System',
   parameters: {
@@ -228,13 +235,17 @@ const ResponsiveContent = () => {
         <Typography variant='body1' sx={{ fontWeight: 700, mb: 1.5 }}>
           参考リンク
         </Typography>
-        <Stack spacing={0.75}>
+        {/* Stack の子はフレックス項目になり、幅いっぱい・高さ 18px のリンクに
+            なる。操作対象として WCAG 2.2 SC 2.5.8 の 24px に届かないので、
+            文字幅に収めたうえで高さを確保する */}
+        <Stack spacing={0.75} alignItems='flex-start'>
           <Link
             href='https://mui.com/material-ui/react-grid/'
             target='_blank'
             rel='noopener noreferrer'
             variant='body1'
-            color='primary'>
+            color='primary'
+            sx={LINK_TAP_TARGET}>
             MUI Grid v7
           </Link>
           <Link
@@ -242,7 +253,8 @@ const ResponsiveContent = () => {
             target='_blank'
             rel='noopener noreferrer'
             variant='body1'
-            color='primary'>
+            color='primary'
+            sx={LINK_TAP_TARGET}>
             MUI Breakpoints
           </Link>
         </Stack>
