@@ -60,3 +60,5 @@ zenn-storybook-ai-chat.md
 
 # Figma plugin build output
 figma-plugin/code.js
+# VRT の作業ディレクトリ（ビルド成果物とスクリーンショット）
+.vrt/
