@@ -189,7 +189,7 @@ export const MonthView = ({
                               : isSaturday(dayIndex)
                                 ? 'info.main'
                                 : 'text.primary',
-                        fontWeight: isToday(date) ? 600 : 400,
+                        fontWeight: isToday(date) ? 700 : 400,
                       }}>
                       {date.date()}
                     </Typography>

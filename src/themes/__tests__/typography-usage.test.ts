@@ -163,13 +163,22 @@ describe('フォントサイズの下限', () => {
 
 describe('フォントウェイトの 2 値化', () => {
   it('400 / 700 以外の数値を直書きしていない', () => {
-    // `fontWeight: 500` と JSX prop の `fontWeight={500}` の両方を見る。
-    // コロン形だけ見ていて prop 形を取りこぼし、実測で 8 箇所残っていた
-    // クォート付きの `fontWeight: '600'` も見る。数値だけ見ていて
-    // 1 箇所取りこぼし、実測で初めて出た
+    // 値が `fontWeight` の直後に来るとは限らない。実測で判明した形式:
+    //   fontWeight: 500              コロン + 数値
+    //   fontWeight={500}             JSX prop
+    //   fontWeight: '600'            クォート付き
+    //   fontWeight: active ? 600 : 400   条件式（直後に来ない）
+    //
+    // 直後だけを見る正規表現で 3 回取りこぼし、そのたびに実ビルドの
+    // 計測で初めて発覚した。**`fontWeight` を含む行の 3 桁数値をすべて見る**
+    // 値の範囲は次の , ; } 改行 まで。行全体を見ると同じ行の
+    // `minWidth: 130` のような無関係な数値を拾って誤検出になる
     const hits = scan(
-      /fontWeight[:=] *\{?['\"]?([0-9]{3})['\"]?/,
-      (m) => !ALLOWED_WEIGHTS.has(Number.parseInt(m[1], 10))
+      /(?:fontWeight|font-weight)\s*[:=]\s*\{?([^,;}\n]*)/,
+      (m) =>
+        [...m[1].matchAll(/\b([0-9]{3})\b/g)].some(
+          (x) => !ALLOWED_WEIGHTS.has(Number.parseInt(x[1], 10))
+        )
     )
     expect(format(hits), '許可は 400 (normal) と 700 (bold) のみ').toEqual([])
   })
