@@ -181,6 +181,43 @@ const componentStyles = {
               : colorData.grey[700],
         },
       }),
+      // text / outlined の Button は文字色に main を使う。main は面のための
+      // 色なので、白地に置くと届かない。実測で Toast の「情報」が 2.52:1、
+      // 「警告」が 2.61:1 だった。Chip と同じく textContrast へ寄せる。
+      //
+      // スロット単位で上書きするのは Chip と同じ理由。複合セレクタ
+      // (&.MuiButton-textWarning) は sx より詳細度が高く、使う側の指定を
+      // 握り潰してしまう
+      ...Object.fromEntries(
+        (
+          [
+            'primary',
+            'secondary',
+            'success',
+            'error',
+            'warning',
+            'info',
+          ] as const
+        ).flatMap((key) => {
+          const cap = key[0].toUpperCase() + key.slice(1)
+          const slot = ({ theme }: { theme: Theme }) => ({
+            color: theme.palette[key].textContrast,
+          })
+          return [
+            [`text${cap}`, slot],
+            [`outlined${cap}`, slot],
+          ]
+        })
+      ),
+    },
+  },
+  // 補助テキストのエラー表示。MUI 既定は error.main を使うが、これは面の
+  // ための色で、白地の 12px に置くと 4.38:1 にしかならない
+  MuiFormHelperText: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '&.Mui-error': { color: theme.palette.error.textContrast },
+      }),
     },
   },
   // フォームラベル: 分離スタイル（アニメーションなし、常に上部固定）
@@ -201,8 +238,10 @@ const componentStyles = {
         '&.Mui-focused': {
           color: theme.palette.text.primary,
         },
+        // error.main は面のための色。文字に使うと 12px で 4.38:1 になり
+        // 本文 AA を割る
         '&.Mui-error': {
-          color: theme.palette.error.main,
+          color: theme.palette.error.textContrast,
         },
       }),
       sizeSmall: {
@@ -249,8 +288,9 @@ const componentStyles = {
           color: theme.palette.text.primary,
         },
       }),
+      // 必須マークも文字。面のための main ではなく前景用の色を使う
       asterisk: ({ theme }: { theme: Theme }) => ({
-        color: theme.palette.error.main,
+        color: theme.palette.error.textContrast,
       }),
     },
   },

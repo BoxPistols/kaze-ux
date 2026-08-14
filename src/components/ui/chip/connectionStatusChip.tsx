@@ -19,7 +19,11 @@ const StyledStatusChip = styled(Chip, {
     : theme.palette.mode === 'light'
       ? theme.palette.error.lighter
       : `${theme.palette.error.main}20`,
-  color: connected ? theme.palette.success.dark : theme.palette.error.dark,
+  // 面は main の 12% tint。その上に置くので、素の面向けの dark では届かない
+  // （実測 4.32:1）。tint 面を見込んだ余裕を持つ textContrast を使う
+  color: connected
+    ? theme.palette.success.textContrast
+    : theme.palette.error.textContrast,
   borderRadius: theme.shape.borderRadius,
   paddingLeft: theme.spacing(1),
   paddingRight: theme.spacing(1),

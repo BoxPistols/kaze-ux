@@ -93,8 +93,8 @@ const statCards: StatCardItem[] = [
 
 /** 変化方向に対応する色を返す */
 function trendColor(trend: StatCardItem['trend']): string {
-  if (trend === 'positive') return 'success.main'
-  if (trend === 'negative') return 'error.main'
+  if (trend === 'positive') return 'success.textContrast'
+  if (trend === 'negative') return 'error.textContrast'
   return 'text.secondary'
 }
 

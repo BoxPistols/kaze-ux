@@ -146,12 +146,14 @@ export const Default: StoryObj<typeof Table> = {
                 <Typography
                   variant='body2'
                   sx={{
+                    // main は面のための色。文字に使うと 12px で 2.7:1 前後に
+                    // しかならない。前景用の textContrast を使う
                     color:
                       row.battery >= 70
-                        ? 'success.main'
+                        ? 'success.textContrast'
                         : row.battery >= 30
-                          ? 'warning.main'
-                          : 'error.main',
+                          ? 'warning.textContrast'
+                          : 'error.textContrast',
                     fontWeight: 700,
                   }}>
                   {row.battery}%
