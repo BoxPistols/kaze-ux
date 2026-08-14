@@ -190,7 +190,7 @@ export const AppSwitcher = ({ currentApp }: AppSwitcherProps) => {
                         color='primary'
                         sx={{
                           height: 20,
-                          fontSize: '11px',
+                          fontSize: '12px',
                           fontWeight: 700,
                         }}
                       />

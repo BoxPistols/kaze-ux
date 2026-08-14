@@ -157,7 +157,7 @@ export const DriverPanel = () => {
                   }}
                 />
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: 600 }}>
+                  <Typography sx={{ fontSize: '15px', fontWeight: 700 }}>
                     {d?.name ?? dp.driverId}
                   </Typography>
                   <Typography
@@ -286,7 +286,7 @@ export const DriverPanel = () => {
                 sx={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: '14px',
-                  fontWeight: 600,
+                  fontWeight: 700,
                 }}>
                 {Math.round(selected.speed)} km/h
               </Typography>
@@ -346,7 +346,7 @@ export const DriverPanel = () => {
               <Typography
                 sx={{
                   fontSize: '13px',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: 'text.secondary',
                   textTransform: 'uppercase',
                   letterSpacing: '0.04em',
@@ -414,7 +414,7 @@ export const DriverPanel = () => {
               }}>
               {shipment.trackingNo}
             </Typography>
-            <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+            <Typography sx={{ fontSize: '14px', fontWeight: 400 }}>
               {shipment.contents}
             </Typography>
             <Typography

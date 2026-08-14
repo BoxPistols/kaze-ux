@@ -216,7 +216,7 @@ const AppBarWithDrawerContent = () => {
 
           {/* コンテンツ表示領域 */}
           <Paper sx={{ p: 3 }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mb: 1 }}>
+            <Typography variant='h6' sx={{ fontWeight: 700, mb: 1 }}>
               タスク TSK-2024-042
             </Typography>
             <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
@@ -238,7 +238,7 @@ const AppBarWithDrawerContent = () => {
                     sx={{ minWidth: 100 }}>
                     {row.label}
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {row.value}
                   </Typography>
                 </Box>
@@ -262,7 +262,7 @@ export const AppBarWithDrawer: StoryObj = {
 
 const BreadcrumbPatternsContent = () => (
   <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
       パンくずリストパターン
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -272,7 +272,7 @@ const BreadcrumbPatternsContent = () => (
     <Stack spacing={3}>
       {/* --- 基本パターン --- */}
       <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-        <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='subtitle2' sx={{ fontWeight: 700, mb: 2 }}>
           基本パターン
         </Typography>
         <Breadcrumbs
@@ -290,7 +290,7 @@ const BreadcrumbPatternsContent = () => (
 
       {/* --- アイコン付きパターン --- */}
       <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-        <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='subtitle2' sx={{ fontWeight: 700, mb: 2 }}>
           アイコン付きパターン
         </Typography>
         <Breadcrumbs
@@ -331,7 +331,7 @@ const BreadcrumbPatternsContent = () => (
 
       {/* --- 折りたたみパターン --- */}
       <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-        <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='subtitle2' sx={{ fontWeight: 700, mb: 2 }}>
           折りたたみパターン（深い階層）
         </Typography>
         <Breadcrumbs
@@ -361,7 +361,7 @@ const BreadcrumbPatternsContent = () => (
 
       {/* --- 現在ページChipパターン --- */}
       <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-        <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='subtitle2' sx={{ fontWeight: 700, mb: 2 }}>
           現在ページ Chip パターン
         </Typography>
         <Breadcrumbs

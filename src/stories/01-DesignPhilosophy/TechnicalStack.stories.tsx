@@ -154,7 +154,7 @@ const TechnicalStackOverview = () => {
                 border: `1px solid ${theme.palette.divider}`,
               }}>
               <Box sx={{ mb: 2 }}>
-                <Typography variant='h5' sx={{ fontWeight: 600, mb: 0.5 }}>
+                <Typography variant='h5' sx={{ fontWeight: 700, mb: 0.5 }}>
                   {tech.name}
                 </Typography>
                 <Typography
@@ -176,7 +176,7 @@ const TechnicalStackOverview = () => {
               <Typography
                 variant='body2'
                 color='text.secondary'
-                sx={{ mb: 1, fontWeight: 600 }}>
+                sx={{ mb: 1, fontWeight: 700 }}>
                 主な機能
               </Typography>
               <Box
@@ -212,7 +212,7 @@ const TechnicalStackOverview = () => {
           variant='h3'
           sx={{
             mb: 4,
-            fontWeight: 600,
+            fontWeight: 700,
             fontSize: { xs: '1.5rem', md: '1.75rem' },
           }}>
           技術選定の理由
@@ -229,7 +229,7 @@ const TechnicalStackOverview = () => {
                   bgcolor: 'action.hover',
                   border: `1px solid ${theme.palette.divider}`,
                 }}>
-                <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
+                <Typography variant='h6' sx={{ mb: 2, fontWeight: 700 }}>
                   {reason.title}
                 </Typography>
                 <Typography

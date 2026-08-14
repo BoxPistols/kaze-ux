@@ -54,7 +54,7 @@ const PageHero = ({ title, subtitle, gradient }: PageHeroProps) => {
       <Typography
         variant='displayMedium'
         component='h1'
-        className='mb-3 font-extrabold tracking-tight text-foreground'>
+        className='mb-3 font-bold tracking-tight text-foreground'>
         {title}
       </Typography>
       <Typography
@@ -81,7 +81,7 @@ const SectionHeader = ({ title, subtitle }: SectionHeaderProps) => (
     <Typography
       variant='h2'
       component='h2'
-      className='font-extrabold tracking-tight text-foreground'>
+      className='font-bold tracking-tight text-foreground'>
       {title}
     </Typography>
     {subtitle && (
@@ -104,7 +104,7 @@ interface SectionLabelProps {
 }
 
 const SectionLabel = ({ children }: SectionLabelProps) => (
-  <p className='mb-3 block text-[11px] font-bold uppercase tracking-[0.1em] text-primary'>
+  <p className='mb-3 block text-[12px] font-bold uppercase tracking-[0.1em] text-primary'>
     {children}
   </p>
 )
@@ -243,7 +243,7 @@ interface DemoPanelProps {
 
 const DemoPanel = ({ label, children }: DemoPanelProps) => (
   <div className='mb-10 rounded-2xl border border-border/50 p-8 dark:border-white/[0.08]'>
-    <p className='mb-6 text-[11px] font-bold uppercase tracking-[0.1em] text-primary'>
+    <p className='mb-6 text-[12px] font-bold uppercase tracking-[0.1em] text-primary'>
       {label}
     </p>
     {children}

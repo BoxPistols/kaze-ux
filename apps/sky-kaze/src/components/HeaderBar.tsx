@@ -70,7 +70,7 @@ export const HeaderBar = () => {
         {!isMobile && (
           <Typography
             sx={{
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: '16px',
               letterSpacing: '-0.02em',
               color: 'text.primary',

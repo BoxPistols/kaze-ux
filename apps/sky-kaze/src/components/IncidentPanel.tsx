@@ -144,7 +144,7 @@ export const IncidentPanel = () => {
                       bgcolor: alpha(color, 0.05),
                     },
                   }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: 500 }}>
+                  <Typography sx={{ fontSize: '15px', fontWeight: 400 }}>
                     {r}
                   </Typography>
                 </Box>

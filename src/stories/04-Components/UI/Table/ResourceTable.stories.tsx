@@ -50,7 +50,7 @@ const sampleColumns: GridColDef<DeviceRow>[] = [
         <Box
           component='span'
           sx={{
-            fontWeight: 500,
+            fontWeight: 400,
             color: value < 30 ? 'error.main' : 'text.primary',
           }}>
           {value}%

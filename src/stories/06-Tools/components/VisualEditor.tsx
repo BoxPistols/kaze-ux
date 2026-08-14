@@ -59,7 +59,7 @@ export const VisualEditor = () => {
               ? alpha(theme.palette.primary.main, 0.08)
               : alpha(theme.palette.primary.main, 0.04),
         }}>
-        <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+        <Typography sx={{ fontSize: 14, fontWeight: 700 }}>
           Visual Editor
         </Typography>
         <Typography variant='caption' color='text.secondary'>

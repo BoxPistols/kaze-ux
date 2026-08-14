@@ -198,7 +198,7 @@ const AppContent = ({
               </Box>
               <Typography
                 sx={{
-                  fontWeight: 800,
+                  fontWeight: 700,
                   fontSize: { xs: '1.25rem', md: '1.4rem' },
                   letterSpacing: '-0.03em',
                   color: 'text.primary',
@@ -309,7 +309,7 @@ const AppContent = ({
                 minWidth: 64,
                 '& .MuiSvgIcon-root': { fontSize: 24 },
                 '& .MuiBottomNavigationAction-label': {
-                  fontSize: '0.7rem',
+                  fontSize: '0.86rem',
                   mt: 0.25,
                 },
               }}

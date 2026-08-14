@@ -40,7 +40,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -119,7 +119,7 @@ const ComponentDevContent = () => {
               ? 'rgba(76,175,80,0.05)'
               : 'rgba(76,175,80,0.02)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           コンポーネント開発ガイド
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -267,7 +267,7 @@ export const Default: Story = {
             {argTypeExamples.map((a) => (
               <TableRow key={a.type}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {a.type}
                   </Typography>
                 </TableCell>
@@ -384,7 +384,7 @@ export const Default: Story = {
             {codingRules.map((r) => (
               <TableRow key={r.rule}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     {r.rule}
                   </Typography>
                 </TableCell>

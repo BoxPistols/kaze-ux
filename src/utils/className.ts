@@ -110,7 +110,7 @@ export const variants = {
   // Button variants
   button: {
     default:
-      'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
     primary: 'bg-primary-main text-primary-foreground hover:bg-primary-dark',
     secondary:
       'bg-secondary-main text-secondary-foreground hover:bg-secondary-dark',
@@ -126,9 +126,9 @@ export const variants = {
 
   // Text variants
   text: {
-    h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
-    h2: 'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight',
-    h3: 'scroll-m-20 text-2xl font-semibold tracking-tight',
+    h1: 'scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl',
+    h2: 'scroll-m-20 border-b pb-2 text-3xl font-bold tracking-tight',
+    h3: 'scroll-m-20 text-2xl font-bold tracking-tight',
     p: 'leading-7 [&:not(:first-child)]:mt-6',
     muted: 'text-sm text-muted-foreground',
   },

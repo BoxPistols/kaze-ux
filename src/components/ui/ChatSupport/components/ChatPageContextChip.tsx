@@ -45,7 +45,7 @@ export const ChatPageContextChip = ({
         onClick={onExplain}
         sx={{
           height: 28,
-          fontSize: '0.75rem',
+          fontSize: '0.86rem',
           cursor: 'pointer',
           borderColor:
             theme.palette.mode === 'dark'

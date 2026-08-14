@@ -215,7 +215,7 @@ export const TimelineBar = () => {
             sx={{
               fontSize: '14px',
               fontFamily: "'JetBrains Mono', monospace",
-              fontWeight: 600,
+              fontWeight: 700,
             }}>
             {movingCount} 走行
           </Typography>
@@ -237,7 +237,7 @@ export const TimelineBar = () => {
             sx={{
               fontSize: '14px',
               fontFamily: "'JetBrains Mono', monospace",
-              fontWeight: 600,
+              fontWeight: 700,
               color: (theme) =>
                 readableStatusColor(
                   DRIVER_STATUS_COLOR.delivering,
@@ -263,7 +263,7 @@ export const TimelineBar = () => {
               sx={{
                 fontSize: '14px',
                 fontFamily: "'JetBrains Mono', monospace",
-                fontWeight: 600,
+                fontWeight: 700,
                 color: (theme) =>
                   readableStatusColor(
                     DRIVER_STATUS_COLOR.incident,

@@ -163,8 +163,8 @@ const ColorChip = ({
         <Typography
           sx={{
             fontFamily: 'monospace',
-            fontSize: '0.75rem',
-            fontWeight: 600,
+            fontSize: '0.86rem',
+            fontWeight: 700,
             color: textColor,
             opacity: 0.9,
           }}>
@@ -176,8 +176,8 @@ const ColorChip = ({
         <Typography
           sx={{
             fontFamily: 'monospace',
-            fontSize: '0.8rem',
-            fontWeight: 600,
+            fontSize: '0.86rem',
+            fontWeight: 700,
             color: theme.palette.text.primary,
             mb: 1,
           }}>
@@ -199,7 +199,7 @@ const ColorChip = ({
               <Typography
                 sx={{
                   fontFamily: 'monospace',
-                  fontSize: '0.7rem',
+                  fontSize: '0.86rem',
                   color: theme.palette.text.secondary,
                 }}>
                 {contrastWhite.toFixed(1)}:1
@@ -207,7 +207,7 @@ const ColorChip = ({
               <Typography
                 sx={{
                   fontFamily: 'monospace',
-                  fontSize: '0.65rem',
+                  fontSize: '0.86rem',
                   fontWeight: 700,
                   color: getWcagColor(wcagWhite),
                 }}>
@@ -227,7 +227,7 @@ const ColorChip = ({
               <Typography
                 sx={{
                   fontFamily: 'monospace',
-                  fontSize: '0.7rem',
+                  fontSize: '0.86rem',
                   color: theme.palette.text.secondary,
                 }}>
                 {contrastBlack.toFixed(1)}:1
@@ -235,7 +235,7 @@ const ColorChip = ({
               <Typography
                 sx={{
                   fontFamily: 'monospace',
-                  fontSize: '0.65rem',
+                  fontSize: '0.86rem',
                   fontWeight: 700,
                   color: getWcagColor(wcagBlack),
                 }}>
@@ -248,7 +248,7 @@ const ColorChip = ({
           <Typography
             sx={{
               fontFamily: 'monospace',
-              fontSize: '0.65rem',
+              fontSize: '0.86rem',
               color: theme.palette.text.disabled,
             }}>
             rgba (コントラスト比算出不可)
@@ -282,7 +282,7 @@ const SectionHeader = ({
       {description && (
         <Typography
           sx={{
-            fontSize: '0.85rem',
+            fontSize: '0.86rem',
             color: theme.palette.text.secondary,
           }}>
           {description}
@@ -490,7 +490,7 @@ const FullColorPalette = () => {
         <Typography
           sx={{
             fontFamily: 'monospace',
-            fontSize: '0.75rem',
+            fontSize: '0.86rem',
             color: theme.palette.text.disabled,
           }}>
           データソース: colorToken.ts + useTheme()
@@ -849,8 +849,8 @@ const LightDarkComparisonView = () => {
               <Box key={name} sx={{ mb: 3 }}>
                 <Typography
                   sx={{
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
                     textTransform: 'capitalize',
                     color: (t) => t.palette.text.primary,
                     mb: 1,
@@ -889,8 +889,8 @@ const LightDarkComparisonView = () => {
           {/* テキスト / 背景 */}
           <Typography
             sx={{
-              fontSize: '0.8rem',
-              fontWeight: 600,
+              fontSize: '0.86rem',
+              fontWeight: 700,
               color: (t) => t.palette.text.primary,
               mt: 4,
               mb: 1,
@@ -930,8 +930,8 @@ const LightDarkComparisonView = () => {
                     <Typography
                       sx={{
                         fontFamily: 'monospace',
-                        fontSize: '0.7rem',
-                        fontWeight: 600,
+                        fontSize: '0.86rem',
+                        fontWeight: 700,
                         color: (t) => t.palette.text.primary,
                       }}>
                       {key}
@@ -939,7 +939,7 @@ const LightDarkComparisonView = () => {
                     <Typography
                       sx={{
                         fontFamily: 'monospace',
-                        fontSize: '0.65rem',
+                        fontSize: '0.86rem',
                         color: (t) => t.palette.text.secondary,
                       }}>
                       {resolveColor(value)}
@@ -953,8 +953,8 @@ const LightDarkComparisonView = () => {
           {/* サーフェス / アイコン */}
           <Typography
             sx={{
-              fontSize: '0.8rem',
-              fontWeight: 600,
+              fontSize: '0.86rem',
+              fontWeight: 700,
               color: (t) => t.palette.text.primary,
               mt: 3,
               mb: 1,
@@ -994,8 +994,8 @@ const LightDarkComparisonView = () => {
                     <Typography
                       sx={{
                         fontFamily: 'monospace',
-                        fontSize: '0.7rem',
-                        fontWeight: 600,
+                        fontSize: '0.86rem',
+                        fontWeight: 700,
                         color: (t) => t.palette.text.primary,
                       }}>
                       {key}
@@ -1003,7 +1003,7 @@ const LightDarkComparisonView = () => {
                     <Typography
                       sx={{
                         fontFamily: 'monospace',
-                        fontSize: '0.65rem',
+                        fontSize: '0.86rem',
                         color: (t) => t.palette.text.secondary,
                       }}>
                       {resolveColor(value)}

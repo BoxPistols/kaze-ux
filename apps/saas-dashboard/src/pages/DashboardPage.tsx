@@ -149,7 +149,7 @@ export const DashboardPage = () => {
                   variant='caption'
                   sx={{
                     color: 'primary.textContrast',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: 'pointer',
                     textDecoration: 'none',
                     '&:hover': { textDecoration: 'underline' },
@@ -175,8 +175,8 @@ export const DashboardPage = () => {
                               textAlign: 'left',
                               padding: '10px 16px',
                               borderBottom: '1px solid var(--color-border)',
-                              fontSize: '0.7rem',
-                              fontWeight: 600,
+                              fontSize: '0.86rem',
+                              fontWeight: 700,
                               textTransform: 'uppercase',
                               letterSpacing: '0.05em',
                               color: 'var(--color-muted)',
@@ -208,7 +208,7 @@ export const DashboardPage = () => {
                             padding: '12px 16px',
                             borderBottom: '1px solid var(--color-border)',
                           }}>
-                          <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                          <Typography variant='body2' sx={{ fontWeight: 700 }}>
                             {project.name}
                           </Typography>
                         </td>
@@ -259,7 +259,7 @@ export const DashboardPage = () => {
                             />
                             <Typography
                               variant='caption'
-                              sx={{ fontWeight: 500, minWidth: 28 }}>
+                              sx={{ fontWeight: 400, minWidth: 28 }}>
                               {project.progress}%
                             </Typography>
                           </Box>
@@ -366,7 +366,7 @@ export const DashboardPage = () => {
                           mb: 0.25,
                         }}>
                         <UserAvatar name={activity.user} size='small' />
-                        <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                        <Typography variant='body2' sx={{ fontWeight: 400 }}>
                           {activity.user}
                         </Typography>
                         <CustomChip
@@ -382,7 +382,7 @@ export const DashboardPage = () => {
                               | 'default'
                           }
                           variant='outlined'
-                          sx={{ height: 18, fontSize: '0.6rem' }}
+                          sx={{ height: 18, fontSize: '0.86rem' }}
                         />
                       </Box>
                       <Typography
@@ -394,7 +394,7 @@ export const DashboardPage = () => {
                       <Typography
                         variant='caption'
                         color='text.secondary'
-                        sx={{ fontSize: '0.7rem' }}>
+                        sx={{ fontSize: '0.86rem' }}>
                         {dayjs(activity.timestamp).format('MMM D, HH:mm')}
                       </Typography>
                     </Box>
@@ -425,8 +425,8 @@ export const DashboardPage = () => {
                     px: 1,
                     py: 0.25,
                     borderRadius: 1,
-                    fontSize: '0.7rem',
-                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
                   }}>
                   {onlineTeam.length}
                 </Box>
@@ -452,7 +452,7 @@ export const DashboardPage = () => {
                       color='primary'
                     />
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                      <Typography variant='body2' sx={{ fontWeight: 400 }}>
                         {member.name}
                       </Typography>
                       <Typography variant='caption' color='text.secondary'>

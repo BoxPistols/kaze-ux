@@ -63,8 +63,8 @@ export const KAZE_META: CSSProperties = {
 /** 袖見出し (EYEBROW): editorial 標準語、section 頭の小ラベル */
 export const KAZE_EYEBROW: CSSProperties = {
   fontFamily: 'var(--kaze-font-mono)',
-  fontSize: '0.75rem',
-  fontWeight: 500,
+  fontSize: '0.86rem',
+  fontWeight: 400,
   letterSpacing: '0.24em',
   textTransform: 'uppercase',
 }
@@ -72,7 +72,7 @@ export const KAZE_EYEBROW: CSSProperties = {
 /** 活字 (PRINT): Fraunces Variable の基調。display 見出し */
 export const KAZE_PRINT: CSSProperties = {
   fontFamily: 'var(--kaze-font-display)',
-  fontWeight: 380,
+  fontWeight: 400,
   letterSpacing: '-0.02em',
   fontVariationSettings: "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
 }
@@ -81,7 +81,7 @@ export const KAZE_PRINT: CSSProperties = {
 export const KAZE_ACCENT: CSSProperties = {
   fontFamily: 'var(--kaze-font-display)',
   fontStyle: 'italic',
-  fontWeight: 420,
+  fontWeight: 400,
   letterSpacing: '-0.02em',
   fontVariationSettings: "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
 }

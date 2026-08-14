@@ -71,18 +71,18 @@ const SpacingScaleShowcase = () => {
             borderBottom: '1px solid',
             borderColor: 'divider',
           }}>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 100 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 100 }}>
             トークン
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, minWidth: 80 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, minWidth: 80 }}>
             ピクセル値
           </Typography>
-          <Typography variant='caption' sx={{ fontWeight: 600, flex: 1 }}>
+          <Typography variant='caption' sx={{ fontWeight: 700, flex: 1 }}>
             ビジュアル
           </Typography>
           <Typography
             variant='caption'
-            sx={{ fontWeight: 600, minWidth: 180, textAlign: 'right' }}>
+            sx={{ fontWeight: 700, minWidth: 180, textAlign: 'right' }}>
             使用場面
           </Typography>
         </Box>
@@ -106,7 +106,7 @@ const SpacingScaleShowcase = () => {
                 variant='body2'
                 sx={{
                   fontFamily: 'monospace',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   minWidth: 100,
                   color: 'primary.main',
                 }}>
@@ -167,8 +167,8 @@ const SpacingUsageShowcase = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '0.75rem',
-    fontWeight: 600,
+    fontSize: '0.86rem',
+    fontWeight: 700,
     minHeight: 32,
   }
 
@@ -184,7 +184,7 @@ const SpacingUsageShowcase = () => {
       <Grid container spacing={4}>
         {/* パディング比較 */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
             Padding
           </Typography>
           <Stack spacing={2}>
@@ -211,7 +211,7 @@ const SpacingUsageShowcase = () => {
 
         {/* ギャップ比較 */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
             Gap (Stack spacing)
           </Typography>
           <Stack spacing={3}>
@@ -275,7 +275,7 @@ const LayoutPatternsShowcase = () => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Typography variant='caption' sx={{ fontWeight: 500 }}>
+      <Typography variant='caption' sx={{ fontWeight: 400 }}>
         {label}
       </Typography>
     </Box>
@@ -293,7 +293,7 @@ const LayoutPatternsShowcase = () => {
       <Grid container spacing={4}>
         {/* カードレイアウト */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
             カード内レイアウト
           </Typography>
           <Paper
@@ -312,7 +312,7 @@ const LayoutPatternsShowcase = () => {
                 justifyContent='space-between'
                 alignItems='center'>
                 <Box>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     カードヘッダー
                   </Typography>
                   <Typography variant='caption' color='text.secondary'>
@@ -355,13 +355,13 @@ const LayoutPatternsShowcase = () => {
 
         {/* フォームレイアウト */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
             フォームレイアウト
           </Typography>
           <Paper variant='outlined' sx={{ p: 5, borderRadius: 2 }}>
             <Stack spacing={4}>
               <Box>
-                <Typography variant='body2' sx={{ fontWeight: 500, mb: 1 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400, mb: 1 }}>
                   ラベル
                 </Typography>
                 <Placeholder label='入力フィールド' height={40} />
@@ -373,13 +373,13 @@ const LayoutPatternsShowcase = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant='body2' sx={{ fontWeight: 500, mb: 1 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400, mb: 1 }}>
                   ラベル
                 </Typography>
                 <Placeholder label='入力フィールド' height={40} />
               </Box>
               <Box>
-                <Typography variant='body2' sx={{ fontWeight: 500, mb: 1 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400, mb: 1 }}>
                   ラベル
                 </Typography>
                 <Placeholder label='テキストエリア' height={80} />
@@ -396,7 +396,7 @@ const LayoutPatternsShowcase = () => {
 
         {/* セクション間隔 */}
         <Grid size={{ xs: 12 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 2 }}>
             セクション間隔の推奨値
           </Typography>
           <Paper variant='outlined' sx={{ p: 4, borderRadius: 2 }}>
@@ -453,7 +453,7 @@ const LayoutPatternsShowcase = () => {
                   />
                   <Typography
                     variant='body2'
-                    sx={{ fontWeight: 600, minWidth: 180 }}>
+                    sx={{ fontWeight: 700, minWidth: 180 }}>
                     {label}
                   </Typography>
                   <Typography variant='body2' color='text.secondary'>

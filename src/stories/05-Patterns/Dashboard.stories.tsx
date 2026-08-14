@@ -114,7 +114,7 @@ function avatarIconColor(trend: StatCardItem['trend']): string {
 
 const StatCardsContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
       KPI統計カード
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -154,7 +154,7 @@ const StatCardsContent = () => (
                   </Typography>
                   <Typography
                     variant='caption'
-                    sx={{ color: trendColor(card.trend), fontWeight: 500 }}>
+                    sx={{ color: trendColor(card.trend), fontWeight: 400 }}>
                     {card.change}
                   </Typography>
                 </Box>
@@ -225,7 +225,7 @@ const activities: ActivityItem[] = [
 
 const ActivityFeedContent = () => (
   <Box sx={{ maxWidth: 640, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
       アクティビティフィード
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -276,7 +276,7 @@ const ActivityFeedContent = () => (
                 secondary={item.secondary}
                 primaryTypographyProps={{
                   variant: 'body2',
-                  fontWeight: 500,
+                  fontWeight: 400,
                 }}
                 secondaryTypographyProps={{
                   variant: 'caption',
@@ -373,7 +373,7 @@ const schedules: ScheduleItem[] = [
 
 const FleetOverviewContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
       車両概況
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -403,7 +403,7 @@ const FleetOverviewContent = () => (
                     justifyContent='space-between'
                     sx={{ mb: 1 }}>
                     <Box>
-                      <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                      <Typography variant='body2' sx={{ fontWeight: 700 }}>
                         {device.name}
                       </Typography>
                       <Typography variant='caption' color='text.secondary'>
@@ -447,7 +447,7 @@ const FleetOverviewContent = () => (
                       variant='caption'
                       sx={{
                         fontFamily: 'monospace',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         minWidth: 36,
                         textAlign: 'right',
                       }}>
@@ -484,7 +484,7 @@ const FleetOverviewContent = () => (
                         width: 40,
                         height: 40,
                         fontWeight: 700,
-                        fontSize: '0.75rem',
+                        fontSize: '0.86rem',
                         fontFamily: 'monospace',
                       }}>
                       {item.time}
@@ -503,7 +503,7 @@ const FleetOverviewContent = () => (
                     }
                     primaryTypographyProps={{
                       variant: 'body2',
-                      fontWeight: 500,
+                      fontWeight: 400,
                     }}
                   />
                 </ListItem>

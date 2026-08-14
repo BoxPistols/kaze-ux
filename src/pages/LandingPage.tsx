@@ -661,7 +661,7 @@ const DevPortSettings = () => {
             bgcolor: saved ? 'success.main' : 'warning.main',
             color: saved ? 'success.contrastText' : 'warning.contrastText',
             fontSize: '0.9rem',
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: 'pointer',
           }}>
           {saved ? '✓ Saved' : 'Save & Reload'}
@@ -681,8 +681,8 @@ const CONTAINER_SX = {
 // Kaze 骨格 — section eyebrow (小さい uppercase ラベル、Plex Mono)
 const EYEBROW_SX = {
   fontFamily: 'var(--kaze-font-mono)',
-  fontSize: '0.75rem',
-  fontWeight: 500,
+  fontSize: '0.86rem',
+  fontWeight: 400,
   letterSpacing: '0.24em',
   textTransform: 'uppercase',
   color: 'primary.textContrast',
@@ -693,7 +693,7 @@ const EYEBROW_SX = {
 const DISPLAY_SX = {
   fontFamily: 'var(--kaze-font-display)',
   fontSize: { xs: '2.5rem', md: '3.6rem' },
-  fontWeight: 380,
+  fontWeight: 400,
   letterSpacing: '-0.03em',
   lineHeight: 1.02,
   fontVariationSettings: "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
@@ -852,8 +852,8 @@ export const LandingPage = () => {
                   <Typography
                     sx={{
                       fontFamily: 'var(--kaze-font-mono)',
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
+                      fontSize: '0.86rem',
+                      fontWeight: 400,
                       letterSpacing: '0.24em',
                       textTransform: 'uppercase',
                       color: 'primary.textContrast',
@@ -876,7 +876,7 @@ export const LandingPage = () => {
                   sx={{
                     fontFamily: 'var(--kaze-font-display)',
                     fontSize: { xs: '3rem', sm: '4.5rem', md: '5.5rem' },
-                    fontWeight: 380,
+                    fontWeight: 400,
                     lineHeight: 0.98,
                     letterSpacing: '-0.035em',
                     fontVariationSettings:
@@ -990,7 +990,7 @@ export const LandingPage = () => {
                           ? 'rgba(255,255,255,0.12)'
                           : 'rgba(0,0,0,0.12)',
                         color: 'text.primary',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         fontSize: '0.9rem',
                         textDecoration: 'none',
                         transition: motionOf(
@@ -1246,7 +1246,7 @@ export const LandingPage = () => {
                         : {})}
                       sx={{
                         fontSize: '0.95rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         color: 'primary.textContrast',
                         textDecoration: 'none',
                         '&:hover': { textDecoration: 'underline' },
@@ -1311,7 +1311,7 @@ export const LandingPage = () => {
                   borderRadius: 2,
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   fontSize: '1rem',
                   textDecoration: 'none',
                   transition: motionOf(['transform', 'box-shadow']),
@@ -1359,7 +1359,7 @@ export const LandingPage = () => {
                     <Typography
                       sx={{
                         fontSize: '0.95rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         color: 'primary.textContrast',
                         mb: 0.5,
                       }}>
@@ -1401,7 +1401,7 @@ export const LandingPage = () => {
           }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <KazeLogo size={18} tone='outline' title='' />
-            <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
+            <Typography sx={{ fontSize: '0.95rem', fontWeight: 700 }}>
               Kaze Design System
             </Typography>
           </Box>

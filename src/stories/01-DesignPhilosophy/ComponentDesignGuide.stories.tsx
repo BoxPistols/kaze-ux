@@ -86,7 +86,7 @@ const SectionHeader = ({
       <Typography
         variant='h3'
         sx={{
-          fontWeight: 800,
+          fontWeight: 700,
           letterSpacing: '-0.02em',
           fontSize: { xs: 24, sm: 28 },
           color: theme.palette.mode === 'dark' ? 'grey.100' : 'grey.900',
@@ -285,7 +285,7 @@ const SectionHero = ({
       <Typography
         variant='h2'
         sx={{
-          fontWeight: 800,
+          fontWeight: 700,
           letterSpacing: '-0.03em',
           fontSize: { xs: 26, sm: 32 },
           mb: 1.5,
@@ -401,13 +401,13 @@ const PrinciplesContent = () => {
                     label={p.name}
                     color={p.color}
                     size='small'
-                    sx={{ fontWeight: 600 }}
+                    sx={{ fontWeight: 700 }}
                   />
                   <Typography variant='caption' color='text.secondary'>
                     {p.en}
                   </Typography>
                 </Stack>
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {p.summary}
                 </Typography>
                 <Typography
@@ -427,7 +427,7 @@ const PrinciplesContent = () => {
                     borderRadius: 1,
                   }}>
                   <Typography variant='caption' color='text.secondary'>
-                    <Box component='span' sx={{ fontWeight: 600 }}>
+                    <Box component='span' sx={{ fontWeight: 700 }}>
                       例:{' '}
                     </Box>
                     {p.example}
@@ -486,7 +486,7 @@ const PathDependencyContent = () => {
       />
       <Stack spacing={3} sx={{ mb: 6 }}>
         <Paper variant='outlined' sx={{ px: 3.5, py: 3, borderRadius: 2 }}>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1.5 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1.5 }}>
             QWERTY配列の例
           </Typography>
           <Typography
@@ -704,7 +704,7 @@ const StrategyContent = () => {
                 </Typography>
               </Paper>
               <Box>
-                <Typography variant='body2' sx={{ fontWeight: 600, mb: 0.5 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700, mb: 0.5 }}>
                   {item.title}
                 </Typography>
                 <Typography
@@ -879,7 +879,7 @@ const DemoPanel = ({
       }}>
       <Typography
         sx={{
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: 700,
           letterSpacing: '0.1em',
           color: 'primary.main',
@@ -954,7 +954,7 @@ const VariablesContent = () => {
                 direction='row'
                 justifyContent='space-between'
                 alignItems='center'>
-                <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                <Typography sx={{ fontSize: 14, fontWeight: 700 }}>
                   アイコンを表示
                 </Typography>
                 <Switch
@@ -967,7 +967,7 @@ const VariablesContent = () => {
                 direction='row'
                 justifyContent='space-between'
                 alignItems='center'>
-                <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                <Typography sx={{ fontSize: 14, fontWeight: 700 }}>
                   バッジを表示
                 </Typography>
                 <Switch
@@ -980,7 +980,7 @@ const VariablesContent = () => {
                 direction='row'
                 justifyContent='space-between'
                 alignItems='center'>
-                <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                <Typography sx={{ fontSize: 14, fontWeight: 700 }}>
                   無効化（操作不可）
                 </Typography>
                 <Switch
@@ -1047,7 +1047,7 @@ const VariablesContent = () => {
           <Grid size={{ xs: 12, md: 5 }}>
             <Stack spacing={4}>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   サイズ
                 </Typography>
                 <ToggleButtonGroup
@@ -1062,7 +1062,7 @@ const VariablesContent = () => {
                 </ToggleButtonGroup>
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   スタイル
                 </Typography>
                 <ToggleButtonGroup
@@ -1120,7 +1120,7 @@ const VariablesContent = () => {
           <Grid size={{ xs: 12, md: 5 }}>
             <Stack spacing={4}>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   ボタンのラベル（テキスト入力してみてください）
                 </Typography>
                 <TextField
@@ -1132,7 +1132,7 @@ const VariablesContent = () => {
                 />
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   バッジの件数: {badgeCount}
                 </Typography>
                 <Slider
@@ -1205,7 +1205,7 @@ const VariablesContent = () => {
           <Grid size={{ xs: 12, md: 5 }}>
             <Stack spacing={4}>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   サイズ（大きさだけが変わる）
                 </Typography>
                 <ToggleButtonGroup
@@ -1220,7 +1220,7 @@ const VariablesContent = () => {
                 </ToggleButtonGroup>
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 1.5 }}>
                   色（色だけが変わる）
                 </Typography>
                 <ToggleButtonGroup
@@ -1309,7 +1309,7 @@ const VariablesContent = () => {
       <DemoPanel label='操作してみよう - アイコンを差し替え'>
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 5 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 2 }}>
+            <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 2 }}>
               左アイコンを選ぶ
             </Typography>
             <Grid container spacing={1.5}>
@@ -1418,7 +1418,7 @@ const VariablesContent = () => {
               <Stack spacing={1.5} alignItems='center'>
                 <Typography
                   sx={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     color: `${semantic}.main`,
@@ -1512,7 +1512,7 @@ const StatesLayoutContent = () => {
               ? 'linear-gradient(135deg, rgba(29,175,194,0.08) 0%, rgba(70,171,74,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(29,175,194,0.04) 0%, rgba(70,171,74,0.04) 100%)',
         }}>
-        <Typography variant='h3' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h3' sx={{ fontWeight: 700, mb: 1 }}>
           状態・レイアウト・アセット
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -1536,9 +1536,9 @@ const StatesLayoutContent = () => {
                   label={s.state}
                   color={s.color}
                   size='small'
-                  sx={{ alignSelf: 'flex-start', fontWeight: 600 }}
+                  sx={{ alignSelf: 'flex-start', fontWeight: 700 }}
                 />
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {s.label}
                 </Typography>
                 <Typography
@@ -1792,7 +1792,7 @@ const DeviceRow = ({
       {/* 名前 */}
       <Typography
         variant='body1'
-        sx={{ fontWeight: 500, flex: 1, opacity: failed ? 0.5 : 1 }}>
+        sx={{ fontWeight: 400, flex: 1, opacity: failed ? 0.5 : 1 }}>
         {name}
       </Typography>
 
@@ -1826,7 +1826,7 @@ const DeviceRow = ({
             </Box>
             <Typography
               variant='caption'
-              sx={{ fontWeight: 600, color: batteryColor, minWidth: 28 }}>
+              sx={{ fontWeight: 700, color: batteryColor, minWidth: 28 }}>
               {battery}%
             </Typography>
           </Stack>
@@ -1948,14 +1948,14 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
               label={cfg.desc}
               size='small'
               color={cfg.color}
-              sx={{ fontWeight: 500, fontSize: 12 }}
+              sx={{ fontWeight: 400, fontSize: 12 }}
             />
           </Stack>
           <Chip
             label={`sizing: ${sizing}`}
             size='small'
             variant='outlined'
-            sx={{ fontSize: 11, fontFamily: 'monospace' }}
+            sx={{ fontSize: 12, fontFamily: 'monospace' }}
           />
         </Stack>
 
@@ -2023,7 +2023,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
                 <Inbox size={28} />
               </Box>
               <Stack alignItems='center' spacing={0.5}>
-                <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                <Typography variant='body1' sx={{ fontWeight: 700 }}>
                   デバイスが登録されていません
                 </Typography>
                 <Typography variant='body1' color='text.secondary'>
@@ -2034,7 +2034,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
                 icon={<Plus size={14} />}
                 label='デバイスを追加'
                 color='primary'
-                sx={{ cursor: 'pointer', fontWeight: 600, mt: 1 }}
+                sx={{ cursor: 'pointer', fontWeight: 700, mt: 1 }}
               />
             </Stack>
           )}
@@ -2078,7 +2078,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
                 <XCircle size={28} />
               </Box>
               <Stack alignItems='center' spacing={0.5}>
-                <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                <Typography variant='body1' sx={{ fontWeight: 700 }}>
                   通信エラーが発生しました
                 </Typography>
                 <Typography variant='body1' color='text.secondary'>
@@ -2090,7 +2090,7 @@ const UIStatePlayground = ({ state, sizing, showInteraction }: UIStateArgs) => {
                 label='再接続'
                 color='error'
                 variant='outlined'
-                sx={{ cursor: 'pointer', fontWeight: 600, mt: 1 }}
+                sx={{ cursor: 'pointer', fontWeight: 700, mt: 1 }}
               />
             </Stack>
           )}

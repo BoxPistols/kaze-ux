@@ -93,7 +93,7 @@ const CodeBlock = ({ children, language = 'tsx', caption }: CodeBlockProps) => {
           sx={{
             display: 'block',
             mt: 0.5,
-            fontSize: 11,
+            fontSize: 12,
             color: 'text.secondary',
           }}>
           {caption}

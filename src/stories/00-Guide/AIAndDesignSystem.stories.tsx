@@ -37,7 +37,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -70,7 +70,7 @@ const AIDesignSystemContent = () => {
               ? 'linear-gradient(135deg, rgba(156,39,176,0.08) 0%, rgba(235,129,23,0.08) 100%)'
               : 'linear-gradient(135deg, rgba(156,39,176,0.04) 0%, rgba(235,129,23,0.04) 100%)',
         }}>
-        <Typography variant='h3' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h3' sx={{ fontWeight: 700, mb: 1 }}>
           AI とデザインシステム
         </Typography>
         <Typography variant='h6' color='text.secondary' sx={{ mb: 2 }}>
@@ -90,9 +90,9 @@ const AIDesignSystemContent = () => {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>指示の質</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>プロンプト例</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>結果</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>指示の質</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>プロンプト例</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>結果</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -131,7 +131,7 @@ const AIDesignSystemContent = () => {
               ? 'rgba(70,171,74,0.06)'
               : 'rgba(70,171,74,0.03)',
         }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 0.5 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 0.5 }}>
           核心
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -233,7 +233,7 @@ const AIDesignSystemContent = () => {
               </Typography>
             </Paper>
             <Box>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 {item.title}
               </Typography>
               <Typography variant='body1' color='text.secondary'>
@@ -256,7 +256,7 @@ const AIDesignSystemContent = () => {
         <Grid size={{ xs: 12, sm: 6 }}>
           <Typography
             variant='body2'
-            sx={{ fontWeight: 600, mb: 1, color: 'error.main' }}>
+            sx={{ fontWeight: 700, mb: 1, color: 'error.main' }}>
             曖昧な指示
           </Typography>
           <CodeBlock language='markdown'>
@@ -268,7 +268,7 @@ const AIDesignSystemContent = () => {
         <Grid size={{ xs: 12, sm: 6 }}>
           <Typography
             variant='body2'
-            sx={{ fontWeight: 600, mb: 1, color: 'success.main' }}>
+            sx={{ fontWeight: 700, mb: 1, color: 'success.main' }}>
             Kaze UX語彙を使った指示
           </Typography>
           <CodeBlock language='markdown'>
@@ -290,9 +290,9 @@ const AIDesignSystemContent = () => {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>活用方法</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>ツール</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>説明</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>活用方法</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>ツール</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>説明</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -320,7 +320,7 @@ const AIDesignSystemContent = () => {
             ].map((row) => (
               <TableRow key={row[0]}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {row[0]}
                   </Typography>
                 </TableCell>

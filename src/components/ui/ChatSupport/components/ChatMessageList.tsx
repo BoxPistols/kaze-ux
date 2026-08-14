@@ -124,7 +124,7 @@ export const ChatMessageList = ({
                         mt: 2,
                         mb: 1,
                         lineHeight: 1.5,
-                        fontWeight: 600,
+                        fontWeight: 700,
                       },
                       '& h1': { fontSize: 18 },
                       '& h2': { fontSize: 16 },
@@ -185,7 +185,7 @@ export const ChatMessageList = ({
                           fontSize: 12,
                         },
                         '& th': {
-                          fontWeight: 600,
+                          fontWeight: 700,
                           bgcolor:
                             theme.palette.mode === 'dark'
                               ? 'rgba(255,255,255,0.04)'

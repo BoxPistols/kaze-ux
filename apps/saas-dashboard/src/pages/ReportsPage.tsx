@@ -131,7 +131,7 @@ export const ReportsPage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Total Projects
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     {projects.length}
                   </Typography>
                 </Box>
@@ -139,7 +139,7 @@ export const ReportsPage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Total Budget
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     ¥{(totalBudget / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
@@ -147,7 +147,7 @@ export const ReportsPage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Total Spent
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     ¥{(totalSpent / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
@@ -161,7 +161,7 @@ export const ReportsPage = () => {
                     <Typography variant='body2' color='text.secondary'>
                       Budget Utilization
                     </Typography>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography variant='body2' sx={{ fontWeight: 700 }}>
                       {budgetUtil.toFixed(1)}%
                     </Typography>
                   </Box>
@@ -195,7 +195,7 @@ export const ReportsPage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Total Invoices
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     {invoices.length}
                   </Typography>
                 </Box>
@@ -211,7 +211,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'success.textContrast' }}>
+                      sx={{ fontWeight: 700, color: 'success.textContrast' }}>
                       ¥{(paidInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -234,7 +234,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'warning.textContrast' }}>
+                      sx={{ fontWeight: 700, color: 'warning.textContrast' }}>
                       ¥{(pendingInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -257,7 +257,7 @@ export const ReportsPage = () => {
                     </Typography>
                     <Typography
                       variant='body2'
-                      sx={{ fontWeight: 600, color: 'error.textContrast' }}>
+                      sx={{ fontWeight: 700, color: 'error.textContrast' }}>
                       ¥{(overdueInvoices / 1000000).toFixed(1)}M
                     </Typography>
                   </Box>
@@ -292,7 +292,7 @@ export const ReportsPage = () => {
                   />
                   <Typography
                     variant='caption'
-                    sx={{ color: 'success.textContrast', fontWeight: 600 }}>
+                    sx={{ color: 'success.textContrast', fontWeight: 700 }}>
                     +12.5% vs last quarter
                   </Typography>
                 </Box>
@@ -319,7 +319,7 @@ export const ReportsPage = () => {
                     <Typography
                       variant='body2'
                       sx={{
-                        fontWeight: 500,
+                        fontWeight: 400,
                         minWidth: 32,
                         color: 'text.secondary',
                       }}>
@@ -341,7 +341,7 @@ export const ReportsPage = () => {
                     <Typography
                       variant='body2'
                       sx={{
-                        fontWeight: 600,
+                        fontWeight: 700,
                         minWidth: 56,
                         textAlign: 'right',
                       }}>

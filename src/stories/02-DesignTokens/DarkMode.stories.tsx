@@ -181,8 +181,8 @@ function TokenPanel({
                 <Typography
                   sx={{
                     fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
                     lineHeight: 1.3,
                   }}>
                   {token.label}
@@ -190,7 +190,7 @@ function TokenPanel({
                 <Typography
                   sx={{
                     fontFamily: 'monospace',
-                    fontSize: '0.7rem',
+                    fontSize: '0.86rem',
                     color: 'text.secondary',
                     lineHeight: 1.3,
                   }}>
@@ -279,7 +279,7 @@ function ComponentShowcase() {
     <Stack spacing={3}>
       {/* ボタン */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           Button
         </Typography>
         <Stack direction='row' spacing={2} sx={{ flexWrap: 'wrap', gap: 1 }}>
@@ -290,7 +290,7 @@ function ComponentShowcase() {
 
       {/* チップ */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           Chip
         </Typography>
         <Stack direction='row' spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
@@ -301,7 +301,7 @@ function ComponentShowcase() {
 
       {/* アラート */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           Alert
         </Typography>
         <Stack spacing={1}>
@@ -314,7 +314,7 @@ function ComponentShowcase() {
 
       {/* テキストフィールド */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           TextField
         </Typography>
         <TextField
@@ -327,7 +327,7 @@ function ComponentShowcase() {
 
       {/* カード */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           Card
         </Typography>
         <Card>
@@ -341,7 +341,7 @@ function ComponentShowcase() {
 
       {/* スイッチ */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           Switch
         </Typography>
         <Stack direction='row' spacing={2} sx={{ alignItems: 'center' }}>
@@ -352,7 +352,7 @@ function ComponentShowcase() {
 
       {/* プログレスバー */}
       <Box>
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.5 }}>
+        <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, mb: 1.5 }}>
           LinearProgress
         </Typography>
         <LinearProgress variant='determinate' value={65} />
@@ -447,13 +447,13 @@ function SurfacePanel({ label }: { label: string }) {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>
+            <Typography sx={{ fontSize: '0.86rem', fontWeight: 700 }}>
               elevation={level}
             </Typography>
             <Typography
               sx={{
                 fontFamily: 'monospace',
-                fontSize: '0.7rem',
+                fontSize: '0.86rem',
                 color: 'text.secondary',
               }}>
               Paper

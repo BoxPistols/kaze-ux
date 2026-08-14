@@ -106,7 +106,7 @@ export const EventLog = () => {
                   bgcolor: alpha(color, 0.15),
                   color,
                   fontSize: '12px',
-                  fontWeight: 900,
+                  fontWeight: 700,
                   flexShrink: 0,
                   mt: 0.1,
                 }}>

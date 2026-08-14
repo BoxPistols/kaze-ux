@@ -61,7 +61,7 @@ export default meta
 
 const BasicContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
       基本カード
     </Typography>
     <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -74,7 +74,7 @@ const BasicContent = () => (
       <Grid size={{ xs: 12, md: 4 }}>
         <Card>
           <CardContent>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
               シンプルカード
             </Typography>
             <Typography variant='body2' color='text.secondary'>
@@ -166,7 +166,7 @@ const DeviceStatusContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         配送ユニットステータスカード
       </Typography>
 
@@ -208,7 +208,7 @@ const DeviceStatusContent = () => {
                       </Stack>
                       <Typography
                         variant='caption'
-                        sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                        sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                         {device.battery}%
                       </Typography>
                     </Stack>
@@ -239,7 +239,7 @@ const DeviceStatusContent = () => {
                           variant='caption'
                           sx={{
                             fontFamily: 'monospace',
-                            fontWeight: 600,
+                            fontWeight: 700,
                             display: 'block',
                           }}>
                           {device.remaining}km
@@ -247,7 +247,7 @@ const DeviceStatusContent = () => {
                         <Typography
                           variant='caption'
                           color='text.secondary'
-                          sx={{ fontSize: '0.625rem' }}>
+                          sx={{ fontSize: '0.86rem' }}>
                           残り距離
                         </Typography>
                       </Box>
@@ -269,7 +269,7 @@ const DeviceStatusContent = () => {
                           variant='caption'
                           sx={{
                             fontFamily: 'monospace',
-                            fontWeight: 600,
+                            fontWeight: 700,
                             display: 'block',
                           }}>
                           {device.speed}km/h
@@ -277,7 +277,7 @@ const DeviceStatusContent = () => {
                         <Typography
                           variant='caption'
                           color='text.secondary'
-                          sx={{ fontSize: '0.625rem' }}>
+                          sx={{ fontSize: '0.86rem' }}>
                           速度
                         </Typography>
                       </Box>
@@ -310,14 +310,14 @@ export const DeviceStatus: StoryObj = {
 
 const LayoutPatternsContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
       レイアウトパターン
     </Typography>
 
     <Stack spacing={4}>
       {/* ダッシュボードグリッド */}
       <Box>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
           ダッシュボードグリッド
         </Typography>
         <Grid container spacing={3}>
@@ -342,7 +342,7 @@ const LayoutPatternsContent = () => (
                       color: stat.change.startsWith('+')
                         ? 'success.main'
                         : 'text.secondary',
-                      fontWeight: 500,
+                      fontWeight: 400,
                     }}>
                     {stat.change}
                   </Typography>
@@ -355,7 +355,7 @@ const LayoutPatternsContent = () => (
 
       {/* 横並びカード */}
       <Box>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
           横レイアウトカード
         </Typography>
         <Card>
@@ -373,7 +373,7 @@ const LayoutPatternsContent = () => (
             </Box>
             <Box sx={{ flex: 1 }}>
               <CardContent>
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   タスクプラン TSK-2024-0042
                 </Typography>
                 <Typography

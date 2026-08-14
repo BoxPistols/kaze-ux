@@ -23,7 +23,6 @@ const SCALE_DESC = [
   'ml',
   'md',
   'sm',
-  'xs',
 ] as const
 
 describe('光学的トラッキング (letterSpacingVariant)', () => {
@@ -47,7 +46,6 @@ describe('光学的トラッキング (letterSpacingVariant)', () => {
 
   it('display 帯は負のトラッキング、最小サイズは正のトラッキング', () => {
     expect(toEm(letterSpacingVariant.displayLarge)).toBeLessThan(0)
-    expect(toEm(letterSpacingVariant.xs)).toBeGreaterThan(0)
   })
 
   it('Inter のダイナミックメトリクス式と一致する', () => {
@@ -76,7 +74,7 @@ describe('光学的な行送り・ウェイト', () => {
   it('display 帯は詰めた行送り (1.2) と semibold (600)', () => {
     for (const name of ['displayLarge', 'displayMedium', 'displaySmall']) {
       expect(variantOf(name).lineHeight, name).toBe(1.2)
-      expect(variantOf(name).fontWeight, name).toBe(600)
+      expect(variantOf(name).fontWeight, name).toBe(700)
     }
   })
 
@@ -179,7 +177,7 @@ describe('variant の一意性', () => {
   })
 
   it('サイズ帯 (xxl-xs) は太さを主張しない', () => {
-    for (const name of ['xxl', 'xl', 'lg', 'ml', 'md', 'sm', 'xs']) {
+    for (const name of ['xxl', 'xl', 'lg', 'ml', 'md', 'sm']) {
       const v = typographyOptions[name] as { fontWeight?: number }
       expect(v.fontWeight, name).toBe(400)
     }

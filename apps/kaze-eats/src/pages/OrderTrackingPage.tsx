@@ -78,7 +78,7 @@ export const OrderTrackingPage = () => {
         <Box>
           <Typography
             variant='h4'
-            sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+            sx={{ fontWeight: 700, letterSpacing: '-0.02em' }}>
             Order #{order.id.toUpperCase()}
           </Typography>
           <Typography variant='body1' color='text.secondary' sx={{ mt: 0.5 }}>
@@ -118,7 +118,7 @@ export const OrderTrackingPage = () => {
             <Typography
               variant='body1'
               color='error.main'
-              sx={{ fontWeight: 600, textAlign: 'center' }}>
+              sx={{ fontWeight: 700, textAlign: 'center' }}>
               This order has been cancelled
             </Typography>
           </CardContent>
@@ -192,7 +192,7 @@ export const OrderTrackingPage = () => {
               <Typography variant='body2' color='text.secondary'>
                 Delivery Address
               </Typography>
-              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ fontWeight: 400 }}>
                 {order.deliveryAddress}
               </Typography>
             </Box>
@@ -200,7 +200,7 @@ export const OrderTrackingPage = () => {
               <Typography variant='body2' color='text.secondary'>
                 Estimated Delivery
               </Typography>
-              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ fontWeight: 400 }}>
                 {new Date(order.estimatedDelivery).toLocaleTimeString('ja-JP', {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -211,7 +211,7 @@ export const OrderTrackingPage = () => {
               <Typography variant='body2' color='text.secondary'>
                 Order Time
               </Typography>
-              <Typography variant='body2' sx={{ fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ fontWeight: 400 }}>
                 {new Date(order.orderDate).toLocaleString('ja-JP', {
                   month: 'short',
                   day: 'numeric',
@@ -240,7 +240,7 @@ export const OrderTrackingPage = () => {
                 <Typography variant='body1'>
                   {item.quantity}x {item.name}
                 </Typography>
-                <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                <Typography variant='body1' sx={{ fontWeight: 700 }}>
                   {formatPrice(item.price * item.quantity)}
                 </Typography>
               </Box>
@@ -257,7 +257,7 @@ export const OrderTrackingPage = () => {
             <Typography variant='body2' color='text.secondary'>
               Subtotal
             </Typography>
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               {formatPrice(order.total)}
             </Typography>
           </Box>
@@ -270,7 +270,7 @@ export const OrderTrackingPage = () => {
             <Typography variant='body2' color='text.secondary'>
               Delivery Fee
             </Typography>
-            <Typography variant='body2' sx={{ fontWeight: 500 }}>
+            <Typography variant='body2' sx={{ fontWeight: 400 }}>
               {formatPrice(order.deliveryFee)}
             </Typography>
           </Box>

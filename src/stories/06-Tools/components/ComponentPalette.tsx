@@ -22,7 +22,7 @@ export const ComponentPalette = ({ onSelect }: ComponentPaletteProps) => (
       variant='caption'
       color='text.secondary'
       sx={{
-        fontWeight: 600,
+        fontWeight: 700,
         letterSpacing: '0.05em',
         mb: 1,
         display: 'block',
@@ -34,7 +34,7 @@ export const ComponentPalette = ({ onSelect }: ComponentPaletteProps) => (
         <Typography
           variant='caption'
           color='text.secondary'
-          sx={{ fontSize: 11, mb: 0.5, display: 'block' }}>
+          sx={{ fontSize: 12, mb: 0.5, display: 'block' }}>
           {cat.label}
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -46,7 +46,7 @@ export const ComponentPalette = ({ onSelect }: ComponentPaletteProps) => (
               variant='outlined'
               onClick={() => onSelect(name)}
               sx={{
-                fontSize: 11,
+                fontSize: 12,
                 height: 24,
                 cursor: 'pointer',
                 '&:hover': { bgcolor: 'action.hover' },

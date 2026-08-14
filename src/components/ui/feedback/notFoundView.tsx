@@ -56,7 +56,7 @@ export const NotFoundView = ({ homePath = '/', sx }: NotFoundViewProps) => {
           sx={{
             mb: 2,
             color: 'text.primary',
-            fontWeight: 500,
+            fontWeight: 400,
           }}>
           ページが見つかりません
         </Typography>

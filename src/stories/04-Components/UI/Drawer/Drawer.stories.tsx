@@ -102,7 +102,7 @@ const AnchorsContent = () => {
           justifyContent: 'space-between',
           p: 2,
         }}>
-        <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+        <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
           ナビゲーション
         </Typography>
         <IconButton
@@ -128,7 +128,7 @@ const AnchorsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         表示位置
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -173,7 +173,7 @@ const NavigationDrawerContent = () => {
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         ナビゲーションドロワー
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -221,7 +221,7 @@ const NavigationDrawerContent = () => {
 
           {/* メインコンテンツ部分 */}
           <Box sx={{ flex: 1, p: 3, bgcolor: 'action.hover' }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mb: 1 }}>
+            <Typography variant='h6' sx={{ fontWeight: 700, mb: 1 }}>
               {navItems[selectedIndex].label}
             </Typography>
             <Typography variant='body2' color='text.secondary'>
@@ -248,7 +248,7 @@ const PracticalPatternsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         実用パターン
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
@@ -259,7 +259,7 @@ const PracticalPatternsContent = () => {
         {/* フィルタードロワー */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               フィルターパネル
             </Typography>
             <Typography
@@ -277,7 +277,7 @@ const PracticalPatternsContent = () => {
         {/* 詳細パネルドロワー */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
               詳細情報パネル
             </Typography>
             <Typography
@@ -315,7 +315,7 @@ const PracticalPatternsContent = () => {
               borderBottom: 1,
               borderColor: 'divider',
             }}>
-            <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+            <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
               フィルター条件
             </Typography>
             <IconButton
@@ -417,7 +417,7 @@ const PracticalPatternsContent = () => {
               borderBottom: 1,
               borderColor: 'divider',
             }}>
-            <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+            <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
               リソース詳細
             </Typography>
             <IconButton
@@ -439,7 +439,7 @@ const PracticalPatternsContent = () => {
                   spacing={1}
                   sx={{ mb: 1.5 }}>
                   <AssignmentIcon color='primary' />
-                  <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                  <Typography variant='h6' sx={{ fontWeight: 700 }}>
                     Device-Alpha
                   </Typography>
                 </Stack>
@@ -453,7 +453,7 @@ const PracticalPatternsContent = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+                  sx={{ fontWeight: 700, mb: 1, display: 'block' }}>
                   基本情報
                 </Typography>
                 <Stack spacing={1.5}>
@@ -469,7 +469,7 @@ const PracticalPatternsContent = () => {
                       <Typography variant='body2' color='text.secondary'>
                         {row.label}
                       </Typography>
-                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                      <Typography variant='body2' sx={{ fontWeight: 400 }}>
                         {row.value}
                       </Typography>
                     </Box>
@@ -484,7 +484,7 @@ const PracticalPatternsContent = () => {
                 <Typography
                   variant='caption'
                   color='text.secondary'
-                  sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+                  sx={{ fontWeight: 700, mb: 1, display: 'block' }}>
                   稼働情報
                 </Typography>
                 <Stack spacing={1.5}>
@@ -501,7 +501,7 @@ const PracticalPatternsContent = () => {
                       <Typography variant='body2' color='text.secondary'>
                         {row.label}
                       </Typography>
-                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                      <Typography variant='body2' sx={{ fontWeight: 400 }}>
                         {row.value}
                       </Typography>
                     </Box>

@@ -70,7 +70,7 @@ export const ProfilePage = () => {
         <Typography
           variant='h4'
           component='h1'
-          sx={{ fontWeight: 800, mb: 0.5, letterSpacing: '-0.02em' }}>
+          sx={{ fontWeight: 700, mb: 0.5, letterSpacing: '-0.02em' }}>
           Profile
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -139,7 +139,7 @@ export const ProfilePage = () => {
                   <Typography
                     variant='caption'
                     color='text.secondary'
-                    sx={{ fontWeight: 500 }}>
+                    sx={{ fontWeight: 400 }}>
                     {stat.label}
                   </Typography>
                 </Box>
@@ -276,7 +276,7 @@ export const ProfilePage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Member since
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     March 2025
                   </Typography>
                 </Box>
@@ -284,7 +284,7 @@ export const ProfilePage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Account type
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     Premium
                   </Typography>
                 </Box>
@@ -292,7 +292,7 @@ export const ProfilePage = () => {
                   <Typography variant='body2' color='text.secondary'>
                     Payment method
                   </Typography>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     Visa •••• 4242
                   </Typography>
                 </Box>

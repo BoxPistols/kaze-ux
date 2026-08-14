@@ -205,7 +205,7 @@ export const ContactsPage = () => {
                 <Box>
                   <Typography
                     variant='h5'
-                    sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                     {stat.value}
                   </Typography>
                   <Typography variant='caption' color='text.secondary'>

@@ -30,7 +30,6 @@ const meta: Meta<typeof PageTitle> = {
         'ml',
         'md',
         'sm',
-        'xs',
       ],
       description: 'タイトルサイズ',
     },

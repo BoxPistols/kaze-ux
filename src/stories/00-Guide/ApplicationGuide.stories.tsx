@@ -35,7 +35,7 @@ const SectionLabel = ({ children }: { children: string }) => (
   <Typography
     variant='overline'
     sx={{
-      fontSize: 11,
+      fontSize: 12,
       fontWeight: 700,
       letterSpacing: '0.1em',
       color: 'primary.main',
@@ -57,7 +57,7 @@ const SectionTitle = ({
     <Typography
       sx={{
         fontSize: { xs: 22, sm: 26 },
-        fontWeight: 800,
+        fontWeight: 700,
         letterSpacing: '-0.02em',
         lineHeight: 1.3,
       }}>
@@ -653,7 +653,7 @@ const ApplicationGuideContent = () => {
           variant='overline'
           sx={{
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '0.12em',
             color: isDark ? 'primary.light' : 'primary.main',
             mb: 2,
@@ -663,7 +663,7 @@ const ApplicationGuideContent = () => {
         </Typography>
         <Typography
           sx={{
-            fontWeight: 800,
+            fontWeight: 700,
             fontSize: { xs: 28, sm: 40 },
             letterSpacing: '-0.03em',
             lineHeight: 1.15,
@@ -749,7 +749,7 @@ const ApplicationGuideContent = () => {
                   variant='outlined'
                   sx={{
                     fontFamily: 'monospace',
-                    fontSize: 11,
+                    fontSize: 12,
                   }}
                 />
               </Box>
@@ -759,20 +759,20 @@ const ApplicationGuideContent = () => {
 
         <InfoCallout title='共有の仕組み' color='info'>
           各プロダクトは{' '}
-          <Box component='code' sx={{ fontWeight: 600 }}>
+          <Box component='code' sx={{ fontWeight: 700 }}>
             @/
           </Box>{' '}
           パスエイリアスで Design System の{' '}
-          <Box component='code' sx={{ fontWeight: 600 }}>
+          <Box component='code' sx={{ fontWeight: 700 }}>
             src/
           </Box>{' '}
           ディレクトリからコンポーネントを直接 import
           しています。プロダクト固有のコードは{' '}
-          <Box component='code' sx={{ fontWeight: 600 }}>
+          <Box component='code' sx={{ fontWeight: 700 }}>
             ~/
           </Box>{' '}
           パスで各アプリの{' '}
-          <Box component='code' sx={{ fontWeight: 600 }}>
+          <Box component='code' sx={{ fontWeight: 700 }}>
             src/
           </Box>{' '}
           から読み込みます。
@@ -824,7 +824,7 @@ import { LOGI_ORANGE } from '~/theme/colors'`}
                     <TableCell>
                       <Typography
                         sx={{
-                          fontWeight: 600,
+                          fontWeight: 700,
                           fontSize: 13,
                           fontFamily: 'monospace',
                         }}>
@@ -1046,7 +1046,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
           {decisionCriteria.map((c) => (
             <TableRow key={c.condition}>
               <TableCell>
-                <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                   {c.condition}
                 </Typography>
               </TableCell>
@@ -1063,7 +1063,7 @@ import { darkTheme, lightTheme } from '@/themes/theme'
                           ? 'warning'
                           : 'default'
                   }
-                  sx={{ fontWeight: 600, fontSize: 12 }}
+                  sx={{ fontWeight: 700, fontSize: 12 }}
                 />
               </TableCell>
               <TableCell>

@@ -38,7 +38,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -159,7 +159,7 @@ const ForDesignersContent = () => {
               ? 'rgba(156,39,176,0.05)'
               : 'rgba(156,39,176,0.02)',
         }}>
-        <Typography variant='h4' sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, mb: 1 }}>
           デザイナー向けガイド
         </Typography>
         <Typography variant='body1' color='text.secondary'>
@@ -185,7 +185,7 @@ const ForDesignersContent = () => {
                 alignItems='center'
                 sx={{ mb: 0.5 }}>
                 <CheckCircleOutlineIcon color='success' sx={{ fontSize: 18 }} />
-                <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                <Typography variant='body2' sx={{ fontWeight: 700 }}>
                   {s.section}
                 </Typography>
               </Stack>
@@ -299,7 +299,7 @@ const ForDesignersContent = () => {
                 <TableCell>
                   <Typography
                     variant='body2'
-                    sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                    sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                     {s.value}
                   </Typography>
                 </TableCell>
@@ -420,7 +420,7 @@ const ForDesignersContent = () => {
             {dailyTasks.map((t) => (
               <TableRow key={t.task}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {t.task}
                   </Typography>
                 </TableCell>
@@ -483,7 +483,7 @@ const ForDesignersContent = () => {
             y='100'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             コンポーネント実装
           </text>
           <text
@@ -491,7 +491,7 @@ const ForDesignersContent = () => {
             y='118'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             デザイントークン定義
           </text>
 
@@ -538,7 +538,7 @@ const ForDesignersContent = () => {
             y='100'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             Storybook 参照で画面設計
           </text>
           <text
@@ -546,7 +546,7 @@ const ForDesignersContent = () => {
             y='118'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             既存コンポーネント再利用
           </text>
 
@@ -593,7 +593,7 @@ const ForDesignersContent = () => {
             y='100'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             Storybook コンポーネントで組む
           </text>
           <text
@@ -601,7 +601,7 @@ const ForDesignersContent = () => {
             y='118'
             textAnchor='middle'
             fill={theme.palette.text.secondary}
-            style={{ fontSize: '11px', fontFamily: 'system-ui' }}>
+            style={{ fontSize: '12px', fontFamily: 'system-ui' }}>
             デザインとの差分が最小化
           </text>
 
@@ -723,7 +723,7 @@ const ForDesignersContent = () => {
                   justifyContent: 'center',
                   flexShrink: 0,
                   fontWeight: 700,
-                  fontSize: '0.85rem',
+                  fontSize: '0.86rem',
                 }}>
                 {item.step}
               </Box>

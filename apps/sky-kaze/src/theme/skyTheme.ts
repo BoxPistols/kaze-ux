@@ -155,14 +155,14 @@ export const skyTheme: Theme = createBrandTheme({
       styleOverrides: {
         label: {
           fontFamily: "'DM Sans', 'Noto Sans JP', sans-serif",
-          fontWeight: 600,
+          fontWeight: 700,
           fontSize: 15,
-          // MUI 自身が `.MuiStepLabel-label.Mui-active` で fontWeight: 500 を
+          // MUI 自身が `.MuiStepLabel-label.Mui-active` で fontWeight: 400 を
           // 当てており、素の `.MuiStepLabel-label` では詳細度で負ける。
           // index.css 側が !important を必要としていたのはこれが理由なので、
           // 状態セレクタを明示して打ち返す（実測で 600 になることを確認済み）
-          '&.Mui-active': { fontWeight: 600 },
-          '&.Mui-completed': { fontWeight: 600 },
+          '&.Mui-active': { fontWeight: 700 },
+          '&.Mui-completed': { fontWeight: 700 },
         },
       },
     },

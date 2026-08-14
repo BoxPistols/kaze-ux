@@ -61,7 +61,7 @@ export const HomePage = () => {
           <Typography
             variant='h3'
             sx={{
-              fontWeight: 800,
+              fontWeight: 700,
               color: '#fff',
               mb: 1,
               fontSize: { xs: '1.75rem', md: '2.5rem' },
@@ -234,8 +234,8 @@ export const HomePage = () => {
                         px: 1.5,
                         py: 0.5,
                         borderRadius: 2,
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
+                        fontSize: '0.86rem',
+                        fontWeight: 700,
                       }}>
                       Featured
                     </Box>
@@ -254,7 +254,7 @@ export const HomePage = () => {
                       />
                       <Typography
                         variant='body2'
-                        sx={{ color: '#fff', fontWeight: 600 }}>
+                        sx={{ color: '#fff', fontWeight: 700 }}>
                         {r.rating}
                       </Typography>
                       <Typography
@@ -390,7 +390,7 @@ export const HomePage = () => {
                       />
                       <Typography
                         variant='caption'
-                        sx={{ color: '#fff', fontWeight: 500 }}>
+                        sx={{ color: '#fff', fontWeight: 400 }}>
                         {r.deliveryTime}
                       </Typography>
                     </Box>
@@ -416,7 +416,7 @@ export const HomePage = () => {
                       />
                       <Typography
                         variant='body2'
-                        sx={{ fontWeight: 600, ml: 0.5 }}>
+                        sx={{ fontWeight: 700, ml: 0.5 }}>
                         {r.rating}
                       </Typography>
                       <Typography variant='body2' color='text.secondary'>
@@ -451,7 +451,7 @@ export const HomePage = () => {
                           label={tag}
                           size='small'
                           variant='outlined'
-                          sx={{ fontSize: '0.7rem' }}
+                          sx={{ fontSize: '0.86rem' }}
                         />
                       ))}
                     </Box>

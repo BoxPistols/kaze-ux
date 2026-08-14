@@ -65,7 +65,7 @@ const BasicContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         基本のSnackbar
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -144,7 +144,7 @@ const WithAlertContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         Alert付きSnackbar
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -162,7 +162,7 @@ const WithAlertContent = () => {
                 textAlign: 'center',
                 borderRadius: 2,
               }}>
-              <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
                 {v.label}
               </Typography>
               <Button
@@ -245,7 +245,7 @@ const PositionsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         表示位置
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>

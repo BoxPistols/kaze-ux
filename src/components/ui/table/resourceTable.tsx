@@ -219,7 +219,7 @@ export const ResourceTable = <T extends { id: string | number }>({
             mb: 3,
           }}>
           {title && (
-            <Typography variant='h5' fontWeight={600}>
+            <Typography variant='h5' fontWeight={700}>
               {title}
             </Typography>
           )}

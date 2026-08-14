@@ -128,7 +128,7 @@ const Section = ({
       <div
         className='mono'
         style={{
-          fontSize: 11,
+          fontSize: 12,
           letterSpacing: '0.24em',
           textTransform: 'uppercase',
           color: tokens.washiMute,
@@ -140,7 +140,7 @@ const Section = ({
         className='display'
         style={{
           fontSize: 'clamp(32px, 5vw, 56px)',
-          fontWeight: 380,
+          fontWeight: 400,
           letterSpacing: '-0.02em',
           lineHeight: 1.05,
           margin: 0,
@@ -210,7 +210,7 @@ const Hero = () => (
       <div
         className='mono'
         style={{
-          fontSize: 11,
+          fontSize: 12,
           letterSpacing: '0.24em',
           textTransform: 'uppercase',
           color: tokens.washiMute,
@@ -224,7 +224,7 @@ const Hero = () => (
           className='display'
           style={{
             fontSize: 'clamp(64px, 11vw, 180px)',
-            fontWeight: 380,
+            fontWeight: 400,
             letterSpacing: '-0.035em',
             lineHeight: 0.95,
             margin: '0 0 32px',
@@ -264,7 +264,7 @@ const Hero = () => (
                 key={label}
                 className='mono'
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                   padding: '8px 14px',
@@ -296,7 +296,7 @@ const TypographySection = () => (
         <div
           className='mono'
           style={{
-            fontSize: 10,
+            fontSize: 12,
             letterSpacing: '0.24em',
             textTransform: 'uppercase',
             color: tokens.washiMute,
@@ -332,7 +332,7 @@ const TypographySection = () => (
         <div
           className='mono'
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: tokens.washiMute,
             marginTop: 16,
             lineHeight: 1.8,
@@ -345,7 +345,7 @@ const TypographySection = () => (
         <div
           className='mono'
           style={{
-            fontSize: 10,
+            fontSize: 12,
             letterSpacing: '0.24em',
             textTransform: 'uppercase',
             color: tokens.washiMute,
@@ -356,7 +356,7 @@ const TypographySection = () => (
         <p
           style={{
             fontSize: 40,
-            fontWeight: 500,
+            fontWeight: 400,
             lineHeight: 1.2,
             margin: 0,
             letterSpacing: '-0.01em',
@@ -396,17 +396,17 @@ const TypographySection = () => (
         gap: 32,
       }}>
       {[
-        { label: 'Caption', size: 11, weight: 500 },
+        { label: 'Caption', size: 12, weight: 400 },
         { label: 'Body-S', size: 13, weight: 400 },
         { label: 'Body', size: 15, weight: 400 },
         { label: 'Lead', size: 20, weight: 400 },
-        { label: 'H3', size: 28, weight: 500 },
+        { label: 'H3', size: 28, weight: 400 },
       ].map((row) => (
         <div key={row.label}>
           <div
             className='mono'
             style={{
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: tokens.washiMute,
@@ -513,18 +513,18 @@ const ColorSection = () => {
               {s.jp}
             </div>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
+              <div style={{ fontSize: 14, fontWeight: 400, marginBottom: 4 }}>
                 {s.name}
               </div>
               <div
                 className='mono'
-                style={{ fontSize: 11, opacity: 0.75, marginBottom: 8 }}>
+                style={{ fontSize: 12, opacity: 0.75, marginBottom: 8 }}>
                 {s.hex.toUpperCase()}
               </div>
               <div
                 className='mono'
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: '0.16em',
                   textTransform: 'uppercase',
                   opacity: 0.7,
@@ -567,7 +567,7 @@ const RadiusSection = () => {
             borderRadius: 2,
             padding: '12px 20px',
             fontSize: 13,
-            fontWeight: 500,
+            fontWeight: 400,
             cursor: 'pointer',
             letterSpacing: '0.02em',
           }}>
@@ -590,8 +590,8 @@ const RadiusSection = () => {
             lineHeight: 1.6,
             width: 160,
           }}>
-          <div style={{ fontWeight: 500, marginBottom: 4 }}>Card</div>
-          <div style={{ color: tokens.washiMute, fontSize: 11 }}>
+          <div style={{ fontWeight: 400, marginBottom: 4 }}>Card</div>
+          <div style={{ color: tokens.washiMute, fontSize: 12 }}>
             Soft corner, soft voice.
           </div>
         </div>
@@ -614,7 +614,7 @@ const RadiusSection = () => {
           <div className='display' style={{ fontSize: 22, marginBottom: 4 }}>
             Welcome
           </div>
-          <div style={{ opacity: 0.85, fontSize: 11 }}>Hero-scale block.</div>
+          <div style={{ opacity: 0.85, fontSize: 12 }}>Hero-scale block.</div>
         </div>
       ),
     },
@@ -642,7 +642,7 @@ const RadiusSection = () => {
           <span
             className='mono'
             style={{
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               padding: '6px 12px',
@@ -681,7 +681,7 @@ const RadiusSection = () => {
               <div
                 className='mono'
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: tokens.washiMute,
@@ -752,7 +752,7 @@ const MotionSection = () => (
           <div
             className='mono'
             style={{
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: tokens.washiMute,
@@ -791,7 +791,7 @@ const MotionSection = () => (
       <div
         className='mono'
         style={{
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.24em',
           textTransform: 'uppercase',
           opacity: 0.55,
@@ -837,10 +837,10 @@ const MotionSection = () => (
             onMouseLeave={(ev) => {
               ev.currentTarget.style.transform = 'translateX(0)'
             }}>
-            <div style={{ fontWeight: 500, marginBottom: 6 }}>
+            <div style={{ fontWeight: 400, marginBottom: 6 }}>
               {e.label} {e.good ? '✓' : '✕'}
             </div>
-            <div className='mono' style={{ fontSize: 10, opacity: 0.7 }}>
+            <div className='mono' style={{ fontSize: 12, opacity: 0.7 }}>
               {e.ease}
             </div>
           </button>
@@ -923,7 +923,7 @@ const CommitmentSection = () => {
               <div
                 className='mono'
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: '0.24em',
                   textTransform: 'uppercase',
                   color: tokens.kazeBlue,
@@ -937,7 +937,7 @@ const CommitmentSection = () => {
               <div
                 className='mono'
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: '0.24em',
                   textTransform: 'uppercase',
                   color: tokens.beni,
@@ -980,7 +980,7 @@ const Footer = () => (
       <div
         className='mono'
         style={{
-          fontSize: 11,
+          fontSize: 12,
           letterSpacing: '0.24em',
           textTransform: 'uppercase',
           color: tokens.washiMute,

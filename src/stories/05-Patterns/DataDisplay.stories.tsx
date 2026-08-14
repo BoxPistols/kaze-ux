@@ -302,7 +302,7 @@ const SearchableTableContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         検索可能テーブル
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -340,12 +340,12 @@ const SearchableTableContent = () => {
                   <TableCell>
                     <Typography
                       variant='body2'
-                      sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
+                      sx={{ fontFamily: 'monospace', fontWeight: 400 }}>
                       {row.id}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant='body2' fontWeight={500}>
+                    <Typography variant='body2' fontWeight={400}>
                       {row.name}
                     </Typography>
                   </TableCell>
@@ -362,7 +362,7 @@ const SearchableTableContent = () => {
                       variant='body2'
                       sx={{
                         color: getBatteryColor(row.battery),
-                        fontWeight: 600,
+                        fontWeight: 700,
                         fontFamily: 'monospace',
                       }}>
                       {row.battery}%
@@ -433,7 +433,7 @@ const CardGridContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         カードグリッド表示
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
@@ -466,7 +466,7 @@ const CardGridContent = () => {
                     <Box sx={{ minWidth: 0, flex: 1 }}>
                       <Typography
                         variant='subtitle1'
-                        sx={{ fontWeight: 600, lineHeight: 1.3 }}>
+                        sx={{ fontWeight: 700, lineHeight: 1.3 }}>
                         {record.name}
                       </Typography>
                       <Typography variant='caption' color='text.secondary'>
@@ -495,7 +495,7 @@ const CardGridContent = () => {
                         variant='body2'
                         sx={{
                           color: getBatteryColor(record.battery),
-                          fontWeight: 600,
+                          fontWeight: 700,
                           fontFamily: 'monospace',
                         }}>
                         {record.battery}%
@@ -510,7 +510,7 @@ const CardGridContent = () => {
                       <Typography variant='body2' color='text.secondary'>
                         所在地
                       </Typography>
-                      <Typography variant='body2' fontWeight={500}>
+                      <Typography variant='body2' fontWeight={400}>
                         {record.location}
                       </Typography>
                     </Stack>

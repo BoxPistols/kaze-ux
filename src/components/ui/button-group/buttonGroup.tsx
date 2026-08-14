@@ -123,7 +123,7 @@ export const ButtonGroup = ({
       sx={{
         '& .MuiButton-root': {
           textTransform: 'none',
-          fontWeight: 500,
+          fontWeight: 400,
           // フォントサイズ: small=12px(0.86rem), medium=14px(1rem), large=16px(1.14rem)
           // 最小12px（A11yルール）
           fontSize:

@@ -67,7 +67,7 @@ const Swatch = ({
       }}>
       {children}
     </Box>
-    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+    <Typography variant='body2' sx={{ fontWeight: 700 }}>
       {label}
     </Typography>
     {note && (
@@ -325,7 +325,7 @@ const ProhibitionsContent = () => (
     </Grid>
 
     <Box sx={{ mt: 6 }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         やってはいけない例
       </Typography>
       <Grid container spacing={4}>
@@ -360,7 +360,7 @@ const ProhibitionsContent = () => (
             </Box>
             <Typography
               variant='caption'
-              sx={{ color: 'error.textContrast', fontWeight: 600 }}>
+              sx={{ color: 'error.textContrast', fontWeight: 700 }}>
               × {label}
             </Typography>
           </Grid>

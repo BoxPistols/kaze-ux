@@ -130,7 +130,7 @@ export const MiniCalendar = ({
             <Typography
               variant='subtitle2'
               sx={{
-                fontWeight: 600,
+                fontWeight: 700,
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',

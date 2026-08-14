@@ -65,7 +65,7 @@ export const OrderHistoryPage = () => {
       headerName: 'Order #',
       width: 100,
       renderCell: (params) => (
-        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700 }}>
           {params.value.toUpperCase()}
         </Typography>
       ),
@@ -97,7 +97,7 @@ export const OrderHistoryPage = () => {
       headerName: 'Total',
       width: 120,
       renderCell: (params) => (
-        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700 }}>
           {formatPrice(params.value + params.row.deliveryFee)}
         </Typography>
       ),
@@ -164,7 +164,7 @@ export const OrderHistoryPage = () => {
           variant='h4'
           component='h1'
           sx={{
-            fontWeight: 800,
+            fontWeight: 700,
             mb: 0.5,
             letterSpacing: '-0.02em',
           }}>
@@ -197,7 +197,7 @@ export const OrderHistoryPage = () => {
               <Box>
                 <Typography
                   variant='h5'
-                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                  sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                   {orders.length}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -231,7 +231,7 @@ export const OrderHistoryPage = () => {
               <Box>
                 <Typography
                   variant='h5'
-                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                  sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                   {formatPrice(totalSpent)}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -261,7 +261,7 @@ export const OrderHistoryPage = () => {
               <Box>
                 <Typography
                   variant='h5'
-                  sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                  sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                   {activeOrders}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>

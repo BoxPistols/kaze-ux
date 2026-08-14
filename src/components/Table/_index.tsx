@@ -118,7 +118,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         ? theme.palette.grey[900]
         : theme.palette.secondary.dark,
     color: theme.palette.common.white,
-    fontSize: '0.75rem',
+    fontSize: '0.86rem',
     fontWeight: theme.typography.fontWeightMedium,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -191,8 +191,8 @@ const formatCellValue = (value: unknown): React.ReactNode => {
           px: 2,
           py: 0.5,
           borderRadius: 1,
-          fontSize: '0.75rem',
-          fontWeight: 'medium',
+          fontSize: '0.86rem',
+          fontWeight: 400,
           bgcolor: value ? 'success.lighter' : 'error.lighter',
           color: theme.palette.common.black,
         }}>

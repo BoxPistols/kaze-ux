@@ -75,7 +75,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, TypographyProps>(
         ref={ref}
         variant={variant}
         className={cn(
-          'text-2xl font-semibold leading-none tracking-tight',
+          'text-2xl font-bold leading-none tracking-tight',
           className
         )}
         style={kaze ? { ...kazeTitleStyle, ...style } : style}

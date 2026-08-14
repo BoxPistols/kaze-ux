@@ -57,7 +57,7 @@ export default meta
 
 const BasicContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
       基本リスト
     </Typography>
 
@@ -69,7 +69,7 @@ const BasicContent = () => (
             variant='caption'
             sx={{
               fontFamily: 'monospace',
-              fontWeight: 600,
+              fontWeight: 700,
               display: 'block',
               p: 2,
               pb: 0,
@@ -100,7 +100,7 @@ const BasicContent = () => (
             variant='caption'
             sx={{
               fontFamily: 'monospace',
-              fontWeight: 600,
+              fontWeight: 700,
               display: 'block',
               p: 2,
               pb: 0,
@@ -137,7 +137,7 @@ const BasicContent = () => (
             variant='caption'
             sx={{
               fontFamily: 'monospace',
-              fontWeight: 600,
+              fontWeight: 700,
               display: 'block',
               p: 2,
               pb: 0,
@@ -183,7 +183,7 @@ const InteractiveContent = () => {
 
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         インタラクティブリスト
       </Typography>
 
@@ -192,7 +192,7 @@ const InteractiveContent = () => {
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ borderRadius: 2 }}>
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 ナビゲーション（選択状態）
               </Typography>
             </Box>
@@ -217,7 +217,7 @@ const InteractiveContent = () => {
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper variant='outlined' sx={{ borderRadius: 2 }}>
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 700 }}>
                 セカンダリアクション
               </Typography>
             </Box>
@@ -287,7 +287,7 @@ const SettingsContent = () => {
 
   return (
     <Box sx={{ maxWidth: 500, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         設定リスト
       </Typography>
 

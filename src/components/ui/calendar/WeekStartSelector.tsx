@@ -78,7 +78,7 @@ export const WeekStartSelector = ({
     <Box sx={sx}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
         <CalendarTodayIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-        <Typography variant='subtitle2' fontWeight={600}>
+        <Typography variant='subtitle2' fontWeight={700}>
           {label}
         </Typography>
       </Box>

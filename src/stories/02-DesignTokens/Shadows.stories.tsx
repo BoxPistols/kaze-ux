@@ -93,7 +93,7 @@ const ShadowValue = ({ level }: { level: number }) => {
         variant='caption'
         sx={{
           fontFamily: 'monospace',
-          fontSize: '0.7rem',
+          fontSize: '0.86rem',
           lineHeight: 1.6,
           wordBreak: 'break-all',
           color: 'text.secondary',
@@ -257,7 +257,7 @@ const AssignmentPanel = ({
         border: '1px solid',
         borderColor: 'divider',
       }}>
-      <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
         {assignment.description}
       </Typography>
       <Typography
@@ -302,7 +302,7 @@ const ComponentElevationContent = () => {
       <Stack spacing={6}>
         {/* Card */}
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
             Card
           </Typography>
           <Grid container spacing={4}>
@@ -325,7 +325,7 @@ const ComponentElevationContent = () => {
 
         {/* Dialog */}
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
             Dialog
           </Typography>
           <Grid container spacing={4}>
@@ -348,7 +348,7 @@ const ComponentElevationContent = () => {
                     borderBottom: '1px solid',
                     borderColor: 'divider',
                   }}>
-                  <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                  <Typography variant='h6' sx={{ fontWeight: 700 }}>
                     ダイアログタイトル
                   </Typography>
                 </Box>
@@ -385,7 +385,7 @@ const ComponentElevationContent = () => {
 
         {/* Menu */}
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
             Menu
           </Typography>
           <Grid container spacing={4}>
@@ -427,7 +427,7 @@ const ComponentElevationContent = () => {
 
         {/* Paper */}
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
             Paper
           </Typography>
           <Grid container spacing={4}>
@@ -450,7 +450,7 @@ const ComponentElevationContent = () => {
 
         {/* Tooltip */}
         <Box>
-          <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
             Tooltip
           </Typography>
           <Grid container spacing={4}>
@@ -549,7 +549,7 @@ const BorderRadiusContent = () => {
               <Box sx={{ textAlign: 'center' }}>
                 <Typography
                   variant='body2'
-                  sx={{ fontWeight: 600, fontFamily: 'monospace', mb: 0.5 }}>
+                  sx={{ fontWeight: 700, fontFamily: 'monospace', mb: 0.5 }}>
                   borderRadius: {item.value}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
@@ -563,7 +563,7 @@ const BorderRadiusContent = () => {
 
       {/* 比較バー */}
       <Box sx={{ mt: 8 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
           横並び比較
         </Typography>
         <Stack
@@ -595,7 +595,7 @@ const BorderRadiusContent = () => {
               />
               <Typography
                 variant='caption'
-                sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
                 {item.label}
               </Typography>
             </Box>
@@ -641,7 +641,7 @@ const ElevationRows = () => {
             <Typography
               variant='body2'
               color='text.primary'
-              sx={{ fontWeight: 600 }}>
+              sx={{ fontWeight: 700 }}>
               {label}
             </Typography>
             <Typography
@@ -695,7 +695,7 @@ const ShadowComparisonContent = () => (
     <Grid container spacing={4}>
       {/* Lightモード */}
       <Grid size={{ xs: 12, md: 6 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
           Light Mode
         </Typography>
         <ThemeProvider theme={lightTheme}>
@@ -714,7 +714,7 @@ const ShadowComparisonContent = () => (
 
       {/* Darkモード */}
       <Grid size={{ xs: 12, md: 6 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
           Dark Mode
         </Typography>
         <ThemeProvider theme={darkTheme}>
@@ -734,7 +734,7 @@ const ShadowComparisonContent = () => (
 
     {/* コンポーネント比較 */}
     <Box sx={{ mt: 8 }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         コンポーネントの見え方比較
       </Typography>
       <Grid container spacing={4}>
@@ -751,7 +751,7 @@ const ShadowComparisonContent = () => (
               <Typography
                 variant='subtitle2'
                 color='text.secondary'
-                sx={{ fontWeight: 600, mb: 2 }}>
+                sx={{ fontWeight: 700, mb: 2 }}>
                 Light
               </Typography>
               <SampleCard />
@@ -772,7 +772,7 @@ const ShadowComparisonContent = () => (
               <Typography
                 variant='subtitle2'
                 color='text.secondary'
-                sx={{ fontWeight: 600, mb: 2 }}>
+                sx={{ fontWeight: 700, mb: 2 }}>
                 Dark
               </Typography>
               <SampleCard />
@@ -784,7 +784,7 @@ const ShadowComparisonContent = () => (
 
     {/* 設計指針 */}
     <Box sx={{ mt: 8 }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         設計指針
       </Typography>
       <Grid container spacing={3}>
@@ -825,7 +825,7 @@ const ShadowComparisonContent = () => (
               elevation={0}
               variant='outlined'
               sx={{ p: 3, borderRadius: 2, height: '100%' }}>
-              <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1 }}>
+              <Typography variant='subtitle2' sx={{ fontWeight: 700, mb: 1 }}>
                 {item.title}
               </Typography>
               <Typography variant='body2' color='text.secondary'>

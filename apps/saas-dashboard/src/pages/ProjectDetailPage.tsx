@@ -150,7 +150,7 @@ export const ProjectDetailPage = () => {
                     value={project.progress}
                     sx={{ flex: 1, height: 8, borderRadius: 4 }}
                   />
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 700 }}>
                     {project.progress}%
                   </Typography>
                 </Box>
@@ -200,7 +200,7 @@ export const ProjectDetailPage = () => {
                     size='small'
                     color='primary'
                   />
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {project.owner}
                   </Typography>
                 </Box>
@@ -262,7 +262,7 @@ export const ProjectDetailPage = () => {
             />
             <Typography
               variant='body1'
-              sx={{ fontWeight: 600, mb: 0.5 }}
+              sx={{ fontWeight: 700, mb: 0.5 }}
               color='text.secondary'>
               No tasks yet
             </Typography>

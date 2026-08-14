@@ -39,7 +39,7 @@ const SectionHeader = ({
   subtitle?: string
 }) => (
   <Box sx={{ mb: 4 }}>
-    <Typography variant='h4' sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+    <Typography variant='h4' sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
       {title}
     </Typography>
     {subtitle && (
@@ -141,7 +141,7 @@ const HowToUseContent = () => {
             <style>{`
               .sb-text { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
               .sb-label { font-size: 13px; fill: ${theme.palette.text.primary}; }
-              .sb-sublabel { font-size: 11px; fill: ${theme.palette.text.secondary}; }
+              .sb-sublabel { font-size: 12px; fill: ${theme.palette.text.secondary}; }
               .sb-bold { font-size: 13px; font-weight: 700; fill: ${theme.palette.text.primary}; }
             `}</style>
           </defs>
@@ -455,7 +455,7 @@ const HowToUseContent = () => {
             {controlTypes.map((c) => (
               <TableRow key={c.type}>
                 <TableCell>
-                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                  <Typography variant='body2' sx={{ fontWeight: 400 }}>
                     {c.type}
                   </Typography>
                 </TableCell>
@@ -511,7 +511,7 @@ const HowToUseContent = () => {
             <style>{`
               .sm-text { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
               .sm-item { font-size: 13px; fill: ${theme.palette.text.primary}; }
-              .sm-key { font-size: 11px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
+              .sm-key { font-size: 12px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
               .sm-sep { stroke: ${theme.palette.divider}; stroke-width: 1; }
               .sm-check { font-size: 13px; fill: ${theme.palette.primary.main}; font-weight: 700; }
             `}</style>

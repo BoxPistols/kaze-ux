@@ -84,7 +84,7 @@ export const ShadcnExample = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <Card key={item} className='p-4'>
-                <h3 className='font-semibold mb-2'>Grid Item {item}</h3>
+                <h3 className='font-bold mb-2'>Grid Item {item}</h3>
                 <p className='text-sm text-muted-foreground'>
                   This is a grid item using Tailwind responsive classes.
                 </p>

@@ -40,8 +40,8 @@ const DemoItem = ({
       textAlign: 'center',
       bgcolor: 'primary.light',
       color: 'primary.contrastText',
-      fontWeight: 600,
-      fontSize: '0.857rem',
+      fontWeight: 700,
+      fontSize: '0.86rem',
       borderRadius: 1.5,
     }}>
     {children}
@@ -64,7 +64,7 @@ const BasicGridPlayground = ({
   const count = Math.ceil(12 / Math.max(1, columnSize))
   return (
     <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         12カラムグリッドシステム
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
@@ -131,7 +131,7 @@ const ResponsiveContent = () => {
 
   return (
     <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
         レスポンシブグリッド
       </Typography>
 
@@ -145,7 +145,7 @@ const ResponsiveContent = () => {
       <Stack spacing={5}>
         {/* パターン1: 1→2→4列 */}
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             mobile: 1列 / tablet: 2列 / laptop: 4列
           </Typography>
           <Typography
@@ -169,7 +169,7 @@ const ResponsiveContent = () => {
 
         {/* パターン2: 1→2→3列 */}
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             mobile: 1列 / tablet: 2列 / laptop: 3列
           </Typography>
           <Typography
@@ -193,7 +193,7 @@ const ResponsiveContent = () => {
 
         {/* パターン3: サイドバーレイアウト */}
         <Box>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 1 }}>
             サイドバーレイアウト（mobile: スタック / tablet以上:
             サイドバー+メイン）
           </Typography>
@@ -248,7 +248,7 @@ const ResponsiveContent = () => {
 
       {/* ブレークポイント参照 */}
       <Box sx={{ mt: 6 }}>
-        <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+        <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
           カスタムブレークポイント
         </Typography>
         <Paper variant='outlined' sx={{ p: 3, borderRadius: 2 }}>
@@ -257,7 +257,7 @@ const ResponsiveContent = () => {
               <Box
                 key={name}
                 sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                <Typography variant='body2' sx={{ fontWeight: 400 }}>
                   {name}
                 </Typography>
                 <Typography
@@ -292,7 +292,7 @@ const SpacingPlayground = ({ spacing, itemCount, columns }: SpacingArgs) => {
     1 | 2 | 3 | 4 | 6 | 12
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
         グリッドスペーシング
       </Typography>
       <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
@@ -358,7 +358,7 @@ export const Spacing: StoryObj<SpacingArgs> = {
 
 const NestedContent = () => (
   <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-    <Typography variant='h5' sx={{ fontWeight: 600, mb: 3 }}>
+    <Typography variant='h5' sx={{ fontWeight: 700, mb: 3 }}>
       ネストされたグリッド
     </Typography>
 
@@ -367,7 +367,7 @@ const NestedContent = () => (
         <Paper
           variant='outlined'
           sx={{ p: 3, borderRadius: 2, height: '100%' }}>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
             メインエリア（8カラム）
           </Typography>
           <Grid container spacing={2}>
@@ -383,7 +383,7 @@ const NestedContent = () => (
         <Paper
           variant='outlined'
           sx={{ p: 3, borderRadius: 2, height: '100%' }}>
-          <Typography variant='body2' sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant='body2' sx={{ fontWeight: 700, mb: 2 }}>
             サイドエリア（4カラム）
           </Typography>
           <Grid container spacing={2}>

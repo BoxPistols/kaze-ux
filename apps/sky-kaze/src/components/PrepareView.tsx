@@ -190,7 +190,7 @@ export const PrepareView = () => {
         <Typography
           variant='xl'
           display='block'
-          sx={{ fontWeight: 800, fontSize: '26px', mb: 0.5 }}>
+          sx={{ fontWeight: 700, fontSize: '26px', mb: 0.5 }}>
           出荷準備
         </Typography>
         <Typography
@@ -389,7 +389,7 @@ export const PrepareView = () => {
                     <Box>
                       <Typography
                         variant='body2'
-                        sx={{ fontWeight: 500, fontSize: '15px' }}>
+                        sx={{ fontWeight: 400, fontSize: '15px' }}>
                         {s.contents}
                       </Typography>
                       <Typography
@@ -425,7 +425,7 @@ export const PrepareView = () => {
                             STATUS_COLORS[s.status],
                             theme.palette.background.paper
                           ),
-                        fontWeight: 600,
+                        fontWeight: 700,
                         justifySelf: 'start',
                       }}
                     />

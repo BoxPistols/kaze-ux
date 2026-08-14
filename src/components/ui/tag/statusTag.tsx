@@ -87,7 +87,7 @@ export const StatusTag = ({
     ...style,
     borderRadius: kaze ? 'var(--kaze-r-sharp)' : '16px',
     borderWidth: '1px',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: 'bold',
     height: 'auto',
     '& .MuiChip-label': {
