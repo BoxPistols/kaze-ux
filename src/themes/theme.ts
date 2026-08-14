@@ -506,11 +506,37 @@ const componentStyles = {
         color: theme.palette.info.textContrast,
       }),
       sizeSmall: {
+        // 表示専用の Chip は密度を優先して 20 のまま（MUI 既定は 24）
         height: 20,
         fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
         '& .MuiChip-label': {
           paddingLeft: 6,
           paddingRight: 6,
+        },
+        // 押せる / 消せる Chip は操作対象なので WCAG 2.2 SC 2.5.8 の
+        // 24x24 が要る。拠り所なく 20 に縮めていたので MUI 既定へ戻す。
+        // 表示専用と分けることで、状態表示の見た目は変えずに済む
+        '&.MuiChip-clickable, &.MuiChip-deletable': {
+          height: 24,
+        },
+      },
+    },
+  },
+  // パンくずのリンク。
+  // ライブラリ既定では行の高さぶん（実測 22px）しかなく、WCAG 2.2 SC 2.5.8 の
+  // 24x24 を割る。文中のインラインリンクは同基準の例外だが、パンくずは
+  // ナビゲーションなので例外に当たらない。
+  // 高さだけを確保し、文字サイズと余白は既定のままにする
+  MuiBreadcrumbs: {
+    styleOverrides: {
+      // li スロットではなく ol に当てる。折りたたみ用の «…» ボタン
+      // (aria-label="Show path") は MuiBreadcrumbs-li が付かない素の <li> に
+      // 入るため、li スロットからは届かない（実測して気づいた）
+      ol: {
+        '& li > a, & li > button, & li > .MuiLink-root': {
+          display: 'inline-flex',
+          alignItems: 'center',
+          minHeight: 24,
         },
       },
     },

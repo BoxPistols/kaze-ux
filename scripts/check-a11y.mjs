@@ -30,6 +30,7 @@
 import { chromium } from 'playwright'
 
 import { CONTRAST_AUDIT } from './lib/contrast-audit.mjs'
+import { TAP_TARGET_AUDIT } from './lib/tap-target-audit.mjs'
 
 const URL = process.env.A11Y_URL ?? 'http://localhost:6099'
 const SHOW_ALL = process.argv.includes('--all')
@@ -90,10 +91,15 @@ if (targets.length === 0) {
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
 
+/** WCAG 2.2 SC 2.5.8 (AA) の最小操作対象。44 は 2.5.5 (AAA) なので使わない */
+const MIN_TAP_PX = 24
+
 const fails = new Map()
+const tapFails = new Map()
 let unknown = 0
 let checked = 0
 let empty = 0
+let tapTotal = 0
 
 /**
  * 1 story を測る。読み込みに失敗した場合は null を返す。
@@ -109,7 +115,7 @@ const measure = async (story) => {
         waitUntil: 'load',
         timeout: attempt === 0 ? 20000 : 40000,
       })
-      await page.waitForTimeout(160)
+      await page.waitForTimeout(400)
 
       // 描画に失敗した story は違反 0 件を返す。確認しないと壊れた画面ほど緑になる
       const live = await page.evaluate(LIVENESS)
@@ -119,7 +125,11 @@ const measure = async (story) => {
         if (attempt === 0) continue
         return { live, r: null }
       }
-      return { live, r: await page.evaluate(CONTRAST_AUDIT) }
+      return {
+        live,
+        r: await page.evaluate(CONTRAST_AUDIT),
+        tap: await page.evaluate(TAP_TARGET_AUDIT, MIN_TAP_PX),
+      }
     } catch {
       // 読み込み自体の失敗。次の試行へ
     }
@@ -160,6 +170,18 @@ for (const story of targets) {
         where: prev?.where ?? story.title,
       })
     }
+
+    tapTotal += measured.tap.total
+    for (const f of measured.tap.fails) {
+      const key = `${f.label}|${f.w}x${f.h}`
+      const prev = tapFails.get(key)
+      tapFails.set(key, {
+        ...f,
+        n: (prev?.n ?? 0) + 1,
+        samples: [...new Set([...(prev?.samples ?? []), f.text])].slice(0, 3),
+        where: prev?.where ?? story.title,
+      })
+    }
   }
 }
 
@@ -168,14 +190,29 @@ await browser.close()
 const rows = [...fails.values()].sort((a, b) => a.got - b.got)
 const count = rows.reduce((a, r) => a + r.n, 0)
 
+const tapRows = [...tapFails.values()].sort((a, b) => a.h * a.w - b.h * b.w)
+const tapCount = tapRows.reduce((a, r) => a + r.n, 0)
+
 console.log(
-  `${checked} story / 判定不能 ${unknown} 箇所` +
+  `${checked} story / コントラスト判定不能 ${unknown} 箇所 / ` +
+    `操作対象 ${tapTotal} 個` +
     (skipped ? ` / 解説カテゴリ ${skipped} story は対象外` : '')
 )
+
+if (rows.length) console.log('\nコントラスト:')
 for (const r of rows) {
   console.log(
     `  ${r.got}:1 (要 ${r.need}) ${r.size}px ×${r.n}  ${r.color} on ${r.bg}\n` +
       `      ${r.label} @${r.where}  例: ${r.samples.map((s) => `"${s}"`).join(' ')}`
+  )
+}
+
+if (tapRows.length)
+  console.log(`\n操作対象の寸法 (要 ${MIN_TAP_PX}x${MIN_TAP_PX}):`)
+for (const r of tapRows) {
+  console.log(
+    `  ${r.w}x${r.h} ×${r.n}  ${r.label} @${r.where}` +
+      `  例: ${r.samples.map((s) => `"${s}"`).join(' ')}`
   )
 }
 
@@ -187,13 +224,25 @@ if (empty) {
   process.exit(1)
 }
 
-if (count) {
-  console.error(
-    `\n❌ コントラスト不足 ${count} 箇所 / ${rows.length} パターン\n` +
-      '   面の色 (main) を文字に使っていないか確認してください。' +
-      '前景用には textContrast があります。'
-  )
+if (count || tapCount) {
+  const parts = []
+  if (count) {
+    parts.push(
+      `コントラスト不足 ${count} 箇所 / ${rows.length} パターン\n` +
+        '   面の色 (main) を文字に使っていないか確認してください。' +
+        '前景用には textContrast があります。'
+    )
+  }
+  if (tapCount) {
+    parts.push(
+      `操作対象が ${MIN_TAP_PX}px 未満 ${tapCount} 箇所 / ${tapRows.length} パターン\n` +
+        '   高さが足りないことが多いです。inline-flex + minHeight で確保できます。'
+    )
+  }
+  console.error(`\n❌ ${parts.join('\n❌ ')}`)
   process.exit(1)
 }
 
-console.log('\n✅ 描画結果にコントラスト不足なし')
+console.log(
+  `\n✅ コントラスト不足なし / 操作対象はすべて ${MIN_TAP_PX}x${MIN_TAP_PX} 以上`
+)
