@@ -95,25 +95,55 @@ let unknown = 0
 let checked = 0
 let empty = 0
 
-for (const story of targets) {
-  try {
-    await page.goto(`${URL}/iframe.html?id=${story.id}&viewMode=story`, {
-      waitUntil: 'load',
-      timeout: 20000,
-    })
-    await page.waitForTimeout(160)
+/**
+ * 1 story を測る。読み込みに失敗した場合は null を返す。
+ *
+ * 一度の失敗で赤にしない。マシンが混んでいると読み込みが 20 秒を
+ * 超えることがあり、それで gate が落ちると「たまに落ちるので無視」に
+ * なって検査そのものが死ぬ。ただし**再試行しても駄目なら落とす**
+ */
+const measure = async (story) => {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await page.goto(`${URL}/iframe.html?id=${story.id}&viewMode=story`, {
+        waitUntil: 'load',
+        timeout: attempt === 0 ? 20000 : 40000,
+      })
+      await page.waitForTimeout(160)
 
-    // 描画に失敗した story は違反 0 件を返す。確認しないと壊れた画面ほど緑になる
-    const live = await page.evaluate(LIVENESS)
-    if (live.errorShown || live.nodes < MIN_DOM_NODES) {
-      empty++
-      console.error(
-        `  ⚠ ${story.id}: 描画されていません（要素 ${live.nodes} / エラー表示 ${live.errorShown}）`
-      )
-      continue
+      // 描画に失敗した story は違反 0 件を返す。確認しないと壊れた画面ほど緑になる
+      const live = await page.evaluate(LIVENESS)
+      // エラー表示は再試行しても変わらないので即座に確定させる
+      if (live.errorShown) return { live, r: null }
+      if (live.nodes < MIN_DOM_NODES) {
+        if (attempt === 0) continue
+        return { live, r: null }
+      }
+      return { live, r: await page.evaluate(CONTRAST_AUDIT) }
+    } catch {
+      // 読み込み自体の失敗。次の試行へ
     }
+  }
+  return null
+}
 
-    const r = await page.evaluate(CONTRAST_AUDIT)
+for (const story of targets) {
+  const measured = await measure(story)
+
+  if (!measured || !measured.r) {
+    empty++
+    const live = measured?.live
+    console.error(
+      `  ⚠ ${story.id}: 描画されていません` +
+        (live
+          ? `（要素 ${live.nodes} / エラー表示 ${live.errorShown}）`
+          : '（読み込みに 2 回失敗）')
+    )
+    continue
+  }
+
+  {
+    const r = measured.r
     checked++
     unknown += r.unknown.length
 
@@ -130,8 +160,6 @@ for (const story of targets) {
         where: prev?.where ?? story.title,
       })
     }
-  } catch {
-    empty++
   }
 }
 

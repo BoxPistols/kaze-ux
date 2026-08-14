@@ -470,7 +470,7 @@ const ForDesignersContent = () => {
             x='110'
             y='78'
             textAnchor='middle'
-            fill={theme.palette.primary.main}
+            fill={theme.palette.primary.textContrast}
             style={{
               fontSize: '14px',
               fontWeight: 700,
@@ -580,7 +580,7 @@ const ForDesignersContent = () => {
             x='610'
             y='78'
             textAnchor='middle'
-            fill={theme.palette.success.main}
+            fill={theme.palette.success.textContrast}
             style={{
               fontSize: '14px',
               fontWeight: 700,
