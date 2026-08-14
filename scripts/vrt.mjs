@@ -33,7 +33,13 @@
  */
 
 import { execFileSync, execSync } from 'node:child_process'
-import { existsSync, mkdirSync, rmSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { join } from 'node:path'
 
 import { chromium } from 'playwright'
@@ -43,6 +49,14 @@ const PORT_BASE = 6301
 const PORT_HEAD = 6302
 /** 自己差分がこの割合を超えたら、描画のゆらぎとみなす */
 const NOISE_RATIO = 0.5
+/**
+ * ゆらぎを測る回数。1 回だと 2 枚が偶然近い値になったときに見逃す。
+ *
+ * 実際に踏んだ: 3D 地図の story が 125,970px の差分で「変わった」と判定
+ * されたが、実体は地形メッシュの描画ゆらぎだった。1 回の撮り直しが
+ * たまたま近いフレームを掴んだため。最大値を採る。
+ */
+const NOISE_SAMPLES = 3
 
 const args = process.argv.slice(2)
 const limitAt = args.indexOf('--limit')
@@ -52,8 +66,19 @@ const BASE_REF =
 
 const ROOT = process.cwd()
 const WORK = join(ROOT, '.vrt')
-const OUT = join(WORK, 'out')
 const TREE = join(WORK, 'base')
+/**
+ * 実行ごとに分けて残す。上書きすると「前回どうだったか」が消え、
+ * 「この差分は前からあったのか、今回出たのか」を後から言えなくなる。
+ * 直近 RUNS_KEPT 回まで保持する。
+ */
+const RUNS_KEPT = 10
+const RUN_ID = new Date()
+  .toISOString()
+  .replace(/[-:]/g, '')
+  .replace(/\..+$/, '')
+  .replace('T', '-')
+const OUT = join(WORK, 'runs', RUN_ID)
 
 const sh = (cmd, cwd = ROOT) =>
   execSync(cmd, {
@@ -66,7 +91,7 @@ console.log(`比較: ${BASE_REF} → 作業ツリー`)
 
 // --- 両方をビルド -----------------------------------------------------------
 
-rmSync(WORK, { recursive: true, force: true })
+rmSync(TREE, { recursive: true, force: true })
 mkdirSync(OUT, { recursive: true })
 for (const d of ['before', 'after', 'diff'])
   mkdirSync(join(OUT, d), { recursive: true })
@@ -191,11 +216,15 @@ try {
   const noiseFile = join(WORK, 'noise.png')
   for (const r of diffs) {
     const n1 = join(WORK, 'n1.png')
-    if (!(await shoot(HEAD, r.id, n1))) {
-      r.noise = -1
-      continue
+    let worst = -1
+    for (let i = 0; i < NOISE_SAMPLES; i++) {
+      if (!(await shoot(HEAD, r.id, n1))) break
+      const d = pixelDiff(join(OUT, 'after', `${r.id}.png`), n1, noiseFile)
+      if (d > worst) worst = d
+      // 既にゆらぎと判定できる大きさなら、それ以上測らない
+      if (worst >= r.diff * NOISE_RATIO) break
     }
-    r.noise = pixelDiff(join(OUT, 'after', `${r.id}.png`), n1, noiseFile)
+    r.noise = worst
   }
 
   await browser.close()
@@ -233,9 +262,116 @@ try {
     }
   }
 
-  console.log(`\n画像: ${OUT}/{before,after,diff}/`)
+  // --- 記録 ---------------------------------------------------------------
+
+  const stamp = new Date().toISOString()
+  const rows = (list) =>
+    list
+      .sort((a, b) => b.diff - a.diff)
+      .map(
+        (r) =>
+          `| ${r.id} | ${r.diff} | ${((r.diff / total) * 100).toFixed(2)}% | ${r.noise} |`
+      )
+      .join('\n')
+
+  const report = [
+    `# VRT ${RUN_ID}`,
+    '',
+    `- 実行: ${stamp}`,
+    `- 比較: \`${BASE_REF}\` (${sh(`git rev-parse --short ${BASE_REF}`)}) → 作業ツリー (${sh('git rev-parse --short HEAD')})`,
+    `- 画面: ${VIEWPORT.width}x${VIEWPORT.height}`,
+    '',
+    '## 結果',
+    '',
+    `| | 件数 |`,
+    `| --- | --- |`,
+    `| 撮影 | ${common.length - failed} |`,
+    `| 完全一致 | ${common.length - failed - diffs.length} |`,
+    `| 見た目が変わった | ${real.length} |`,
+    `| 描画のゆらぎ | ${noisy.length} |`,
+    `| 撮影失敗 | ${failed} |`,
+    `| 追加された story | ${added.length} |`,
+    `| 削除された story | ${removed.length} |`,
+    '',
+    ...(real.length
+      ? [
+          '## 見た目が変わった',
+          '',
+          '| story | 差分(px) | 割合 | 自己差分 |',
+          '| --- | ---: | ---: | ---: |',
+          rows(real),
+          '',
+        ]
+      : ['## 見た目が変わった', '', 'なし', '']),
+    ...(noisy.length
+      ? [
+          '## 描画のゆらぎと判定',
+          '',
+          '同じ版で撮り直しても同程度の差が出るもの。変更とは無関係。',
+          '',
+          '| story | 差分(px) | 自己差分(px) |',
+          '| --- | ---: | ---: |',
+          noisy
+            .sort((a, b) => b.diff - a.diff)
+            .map((r) => `| ${r.id} | ${r.diff} | ${r.noise} |`)
+            .join('\n'),
+          '',
+        ]
+      : []),
+    ...(added.length
+      ? ['## 追加された story', '', ...added.map((id) => `- ${id}`), '']
+      : []),
+    ...(removed.length
+      ? ['## 削除された story', '', ...removed.map((id) => `- ${id}`), '']
+      : []),
+    '## 判定について',
+    '',
+    '差分の有無しか出していない。意図した変化かどうかは画像を見て決める。',
+    '大きさと重大さは相関しない（8.59% が意図どおりで 1.06% が既存の描画エラー、という実例がある）。',
+    '',
+    `画像: \`${OUT.replace(ROOT + '/', '')}/{before,after,diff}/\``,
+  ].join('\n')
+
+  writeFileSync(join(OUT, 'report.md'), report + '\n')
+  writeFileSync(
+    join(OUT, 'result.json'),
+    JSON.stringify(
+      {
+        runId: RUN_ID,
+        at: stamp,
+        baseRef: BASE_REF,
+        baseSha: sh(`git rev-parse ${BASE_REF}`),
+        headSha: sh('git rev-parse HEAD'),
+        viewport: VIEWPORT,
+        shot: common.length - failed,
+        identical: common.length - failed - diffs.length,
+        changed: real,
+        noisy,
+        added,
+        removed,
+        failed,
+      },
+      null,
+      2
+    ) + '\n'
+  )
+
+  // 古い実行を落とす。溜め続けると画像でディスクを食う
+  try {
+    const runsDir = join(WORK, 'runs')
+    const kept = readdirSync(runsDir).sort().reverse()
+    for (const old of kept.slice(RUNS_KEPT)) {
+      rmSync(join(runsDir, old), { recursive: true, force: true })
+    }
+    console.log(`\n記録: ${Math.min(kept.length, RUNS_KEPT)} 回分を保持`)
+  } catch {
+    /* 保持の失敗は結果に影響しない */
+  }
+
+  console.log(`  ${join(OUT, 'report.md').replace(ROOT + '/', '')}`)
+  console.log(`  画像: ${OUT.replace(ROOT + '/', '')}/{before,after,diff}/`)
   console.log(
-    '差分は自動では判定できない。意図した変化かどうかは画像を見て決める。'
+    '\n差分は自動では判定できない。意図した変化かどうかは画像を見て決める。'
   )
 } finally {
   execFileSync('sh', [
