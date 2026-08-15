@@ -27,6 +27,12 @@ const DAILY_LIMIT = (() => {
   return Number.isNaN(parsed) || parsed <= 0 ? DEFAULT_DAILY_LIMIT : parsed
 })()
 
+// Redis キーの名前空間。1 つの Upstash DB を複数プロダクトで共有するとき、
+// ここが同じだとカウンタが混ざる（別プロダクトの利用で枠が減る）。
+// プロダクトごとに RATELIMIT_PREFIX を変えれば、無料枠の 1 DB のまま
+// 上限を独立させられる
+const RATELIMIT_PREFIX = process.env.RATELIMIT_PREFIX || 'kaze-ux/ai'
+
 // ---------------------------------------------------------------------------
 // Upstash インスタンス（lazy init）
 // ---------------------------------------------------------------------------
@@ -52,7 +58,7 @@ const getUpstashRatelimit = (): Ratelimit | null => {
       redis,
       limiter: Ratelimit.slidingWindow(DAILY_LIMIT, '1 d'),
       analytics: true,
-      prefix: 'kaze-ux/ai',
+      prefix: RATELIMIT_PREFIX,
     })
     upstashAvailable = true
     return cachedRatelimit
