@@ -62,3 +62,6 @@ zenn-storybook-ai-chat.md
 figma-plugin/code.js
 # VRT の作業ディレクトリ（ビルド成果物とスクリーンショット）
 .vrt/
+
+# Playwright MCP の一時出力（スナップショット・コンソールログ）
+.playwright-mcp/
