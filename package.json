@@ -93,7 +93,8 @@
     "check:share": "pnpm run check:anon && pnpm run check:live",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:tailwind-consumer": "tsx scripts/check-tailwind-consumer.ts",
-    "export-metadata": "node scripts/export-component-metadata.mjs"
+    "export-metadata": "node scripts/export-component-metadata.mjs",
+    "check:mcp": "node scripts/check-mcp.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

@@ -66,6 +66,13 @@ jobs:
       - name: Check DS core has no UI-library dependency
         run: pnpm check:ds-core
 
+      # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
+      # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
+      # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば
+      # 分かるが、動くかどうかは起動しないと分からない
+      - name: Check the registered MCP server actually works
+        run: pnpm check:mcp
+
       # design-tokens/tokens.json は src/themes と story から生成する派生物。
       # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
       # なので、古いまま配ると相手は黙って古い値を掴む。
