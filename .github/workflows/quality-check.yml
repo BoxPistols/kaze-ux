@@ -78,6 +78,11 @@ jobs:
       - name: Check CLAUDE.md Quick Reference matches the implementation
         run: pnpm check:quickref
 
+      # Skill は AI がそのまま従う指示書で、間違っていても人には見えない。
+      # 参照先が消えていれば読めず、案内するコマンドが無ければそこで止まる
+      - name: Check skills reference things that exist
+        run: pnpm check:skills
+
       # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
       # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
       # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば

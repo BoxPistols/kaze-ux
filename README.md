@@ -209,6 +209,7 @@ initialize → tools/list → tools/call まで通し、返答が空でないこ
 
 | Skill               | Description                                                  |
 | ------------------- | ------------------------------------------------------------ |
+| `/kaze-design`      | UI を作る・直すときの設計原則。意匠は縛らず下限だけ保証する  |
 | `/design-review`    | ファイルを DS ルールに照合し違反を検出・重大度分類           |
 | `/create-component` | 新コンポーネントの scaffold（ファイル + Story + メタデータ） |
 | `/sync-tokens`      | 生成物 4 つを作り直し、検査まで通す                          |
