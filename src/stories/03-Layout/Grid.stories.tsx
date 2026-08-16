@@ -45,10 +45,11 @@ const DemoItem = ({
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      // primary の前景色はブランド色の面を基準にするため、環境色の
-      // lighter 面ではテーマの本文色を使う
+      // contrastText は main の面に対して設計された色。light に重ねると
+      // 3.95:1 で届かない。淡い面には前景用の textContrast を合わせる
+      // （textContrast は lighter の面も基準に入れて算出している）
       bgcolor: 'primary.lighter',
-      color: 'text.primary',
+      color: 'primary.textContrast',
       fontWeight: 700,
       fontSize: '0.86rem',
       borderRadius: 1.5,
