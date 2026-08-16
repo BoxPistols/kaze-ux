@@ -12,12 +12,18 @@
  */
 
 import { execSync } from 'node:child_process'
-import { cpSync, mkdirSync, rmSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs'
 
 const run = (cmd) => {
   console.log(`\n> ${cmd}`)
   execSync(cmd, { stdio: 'inherit' })
 }
+
+// 既に storybook-static/ を作った工程から呼ぶとき用。
+// **存在しなければ無視して普通にビルドする。** 立てたつもりのフラグで
+// 中身の無い dist を作ると、検査は「違反 0」を返して緑になる
+const reuseStorybook =
+  process.env.REUSE_STORYBOOK === '1' && existsSync('storybook-static')
 
 // クリーン
 rmSync('dist', { recursive: true, force: true })
@@ -27,7 +33,11 @@ mkdirSync('dist', { recursive: true })
 run('pnpm build-sandbox')
 
 // 2. Storybook → storybook-static/ に出力後、dist/storybook/ にコピー
-run('pnpm build-storybook')
+if (reuseStorybook) {
+  console.log('\n> storybook-static/ を再利用（REUSE_STORYBOOK=1）')
+} else {
+  run('pnpm build-storybook')
+}
 mkdirSync('dist/storybook', { recursive: true })
 cpSync('storybook-static', 'dist/storybook', { recursive: true })
 

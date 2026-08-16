@@ -32,21 +32,35 @@ const ALLOWED_WEIGHTS = new Set([400, 700])
 /** これ未満しかテキストが無い画面は、描画されていないとみなす */
 const MIN_TEXT_NODES = 5
 
-/** 検査する面。ビルド済みの成果物を配信してから実行する */
+/**
+ * 検査する面。`pnpm serve:dist` で配信してから実行する。
+ *
+ * **アプリごとに別ポートへ切り出さない。** 各アプリは `/saas/` のような
+ * ベースパスでビルドされるので、`dist/saas` をポートのルートに配信すると
+ * 資産の参照が全部 404 になり、**1 テキストしか描画されない面を
+ * 「違反 0」と数えてしまう**。実際その設定のまま 4 面が一度も
+ * 検査されていなかった。本番と同じ 1 オリジン + サブパスで測る。
+ */
+const DIST = process.env.TYPO_URL || 'http://localhost:6110'
 const SURFACES = {
-  storybook: { url: 'http://localhost:6099', kind: 'storybook' },
-  lp: { url: 'http://localhost:6110', kind: 'spa', routes: ['/'] },
+  storybook: { url: `${DIST}/storybook`, kind: 'storybook' },
+  lp: { url: DIST, kind: 'spa', routes: ['/'] },
   saas: {
-    url: 'http://localhost:6101',
+    url: DIST,
     kind: 'spa',
-    routes: ['/', '/#/projects', '/#/invoices', '/#/settings'],
+    routes: [
+      '/saas/',
+      '/saas/#/projects',
+      '/saas/#/invoices',
+      '/saas/#/settings',
+    ],
   },
   'kaze-eats': {
-    url: 'http://localhost:6102',
+    url: DIST,
     kind: 'spa',
-    routes: ['/', '/#/orders'],
+    routes: ['/kaze-eats/', '/kaze-eats/#/orders'],
   },
-  'sky-kaze': { url: 'http://localhost:6103', kind: 'spa', routes: ['/'] },
+  'sky-kaze': { url: DIST, kind: 'spa', routes: ['/sky-kaze/'] },
 }
 
 /** 描画結果から違反を集める。非表示要素は対象外 */

@@ -273,6 +273,28 @@ jobs:
           fi
           pnpm check:a11y
 
+      # 描画されたフォントサイズ・ウェイトを測る。Storybook だけでなく
+      # LP と 3 アプリも見る。**面の設定が壊れていて 4 面が一度も
+      # 検査されていなかった**（アプリは /saas/ 等のベースパスで
+      # ビルドされるので、切り出したポートのルートに置くと資産が
+      # 全部 404 になり、1 テキストしか描画されない画面を「違反 0」と
+      # 数えていた）。本番と同じ 1 オリジン + サブパスで測る
+      - name: Check typography (rendered)
+        run: |
+          REUSE_STORYBOOK=1 node scripts/vercel-build.mjs
+          npx --yes http-server dist -p 6110 --silent >/dev/null 2>&1 &
+          ready=0
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:6110/storybook/index.json; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            echo "dist を配信できませんでした"; exit 1
+          fi
+          pnpm check:typo
+
   # Change Analysis
   change-analysis:
     name: Change Analysis
