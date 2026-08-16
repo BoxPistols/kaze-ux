@@ -70,13 +70,19 @@ jobs:
       # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
       # なので、古いまま配ると相手は黙って古い値を掴む。
       # 実際 StatCard / EmptyState を DS に足したときに再生成が漏れていた。
-      - name: Check design tokens are up to date
+      # 生成物が古いまま配られないようにする。
+      #
+      # metadata/components.json は MCP サーバが AI に配る唯一の部品情報。
+      # 手書きだった間は公開 54 件のうち 18 件しか載っておらず、載っていない
+      # ものについては AI が prop を推測して書いていた（エラーは出ない）
+      - name: Check generated artifacts are up to date
         run: |
           pnpm export-tokens
           pnpm export-css
-          if ! git diff --quiet design-tokens/; then
-            echo "::error::design-tokens/ の生成物が古いです。pnpm export-tokens && pnpm export-css を実行してコミットしてください"
-            git diff --stat design-tokens/
+          pnpm export-metadata
+          if ! git diff --quiet design-tokens/ metadata/; then
+            echo "::error::生成物が古いです。pnpm export-tokens && pnpm export-css && pnpm export-metadata を実行してコミットしてください"
+            git diff --stat design-tokens/ metadata/
             exit 1
           fi
 
