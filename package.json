@@ -2,10 +2,10 @@
   "name": "kaze-ux",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/kaze-ux.git"
+    "url": "https://github.com/BoxPistols/kaze-ux.git"
   },
   "private": false,
-  "description": "A modern React design system built with MUI v7, Tailwind CSS, and Storybook",
+  "description": "MUI + Tailwind + Storybook のデザインシステム。トークンと部品の仕様を AI が読める形で配り、守られていることを実測で検査する",
   "keywords": [
     "react",
     "mui",
@@ -14,7 +14,12 @@
     "ui",
     "design-system",
     "storybook",
-    "tailwindcss"
+    "tailwindcss",
+    "design-tokens",
+    "mcp",
+    "ai-agent",
+    "accessibility",
+    "wcag"
   ],
   "author": "",
   "license": "MIT",
@@ -231,5 +236,9 @@
       "picomatch@<4": "^2.3.2",
       "picomatch@>=4": "^4.0.4"
     }
+  },
+  "homepage": "https://kaze-ux.vercel.app",
+  "bugs": {
+    "url": "https://github.com/BoxPistols/kaze-ux/issues"
   }
 }

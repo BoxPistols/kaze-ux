@@ -94,6 +94,7 @@ for (const [name, spec] of targets) {
       ],
       [1500, { jsonrpc: '2.0', method: 'notifications/initialized' }],
       [1600, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }],
+      [1700, { jsonrpc: '2.0', id: 4, method: 'resources/list', params: {} }],
       [
         2600,
         {
@@ -111,6 +112,7 @@ for (const [name, spec] of targets) {
   const init = replies.find((m) => m.id === 1)
   const list = replies.find((m) => m.id === 2)
   const call = replies.find((m) => m.id === 3)
+  const resources = replies.find((m) => m.id === 4)
 
   if (!init?.result) {
     console.error(
@@ -139,8 +141,13 @@ for (const [name, spec] of targets) {
     continue
   }
 
+  // README が「4ツール + 3リソース」と書いているので、リソース側も数える。
+  // 主張している数と実際が食い違っていないかは、起動してみないと分からない
+  const resourceUris = resources?.result?.resources?.map((r) => r.uri) ?? []
+
   console.log(
-    `✅ ${name}: 起動 OK / ツール ${tools.length} 件 (${tools.join(', ')}) / 部品情報の取得 OK`
+    `✅ ${name}: 起動 OK / ツール ${tools.length} 件 (${tools.join(', ')}) / ` +
+      `リソース ${resourceUris.length} 件 (${resourceUris.join(', ') || 'なし'}) / 部品情報の取得 OK`
   )
 }
 

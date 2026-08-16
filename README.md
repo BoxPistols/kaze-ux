@@ -1,10 +1,20 @@
 # Kaze Design System
 
 MUI + Tailwind CSS + Storybook で構築したデザインシステム。
-コンポーネント・デザイントークン・テーマを統一し、プロダクト開発の品質と速度を両立します。
 
-> A modern React design system built with MUI v7, Tailwind CSS, and Storybook.
-> Provides unified components, design tokens, and theming for consistent product development.
+このプロジェクトが他と違うのは 2 点です。
+
+**仕様を AI が読める形で配ります。** トークン・部品のメタデータ・禁止パターンを
+機械可読な単一ソースから生成し、MCP サーバー経由で AI エージェントに渡します。
+手で書いた一覧は必ず実装から遅れるので、**すべて生成物**にしています。
+
+**「守られていること」を実測で検査します。** 規約を決めることと守られていることは
+別物で、その差は毎回測ってはじめて分かりました。コントラスト・操作対象の寸法・
+フォント・配布物の鮮度・MCP の稼働まで、実際に描画・起動して数えています
+（[docs/verification.md](docs/verification.md)）。
+
+> A React design system that ships its spec in a machine-readable form for AI agents,
+> and verifies the rules are actually held by measuring rendered output.
 
 ---
 
@@ -160,12 +170,13 @@ AI エージェント（Claude Code, Cursor 等）がデザインシステムの
 
 層2: foundations/
   ├── design_philosophy.md   7つの設計原則
-  ├── prohibited.md          30+ 禁止パターン（ID付き構造化）
+  ├── prohibited.md          禁止パターン 20 件（生成物。強制手段つき）
   └── ai-architect.md        設計ドキュメント
 
 層3: metadata/ + design-tokens/
-  ├── components.json        コンポーネントメタデータ（variants, sizes, accessibility, sample）
-  └── tokens.json            W3C DTCG 形式デザイントークン
+  ├── components.json        部品 55 件の仕様（生成物。story が単一ソース）
+  ├── tokens.json            W3C DTCG 形式デザイントークン（生成物）
+  └── kaze-tokens.css        CSS 変数（生成物。MUI 不要）
 
 層4: MCP + Skills + IDE Rules
   ├── mcp/                   MCP サーバー（4ツール + 3リソース）
@@ -178,12 +189,16 @@ AI エージェント（Claude Code, Cursor 等）がデザインシステムの
 Claude Code / Cursor 等の AI エージェントがプログラマティックにアクセス:
 
 ```bash
-# .mcp.json で自動接続
+# .mcp.json で自動接続（ビルド不要。tsx でソースから起動する）
 get_token("color.light.primary.main")     → #0057B8
-get_component("button")                   → variants, sizes, sample
+get_component("statCard")                 → variants, sizes, props, description
 check_rule("<IconButton><X /></IconButton>") → A01: aria-label なし
 search("spacing")                         → トークン横断検索
 ```
+
+**登録されているだけで動かない状態を検出します。** `pnpm check:mcp` が実際に
+initialize → tools/list → tools/call まで通し、返答が空でないことまで見ます。
+以前はビルド成果物を指しており、clone した環境では起動しませんでした。
 
 ### Skills
 
@@ -191,7 +206,7 @@ search("spacing")                         → トークン横断検索
 | ------------------- | ------------------------------------------------------------ |
 | `/design-review`    | ファイルを DS ルールに照合し違反を検出・重大度分類           |
 | `/create-component` | 新コンポーネントの scaffold（ファイル + Story + メタデータ） |
-| `/sync-tokens`      | テーマ → tokens.json → Figma Plugin 一括同期                 |
+| `/sync-tokens`      | 生成物 4 つを作り直し、検査まで通す                          |
 
 ### Cursor Rules
 
@@ -246,15 +261,30 @@ dist/
 
 ## Design Tokens
 
-W3C DTCG 形式。カラー・タイポグラフィ・スペーシング・シャドウ・角丸・ブレークポイントをカバー。
+**すべて生成物です。** 単一ソースは `src/themes/` と story で、手で編集しません。
+CI が「再生成して差分が出ないこと」を検査するので、古いまま配られることはありません。
 
-```bash
-# 生成
-pnpm export-tokens
+| 出力                            | 中身                                     | 誰が読むか                   | 生成                   |
+| ------------------------------- | ---------------------------------------- | ---------------------------- | ---------------------- |
+| `design-tokens/tokens.json`     | W3C DTCG 形式 553 トークン               | Figma / 外部ツール           | `pnpm export-tokens`   |
+| `design-tokens/kaze-tokens.css` | CSS 変数 55 個 × 3 スキーム × light/dark | **MUI を使わないプロダクト** | `pnpm export-css`      |
+| `metadata/components.json`      | 部品 55 件の仕様                         | MCP（AI エージェント）       | `pnpm export-metadata` |
+| `foundations/prohibited.md`     | 禁止パターン 20 件と**その強制手段**     | 人と AI                      | `pnpm export-rules`    |
 
-# 出力
-design-tokens/tokens.json
-```
+**どれか 1 つだけ再生成すると CI が落ちます。** `/sync-tokens` が 4 つまとめて回します。
+
+### MUI 無しで使う
+
+`design-tokens/kaze-tokens.css` は依存ゼロの 1 ファイルです。これを読み込めば
+`--color-*` が揃い、Tailwind 側は `var(--color-primary)` を参照する形なので
+`bg-primary-main` のようなクラスがそのまま通ります。MUI も Emotion も要りません。
+
+手順は [design-tokens/README.md](design-tokens/README.md) にあります。
+**その手順が本当に動くことを CI が検査しています**（README のコードブロックを
+そのまま取り出し、kaze-ux を参照しないプロジェクトを組んで実ブラウザで描画色を測る）。
+
+MUI 非依存で成立している範囲の定義は `scripts/ds-core.mjs` が単一ソースで、
+ESLint と依存グラフ検査の両方が境界を守ります。
 
 ## Code Conventions
 
@@ -270,7 +300,32 @@ design-tokens/tokens.json
 | **色はトークン参照** | ハードコード色値禁止。`primary.main` 等を使用                     |
 | **ConfirmDialog**    | `window.confirm()` 禁止。`ConfirmDialog` コンポーネントを使用     |
 
-禁止パターン詳細: [foundations/prohibited.md](foundations/prohibited.md)
+禁止パターンの全量と**それぞれを何が強制しているか**:
+[foundations/prohibited.md](foundations/prohibited.md)（生成物）
+
+強制手段が無いルールは、表に「なし」と出ます。書いてあるだけで破っても
+気づけないものを、書いてあるからという理由で守られている扱いにしません。
+
+## Quality Gates
+
+規約を決めることと守られていることは別物です。この差は毎回**測ってはじめて**
+分かりました。CI が実際に描画・起動して数えます。
+
+| 検査                           | 何を確かめるか                                               |
+| ------------------------------ | ------------------------------------------------------------ |
+| `pnpm check:a11y`              | 描画したコントラストと操作対象の寸法（138 story × 3 テーマ） |
+| `pnpm check:typo`              | 描画したフォントサイズとウェイト                             |
+| `pnpm check:css-vars`          | 配布 CSS が実ブラウザで意図どおり解決する                    |
+| `pnpm check:tailwind-consumer` | README の手順で組んだ実プロジェクトに色が付く                |
+| `pnpm check:mcp`               | 登録した MCP が起動して部品情報を返す                        |
+| `pnpm check:ds-core`           | コアの依存グラフに UI ライブラリが無い                       |
+| `pnpm check:rules`             | 禁止パターンが実際に守られている                             |
+| `pnpm check:quickref`          | CLAUDE.md の値が実装と一致する                               |
+| `pnpm ds:adoption`             | アプリが DS の部品を使っている割合                           |
+
+**各検査は導入時に一度壊して赤くなることを確認しています。** 緑を見ただけでは
+信用しません。詳しい経緯と、測って初めて分かったこと:
+[docs/verification.md](docs/verification.md)
 
 ## Commands
 
@@ -284,9 +339,14 @@ design-tokens/tokens.json
 | `pnpm lint`               | ESLint                 |
 | `pnpm format`             | Prettier               |
 | `pnpm fix`                | lint + format          |
-| `pnpm export-tokens`      | デザイントークン生成   |
+| `pnpm export-tokens`      | tokens.json 生成       |
+| `pnpm export-css`         | kaze-tokens.css 生成   |
+| `pnpm export-metadata`    | components.json 生成   |
+| `pnpm export-rules`       | prohibited.md 生成     |
 | `pnpm figma-plugin:build` | Figma プラグインビルド |
 | `pnpm build-storybook`    | Storybook ビルド       |
+
+検査コマンドは [Quality Gates](#quality-gates) を参照してください。
 
 ## Brand
 
