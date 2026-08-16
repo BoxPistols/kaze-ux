@@ -26,6 +26,7 @@ export const checkRuleTool = {
       pattern: string
       reason: string
       category: string
+      enforcedBy?: string
     }> = []
 
     // パターンマッチング
@@ -84,7 +85,8 @@ export const checkRuleTool = {
     const report = violations
       .map(
         (v) =>
-          `[${v.id}] ${v.category}\n  禁止: ${v.pattern}\n  理由: ${v.reason}`
+          `[${v.id}] ${v.category}\n  禁止: ${v.pattern}\n  代わりに: ${v.reason}\n` +
+          `  強制: ${v.enforcedBy ?? '無し（書いてあるだけで、破っても検出されない）'}`
       )
       .join('\n\n')
 

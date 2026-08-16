@@ -13,8 +13,13 @@ MUI + Tailwind CSS + Storybook で構築したデザインシステム。
 フォント・配布物の鮮度・MCP の稼働まで、実際に描画・起動して数えています
 （[docs/verification.md](docs/verification.md)）。
 
+**この仕組みは kaze-ux 専用ではありません。** 同じ形のファイルを置けば、
+あなたのプロジェクトでも同じように動きます。手順:
+[docs/adopt-the-scheme.md](docs/adopt-the-scheme.md)
+
 > A React design system that ships its spec in a machine-readable form for AI agents,
 > and verifies the rules are actually held by measuring rendered output.
+> The scheme itself is reusable — see [docs/adopt-the-scheme.md](docs/adopt-the-scheme.md).
 
 ---
 

@@ -18,7 +18,14 @@
  * サーバは起動するので、起動だけを見ると「動いている」と誤読する。
  */
 import { spawn } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
+import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
@@ -155,4 +162,104 @@ if (failed) {
   console.error(`\n❌ ${failed} 個の MCP サーバが使える状態にありません`)
   process.exit(1)
 }
+// --- 移植性: kaze-ux 以外のプロジェクトでも動くか ---
+//
+// 「同じ形のファイルを置けば動く」は OSS としての中心的な主張なので毎回試す。
+// 主張だけ書いて実際は動かない、が一番まずい。
+// docs/adopt-the-scheme.md が案内している env の指定と同じ形で確かめる。
+const fixture = mkdtempSync(resolve(tmpdir(), 'ds-portability-'))
+mkdirSync(resolve(fixture, 'design'), { recursive: true })
+writeFileSync(
+  resolve(fixture, 'design/tokens.json'),
+  JSON.stringify({
+    color: {
+      light: { primary: { main: { $value: '#FF6600', $type: 'color' } } },
+    },
+  })
+)
+writeFileSync(
+  resolve(fixture, 'design/components.json'),
+  JSON.stringify({
+    components: {
+      widget: { name: 'Widget', category: 'Demo', variants: ['a'] },
+    },
+  })
+)
+writeFileSync(
+  resolve(fixture, 'design/rules.md'),
+  '# 禁止パターン\n\n## デモ\n\n| ID | 禁止 | 代わりに | 強制 |\n| --- | --- | --- | --- |\n| D01 | x | y | ESLint |\n'
+)
+
+const portable = spawn('npx', ['tsx', 'mcp/src/index.ts'], {
+  cwd: ROOT,
+  stdio: ['pipe', 'pipe', 'pipe'],
+  env: {
+    ...process.env,
+    DS_ROOT: fixture,
+    DS_TOKENS_PATH: 'design/tokens.json',
+    DS_COMPONENTS_PATH: 'design/components.json',
+    DS_RULES_PATH: 'design/rules.md',
+  },
+})
+
+const portableReplies = await rpc(
+  portable,
+  [
+    [
+      0,
+      {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: {
+          protocolVersion: '2024-11-05',
+          capabilities: {},
+          clientInfo: { name: 'kaze-check', version: '1' },
+        },
+      },
+    ],
+    [1500, { jsonrpc: '2.0', method: 'notifications/initialized' }],
+    [
+      1600,
+      {
+        jsonrpc: '2.0',
+        id: 5,
+        method: 'tools/call',
+        params: { name: 'get_component', arguments: { name: 'widget' } },
+      },
+    ],
+    [
+      2400,
+      {
+        jsonrpc: '2.0',
+        id: 6,
+        method: 'tools/call',
+        params: {
+          name: 'get_token',
+          arguments: { path: 'color.light.primary.main' },
+        },
+      },
+    ],
+  ],
+  5000
+)
+portable.kill()
+rmSync(fixture, { recursive: true, force: true })
+
+const comp =
+  portableReplies.find((m) => m.id === 5)?.result?.content?.[0]?.text ?? ''
+const tok =
+  portableReplies.find((m) => m.id === 6)?.result?.content?.[0]?.text ?? ''
+if (!comp.includes('Widget') || !tok.includes('#FF6600')) {
+  console.error(
+    '\n❌ 別プロジェクトに向けたとき、そのプロジェクトのデータを返しません。\n' +
+      '   docs/adopt-the-scheme.md の「同じ形のファイルを置けば動く」が成立していません。\n' +
+      `   get_component: ${comp.slice(0, 80) || '(空)'}\n   get_token: ${tok.slice(0, 80) || '(空)'}`
+  )
+  process.exit(1)
+}
+console.log(
+  '✅ 移植性: kaze-ux を参照しない別プロジェクトでも、そのプロジェクトの部品とトークンを返します'
+)
+
 console.log('\n✅ .mcp.json に登録した MCP サーバは実際に使えます')
