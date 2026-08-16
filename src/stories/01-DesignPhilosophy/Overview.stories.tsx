@@ -22,28 +22,28 @@ const DesignPhilosophyOverview = () => {
   const isDark = theme.palette.mode === 'dark'
 
   const brandIdentity = {
-    slogan: '整えて、委ねる',
-    mission: 'つくる人の手に、確かな土台を',
+    slogan: 'デザインを、構造で支える',
+    mission: '一貫した構造の上に、複数のプロダクトを置く',
     vision: [
-      '見えないところほど、丁寧に',
-      '決めたことは、守りきる',
-      '余計なものを、置かない',
+      '共通の構造から、異なる表現が生まれる',
+      '同じものは、同じ形で現れる',
+      '見えないところに、精度がある',
     ],
     values: [
       {
-        title: '誠実',
+        title: '精度',
         color: 'primary.textContrast',
-        attributes: ['正確', '透明', '率直', '一貫', '責任'],
+        attributes: ['正確', '均質', '厳密', '再現', '一貫'],
       },
       {
-        title: '抑制',
+        title: '簡潔',
         color: '#1dafc2',
-        attributes: ['簡潔', '静けさ', '余白', '品位', '潔さ'],
+        attributes: ['簡素', '余白', '抑制', '静穏', '無駄がない'],
       },
       {
-        title: '開放',
+        title: '中立',
         color: '#46ab4a',
-        attributes: ['寛容', '平明', '共有', '越境', '継承'],
+        attributes: ['非依存', '汎用', '可搬', '開放', '継承'],
       },
     ],
   }
@@ -51,21 +51,21 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '守るべき一線',
-      description: '譲れないものを、先に決めておく',
-      details: '決めていないものは、いつのまにか失われる',
+      title: '拡張に耐える構造',
+      description: '用途が変わっても、壊れない',
+      details: '変化は前提であり、例外ではない',
     },
     {
       num: '02',
-      title: 'ひとつの拠り所',
-      description: '立ち返る場所を、ひとつに',
-      details: '拠り所がふたつあれば、どちらも信じられなくなる',
+      title: '最小の情報量',
+      description: '見えるものが少ないほど、迷いは少ない',
+      details: '足すより、削るほうが難しい',
     },
     {
       num: '03',
-      title: '表現は託す',
-      description: '選ぶ楽しみを、つくる人に残す',
-      details: '整えるのは土台まで。その先には口を出さない',
+      title: '統一された秩序',
+      description: '同じものは、同じ形で現れる',
+      details: '例外は、秩序を薄める',
     },
   ]
 
