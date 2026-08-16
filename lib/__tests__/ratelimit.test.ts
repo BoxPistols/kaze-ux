@@ -82,32 +82,48 @@ describe('getDailyLimit', () => {
 // ---------------------------------------------------------------------------
 
 describe('getClientIdentifier', () => {
+  // 戻り値はハッシュなので、値そのものではなく**性質**を検証する。
+  // 生の IP と一致しないこと・同じ IP なら同じキーになること・
+  // 別の IP なら別のキーになること。この 3 つが満たせていれば、
+  // 「保存せずに同一性だけ判定する」という目的を果たしている
+  const idFor = (headers: Record<string, string | string[] | undefined>) =>
+    getClientIdentifier({ headers })
+
+  it('戻り値に生の IP を含まない', () => {
+    const id = idFor({ 'x-vercel-forwarded-for': '203.0.113.5' })
+    expect(id).not.toContain('203.0.113.5')
+    expect(id).toMatch(/^[0-9a-f]{32}$/)
+  })
+
+  it('同じ IP は同じキー、別の IP は別のキーになる', () => {
+    expect(idFor({ 'x-real-ip': '203.0.113.5' })).toBe(
+      idFor({ 'x-real-ip': '203.0.113.5' })
+    )
+    expect(idFor({ 'x-real-ip': '203.0.113.5' })).not.toBe(
+      idFor({ 'x-real-ip': '203.0.113.6' })
+    )
+  })
+
   it('x-vercel-forwarded-for を優先', () => {
-    const id = getClientIdentifier({
-      headers: {
-        'x-vercel-forwarded-for': '203.0.113.5, 198.51.100.1',
-        'x-forwarded-for': '10.0.0.1',
-      },
+    // 優先順位は「どのヘッダを採用したか」で見る。採用側と同じ値を
+    // 単独で渡したときと一致すれば、そのヘッダを見ている
+    const id = idFor({
+      'x-vercel-forwarded-for': '203.0.113.5, 198.51.100.1',
+      'x-forwarded-for': '10.0.0.1',
     })
-    expect(id).toBe('203.0.113.5')
+    expect(id).toBe(idFor({ 'x-real-ip': '203.0.113.5' }))
+    expect(id).not.toBe(idFor({ 'x-real-ip': '10.0.0.1' }))
   })
 
   it('x-forwarded-for にフォールバック', () => {
-    const id = getClientIdentifier({
-      headers: {
-        'x-forwarded-for': '203.0.113.10, 198.51.100.5',
-      },
-    })
-    expect(id).toBe('203.0.113.10')
+    const id = idFor({ 'x-forwarded-for': '203.0.113.10, 198.51.100.5' })
+    expect(id).toBe(idFor({ 'x-real-ip': '203.0.113.10' }))
   })
 
   it('x-real-ip にフォールバック', () => {
-    const id = getClientIdentifier({
-      headers: {
-        'x-real-ip': '203.0.113.20',
-      },
-    })
-    expect(id).toBe('203.0.113.20')
+    const id = idFor({ 'x-real-ip': '203.0.113.20' })
+    expect(id).not.toContain('203.0.113.20')
+    expect(id).toMatch(/^[0-9a-f]{32}$/)
   })
 
   it('全て無い場合は unknown', () => {
@@ -116,11 +132,9 @@ describe('getClientIdentifier', () => {
   })
 
   it('配列ヘッダー値も処理', () => {
-    const id = getClientIdentifier({
-      headers: {
-        'x-vercel-forwarded-for': ['203.0.113.30', '198.51.100.10'],
-      },
+    const id = idFor({
+      'x-vercel-forwarded-for': ['203.0.113.30', '198.51.100.10'],
     })
-    expect(id).toBe('203.0.113.30')
+    expect(id).toBe(idFor({ 'x-real-ip': '203.0.113.30' }))
   })
 })

@@ -12,6 +12,8 @@
 //
 // - IP ベース、X-Vercel-Forwarded-For を優先
 
+import { createHash } from 'node:crypto'
+
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
@@ -152,18 +154,64 @@ const headerToString = (
   return value
 }
 
+/**
+ * IP を復元できない形に変換する。
+ *
+ * ## なぜ必要か
+ *
+ * 以前は生の IP をそのまま Upstash のキーにしていた
+ * （`kaze-ux/ai:203.0.113.5`）。**濫用を止めるのに IP そのものを保存する
+ * 必要はない**。必要なのは「同じ相手か」が分かることだけ。
+ *
+ * ## 単なるハッシュでは足りない
+ *
+ * IPv4 は 2^32 通りしかないので、素の sha256 は総当たりで逆引きできる。
+ * **秘密のソルトが要る**。`RATELIMIT_SALT` を設定するとそれを使う。
+ *
+ * 未設定なら日付だけをソルトにする。この場合は逆引き可能なので保護に
+ * ならないが、**黙って弱いまま動くより、設定漏れが分かるほうがよい**ので
+ * 起動時に一度だけ警告する。
+ *
+ * 日付を混ぜているのは、上限が 1 日単位で、翌日には別のキーになるため。
+ * 過去の識別子を溜め込まない。
+ */
+const hashIdentifier = (raw: string): string => {
+  const secret = process.env.RATELIMIT_SALT
+  if (!secret && !saltWarned) {
+    saltWarned = true
+    console.warn(
+      '[ratelimit] RATELIMIT_SALT が未設定です。IP のハッシュは逆引き可能な状態です。' +
+        '本番では必ず設定してください'
+    )
+  }
+  const day = new Date().toISOString().slice(0, 10)
+  return createHash('sha256')
+    .update(`${secret ?? ''}:${day}:${raw}`)
+    .digest('hex')
+    .slice(0, 32)
+}
+
+let saltWarned = false
+
+/**
+ * レート制限のキーを返す。**戻り値に生の IP は含まれない。**
+ *
+ * IP ヘッダを読むこと自体は避けられない（あらゆるリクエストが運んでくる）が、
+ * 保存・記録するかは選べる。ここで断つ。
+ */
 export const getClientIdentifier = (req: RequestLike): string => {
   // Vercel 環境では x-vercel-forwarded-for が最も信頼可能
   const vercelFwd = headerToString(req.headers['x-vercel-forwarded-for'])
-  if (vercelFwd) return vercelFwd.split(',')[0].trim()
+  if (vercelFwd) return hashIdentifier(vercelFwd.split(',')[0].trim())
 
   // 標準フォールバック
   const xff = headerToString(req.headers['x-forwarded-for'])
-  if (xff) return xff.split(',')[0].trim()
+  if (xff) return hashIdentifier(xff.split(',')[0].trim())
 
   const realIp = headerToString(req.headers['x-real-ip'])
-  if (realIp) return realIp
+  if (realIp) return hashIdentifier(realIp)
 
+  // 識別子が取れない場合。ハッシュ化しても意味が無いので固定値
   return 'unknown'
 }
 
