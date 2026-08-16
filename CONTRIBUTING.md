@@ -47,12 +47,39 @@ pnpm fix
 # Run tests
 pnpm test:run
 
-# Build to verify no errors
-pnpm build
-
 # Build Storybook
 pnpm build-storybook
 ```
+
+CI also runs these. Run them locally to avoid surprises:
+
+```bash
+pnpm check:rules       # prohibited patterns are actually held
+pnpm check:quickref    # CLAUDE.md Quick Reference matches the theme
+pnpm check:ds-core     # the framework-agnostic core has no UI-library dependency
+pnpm check:mcp         # the registered MCP server starts and answers
+```
+
+Two more run in CI with a browser (`pnpm exec playwright install chromium` first):
+`check:a11y`, `check:css-vars`, `check:tailwind-consumer`.
+
+### Generated files — do not edit by hand
+
+These four are generated. CI regenerates them and fails if anything differs:
+
+| File                            | Regenerate with        |
+| ------------------------------- | ---------------------- |
+| `design-tokens/tokens.json`     | `pnpm export-tokens`   |
+| `design-tokens/kaze-tokens.css` | `pnpm export-css`      |
+| `metadata/components.json`      | `pnpm export-metadata` |
+| `foundations/prohibited.md`     | `pnpm export-rules`    |
+
+**Regenerating only one of them will fail CI**, because the freshness check looks at
+all of them together. `/sync-tokens` (Claude Code skill) runs all four plus the checks.
+
+To add a component to `components.json`, write a Storybook story — it is picked up
+automatically. Only things a story cannot express (prohibited patterns, accessibility
+notes) go in `metadata/curated.json`, keyed by the generated key.
 
 ## Coding Standards
 
