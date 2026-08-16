@@ -22,34 +22,34 @@ const DesignPhilosophyOverview = () => {
   const isDark = theme.palette.mode === 'dark'
 
   const brandIdentity = {
-    slogan: '規範は、検証されて初めて規範となる',
+    slogan: '規律の上に、自由をつくる',
     mission: '表現の自由と、品質の下限を、同時に成立させる',
     vision: [
-      '言明は、常に検証にさらす',
-      '人と機械に、同じものを示す',
-      '守るのは下限。表現は委ねる',
+      '人にも機械にも同じ仕様を示し、宣言と実装が食い違わない状態を保ちつづける',
+      '守るのは下限だけ。意匠はプロダクトに委ねる',
       '規律は、成果物に現れる',
     ],
     values: [
       {
-        title: '検証可能性',
+        title: '実証性',
         color: 'primary.textContrast',
-        attributes: ['実測にもとづく判断', '反証の用意', '未達の明示'],
-      },
-      {
-        title: '単一性',
-        color: '#1dafc2',
-        attributes: ['ひとつの定義', '生成による配布', '乖離の検出'],
-      },
-      {
-        title: '中立性',
-        color: '#46ab4a',
-        attributes: ['実装からの独立', '意匠への不干渉', '移植の前提'],
+        attributes: ['実測', '反証可能', '透明', '再現性', '誠実さ'],
       },
       {
         title: '抑制',
-        color: 'warning.textContrast',
-        attributes: ['装飾への懐疑', '借り物を用いない', '削ることによる完成'],
+        color: '#1dafc2',
+        attributes: [
+          '簡潔',
+          '削ぎ落とす',
+          '装飾を疑う',
+          '借り物を使わない',
+          '一点集中',
+        ],
+      },
+      {
+        title: '開放性',
+        color: '#46ab4a',
+        attributes: ['非依存', '可搬性', '拡張可能', '相互運用', '機械可読'],
       },
     ],
   }
@@ -57,24 +57,21 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '規範には、強制を伴わせる',
+      title: '強制をともなう規範',
       description: '止める仕組みを持たないものを、規範とは呼ばない',
-      details:
-        '違反が検出されない規約は、守られているかを誰も判定できない。強制の所在を、規約と同じ場所に記す',
+      details: '強制の所在を規約と同じ場所に記し、無い場合は「なし」と明示する',
     },
     {
       num: '02',
-      title: '定義は、ひとつに保つ',
+      title: 'ひとつの定義',
       description: '人が読む記述は、機械が読む定義から導く',
-      details:
-        'ふたつの記述が併存すれば、必ず乖離する。単一の定義から生成し、その鮮度を絶やさない',
+      details: 'ふたつの記述が併存すれば必ず乖離する。単一の定義から生成する',
     },
     {
       num: '03',
-      title: '保証は、下限にとどめる',
+      title: '下限だけの保証',
       description: '読めること、触れられること、伝わること',
-      details:
-        '色も書体も余白も、選ぶのは作り手。共通の基盤が定めるのは、いかなる表現でも満たすべき最低条件に限る',
+      details: '色も書体も余白も、選ぶのは作り手。共通の基盤は最低条件に限る',
     },
   ]
 
@@ -250,7 +247,7 @@ const DesignPhilosophyOverview = () => {
         </Typography>
         <Grid container spacing={3}>
           {brandIdentity.values.map((value, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+            <Grid size={{ xs: 12, md: 4 }} key={index}>
               <Box
                 sx={{
                   height: '100%',
