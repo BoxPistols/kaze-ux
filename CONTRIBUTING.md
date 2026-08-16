@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Kaze UX. This guide will help you
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/kaze-ux.git
+git clone https://github.com/BoxPistols/kaze-ux.git
 cd kaze-ux
 
 # Install dependencies

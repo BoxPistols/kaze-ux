@@ -156,7 +156,7 @@ code.ts を保存するたびに自動ビルド。Figma 側で `Cmd+Option+P` �
 | Description   | [付録の説明文を参照](#付録-community-説明文)     |
 | Categories    | Design Systems, Utilities                        |
 | Tags          | design-tokens, variables, w3c, dtcg, mui, styles |
-| Creator links | https://github.com/your-username/your-repo       |
+| Creator links | https://github.com/BoxPistols/kaze-ux            |
 | Support email | (任意)                                           |
 
 4. アイコン・カバー・スクリーンショットをアップロード
@@ -244,7 +244,7 @@ A sample tokens.json is included in the GitHub repository.
 
 ### Links
 
-- GitHub: https://github.com/your-username/your-repo
+- GitHub: https://github.com/BoxPistols/kaze-ux
 - Sample tokens: figma-plugin/sample-tokens.json
 
 ---
