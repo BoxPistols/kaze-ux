@@ -72,6 +72,12 @@ jobs:
       - name: Check prohibited patterns
         run: pnpm check:rules
 
+      # CLAUDE.md の Quick Reference は「このファイルだけで基本 UI 生成可能」と
+      # 謳っている、AI が最初に読む場所。ここがズレると以降の生成すべてに
+      # 効くうえ、読んだ側からは正しいか判断できない
+      - name: Check CLAUDE.md Quick Reference matches the implementation
+        run: pnpm check:quickref
+
       # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
       # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
       # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば

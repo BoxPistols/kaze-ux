@@ -96,7 +96,8 @@
     "export-metadata": "node scripts/export-component-metadata.mjs",
     "check:mcp": "node scripts/check-mcp.mjs",
     "check:rules": "node scripts/check-ds-rules.mjs",
-    "export-rules": "node scripts/export-prohibited-doc.mjs"
+    "export-rules": "node scripts/export-prohibited-doc.mjs",
+    "check:quickref": "tsx scripts/check-quickref.ts"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",
