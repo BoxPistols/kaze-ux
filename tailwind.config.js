@@ -132,9 +132,16 @@ export default {
           DEFAULT: 'var(--color-background-paper)',
           foreground: 'var(--color-foreground)',
         },
+        // hover 用の面と、その上の文字。
+        //
+        // かつて colorData から静的に取っており、**ライトの値が焼き付いて
+        // いた**。CustomButton の outline / ghost が hover:bg-accent
+        // hover:text-accent-foreground を使っているため、ダークで
+        // near-black の文字が出ていた。MUI 側は追従していたので、同じ画面で
+        // MUI 製と CVA 製のボタンの hover だけが食い違う
         accent: {
-          DEFAULT: colorData.action.hover,
-          foreground: colorData.text.primary,
+          DEFAULT: 'var(--color-action-hover)',
+          foreground: 'var(--color-foreground)',
         },
         destructive: {
           DEFAULT: 'var(--color-error)',

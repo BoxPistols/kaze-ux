@@ -636,6 +636,15 @@ export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-muted': c.text.secondary,
   '--color-border': c.divider,
 
+  // hover / selected の面。
+  //
+  // tailwind.config の accent がこれを静的な colorData から取っていたため、
+  // Tailwind 側の hover だけモードに追従せず、ダークでライトの値
+  // （near-black の文字色）が出ていた。MUI の palette は追従していたので
+  // 同じ画面で MUI 製と CVA 製のボタンの hover が食い違う
+  '--color-action-hover': c.action.hover,
+  '--color-action-selected': c.action.selected,
+
   // フォーカスリング。ブランド色そのままだと primary の塗り面で溶けるため、
   // 面と地の両方に対して UI 基準 (3:1) を満たす明度に寄せた値を持つ
   '--color-ring': focusRingColor(c.primary.main, c.background),

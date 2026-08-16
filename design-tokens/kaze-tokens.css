@@ -54,6 +54,8 @@
   --color-foreground: #1a1a2e;
   --color-muted: #4a5568;
   --color-border: rgba(0, 0, 0, 0.08);
+  --color-action-hover: rgba(0, 0, 0, 0.04);
+  --color-action-selected: rgba(0, 0, 0, 0.08);
   --color-ring: #0057b8;
   --motion-ease-enter: cubic-bezier(0.33, 0, 0, 1);
   --motion-ease-exit: cubic-bezier(0.6, 0, 1, 1);
@@ -113,6 +115,8 @@
     --color-foreground: #e4e4e7;
     --color-muted: #a1a1aa;
     --color-border: rgba(255, 255, 255, 0.08);
+    --color-action-hover: rgba(255, 255, 255, 0.04);
+    --color-action-selected: rgba(77, 216, 224, 0.15);
     --color-ring: #5aa9ff;
   }
 }
@@ -163,6 +167,8 @@
   --color-foreground: #e4e4e7;
   --color-muted: #a1a1aa;
   --color-border: rgba(255, 255, 255, 0.08);
+  --color-action-hover: rgba(255, 255, 255, 0.04);
+  --color-action-selected: rgba(77, 216, 224, 0.15);
   --color-ring: #5aa9ff;
 }
 
@@ -211,6 +217,8 @@
   --color-foreground: #2d1f4e;
   --color-muted: #5c4d7a;
   --color-border: rgba(100, 60, 160, 0.1);
+  --color-action-hover: rgba(100, 60, 160, 0.06);
+  --color-action-selected: rgba(100, 60, 160, 0.1);
   --color-ring: #0057b8;
 }
 
@@ -261,6 +269,8 @@
     --color-foreground: #f8f8f2;
     --color-muted: #aab0cd;
     --color-border: rgba(98, 114, 164, 0.15);
+    --color-action-hover: rgba(248, 248, 242, 0.06);
+    --color-action-selected: rgba(80, 216, 216, 0.15);
     --color-ring: #7fa8f8;
   }
 }
@@ -311,6 +321,8 @@
   --color-foreground: #f8f8f2;
   --color-muted: #aab0cd;
   --color-border: rgba(98, 114, 164, 0.15);
+  --color-action-hover: rgba(248, 248, 242, 0.06);
+  --color-action-selected: rgba(80, 216, 216, 0.15);
   --color-ring: #7fa8f8;
 }
 
@@ -359,6 +371,8 @@
   --color-foreground: #2a2a2e;
   --color-muted: #606068;
   --color-border: rgba(0, 0, 0, 0.06);
+  --color-action-hover: rgba(0, 0, 0, 0.03);
+  --color-action-selected: rgba(0, 0, 0, 0.06);
   --color-ring: #0057b8;
 }
 
@@ -409,6 +423,8 @@
     --color-foreground: #d0d0d4;
     --color-muted: #8c8f97;
     --color-border: rgba(255, 255, 255, 0.08);
+    --color-action-hover: rgba(255, 255, 255, 0.04);
+    --color-action-selected: rgba(134, 173, 217, 0.12);
     --color-ring: #86add9;
   }
 }
@@ -459,5 +475,7 @@
   --color-foreground: #d0d0d4;
   --color-muted: #8c8f97;
   --color-border: rgba(255, 255, 255, 0.08);
+  --color-action-hover: rgba(255, 255, 255, 0.04);
+  --color-action-selected: rgba(134, 173, 217, 0.12);
   --color-ring: #86add9;
 }
