@@ -287,10 +287,18 @@ const parseArgTypesFromFile = (
     )
     if (!propBlock) continue
 
-    const controlMatch = propBlock.match(/control:\s*['"](\w+)['"]/)
+    // ハイフンを含む control 名 (inline-radio / inline-check / multi-select) を
+    // 取りこぼさない。`(\w+)` にしていたため EmptyState.size が丸ごと
+    // 落ちていた。**エラーにならず、トークンが 1 つ静かに減るだけ**なので
+    // 生成物を突き合わせるまで気づけない
+    const controlMatch = propBlock.match(/control:\s*['"]([\w-]+)['"]/)
     if (!controlMatch) continue
 
-    const controlType = controlMatch[1] as ControlDef['type']
+    // inline- は表示形態の違いで、値の性質は同じ
+    const controlType = controlMatch[1].replace(
+      /^inline-/,
+      ''
+    ) as ControlDef['type']
     const def: ControlDef = { type: controlType }
 
     const optionsMatch = propBlock.match(/options:\s*\[([\s\S]*?)\]/)
