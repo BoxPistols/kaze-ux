@@ -22,9 +22,13 @@ kaze-ux 本体は MUI と Tailwind を併用していますが、**色の経路�
 import 'kaze-tokens.css' // パスは配置先に合わせる
 ```
 
+<!-- kaze:tailwind-config:begin -->
+
 ```js
 // 2. tailwind.config で変数を参照する（kaze-ux 本体と同じ形）
 export default {
+  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -36,15 +40,69 @@ export default {
           light: 'var(--color-primary-light)',
           dark: 'var(--color-primary-dark)',
         },
-        // secondary / success / info / warning / error も同じ形
+        secondary: {
+          main: 'var(--color-secondary)',
+          ink: 'var(--color-secondary-ink)',
+          foreground: 'var(--color-secondary-foreground)',
+          dark: 'var(--color-secondary-dark)',
+        },
+        success: {
+          main: 'var(--color-success)',
+          ink: 'var(--color-success-ink)',
+          foreground: 'var(--color-success-foreground)',
+        },
+        warning: {
+          main: 'var(--color-warning)',
+          ink: 'var(--color-warning-ink)',
+          foreground: 'var(--color-warning-foreground)',
+        },
+        info: {
+          main: 'var(--color-info)',
+          ink: 'var(--color-info-ink)',
+          foreground: 'var(--color-info-foreground)',
+        },
+        error: {
+          main: 'var(--color-error)',
+          ink: 'var(--color-error-ink)',
+          foreground: 'var(--color-error-foreground)',
+        },
+        background: {
+          DEFAULT: 'var(--color-background)',
+          paper: 'var(--color-background-paper)',
+        },
+        foreground: 'var(--color-foreground)',
+        muted: 'var(--color-muted)',
+        border: 'var(--color-border)',
+        ring: 'var(--color-ring)',
+        accent: {
+          DEFAULT: 'var(--color-action-hover)',
+          foreground: 'var(--color-foreground)',
+        },
       },
     },
   },
 }
 ```
 
+<!-- kaze:tailwind-config:end -->
+
 これで `bg-primary-main` `text-error-ink` などが使えます。MUI も Emotion も
 不要です。
+
+> **`content` のパスは実行時のカレントディレクトリ基準**で、設定ファイルの
+> 場所基準ではありません。別ディレクトリから tailwind を起動すると走査対象が
+> 0 件になり、**変数は出るのにユーティリティが 1 つも生成されない**という
+> 形で出ます（この検証中に実際に踏みました）。
+
+> `darkMode: 'class'` は**色の切り替えには不要**です。light / dark の出し
+> 分けは CSS 側で完結しているので、`.dark` を付けるだけで色は変わります
+> （検証で確認済み）。この設定が要るのは、利用者側が `dark:` バリアントを
+> 自分で書く場合だけです。
+
+**この手順は `pnpm check:tailwind-consumer` が実際に動かして検証しています。**
+上のコードブロックをそのまま取り出し、kaze-ux のソースを一切参照しない
+プロジェクトを組んで tailwind をビルドし、実ブラウザで light / dark の
+描画色をテーマの値と突き合わせます。README が古くなれば落ちます。
 
 ## ダークとスキームの切り替え
 

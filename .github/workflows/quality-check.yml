@@ -212,6 +212,13 @@ jobs:
       - name: Check CSS variables resolve as intended
         run: pnpm check:css-vars
 
+      # README の手順どおりに組んだ「kaze-ux を参照しない Tailwind
+      # プロジェクト」を実際にビルドして描画する。利用者が踏む経路は
+      # 「README を読む → 設定を書く → ビルド → 描画」で、途中のどこが
+      # 欠けても色は付かない。CSS 単体の検査では通ってしまう
+      - name: Check the documented Tailwind integration actually works
+        run: pnpm check:tailwind-consumer
+
       # 配信と検査を 1 ステップにまとめる。
       # ステップをまたいで背景プロセスが生きている前提を持たない
       - name: Check contrast (rendered)
