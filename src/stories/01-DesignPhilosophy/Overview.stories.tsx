@@ -28,6 +28,7 @@ const DesignPhilosophyOverview = () => {
       '宣言と実装の一致を、常時検証する',
       '仕様は、人と機械が同一のものを読む',
       '保証は下限に限る。意匠は規定しない',
+      '作り手の規律は、そのまま成果物に現れる',
     ],
     values: [
       {
@@ -61,6 +62,17 @@ const DesignPhilosophyOverview = () => {
           '移植を前提とする',
           '拡張点を定義する',
           '相互運用に開く',
+        ],
+      },
+      {
+        title: '抑制',
+        color: 'warning.textContrast',
+        attributes: [
+          '足さずに済ませる',
+          '装飾を疑う',
+          '借り物の意匠を用いない',
+          '主役を一つに絞る',
+          '完成は、削り終えた時点',
         ],
       },
     ],
@@ -262,7 +274,7 @@ const DesignPhilosophyOverview = () => {
         </Typography>
         <Grid container spacing={3}>
           {brandIdentity.values.map((value, index) => (
-            <Grid size={{ xs: 12, md: 4 }} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Box
                 sx={{
                   height: '100%',
