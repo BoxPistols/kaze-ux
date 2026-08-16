@@ -71,5 +71,3 @@ export const CustomToaster = ({
 
 // sonnerのtoast関数を再エクスポート
 export { toast } from 'sonner'
-
-export default CustomToaster

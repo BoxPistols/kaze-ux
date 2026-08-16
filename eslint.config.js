@@ -238,6 +238,26 @@ export default tseslint.config({
     ],
   },
 }, {
+  // named export で統一する（禁止パターン C03）
+  //
+  // 書いてあるだけで止めるものが無く、**33 箇所で破られていた**。同じ部品が
+  // default と named の両方で取れると、AI が生成するコードの import 形式が
+  // 揃わない。ルールを残すなら止める仕組みを付ける。
+  //
+  // story の `export default meta` は Storybook の仕様なので対象外。
+  name: 'kaze/named-exports-only',
+  files: [
+    'src/components/**/*.{ts,tsx}',
+    'src/themes/**/*.{ts,tsx}',
+    'src/layouts/**/*.{ts,tsx}',
+    'src/utils/**/*.{ts,tsx}',
+    'apps/*/src/**/*.{ts,tsx}',
+  ],
+  ignores: ['**/*.stories.{ts,tsx}', '**/*.config.{ts,tsx}'],
+  rules: {
+    'import/no-default-export': 'error',
+  },
+}, {
   // DS コア層に UI ライブラリを持ち込ませない
   //
   // 「MUI があってもなくても使えるデザインシステム」にするための境界線。

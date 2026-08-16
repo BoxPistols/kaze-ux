@@ -104,5 +104,3 @@ export const WeekStartSelector = ({
     </Box>
   )
 }
-
-export default WeekStartSelector

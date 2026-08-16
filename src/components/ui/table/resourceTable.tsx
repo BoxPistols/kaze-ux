@@ -347,5 +347,3 @@ export const ResourceTable = <T extends { id: string | number }>({
     </Box>
   )
 }
-
-export default ResourceTable

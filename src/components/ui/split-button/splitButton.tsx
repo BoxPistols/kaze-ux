@@ -227,5 +227,3 @@ export const SplitButton = ({
     </>
   )
 }
-
-export default SplitButton

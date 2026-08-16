@@ -94,7 +94,9 @@
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:tailwind-consumer": "tsx scripts/check-tailwind-consumer.ts",
     "export-metadata": "node scripts/export-component-metadata.mjs",
-    "check:mcp": "node scripts/check-mcp.mjs"
+    "check:mcp": "node scripts/check-mcp.mjs",
+    "check:rules": "node scripts/check-ds-rules.mjs",
+    "export-rules": "node scripts/export-prohibited-doc.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

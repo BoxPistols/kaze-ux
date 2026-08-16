@@ -13,7 +13,7 @@ import { Bot, User } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-import CodeBlock, { CodeBlockPre } from '../CodeBlock'
+import { CodeBlock, CodeBlockPre } from '../CodeBlock'
 import { QUICK_SUGGESTIONS } from '../faqDatabase'
 
 import type { CurrentStoryContext, Message } from '../chatSupportTypes'

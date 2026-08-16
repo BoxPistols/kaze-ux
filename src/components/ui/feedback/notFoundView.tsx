@@ -107,5 +107,3 @@ export const NotFoundView = ({ homePath = '/', sx }: NotFoundViewProps) => {
     </Container>
   )
 }
-
-export default NotFoundView

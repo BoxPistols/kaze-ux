@@ -39,5 +39,3 @@ export const TableToolbar = ({
     </Stack>
   )
 }
-
-export default TableToolbar

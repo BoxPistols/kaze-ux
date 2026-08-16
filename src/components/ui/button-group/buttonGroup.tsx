@@ -160,5 +160,3 @@ export const ButtonGroup = ({
     </MuiButtonGroup>
   )
 }
-
-export default ButtonGroup

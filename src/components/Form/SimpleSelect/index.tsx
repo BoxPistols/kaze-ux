@@ -71,5 +71,3 @@ export const SimpleSelect = ({
     </FormControl>
   )
 }
-
-export default SimpleSelect

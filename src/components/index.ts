@@ -1,7 +1,7 @@
 // Theme関連
 export { ThemeProvider } from './ThemeProvider'
 // レイアウト関連
-export { default as MainGrid } from './MainGrid'
+export { MainGrid } from './MainGrid'
 
 // テーブル関連
 export { CustomTable } from './Table'
@@ -15,7 +15,7 @@ export type { DateTimePickerProps, Dayjs } from './Form/DateTimePicker'
 
 // shadcn-inspired components (pure Tailwind CSS with MUI)
 export * from './ui'
-export { default as ShadcnExample } from './examples/ShadcnExample'
+export { ShadcnExample } from './examples/ShadcnExample'
 
 // Form関連コンポーネント（作成予定）
 // export * from './Form';

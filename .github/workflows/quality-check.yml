@@ -66,6 +66,12 @@ jobs:
       - name: Check DS core has no UI-library dependency
         run: pnpm check:ds-core
 
+      # 禁止パターンが実際に守られているか。
+      # 「書いてあるが守られていない」ルールは AI にとって嘘の仕様になる。
+      # 説明を読んだ AI は従い、コードを読んだ AI は真似る
+      - name: Check prohibited patterns
+        run: pnpm check:rules
+
       # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
       # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
       # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば
@@ -87,9 +93,10 @@ jobs:
           pnpm export-tokens
           pnpm export-css
           pnpm export-metadata
-          if ! git diff --quiet design-tokens/ metadata/; then
-            echo "::error::生成物が古いです。pnpm export-tokens && pnpm export-css && pnpm export-metadata を実行してコミットしてください"
-            git diff --stat design-tokens/ metadata/
+          pnpm export-rules
+          if ! git diff --quiet design-tokens/ metadata/ foundations/; then
+            echo "::error::生成物が古いです。pnpm export-tokens && pnpm export-css && pnpm export-metadata && pnpm export-rules を実行してコミットしてください"
+            git diff --stat design-tokens/ metadata/ foundations/
             exit 1
           fi
 

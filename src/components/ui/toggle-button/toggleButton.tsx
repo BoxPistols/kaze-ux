@@ -266,5 +266,3 @@ export const ToggleButtonGroup = ({
     </MuiToggleButtonGroup>
   )
 }
-
-export default ToggleButton

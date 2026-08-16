@@ -205,5 +205,3 @@ export const CustomTable = ({
     </Box>
   )
 }
-
-export default CustomTable

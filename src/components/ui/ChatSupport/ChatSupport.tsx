@@ -7,7 +7,7 @@ import { useCallback } from 'react'
 
 import { motionOf } from '@/themes/motion'
 
-import BookConciergeIcon from './BookConciergeIcon'
+import { BookConciergeIcon } from './BookConciergeIcon'
 import { isBackendMode } from './chatAiService'
 import { ChatHeader } from './components/ChatHeader'
 import { ChatInput } from './components/ChatInput'

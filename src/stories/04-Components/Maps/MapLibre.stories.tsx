@@ -1,4 +1,4 @@
-import MapLibre from '@/components/MapLibre'
+import { MapLibre } from '@/components/MapLibre'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

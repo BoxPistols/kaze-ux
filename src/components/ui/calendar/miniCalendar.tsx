@@ -212,5 +212,3 @@ export const MiniCalendar = ({
     </Box>
   )
 }
-
-export default MiniCalendar

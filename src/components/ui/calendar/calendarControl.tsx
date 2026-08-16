@@ -118,5 +118,3 @@ export const CalendarControl = ({
     </Box>
   )
 }
-
-export default CalendarControl

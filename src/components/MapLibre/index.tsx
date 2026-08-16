@@ -7,7 +7,7 @@ interface MapLibreProps {
   zoom?: number
 }
 
-const MapLibre = ({
+export const MapLibre = ({
   latitude = 35.6814,
   longitude = 139.767,
   zoom = 9,
@@ -59,5 +59,3 @@ const MapLibre = ({
     </div>
   )
 }
-
-export default MapLibre

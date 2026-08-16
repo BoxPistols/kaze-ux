@@ -50,5 +50,3 @@ export const SaveButton = ({
     </Button>
   )
 }
-
-export default SaveButton

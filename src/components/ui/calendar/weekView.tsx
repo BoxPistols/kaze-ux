@@ -264,5 +264,3 @@ export const WeekView = ({
     </Box>
   )
 }
-
-export default WeekView
