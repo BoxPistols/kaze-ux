@@ -13,8 +13,8 @@
  */
 
 import { execSync } from 'node:child_process'
-import { createServer } from 'node:http'
 import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs'
+import { createServer } from 'node:http'
 import { extname, join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 

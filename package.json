@@ -50,7 +50,7 @@
     "test:all:ui": "vitest --ui --coverage --reporter=basic --reporter=html",
     "test:all:watch": "vitest --coverage --reporter=basic",
     "format": "prettier --write .",
-    "lint": "eslint --fix ./src",
+    "lint": "eslint --fix ./src ./scripts",
     "fix": "pnpm run lint && pnpm run format",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6007",
