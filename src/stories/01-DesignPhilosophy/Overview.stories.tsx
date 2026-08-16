@@ -22,46 +22,45 @@ const DesignPhilosophyOverview = () => {
   const isDark = theme.palette.mode === 'dark'
 
   const brandIdentity = {
-    slogan: '正直であることが、いちばん外側の品質',
-    mission:
-      '作り手の表現を縛らずに、誰にとっても読めて触れる土台を差し出しつづける',
+    slogan: '規範は、検証されて初めて規範となる',
+    mission: '表現の自由と、品質の下限を、同時に成立させる',
     vision: [
-      'できていないことを、できていないと言えること。それを言えるものだけが、できていることを信じてもらえる',
-      '基盤は主張しない。風のように、作るものの背後に回る',
-      '一貫性は、揃えることではなく、迷わせないこと',
+      '宣言と実装の一致を、常時検証する',
+      '仕様は、人と機械が同一のものを読む',
+      '保証は下限に限る。意匠は規定しない',
     ],
     values: [
       {
-        title: '正直',
+        title: '検証可能性',
         color: 'primary.textContrast',
         attributes: [
-          '誇張しない',
-          '弱点を先に出す',
-          '数字を飾らない',
-          '分からないと言える',
-          '直す前に、まず認める',
+          '実測に基づく',
+          '反証を用意する',
+          '未達を明示する',
+          '数値で示す',
+          '例外を隠さない',
         ],
       },
       {
-        title: '謙虚',
+        title: '単一性',
         color: '#1dafc2',
         attributes: [
-          '自分の目を疑う',
-          '好みで決めない',
-          '確かめてから言う',
-          '例外を切り捨てない',
-          '前提から間違えている可能性を残す',
+          '生成物として配る',
+          '二重定義を持たない',
+          '鮮度を強制する',
+          '手作業を排する',
+          '差異を検出する',
         ],
       },
       {
-        title: '敬意',
+        title: '中立性',
         color: '#46ab4a',
         attributes: [
-          '読む人を迷わせない',
-          '選び方を押し付けない',
-          '誰にでも届く形にする',
-          '後から来る人に残す',
-          '人にも AI にも同じ顔を向ける',
+          '実装に依存しない',
+          '意匠を規定しない',
+          '移植を前提とする',
+          '拡張点を定義する',
+          '相互運用に開く',
         ],
       },
     ],
@@ -70,24 +69,24 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '正直さは、機能である',
-      description: '言っていることと、出来ているものを、一致させつづける',
+      title: '規範と強制手段は一体で定義する',
+      description: '止める仕組みを持たない規範は、規範として扱わない',
       details:
-        '仕様と実物がずれていても、たいてい何も起こらない。だからこそ、ずれを見つけたら書き換えるのではなく、ずれない形に作り替える',
+        '違反が検出されない規約は、遵守されているかどうかを誰も判定できない。強制の所在を規約と同じ場所に記す',
     },
     {
       num: '02',
-      title: '自由は、土台の上に立つ',
-      description: '表現を縛らないために、譲れない下限だけを決める',
+      title: '仕様は機械可読を第一とする',
+      description: '人向けの記述は、機械可読な定義から導出する',
       details:
-        '色も書体も余白も、選ぶのは作り手。読めること、触れられること、意味が伝わること。ここだけは誰の好みにも譲らない',
+        '二つの記述が併存すれば必ず乖離する。単一の定義から生成し、生成物の鮮度を継続的に検証する',
     },
     {
       num: '03',
-      title: '風のように、邪魔をしない',
-      description: '基盤は前に出ない。作るものの背後に回る',
+      title: '保証は下限に限定する',
+      description: '可読性・操作性・意味の伝達のみを共通の要件とする',
       details:
-        '良い土台は、使っているあいだ意識されない。覚えることを増やさず、選択肢を狭めず、必要なときにだけ姿を見せる',
+        '色・書体・余白の選択は各プロダクトの領分とする。共通基盤が規定するのは、いかなる意匠でも満たすべき最低条件に限る',
     },
   ]
 
@@ -251,7 +250,7 @@ const DesignPhilosophyOverview = () => {
             mb: 1,
             display: 'block',
           }}>
-          BRAND PERSONALITY
+          CORE VALUES
         </Typography>
         <Typography
           sx={{
@@ -259,7 +258,7 @@ const DesignPhilosophyOverview = () => {
             color: 'text.secondary',
             mb: 5,
           }}>
-          サービス&ldquo;らしさ&rdquo;の定義
+          判断に迷ったときの拠り所
         </Typography>
         <Grid container spacing={3}>
           {brandIdentity.values.map((value, index) => (
@@ -356,7 +355,7 @@ const DesignPhilosophyOverview = () => {
             color: 'text.secondary',
             mb: 5,
           }}>
-          デザインする上で大事にしたいこと
+          設計上、例外を認めない三点
         </Typography>
         <Grid container spacing={3}>
           {designPrinciples.map((principle, index) => (
