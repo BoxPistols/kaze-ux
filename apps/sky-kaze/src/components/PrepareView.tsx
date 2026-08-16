@@ -195,7 +195,7 @@ export const PrepareView = () => {
         </Typography>
         <Typography
           variant='body2'
-          color='text.secondary'
+          color='text.primary'
           sx={{ fontSize: '15px', mb: 3 }}>
           荷物の確認・伝票発行・車両点検を完了してから配送を開始してください
         </Typography>
@@ -252,7 +252,7 @@ export const PrepareView = () => {
             fontWeight: 700,
             fontSize: '15px',
             mb: 2,
-            color: 'text.secondary',
+            color: 'text.primary',
           }}>
           Step {activeStep + 1}/{STEP_LABELS.length} — {STEP_LABELS[activeStep]}
         </Typography>
@@ -292,7 +292,7 @@ export const PrepareView = () => {
           }}>
           <Typography
             variant='body2'
-            sx={{ fontSize: '15px', color: 'text.secondary' }}>
+            sx={{ fontSize: '15px', color: 'text.primary' }}>
             {STEP_DESCRIPTIONS[activeStep]}
           </Typography>
         </Box>
@@ -351,7 +351,7 @@ export const PrepareView = () => {
                         fontSize: '13px',
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
-                        color: 'text.secondary',
+                        color: 'text.primary',
                       }}>
                       {h}
                     </Typography>

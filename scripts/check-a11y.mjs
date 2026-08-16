@@ -42,11 +42,9 @@ const SHOW_ALL = process.argv.includes('--all')
  * light だけを測っていた間、ダークの contained Button が 2.46:1 のまま
  * 半年気づかれなかった。片方だけ測るのは測っていないのとあまり変わらない。
  *
- * dark-dracula は既知の未対応があるため既定から外している
- * （textContrast が X.lighter の面に対して保証されていない構造の問題）。
- * A11Y_THEMES で明示すれば測れる。
+ * dark-dracula も含め、実装済みのダークスキームを既定で測る。
  */
-const THEMES = (process.env.A11Y_THEMES ?? 'light,dark-kaze')
+const THEMES = (process.env.A11Y_THEMES ?? 'light,dark-kaze,dark-dracula')
   .split(',')
   .map((t) => t.trim())
   .filter(Boolean)

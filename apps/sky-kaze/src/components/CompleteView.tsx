@@ -237,7 +237,7 @@ export const CompleteView = () => {
                       fontSize: '13px',
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
-                      color: 'text.secondary',
+                      color: 'text.primary',
                     }}>
                     {h}
                   </Typography>
@@ -457,7 +457,7 @@ export const CompleteView = () => {
                     fontSize: '13px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'text.secondary',
+                    color: 'text.primary',
                   }}>
                   {h}
                 </Typography>
