@@ -257,16 +257,6 @@ const DesignPhilosophyOverview = () => {
                     borderColor: value.color,
                   },
                 }}>
-                {/* 3 つの価値を色で見分ける帯。
-                    `background` は sx でパレット解決されないため、
-                    `primary.textContrast` のようなトークン指定が無効な CSS 値として
-                    無視され、1 枚目だけ帯が出ていなかった。bgcolor は解決される */}
-                <Box
-                  sx={{
-                    height: 3,
-                    bgcolor: value.color,
-                  }}
-                />
                 <Box sx={{ px: 3.5, py: 3 }}>
                   <Typography
                     sx={{

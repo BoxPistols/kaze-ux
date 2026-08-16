@@ -353,8 +353,8 @@ export const CompleteView = () => {
                   <Grid key={inc.id} size={{ xs: 12, md: 6 }}>
                     <Card
                       sx={{
-                        borderLeft: '3px solid',
-                        borderLeftColor: color,
+                        // 角丸に片側だけの太いボーダーを足さない。
+                        // 種別の色は下のアイコンが既に伝えている
                         opacity: inc.resolved ? 0.75 : 1,
                       }}>
                       <CardHeader>

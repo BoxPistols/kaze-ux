@@ -77,7 +77,7 @@ interface SectionHeaderProps {
 }
 
 const SectionHeader = ({ title, subtitle }: SectionHeaderProps) => (
-  <div className='mb-10 border-l-4 border-primary pl-6'>
+  <div className='mb-10'>
     <Typography
       variant='h2'
       component='h2'
@@ -131,7 +131,7 @@ const SubSection = ({ title, children }: SubSectionProps) => (
 )
 
 /* ================================================================
- * InfoCallout - カラー付き左ボーダーのコールアウトボックス
+ * InfoCallout - 種別色で全周を囲んだコールアウトボックス
  * ================================================================ */
 
 type CalloutColor = 'info' | 'warning' | 'success' | 'error'
@@ -152,7 +152,9 @@ const calloutBorderMap: Record<CalloutColor, string> = {
 const InfoCallout = ({ title, children, color = 'info' }: InfoCalloutProps) => (
   <div
     className={cn(
-      'mb-10 rounded-r-lg border-l-4 py-5 pl-6 pr-7',
+      // 角丸に片側だけの太いボーダーを足さない。全周を細い線で囲み、
+      // 種別は面の色で伝える
+      'mb-10 rounded-lg border px-6 py-5',
       calloutBorderMap[color]
     )}
     style={{

@@ -138,21 +138,23 @@ const InfoBox = ({
 }) => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
+  // 面ではなく境界に置く色なので、前景用の textContrast を使う。
+  // main のままだと白地で 2.5:1 しか出ず、輪郭が見えない
   const colorMap = {
     info: {
-      border: theme.palette.info.main,
+      border: theme.palette.info.textContrast ?? theme.palette.info.main,
       bg: isDark ? 'rgba(33,150,243,0.07)' : 'rgba(33,150,243,0.04)',
     },
     warning: {
-      border: theme.palette.warning.main,
+      border: theme.palette.warning.textContrast ?? theme.palette.warning.main,
       bg: isDark ? 'rgba(235,129,23,0.07)' : 'rgba(235,129,23,0.04)',
     },
     success: {
-      border: theme.palette.success.main,
+      border: theme.palette.success.textContrast ?? theme.palette.success.main,
       bg: isDark ? 'rgba(70,171,74,0.07)' : 'rgba(70,171,74,0.04)',
     },
     error: {
-      border: theme.palette.error.main,
+      border: theme.palette.error.textContrast ?? theme.palette.error.main,
       bg: isDark ? 'rgba(218,55,55,0.07)' : 'rgba(218,55,55,0.04)',
     },
   }
@@ -160,12 +162,12 @@ const InfoBox = ({
   return (
     <Box
       sx={{
-        pl: 3,
-        pr: 3.5,
+        px: 3,
         py: 2.5,
         mb: 5,
-        borderRadius: '0 8px 8px 0',
-        borderLeft: `4px solid ${c.border}`,
+        // 角丸に片側だけの太いボーダーを足さない。種別の色は全周の線で伝える
+        borderRadius: '8px',
+        border: `1px solid ${c.border}`,
         bgcolor: c.bg,
       }}>
       <Typography

@@ -111,6 +111,94 @@ const outlineWithoutFocusVisible = (src) => {
 }
 
 /**
+ * 角丸と、片側だけの太いボーダーの併用。
+ *
+ * `rounded-r-lg border-l-4` のような組み合わせは、AI が生成した画面で
+ * 頻出する。情報を足していない装飾で、しかも出自が透けて見える。
+ *
+ * 記法が 2 つあるので両方見る。**className だけを見ていたときは、
+ * 同じ形の `sx` を 4 箇所取りこぼした**（3 つの重複した InfoCallout と
+ * カード上端のカラーバー）。片方だけの検出は、検出していないのと同じ。
+ */
+const roundedWithThickSideBorder = (src) => [
+  ...roundedSideBorderInClassName(src),
+  ...roundedSideBorderInStyleObject(src),
+]
+
+/** Tailwind: `rounded-*` と `border-{t,r,b,l}-{2以上}` が同居する */
+const roundedSideBorderInClassName = (src) => {
+  const hits = []
+  const lines = src.split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    // className は複数行に分かれるため、前後 3 行をまとめて見る
+    const around = lines.slice(Math.max(0, i - 3), i + 4).join(' ')
+    if (!/\brounded(-[a-z]+)?(-[a-z0-9]+)?\b/.test(around)) continue
+    if (!/\bborder-(t|r|b|l)-([2-9]|\d{2,})\b/.test(around)) continue
+    if (!/\bborder-(t|r|b|l)-([2-9]|\d{2,})\b/.test(lines[i])) continue
+    hits.push({ line: i + 1, text: lines[i].trim() })
+  }
+  return hits
+}
+
+/**
+ * sx / style / CSS: 片側だけ 2px 以上のボーダーを持つ宣言を見つけ、
+ * **それを囲む一番内側のブロック**に角丸があるかを見る。
+ *
+ * 行の窓ではなくブロックで判定するのが要点。窓で見ると
+ * `'& blockquote': { borderLeft: '3px solid' }` が、親の sx が持つ
+ * `borderRadius` を拾って誤検出になる（blockquote の左罫は別物）。
+ */
+const roundedSideBorderInStyleObject = (src) => {
+  const sideBorder =
+    /border-?(Left|Right|Top|Bottom)(-?Width)?\s*:\s*[`'"]?\s*(\d+)(px)?/gi
+  const hits = []
+
+  for (const m of src.matchAll(sideBorder)) {
+    const width = Number(m[3])
+    if (width < 2) continue
+
+    const block = innermostBlock(src, m.index)
+    if (!block) continue
+    // 角丸が 0 のものは対象外（`borderRadius: 0` / `'0 0 0 0'`）
+    const radius = block.match(/border-?[Rr]adius\s*:\s*([^,;\n}]+)/)
+    if (!radius || /^\s*[`'"]?0(px)?[`'"]?\s*$/.test(radius[1])) continue
+
+    hits.push({
+      line: src.slice(0, m.index).split('\n').length,
+      text: m[0].trim(),
+    })
+  }
+  return hits
+}
+
+/** pos を含む一番内側の `{ ... }` を返す。見つからなければ null */
+const innermostBlock = (src, pos) => {
+  let depth = 0
+  let start = -1
+  for (let i = pos; i >= 0; i--) {
+    if (src[i] === '}') depth++
+    else if (src[i] === '{') {
+      if (depth === 0) {
+        start = i
+        break
+      }
+      depth--
+    }
+  }
+  if (start < 0) return null
+
+  depth = 0
+  for (let i = start; i < src.length; i++) {
+    if (src[i] === '{') depth++
+    else if (src[i] === '}') {
+      depth--
+      if (depth === 0) return src.slice(start, i + 1)
+    }
+  }
+  return null
+}
+
+/**
  * ルール一覧。
  *
  * - `enforcedBy`: 何が破綻を止めるか。`null` は**止めるものが無い**
@@ -285,6 +373,14 @@ export const DS_RULES = [
     instead: 'テーマの borderRadius トークン',
     enforcedBy: null,
     detect: null,
+  },
+  {
+    id: 'AI04',
+    category: 'AI 生成',
+    forbidden: '角丸と、片側だけの太い（2px 以上）ボーダーの併用',
+    instead: '全周を細い線で囲むか、面の色で区別する',
+    enforcedBy: null,
+    detect: roundedWithThickSideBorder,
   },
 ]
 
