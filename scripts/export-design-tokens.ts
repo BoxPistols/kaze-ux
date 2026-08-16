@@ -443,7 +443,11 @@ const tokens = {
 // 出力
 mkdirSync(OUTPUT_DIR, { recursive: true })
 const outputPath = resolve(OUTPUT_DIR, 'tokens.json')
-writeFileSync(outputPath, JSON.stringify(tokens, null, 2), 'utf-8')
+// 末尾に改行を付けるのは体裁の話ではない。これが無いと prettier が
+// 「未整形」と判定して pre-commit で書き換えるため、生成物とコミット済みの
+// バイト列が毎回ずれ、CI の鮮度チェック（再生成して差分が無いこと）が
+// 恒常的に落ちる。生成側が整形済みの形で出すのが正しい
+writeFileSync(outputPath, `${JSON.stringify(tokens, null, 2)}\n`, 'utf-8')
 
 console.log(`Design tokens exported to: ${outputPath}`)
 console.log(`  - Color modes: light, dark`)

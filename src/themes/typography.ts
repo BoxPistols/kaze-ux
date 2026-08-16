@@ -1,6 +1,11 @@
-import type React from 'react'
 import type { CSSProperties } from 'react'
-// TypographyOptions interface for MUI v7
+
+// このファイルはタイポグラフィの**値**だけを持つ（DS コア層）。
+// MUI の型拡張（TypographyVariants 等の declare module）は src/types/theme.ts
+// に移した。値と MUI 固有の型が同居していると、MUI を使わない環境へ
+// 持っていけない。境界の定義は scripts/ds-core.mjs にある。
+
+/** createTheme に渡す形。MUI v7 の TypographyOptions と同じ構造 */
 interface TypographyOptions {
   htmlFontSize?: number
   fontSize?: number
@@ -12,66 +17,6 @@ interface TypographyOptions {
   allVariants?: CSSProperties
   [key: string]: unknown
 }
-import '@mui/material/Typography'
-
-declare module '@mui/material/styles' {
-  interface TypographyVariants {
-    displayLarge: React.CSSProperties
-    displayMedium: React.CSSProperties
-    displaySmall: React.CSSProperties
-    xxl: React.CSSProperties
-    xl: React.CSSProperties
-    lg: React.CSSProperties
-    ml: React.CSSProperties
-    md: React.CSSProperties
-    sm: React.CSSProperties
-  }
-
-  interface TypographyVariantsOptions {
-    // 実行時のフォールバックは MUI デフォルトに委ねるため optional。
-    // 必須 (`:`) にすると createTheme の引数型と typographyOptions が不整合になる
-    // (typographyOptions は display* を定義していない)。
-    displayLarge?: React.CSSProperties
-    displayMedium?: React.CSSProperties
-    displaySmall?: React.CSSProperties
-    xxl?: React.CSSProperties
-    xl?: React.CSSProperties
-    lg?: React.CSSProperties
-    ml?: React.CSSProperties
-    md?: React.CSSProperties
-    sm?: React.CSSProperties
-  }
-}
-
-// Existing type declarations
-declare module '@mui/material/Typography' {
-  interface TypographyPropsVariantOverrides {
-    displayLarge: true
-    displayMedium: true
-    displaySmall: true
-    xxl: true
-    xl: true
-    lg: true
-    ml: true
-    md: true
-    sm: true
-  }
-}
-
-declare module '@mui/material/styles' {
-  interface Typography {
-    displayLarge: CSSProperties
-    displayMedium: CSSProperties
-    displaySmall: CSSProperties
-    xxl?: CSSProperties
-    xl?: CSSProperties
-    lg?: CSSProperties
-    ml?: CSSProperties
-    md?: CSSProperties
-    sm?: CSSProperties
-  }
-}
-
 // Typography-related constants and functions
 const baseFontSize = 14
 

@@ -60,6 +60,25 @@ jobs:
         run: pnpm lint
         continue-on-error: false
 
+      # DS コア層が UI ライブラリに依存していないこと。
+      # ESLint はファイル単位でしか見ないので、コア外を 1 枚挟んだ経路
+      # (core → helper → @mui) を素通りさせる。こちらは依存グラフを辿る。
+      - name: Check DS core has no UI-library dependency
+        run: pnpm check:ds-core
+
+      # design-tokens/tokens.json は src/themes と story から生成する派生物。
+      # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
+      # なので、古いまま配ると相手は黙って古い値を掴む。
+      # 実際 StatCard / EmptyState を DS に足したときに再生成が漏れていた。
+      - name: Check design tokens are up to date
+        run: |
+          pnpm export-tokens
+          if ! git diff --quiet design-tokens/; then
+            echo "::error::design-tokens/tokens.json が古いです。pnpm export-tokens を実行してコミットしてください"
+            git diff --stat design-tokens/
+            exit 1
+          fi
+
       - name: Check for console.log
         run: |
           echo "Checking for console.log remnants..."

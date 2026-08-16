@@ -1,5 +1,3 @@
-import { amber, blue, pink } from '@mui/material/colors'
-
 import { CONTRAST_THRESHOLD, bestContrast, ensureContrast } from './contrast'
 import { focusRingColor } from './focus'
 
@@ -102,6 +100,19 @@ export const ON_SURFACE_INKS: readonly [string, ...string[]] = [
  * ロゴ側の参照: src/components/ui/logo/logoRules.ts
  */
 export const BRAND_BLUE = '#0057B8'
+
+/**
+ * かつて `@mui/material/colors` から取っていた 4 色。
+ *
+ * この層（トークンと色の計算）は **MUI があってもなくても使える**ことを
+ * 契約にしているので、定数 4 つのために UI ライブラリへ依存しない。
+ * 値は MUI の同名スロットと同一（amber[400] / blue[50] / blue[200] /
+ * pink[200]）で、移した時点で実測して一致を確認している。
+ */
+const AMBER_400 = '#ffca28'
+const BLUE_50 = '#e3f2fd'
+const BLUE_200 = '#90caf9'
+const PINK_200 = '#f48fb1'
 
 /**
  * 色を「前景」として使うときに選ぶべき variant。
@@ -400,7 +411,7 @@ export const createLightThemeColors = (
     background: env.background,
     action: env.action,
     surface: env.surface,
-    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    icon: { white: '#ffffff', ...env.icon, action: AMBER_400 },
     divider: env.divider,
     common: { black: '#09090b', white: '#ffffff' },
   }
@@ -549,7 +560,7 @@ export const createDarkThemeColors = (
     background: env.background,
     action: env.action,
     surface: env.surface,
-    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    icon: { white: '#ffffff', ...env.icon, action: AMBER_400 },
     divider: env.divider,
     common: { black: '#09090b', white: '#ffffff' },
   }
@@ -638,8 +649,8 @@ export const DARK_SCHEME_STORAGE_KEY = COLOR_SCHEME_STORAGE_KEY
 // これは、後にチャートなどの色を設計する時の参考
 export const colorData = {
   chart: {
-    blue: { 50: blue[50], 200: blue[200] },
-    pink: { 200: pink[200] },
+    blue: { 50: BLUE_50, 200: BLUE_200 },
+    pink: { 200: PINK_200 },
   },
   ...createLightColors(),
   dark: createDarkThemeColors('dracula'), // デフォルト: Dracula(後方互換)

@@ -81,6 +81,7 @@
     "audit:contrast": "node scripts/audit-contrast.mjs",
     "check:brand": "node scripts/check-brand-terms.mjs",
     "ds:adoption": "node scripts/ds-adoption.mjs",
+    "check:ds-core": "node scripts/check-ds-core.mjs",
     "ds:adoption:json": "node scripts/ds-adoption.mjs --json",
     "capture:products": "node scripts/capture-products.mjs",
     "check:anon": "node scripts/check-anonymity.mjs",
