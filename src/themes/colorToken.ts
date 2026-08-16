@@ -1,5 +1,3 @@
-import { amber, blue, pink } from '@mui/material/colors'
-
 import { CONTRAST_THRESHOLD, bestContrast, ensureContrast } from './contrast'
 import { focusRingColor } from './focus'
 
@@ -104,6 +102,19 @@ export const ON_SURFACE_INKS: readonly [string, ...string[]] = [
 export const BRAND_BLUE = '#0057B8'
 
 /**
+ * かつて `@mui/material/colors` から取っていた 4 色。
+ *
+ * この層（トークンと色の計算）は **MUI があってもなくても使える**ことを
+ * 契約にしているので、定数 4 つのために UI ライブラリへ依存しない。
+ * 値は MUI の同名スロットと同一（amber[400] / blue[50] / blue[200] /
+ * pink[200]）で、移した時点で実測して一致を確認している。
+ */
+const AMBER_400 = '#ffca28'
+const BLUE_50 = '#e3f2fd'
+const BLUE_200 = '#90caf9'
+const PINK_200 = '#f48fb1'
+
+/**
  * 色を「前景」として使うときに選ぶべき variant。
  *
  * セマンティック色の main は明度がまちまちで、明るいもの（info #1dafc2 は
@@ -134,12 +145,16 @@ export const foregroundVariant = (
  * 前景色に持たせる余裕。
  *
  * ちょうど 4.5:1 で止めると余裕がゼロになり、その色を淡い tint の上に
- * 置いた瞬間に基準を割る。実測すると `success.textContrast` を
- * `success.lighter` に重ねた「+12%」が 4.49:1 で、0.01 足りなかった。
+ * 置いた瞬間に基準を割る。
  *
  * 前景は素の背景の上だけに置かれるとは限らない。Chip・Alert・
  * ハイライト行など、薄く色を敷いた面に乗ることの方が多い。
  * 素の面に対して少し濃いめに決めておけば、その分がそのまま余裕になる。
+ *
+ * ただし**余裕は経験則なので、実在する面の代わりにはならない**。
+ * `X.lighter` は実際に敷かれる面なので、余裕に頼らず基準面として測る
+ * （下の withTextContrast を参照）。ここに残しているのは
+ * `alpha(color, 0.12)` のように**動的に合成される** tint の分。
  */
 const TEXT_CONTRAST_HEADROOM = 1.2
 
@@ -158,18 +173,28 @@ export const withTextContrast = (
   // まず用途に応じた variant を選び、それでも本文 AA に届かなければ
   // 色相・彩度を保ったまま明度だけ動かして基準まで持っていく。
   //
-  // paper と default の両方に対して満たす必要がある。どちらが厳しいかは
-  // モードで入れ替わるため（ライトは暗い文字なので暗い default が厳しく、
-  // ダークは明るい文字なので明るい paper が厳しい）、片方だけを基準に
-  // すると、もう一方の面に置いたときに AA を割る。
-  textContrast: ensureContrast(
-    ensureContrast(
-      foregroundVariant(cs, mode),
-      background.paper,
-      CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM
-    ),
-    background.default,
-    CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM
+  // 基準は「実際に敷かれる面」を全部並べる。どれが厳しいかはモードで
+  // 入れ替わるため（ライトは暗い文字なので暗い default が厳しく、ダークは
+  // 明るい文字なので明るい paper が厳しい）、1 面だけを基準にすると
+  // 別の面に置いたときに AA を割る。
+  //
+  // cs.lighter を入れているのは、textContrast が置かれる面として
+  // paper / default より **lighter の方が多い** ため。ここを余裕
+  // (TEXT_CONTRAST_HEADROOM) で吸収しようとして、dark-dracula の
+  // primary が 4.31:1 のまま通っていた（#121）。lighter は
+  // 実在する面なので、経験則ではなく基準面として測る。
+  //
+  // 同一モード内では 3 面とも同じ向き（ライトなら暗く、ダークなら明るく）
+  // にしか動かないので、順に適用しても前の面の達成を崩さない。
+  textContrast: (
+    [
+      [background.paper, CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM],
+      [background.default, CONTRAST_THRESHOLD.text * TEXT_CONTRAST_HEADROOM],
+      [cs.lighter, CONTRAST_THRESHOLD.text],
+    ] as const
+  ).reduce(
+    (fg, [surface, target]) => ensureContrast(fg, surface, target),
+    foregroundVariant(cs, mode)
   ),
 })
 
@@ -386,7 +411,7 @@ export const createLightThemeColors = (
     background: env.background,
     action: env.action,
     surface: env.surface,
-    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    icon: { white: '#ffffff', ...env.icon, action: AMBER_400 },
     divider: env.divider,
     common: { black: '#09090b', white: '#ffffff' },
   }
@@ -535,7 +560,7 @@ export const createDarkThemeColors = (
     background: env.background,
     action: env.action,
     surface: env.surface,
-    icon: { white: '#ffffff', ...env.icon, action: amber[400] },
+    icon: { white: '#ffffff', ...env.icon, action: AMBER_400 },
     divider: env.divider,
     common: { black: '#09090b', white: '#ffffff' },
   }
@@ -611,6 +636,15 @@ export const createCssVars = (c: ThemeColors): Record<string, string> => ({
   '--color-muted': c.text.secondary,
   '--color-border': c.divider,
 
+  // hover / selected の面。
+  //
+  // tailwind.config の accent がこれを静的な colorData から取っていたため、
+  // Tailwind 側の hover だけモードに追従せず、ダークでライトの値
+  // （near-black の文字色）が出ていた。MUI の palette は追従していたので
+  // 同じ画面で MUI 製と CVA 製のボタンの hover が食い違う
+  '--color-action-hover': c.action.hover,
+  '--color-action-selected': c.action.selected,
+
   // フォーカスリング。ブランド色そのままだと primary の塗り面で溶けるため、
   // 面と地の両方に対して UI 基準 (3:1) を満たす明度に寄せた値を持つ
   '--color-ring': focusRingColor(c.primary.main, c.background),
@@ -624,8 +658,8 @@ export const DARK_SCHEME_STORAGE_KEY = COLOR_SCHEME_STORAGE_KEY
 // これは、後にチャートなどの色を設計する時の参考
 export const colorData = {
   chart: {
-    blue: { 50: blue[50], 200: blue[200] },
-    pink: { 200: pink[200] },
+    blue: { 50: BLUE_50, 200: BLUE_200 },
+    pink: { 200: PINK_200 },
   },
   ...createLightColors(),
   dark: createDarkThemeColors('dracula'), // デフォルト: Dracula(後方互換)

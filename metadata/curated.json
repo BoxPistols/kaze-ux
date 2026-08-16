@@ -1,0 +1,84 @@
+{
+  "$schema": "https://kaze-ux.dev/schema/curated-metadata.json",
+  "$description": "story から機械的に取れないものだけを手で持つ。キーは components.json の生成キーに一致させる（名前で寄せると別部品に重なる）。pending は重ね先が決まらないもので、story を整備したら components へ移す",
+  "components": {
+    "tailwindButton": {
+      "accessibility": [
+        "focus-visible:ring",
+        "disabled:opacity-50",
+        "aria-disabled"
+      ],
+      "prohibited": ["React.FC使用禁止", "MUI Buttonとの混在禁止"],
+      "sample": "<Button variant='outline' size='sm'>Click</Button>"
+    },
+    "iconButton": {
+      "accessibility": ["aria-label必須", "aria-busy", "tooltip"],
+      "sample": "<IconButton tooltip='Edit' aria-label='Edit'><EditIcon /></IconButton>"
+    },
+    "loadingButton": {
+      "accessibility": ["aria-busy", "aria-disabled"]
+    },
+    "dialog": {
+      "accessibility": [
+        "role=alertdialog",
+        "aria-labelledby",
+        "aria-describedby"
+      ],
+      "prohibited": ["window.confirm使用禁止"]
+    },
+    "customTextField": {
+      "accessibility": [
+        "aria-label",
+        "aria-required",
+        "aria-invalid",
+        "aria-describedby"
+      ],
+      "sample": "<CustomTextField label='名前' required placeholder='入力してください' />"
+    },
+    "select": {
+      "accessibility": ["aria-label", "aria-required", "aria-invalid"],
+      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />"
+    },
+    "dateTimePicker": {
+      "accessibility": ["aria-label", "LocalizationProvider"]
+    },
+    "pagination": {
+      "accessibility": ["aria-label", "keyboard navigation"]
+    },
+    "accordion": {
+      "accessibility": ["role=button", "aria-expanded", "keyboard navigation"]
+    },
+    "userAvatar": {
+      "accessibility": ["alt text", "aria-label"]
+    },
+    "actionMenu": {
+      "accessibility": [
+        "aria-label",
+        "aria-controls",
+        "aria-expanded",
+        "aria-haspopup"
+      ]
+    },
+    "fab": {
+      "accessibility": ["aria-label", "tooltip"]
+    },
+    "splitButton": {
+      "accessibility": ["aria-controls", "aria-expanded", "aria-haspopup=menu"]
+    },
+    "chatSupport": {
+      "accessibility": ["keyboard shortcuts", "aria-live"]
+    }
+  },
+  "pending": {
+    "Card": {
+      "sample": "<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardContent>Body</CardContent></Card>",
+      "$reason": "DS の Card (src/components/ui/Card.tsx) に部品 story が無い。story 名 Card は MUI の Card を指すので、そこへ重ねると別物の説明になる",
+      "path": "src/components/ui/Card.tsx"
+    },
+    "MultiSelectAutocomplete": {
+      "accessibility": ["aria-label", "aria-required"],
+      "$reason": "Form/Select story に CustomSelect と同居している。story を分けるまで重ね先が一意に決まらない",
+      "path": "src/components/Form/MultiSelectAutocomplete/index.tsx"
+    }
+  }
+}

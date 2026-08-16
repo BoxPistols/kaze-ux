@@ -125,5 +125,3 @@ export const ShadcnExample = () => {
     </div>
   )
 }
-
-export default ShadcnExample

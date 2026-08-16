@@ -99,7 +99,7 @@ export const CodeBlockPre = ({ children }: { children?: React.ReactNode }) => {
 /**
  * インラインcode要素。ブロックcodeは CodeBlockPre が処理するためシンプルに返す。
  */
-const CodeBlock = ({
+export const CodeBlock = ({
   children,
   className,
 }: {
@@ -108,5 +108,3 @@ const CodeBlock = ({
 }) => {
   return <code className={className}>{children}</code>
 }
-
-export default CodeBlock

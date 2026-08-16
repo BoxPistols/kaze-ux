@@ -245,5 +245,3 @@ export const ResizableDivider = React.forwardRef<
 })
 
 ResizableDivider.displayName = 'ResizableDivider'
-
-export default ResizableDivider

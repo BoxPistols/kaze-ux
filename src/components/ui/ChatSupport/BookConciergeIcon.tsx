@@ -1,6 +1,6 @@
 // ChatSupport 本アイコン（コンシェルジュ）
 
-const BookConciergeIcon = ({ size = 24 }: { size?: number }) => (
+export const BookConciergeIcon = ({ size = 24 }: { size?: number }) => (
   <svg
     width={size}
     height={size}
@@ -20,5 +20,3 @@ const BookConciergeIcon = ({ size = 24 }: { size?: number }) => (
     <path d='M12 6.25v14.14' strokeWidth={1.65} />
   </svg>
 )
-
-export default BookConciergeIcon

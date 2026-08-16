@@ -6,8 +6,13 @@ import { lazy, Suspense } from 'react'
 
 import type { DateTimePickerProps } from './index'
 
-// 遅延読み込み
-const DateTimePicker = lazy(() => import('./index'))
+// 遅延読み込み。
+// lazy() は `{ default: Component }` を要求するが、DS は named export で
+// 統一している（C03）。default export を残すのではなく、ここで名前を
+// 束ね直す
+const DateTimePicker = lazy(() =>
+  import('./index').then((m) => ({ default: m.DateTimePicker }))
+)
 
 // ラベルコンテナ（ローディング表示用）
 const LabelContainer = styled(Box)({
@@ -91,5 +96,3 @@ export const LazyDateTimePicker = (props: DateTimePickerProps) => {
     </Suspense>
   )
 }
-
-export default LazyDateTimePicker

@@ -26,10 +26,10 @@ import { chromium } from 'playwright'
 import { CONTRAST_AUDIT } from './lib/contrast-audit.mjs'
 
 const TARGETS = [
-  ['LP', 'http://localhost:5174/'],
-  ['SaaS', 'http://localhost:3003/'],
+  ['LP', 'http://localhost:5173/'],
+  ['SaaS', 'http://localhost:3001/'],
   ['KazeEats', 'http://localhost:3002/'],
-  ['KazeLogistics', 'http://localhost:3004/'],
+  ['KazeLogistics', 'http://localhost:3003/'],
 ]
 
 const SCHEMES = (process.env.AUDIT_SCHEMES ?? 'light').split(',')

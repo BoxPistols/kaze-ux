@@ -113,5 +113,3 @@ export const StatusTag = ({
     />
   )
 }
-
-export default StatusTag

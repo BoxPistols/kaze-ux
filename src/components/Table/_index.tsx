@@ -260,7 +260,6 @@ const TableRows = ({
                 size='small'
                 onClick={() => onView(row)}
                 color='secondary'
-                title='View'
                 sx={{ mr: 1 }}>
                 <VisibilityIcon fontSize='small' />
               </IconButton>
@@ -270,7 +269,6 @@ const TableRows = ({
                 size='small'
                 onClick={() => onEdit(row)}
                 color='secondary'
-                title='Edit'
                 sx={{ mr: 1 }}>
                 <EditIcon fontSize='small' />
               </IconButton>
@@ -279,8 +277,7 @@ const TableRows = ({
               <IconButton
                 size='small'
                 onClick={() => onDelete(row)}
-                color='secondary'
-                title='Delete'>
+                color='secondary'>
                 <DeleteIcon fontSize='small' />
               </IconButton>
             </Tooltip>

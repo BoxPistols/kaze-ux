@@ -144,5 +144,3 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 )
 
 LoadingButton.displayName = 'LoadingButton'
-
-export default LoadingButton

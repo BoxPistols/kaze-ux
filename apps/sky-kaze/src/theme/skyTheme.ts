@@ -6,7 +6,11 @@ import {
   withTextContrast,
 } from '@/themes/colorToken'
 import type { ColorSet, ThemeColors } from '@/themes/colorToken'
-import { bestContrast } from '@/themes/contrast'
+import {
+  CONTRAST_THRESHOLD,
+  bestContrast,
+  ensureContrast,
+} from '@/themes/contrast'
 import { createBrandTheme } from '@/themes/theme'
 
 import {
@@ -36,6 +40,21 @@ declare module '@mui/material/styles' {
 const onSurface = (bg: string) => bestContrast(bg, ON_SURFACE_INKS)
 
 /**
+ * secondary の文字が実際に置かれる面のうち、最も厳しいもの。
+ *
+ * 素の #64748B は paper (#FFFFFF) で 4.76:1、default (#FAFAFA) で 4.56:1 と
+ * 足りているが、**素の背景の上にだけ置かれるわけではない**。
+ *
+ * - テーブル見出しの `action.hover` を paper に合成した #F5F5F5 で 4.36:1
+ * - ステップ説明の `alpha(LOGI_ORANGE, 0.06)` を default に重ねた #FAF2EC で 4.30:1
+ *
+ * 実測で 16 箇所割れていた。箇所ごとに text.primary へ持ち上げると階層が
+ * 潰れるうえ、次に淡い面のテーブルを足したときに再発する。面の側を基準に
+ * 入れて、トークンの値で解く。
+ */
+const SECONDARY_WORST_SURFACE = '#FAF2EC'
+
+/**
  * KazeLogistics の環境色。
  *
  * ダークの面を navy に保つのは意匠の都合だけではない。colors.ts の
@@ -46,7 +65,14 @@ const onSurface = (bg: string) => bestContrast(bg, ON_SURFACE_INKS)
 const skyEnv = {
   light: {
     background: { default: '#FAFAFA', paper: '#FFFFFF' },
-    text: { primary: LOGI_NAVY, secondary: '#64748B' },
+    text: {
+      primary: LOGI_NAVY,
+      secondary: ensureContrast(
+        '#64748B',
+        SECONDARY_WORST_SURFACE,
+        CONTRAST_THRESHOLD.text
+      ),
+    },
     divider: '#E5E7EB',
   },
   dark: {

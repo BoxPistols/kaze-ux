@@ -10,6 +10,11 @@ import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
 import {
+  DS_CORE_FORBIDDEN_PATTERNS,
+  DS_CORE_MODULES,
+  DS_CORE_VIOLATION_MESSAGE,
+} from './scripts/ds-core.mjs'
+import {
   DS_EQUIVALENT,
   RESTRICTED_MUI_IMPORTS,
 } from './scripts/ds-equivalents.mjs'
@@ -228,6 +233,49 @@ export default tseslint.config({
           name: '@mui/material',
           importNames: [name],
           message: `DS の ${DS_EQUIVALENT[name]} を使ってください。レイアウト原始要素 (Box / Grid / Stack / Typography 等) は対象外です。`,
+        })),
+      },
+    ],
+  },
+}, {
+  // named export で統一する（禁止パターン C03）
+  //
+  // 書いてあるだけで止めるものが無く、**33 箇所で破られていた**。同じ部品が
+  // default と named の両方で取れると、AI が生成するコードの import 形式が
+  // 揃わない。ルールを残すなら止める仕組みを付ける。
+  //
+  // story の `export default meta` は Storybook の仕様なので対象外。
+  name: 'kaze/named-exports-only',
+  files: [
+    'src/components/**/*.{ts,tsx}',
+    'src/themes/**/*.{ts,tsx}',
+    'src/layouts/**/*.{ts,tsx}',
+    'src/utils/**/*.{ts,tsx}',
+    'apps/*/src/**/*.{ts,tsx}',
+  ],
+  ignores: ['**/*.stories.{ts,tsx}', '**/*.config.{ts,tsx}'],
+  rules: {
+    'import/no-default-export': 'error',
+  },
+}, {
+  // DS コア層に UI ライブラリを持ち込ませない
+  //
+  // 「MUI があってもなくても使えるデザインシステム」にするための境界線。
+  // 部品 10,321 行を一度に剥がすのは無理なので、外から使いたい層
+  // （トークン・色の計算・タイポグラフィ）だけ先に線を引いて固定する。
+  //
+  // 一覧は scripts/ds-core.mjs が単一ソース。同じ表を
+  // coreDependencies.test.ts も見ており、そちらは依存グラフを辿るので
+  // 「コア以外のファイル経由で MUI が入る」経路も塞ぐ。
+  name: 'kaze/ds-core-no-ui-library',
+  files: DS_CORE_MODULES,
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: DS_CORE_FORBIDDEN_PATTERNS.map((group) => ({
+          group: [group],
+          message: DS_CORE_VIOLATION_MESSAGE,
         })),
       },
     ],

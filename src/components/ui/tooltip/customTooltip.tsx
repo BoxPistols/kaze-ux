@@ -19,5 +19,3 @@ export const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     padding: '8px',
   },
 })
-
-export default CustomTooltip

@@ -193,14 +193,20 @@ describe('前景用スロット textContrast (全 6 テーマ)', () => {
   ] as const
 
   for (const [name, c] of allThemes) {
-    it(`${name}: textContrast が paper / default 双方で本文 AA を満たす`, () => {
-      // どちらが厳しいかはモードで入れ替わるため両面を検証する
+    it(`${name}: textContrast が paper / default / lighter のどの面でも本文 AA を満たす`, () => {
+      // どちらが厳しいかはモードで入れ替わるため全面を検証する。
+      //
+      // lighter を含めるのは、textContrast が実際に置かれる面として
+      // 素の背景より lighter の方が多いため。ここを検証していなかった
+      // 間、dark-dracula の primary が lighter 上で 4.31:1 のまま
+      // 通っていた（#121）。
       for (const key of semantic) {
         const fg = c[key].textContrast
         expect(fg, `${name} ${key}.textContrast が未定義`).toBeDefined()
         for (const [surface, bg] of [
           ['paper', c.background.paper],
           ['default', c.background.default],
+          ['lighter', c[key].lighter],
         ] as const) {
           const ratio = contrastRatio(fg as string, bg)
           expect(

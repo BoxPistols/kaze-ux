@@ -60,6 +60,52 @@ jobs:
         run: pnpm lint
         continue-on-error: false
 
+      # DS コア層が UI ライブラリに依存していないこと。
+      # ESLint はファイル単位でしか見ないので、コア外を 1 枚挟んだ経路
+      # (core → helper → @mui) を素通りさせる。こちらは依存グラフを辿る。
+      - name: Check DS core has no UI-library dependency
+        run: pnpm check:ds-core
+
+      # 禁止パターンが実際に守られているか。
+      # 「書いてあるが守られていない」ルールは AI にとって嘘の仕様になる。
+      # 説明を読んだ AI は従い、コードを読んだ AI は真似る
+      - name: Check prohibited patterns
+        run: pnpm check:rules
+
+      # CLAUDE.md の Quick Reference は「このファイルだけで基本 UI 生成可能」と
+      # 謳っている、AI が最初に読む場所。ここがズレると以降の生成すべてに
+      # 効くうえ、読んだ側からは正しいか判断できない
+      - name: Check CLAUDE.md Quick Reference matches the implementation
+        run: pnpm check:quickref
+
+      # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
+      # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
+      # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば
+      # 分かるが、動くかどうかは起動しないと分からない
+      - name: Check the registered MCP server actually works
+        run: pnpm check:mcp
+
+      # design-tokens/tokens.json は src/themes と story から生成する派生物。
+      # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
+      # なので、古いまま配ると相手は黙って古い値を掴む。
+      # 実際 StatCard / EmptyState を DS に足したときに再生成が漏れていた。
+      # 生成物が古いまま配られないようにする。
+      #
+      # metadata/components.json は MCP サーバが AI に配る唯一の部品情報。
+      # 手書きだった間は公開 54 件のうち 18 件しか載っておらず、載っていない
+      # ものについては AI が prop を推測して書いていた（エラーは出ない）
+      - name: Check generated artifacts are up to date
+        run: |
+          pnpm export-tokens
+          pnpm export-css
+          pnpm export-metadata
+          pnpm export-rules
+          if ! git diff --quiet design-tokens/ metadata/ foundations/; then
+            echo "::error::生成物が古いです。pnpm export-tokens && pnpm export-css && pnpm export-metadata && pnpm export-rules を実行してコミットしてください"
+            git diff --stat design-tokens/ metadata/ foundations/
+            exit 1
+          fi
+
       - name: Check for console.log
         run: |
           echo "Checking for console.log remnants..."
@@ -184,6 +230,20 @@ jobs:
       # ビルドした物を実際に描画して測る
       - name: Install Chromium for a11y check
         run: pnpm exec playwright install --with-deps chromium
+
+      # design-tokens/kaze-tokens.css は MUI を入れないプロダクトが読む
+      # 唯一の色の入口。詳細度と順序（スキーム属性とモード属性が同じ重み、
+      # prefers-color-scheme と明示指定の優先関係）はソースを読んでも
+      # 判定できないので、実ブラウザで computed value を測る
+      - name: Check CSS variables resolve as intended
+        run: pnpm check:css-vars
+
+      # README の手順どおりに組んだ「kaze-ux を参照しない Tailwind
+      # プロジェクト」を実際にビルドして描画する。利用者が踏む経路は
+      # 「README を読む → 設定を書く → ビルド → 描画」で、途中のどこが
+      # 欠けても色は付かない。CSS 単体の検査では通ってしまう
+      - name: Check the documented Tailwind integration actually works
+        run: pnpm check:tailwind-consumer
 
       # 配信と検査を 1 ステップにまとめる。
       # ステップをまたいで背景プロセスが生きている前提を持たない

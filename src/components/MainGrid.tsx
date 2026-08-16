@@ -10,7 +10,7 @@ interface MainGridProps {
   overview?: string
 }
 
-export default function MainGrid({ children, overview }: MainGridProps) {
+export function MainGrid({ children, overview }: MainGridProps) {
   return (
     <Container
       sx={{

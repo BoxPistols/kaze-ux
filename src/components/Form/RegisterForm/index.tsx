@@ -102,5 +102,3 @@ export const RegisterForm = ({
     </Box>
   )
 }
-
-export default RegisterForm

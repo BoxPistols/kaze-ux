@@ -47,6 +47,7 @@ const DemoItem = ({
       textAlign: 'center',
       // contrastText は main の面に対して設計された色。light に重ねると
       // 3.95:1 で届かない。淡い面には前景用の textContrast を合わせる
+      // （textContrast は lighter の面も基準に入れて算出している）
       bgcolor: 'primary.lighter',
       color: 'primary.textContrast',
       fontWeight: 700,

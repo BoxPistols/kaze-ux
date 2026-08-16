@@ -252,5 +252,3 @@ export const MonthView = ({
     </Box>
   )
 }
-
-export default MonthView

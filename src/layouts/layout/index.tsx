@@ -13,7 +13,7 @@ type LayoutProps = {
   children?: React.ReactNode
 }
 
-const Layout = ({
+export const Layout = ({
   open = false,
   onToggle,
   sideNavWidth = LAYOUT_CONSTANTS.SIDEBAR.WIDTH_CLOSED,
@@ -63,5 +63,3 @@ const Layout = ({
     </Box>
   )
 }
-
-export default Layout

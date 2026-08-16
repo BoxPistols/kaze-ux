@@ -304,5 +304,3 @@ export const DayView = ({
     </Box>
   )
 }
-
-export default DayView

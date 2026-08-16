@@ -31,7 +31,11 @@ import {
   INCIDENT_LABELS,
   INCIDENT_COLORS,
 } from '~/data/simulation'
-import { LOGI_ORANGE, logiForegroundLarge } from '~/theme/colors'
+import {
+  LOGI_ORANGE,
+  logiForeground,
+  logiForegroundLarge,
+} from '~/theme/colors'
 
 // メモ用の型
 interface ShipmentNote {
@@ -503,7 +507,9 @@ export const CompleteView = () => {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 700,
                       fontSize: '14px',
-                      color: LOGI_ORANGE,
+                      // 14px なので大きい文字の 3:1 ではなく本文の 4.5 が要る。
+                      // 素の LOGI_ORANGE は白地で 2.8:1（実測で 10 件破綻）
+                      color: (t) => logiForeground(LOGI_ORANGE, t.palette.mode),
                     }}>
                     {s.trackingNo}
                   </Typography>

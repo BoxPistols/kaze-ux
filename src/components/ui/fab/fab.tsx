@@ -212,5 +212,3 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(
 )
 
 Fab.displayName = 'Fab'
-
-export default Fab

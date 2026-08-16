@@ -153,5 +153,3 @@ export const DateTimePicker = ({
 // dayjsユーティリティもエクスポート
 export { dayjs }
 export type { Dayjs }
-
-export default DateTimePicker
