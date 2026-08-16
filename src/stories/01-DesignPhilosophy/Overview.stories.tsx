@@ -22,34 +22,28 @@ const DesignPhilosophyOverview = () => {
   const isDark = theme.palette.mode === 'dark'
 
   const brandIdentity = {
-    slogan: '規律の上に、自由をつくる',
-    mission: '表現の自由と、品質の下限を、同時に成立させる',
+    slogan: '整えて、委ねる',
+    mission: 'つくる人の手に、確かな土台を',
     vision: [
-      '人にも機械にも同じ仕様を示し、宣言と実装が食い違わない状態を保ちつづける',
-      '守るのは下限だけ。意匠はプロダクトに委ねる',
-      '規律は、成果物に現れる',
+      '見えないところほど、丁寧に',
+      '決めたことは、守りきる',
+      '余計なものを、置かない',
     ],
     values: [
       {
-        title: '実証性',
+        title: '誠実',
         color: 'primary.textContrast',
-        attributes: ['実測', '反証可能', '透明', '再現性', '誠実さ'],
+        attributes: ['正確', '透明', '率直', '一貫', '責任'],
       },
       {
         title: '抑制',
         color: '#1dafc2',
-        attributes: [
-          '簡潔',
-          '削ぎ落とす',
-          '装飾を疑う',
-          '借り物を使わない',
-          '一点集中',
-        ],
+        attributes: ['簡潔', '静けさ', '余白', '品位', '潔さ'],
       },
       {
-        title: '開放性',
+        title: '開放',
         color: '#46ab4a',
-        attributes: ['非依存', '可搬性', '拡張可能', '相互運用', '機械可読'],
+        attributes: ['寛容', '平明', '共有', '越境', '継承'],
       },
     ],
   }
@@ -57,21 +51,21 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '強制をともなう規範',
-      description: '止める仕組みを持たないものを、規範とは呼ばない',
-      details: '強制の所在を規約と同じ場所に記し、無い場合は「なし」と明示する',
+      title: '守るべき一線',
+      description: '譲れないものを、先に決めておく',
+      details: '決めていないものは、いつのまにか失われる',
     },
     {
       num: '02',
-      title: 'ひとつの定義',
-      description: '人が読む記述は、機械が読む定義から導く',
-      details: 'ふたつの記述が併存すれば必ず乖離する。単一の定義から生成する',
+      title: 'ひとつの拠り所',
+      description: '立ち返る場所を、ひとつに',
+      details: '拠り所がふたつあれば、どちらも信じられなくなる',
     },
     {
       num: '03',
-      title: '下限だけの保証',
-      description: '読めること、触れられること、伝わること',
-      details: '色も書体も余白も、選ぶのは作り手。共通の基盤は最低条件に限る',
+      title: '表現は託す',
+      description: '選ぶ楽しみを、つくる人に残す',
+      details: '整えるのは土台まで。その先には口を出さない',
     },
   ]
 
