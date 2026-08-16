@@ -78,7 +78,11 @@ export const ChatMessageList = ({
                   height: 28,
                   mt: 0.5,
                   flexShrink: 0,
+                  // MUI の Avatar は既定の文字色が background.default なので、
+                  // ダークでは黒いアイコンが淡い面に乗って周囲の白文字と食い違う。
+                  // 面ごとに測ってある前景色トークンを当てる
                   bgcolor: isUser ? 'secondary.main' : 'primary.light',
+                  color: isUser ? 'secondary.contrastText' : 'primary.onLight',
                   fontSize: 12,
                 }}>
                 {isUser ? <User size={14} /> : <Bot size={14} />}

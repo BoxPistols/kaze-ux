@@ -26,7 +26,24 @@ export interface DailyUsage {
   /** ローカル日付 (YYYY-MM-DD)。日付が変われば自動的にリセットされる */
   date: string
   count: number
+  /**
+   * この記録を作った日 (YYYY-MM-DD)。
+   *
+   * 日付が変わればカウントは 0 に戻るが、**localStorage の項目自体は
+   * 残り続ける**。使わなくなった端末にいつまでも痕跡を置かないよう、
+   * 一定期間が過ぎたら項目ごと消して作り直す
+   */
+  since?: string
 }
+
+/**
+ * 記録を保持する日数。これを超えたら localStorage の項目ごと消す。
+ *
+ * 上限は 1 日単位なので、保持しても意味があるのは当日分だけ。
+ * それでも数日は残す（日付をまたぐ利用や時計のずれで、消しすぎると
+ * 上限がすり抜ける）。1 週間を目安にする
+ */
+export const USAGE_RETENTION_DAYS = 7
 
 /**
  * ローカル日付を YYYY-MM-DD で返す。
@@ -44,7 +61,52 @@ export const localDateKey = (now: Date = new Date()): string => {
 const emptyUsage = (now?: Date): DailyUsage => ({
   date: localDateKey(now),
   count: 0,
+  since: localDateKey(now),
 })
+
+/** YYYY-MM-DD 同士の日数差。パースできなければ「古い」とみなす */
+const daysBetween = (from: string | undefined, to: string): number => {
+  if (!from) return Number.POSITIVE_INFINITY
+  const a = Date.parse(`${from}T00:00:00`)
+  const b = Date.parse(`${to}T00:00:00`)
+  if (Number.isNaN(a) || Number.isNaN(b)) return Number.POSITIVE_INFINITY
+  return Math.floor((b - a) / (24 * 60 * 60 * 1000))
+}
+
+/**
+ * 保持期間を過ぎた記録を localStorage から消す。
+ *
+ * 日付が変わればカウントは 0 に戻るが、**項目そのものは残り続ける**。
+ * 使わなくなった端末に痕跡を置き続けないよう、期間を過ぎたら項目ごと消す。
+ *
+ * 戻り値は「消したか」。読み取り側はこの後 emptyUsage から数え直す
+ */
+export const pruneExpiredUsage = (now: Date = new Date()): boolean => {
+  if (typeof localStorage === 'undefined') return false
+  try {
+    const raw = localStorage.getItem(USAGE_STORAGE_KEY)
+    if (!raw) return false
+    const parsed: unknown = JSON.parse(raw)
+    if (typeof parsed !== 'object' || parsed === null) {
+      localStorage.removeItem(USAGE_STORAGE_KEY)
+      return true
+    }
+    const since = (parsed as DailyUsage).since ?? (parsed as DailyUsage).date
+    if (daysBetween(since, localDateKey(now)) < USAGE_RETENTION_DAYS) {
+      return false
+    }
+    localStorage.removeItem(USAGE_STORAGE_KEY)
+    return true
+  } catch {
+    // 壊れているなら残しておく理由が無い
+    try {
+      localStorage.removeItem(USAGE_STORAGE_KEY)
+    } catch {
+      /* localStorage 自体が使えない */
+    }
+    return true
+  }
+}
 
 /**
  * 保存済みの利用状況を読む。日付が変わっていれば 0 から数え直す。
@@ -54,6 +116,9 @@ const emptyUsage = (now?: Date): DailyUsage => ({
  */
 export const readUsage = (now: Date = new Date()): DailyUsage => {
   if (typeof localStorage === 'undefined') return emptyUsage(now)
+  // 期限切れの記録は読む前に消す。読み取りのたびに掃除されるので、
+  // 別途スケジューラを持たなくてよい
+  pruneExpiredUsage(now)
   try {
     const raw = localStorage.getItem(USAGE_STORAGE_KEY)
     if (!raw) return emptyUsage(now)
@@ -68,9 +133,16 @@ export const readUsage = (now: Date = new Date()): DailyUsage => {
       return emptyUsage(now)
     }
     const usage = parsed as DailyUsage
-    if (usage.date !== localDateKey(now)) return emptyUsage(now)
+    if (usage.date !== localDateKey(now)) {
+      // 日付だけ変わった場合は since を引き継ぐ（保持期間の起点を保つ）
+      return { ...emptyUsage(now), since: usage.since ?? usage.date }
+    }
     // 手で書き換えられていても負数や小数にはしない
-    return { date: usage.date, count: Math.max(0, Math.floor(usage.count)) }
+    return {
+      date: usage.date,
+      count: Math.max(0, Math.floor(usage.count)),
+      since: usage.since ?? usage.date,
+    }
   } catch {
     return emptyUsage(now)
   }

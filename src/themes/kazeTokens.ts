@@ -42,8 +42,11 @@ export const kazeTokens = {
     },
   },
   font: {
-    display:
-      "'Fraunces', 'Shippori Mincho B1', 'Noto Serif JP', Georgia, serif",
+    // 見出しも本文と同じグロテスク系で統一する。
+    // 以前は可変明朝 (Fraunces) を SOFT/WONK 軸つきで使っていたが、
+    // 字面が波打って読みにくく、装飾が意味を持っていなかった。
+    // MUI 側の stack と同じ並びにして、面をまたいでも書体が変わらないようにする
+    display: "'Inter', 'Noto Sans JP', Helvetica, Arial, sans-serif",
     body: "'IBM Plex Sans', 'IBM Plex Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif",
     mono: "'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace",
   },

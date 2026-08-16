@@ -323,12 +323,17 @@ export const PrepareView = () => {
               </Button>
             </Box>
             <Card sx={{ mb: 4 }}>
-              <CardContent className='p-0'>
+              <CardContent
+                className='p-0'
+                // 固定列のテーブルは狭い画面で潰れる。列幅を保ったまま
+                // 横スクロールさせる（1 文字ずつ折り返す描画を防ぐ）
+                sx={{ overflowX: 'auto' }}>
                 {/* ヘッダー行 */}
                 <Box
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: '160px 1fr 120px 80px 100px',
+                    minWidth: 700,
                     gap: 2,
                     px: 3,
                     py: 1.5,
@@ -364,6 +369,7 @@ export const PrepareView = () => {
                     sx={{
                       display: 'grid',
                       gridTemplateColumns: '160px 1fr 120px 80px 100px',
+                      minWidth: 700,
                       gap: 2,
                       px: 3,
                       py: 2,
@@ -457,7 +463,11 @@ export const PrepareView = () => {
               </Button>
             </Box>
             <Card sx={{ mb: 4 }}>
-              <CardContent className='p-0'>
+              <CardContent
+                className='p-0'
+                // 固定列のテーブルは狭い画面で潰れる。列幅を保ったまま
+                // 横スクロールさせる（1 文字ずつ折り返す描画を防ぐ）
+                sx={{ overflowX: 'auto' }}>
                 {categories.map((cat, catIdx) => (
                   <Box key={cat}>
                     <Box

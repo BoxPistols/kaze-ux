@@ -219,11 +219,16 @@ export const CompleteView = () => {
         {/* ── ドライバー成績 ── */}
         <SectionTitle sx={{ mb: 2 }}>ドライバー成績</SectionTitle>
         <Card sx={{ mb: 5 }}>
-          <CardContent className='p-0'>
+          <CardContent
+            className='p-0'
+            // 固定列のテーブルは狭い画面で潰れる。列幅を保ったまま
+            // 横スクロールさせる（1 文字ずつ折り返す描画を防ぐ）
+            sx={{ overflowX: 'auto' }}>
             <Box
               sx={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 100px 80px 80px 100px',
+                minWidth: 560,
                 gap: 2,
                 px: 3,
                 py: 1.5,
@@ -259,6 +264,7 @@ export const CompleteView = () => {
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 100px 80px 80px 100px',
+                    minWidth: 560,
                     gap: 2,
                     px: 3,
                     py: 2,
@@ -434,11 +440,16 @@ export const CompleteView = () => {
           />
         </Box>
         <Card sx={{ mb: 5 }}>
-          <CardContent className='p-0'>
+          <CardContent
+            className='p-0'
+            // 固定列のテーブルは狭い画面で潰れる。列幅を保ったまま
+            // 横スクロールさせる（1 文字ずつ折り返す描画を防ぐ）
+            sx={{ overflowX: 'auto' }}>
             <Box
               sx={{
                 display: 'grid',
                 gridTemplateColumns: '130px 1fr 100px 100px 120px',
+                minWidth: 700,
                 gap: 2,
                 px: 3,
                 py: 1.5,
@@ -476,6 +487,7 @@ export const CompleteView = () => {
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: '130px 1fr 100px 100px 120px',
+                    minWidth: 700,
                     gap: 2,
                     px: 3,
                     py: 2,

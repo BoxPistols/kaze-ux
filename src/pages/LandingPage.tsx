@@ -689,14 +689,15 @@ const EYEBROW_SX = {
   mb: 2,
 } as const
 
-// Kaze 骨格 — section display (大型見出し、Fraunces Variable)
+// 大型見出し。本文と同じグロテスク系で、太さで階層を作る。
+// 以前は可変明朝の SOFT/WONK 軸で字面を波打たせていたが、読みにくいうえ
+// 装飾が意味を持っていなかったのでやめた
 const DISPLAY_SX = {
   fontFamily: 'var(--kaze-font-display)',
   fontSize: { xs: '2.5rem', md: '3.6rem' },
-  fontWeight: 400,
+  fontWeight: 700,
   letterSpacing: '-0.03em',
   lineHeight: 1.02,
-  fontVariationSettings: "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
   mb: 1.5,
 } as const
 
@@ -876,11 +877,9 @@ export const LandingPage = () => {
                   sx={{
                     fontFamily: 'var(--kaze-font-display)',
                     fontSize: { xs: '3rem', sm: '4.5rem', md: '5.5rem' },
-                    fontWeight: 400,
+                    fontWeight: 700,
                     lineHeight: 0.98,
                     letterSpacing: '-0.035em',
-                    fontVariationSettings:
-                      "'opsz' 144, 'wght' 380, 'SOFT' 30, 'WONK' 0",
                     mb: 2,
                   }}>
                   One System,
@@ -888,10 +887,8 @@ export const LandingPage = () => {
                   <Box
                     component='span'
                     sx={{
+                      // 強調は色だけで作る。斜体と可変軸は使わない
                       color: 'primary.textContrast',
-                      fontStyle: 'italic',
-                      fontVariationSettings:
-                        "'opsz' 144, 'wght' 420, 'SOFT' 70, 'WONK' 1",
                     }}>
                     Infinite
                   </Box>{' '}

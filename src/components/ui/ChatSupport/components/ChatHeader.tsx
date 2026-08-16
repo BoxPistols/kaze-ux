@@ -84,7 +84,14 @@ export const ChatHeader = ({
             </IconButton>
           ) : (
             <Avatar
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 32, height: 32 }}>
+              // ヘッダはブランド色の面。Avatar の既定色 (background.default) は
+              // ダークで黒くなるため、面に合わせて明示する
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.2)',
+                color: '#fff',
+                width: 32,
+                height: 32,
+              }}>
               <Bot size={20} />
             </Avatar>
           )}
