@@ -82,6 +82,8 @@
     "check:brand": "node scripts/check-brand-terms.mjs",
     "ds:adoption": "node scripts/ds-adoption.mjs",
     "check:ds-core": "node scripts/check-ds-core.mjs",
+    "export-css": "tsx scripts/export-css-vars.ts",
+    "check:css-vars": "tsx scripts/check-css-vars.ts",
     "ds:adoption:json": "node scripts/ds-adoption.mjs --json",
     "capture:products": "node scripts/capture-products.mjs",
     "check:anon": "node scripts/check-anonymity.mjs",

@@ -73,8 +73,9 @@ jobs:
       - name: Check design tokens are up to date
         run: |
           pnpm export-tokens
+          pnpm export-css
           if ! git diff --quiet design-tokens/; then
-            echo "::error::design-tokens/tokens.json が古いです。pnpm export-tokens を実行してコミットしてください"
+            echo "::error::design-tokens/ の生成物が古いです。pnpm export-tokens && pnpm export-css を実行してコミットしてください"
             git diff --stat design-tokens/
             exit 1
           fi
@@ -203,6 +204,13 @@ jobs:
       # ビルドした物を実際に描画して測る
       - name: Install Chromium for a11y check
         run: pnpm exec playwright install --with-deps chromium
+
+      # design-tokens/kaze-tokens.css は MUI を入れないプロダクトが読む
+      # 唯一の色の入口。詳細度と順序（スキーム属性とモード属性が同じ重み、
+      # prefers-color-scheme と明示指定の優先関係）はソースを読んでも
+      # 判定できないので、実ブラウザで computed value を測る
+      - name: Check CSS variables resolve as intended
+        run: pnpm check:css-vars
 
       # 配信と検査を 1 ステップにまとめる。
       # ステップをまたいで背景プロセスが生きている前提を持たない
