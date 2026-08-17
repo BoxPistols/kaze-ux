@@ -51,21 +51,21 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '変化に開かれた形',
-      description: '明日の用途を、今日の形が妨げない',
-      details: '増えることは、乱れることではない',
+      title: '単一の規則',
+      description: 'すべての画面が、同じ規則の上にある',
+      details: '用途が増えても、規則は増えない',
     },
     {
       num: '02',
-      title: '静けさのある画面',
-      description: '少ないほど、迷いはない',
-      details: '余白は、欠落ではない',
+      title: '最小の構成',
+      description: '画面にあるものは、役割を持つ',
+      details: '装飾は含まない',
     },
     {
       num: '03',
-      title: '揺るがない秩序',
-      description: '一貫は、細部にこそ現れる',
-      details: '例外のないところに、信頼が生まれる',
+      title: '役割と形の一致',
+      description: '同じ役割は、同じ形をとる',
+      details: '例外を持たない',
     },
   ]
 
