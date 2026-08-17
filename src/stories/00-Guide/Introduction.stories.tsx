@@ -17,10 +17,18 @@ import {
   Typography,
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
+import { useMemo } from 'react'
 
+import {
+  SHORTCUT_METADATA,
+  createDefaultShortcuts,
+  formatShortcutLabel,
+} from '@/components/ui/ChatSupport/chatSupportConstants'
 import { KazeLogo } from '@/components/ui/logo'
 import { motionOf } from '@/themes/motion'
 import { APP_LINKS } from '@/utils/appLinks'
+
+import { isMacLike, shortcutLabel } from '../_shared/shortcutKeys'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -191,6 +199,10 @@ const StyledTable = ({
 const IntroductionContent = () => {
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
+  // 閲覧者の OS でキー表記を切り替える
+  const mac = useMemo(() => isMacLike(), [])
+  const key = (command: string) => shortcutLabel(command, mac)
+  const chatShortcuts = useMemo(() => createDefaultShortcuts(), [])
 
   const benefits = [
     {
@@ -490,16 +502,16 @@ const IntroductionContent = () => {
         </SectionTitle>
         <StyledTable headers={['操作', 'ショートカット']}>
           {[
-            { action: 'コンポーネントを検索', key: '\u2318 K' },
-            { action: 'フルスクリーン', key: '\u2325 F' },
-            { action: 'サイドバーの表示/非表示', key: '\u2325 S' },
-            { action: 'アドオンパネルの表示/非表示', key: '\u2325 A' },
-            { action: 'アドオンパネルの向きを切替', key: '\u2325 D' },
-            { action: 'ツールバーの表示/非表示', key: '\u2325 T' },
-            { action: '前のコンポーネント', key: '\u2325 \u2191' },
-            { action: '次のコンポーネント', key: '\u2325 \u2193' },
-            { action: '前のストーリー', key: '\u2325 \u2190' },
-            { action: '次のストーリー', key: '\u2325 \u2192' },
+            { action: 'コンポーネントを検索', key: key('search') },
+            { action: 'フルスクリーン', key: key('fullScreen') },
+            { action: 'サイドバーの表示/非表示', key: key('toggleNav') },
+            { action: 'アドオンパネルの表示/非表示', key: key('togglePanel') },
+            { action: 'アドオンパネルの向きを切替', key: key('panelPosition') },
+            { action: 'ツールバーの表示/非表示', key: key('toolbar') },
+            { action: '前のコンポーネント', key: key('prevComponent') },
+            { action: '次のコンポーネント', key: key('nextComponent') },
+            { action: '前のストーリー', key: key('prevStory') },
+            { action: '次のストーリー', key: key('nextStory') },
           ].map((s) => (
             <TableRow key={s.action}>
               <TableCell>{s.action}</TableCell>
@@ -522,12 +534,11 @@ const IntroductionContent = () => {
           <Box
             component='span'
             sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
-            Cmd + Shift + ,
+            {key('shortcutsPage')}
           </Box>{' '}
-          （Windows: Ctrl + Shift + ,）で設定画面を開き、「Keyboard
-          shortcuts」タブからすべてのショートカットを変更できます。上の表の
-          &#8984; は Command、&#8997; は Option です。Windows と Linux では
-          それぞれ Ctrl と Alt になります。
+          で設定画面を開き、「Keyboard
+          shortcuts」タブからすべてのショートカットを変更できます。 Restore
+          defaults で既定に戻せます。
         </InfoCallout>
 
         {/* Concierge ショートカット */}
@@ -548,52 +559,18 @@ const IntroductionContent = () => {
             color: 'text.secondary',
             mb: 4,
           }}>
-          チャットウィジェット用ショートカットです。右下のConciergeチャットが対象です。
+          チャットウィジェット用ショートカットです。右下のConciergeチャットが対象です。表記はご利用の
+          OS に合わせて出ています。
         </Typography>
-        <StyledTable headers={['操作', 'Mac', 'Windows']}>
-          {[
-            { action: 'チャット開閉', mac: 'Cmd+Shift+K', win: 'Ctrl+Shift+K' },
-            { action: '入力欄にフォーカス', mac: 'Cmd+/', win: 'Ctrl+/' },
-            { action: 'メッセージ送信', mac: 'Cmd+Enter', win: 'Ctrl+Enter' },
-            {
-              action: '設定パネル切替',
-              mac: 'Cmd+Shift+S',
-              win: 'Ctrl+Shift+S',
-            },
-            {
-              action: '履歴ダウンロード',
-              mac: 'Cmd+Shift+D',
-              win: 'Ctrl+Shift+D',
-            },
-            {
-              action: 'サイドバー/ウィジェット切替',
-              mac: 'Cmd+Shift+L',
-              win: 'Ctrl+Shift+L',
-            },
-            {
-              action: '履歴クリア',
-              mac: 'Cmd+Shift+Delete',
-              win: 'Ctrl+Shift+Delete',
-            },
-            { action: 'チャットを閉じる', mac: 'Esc', win: 'Esc' },
-          ].map((s) => (
-            <TableRow key={s.action}>
-              <TableCell>{s.action}</TableCell>
+        {/* 実装から導出する。手書きすると必ずずれる（実際 2 行ずれていた）。
+            formatShortcutLabel は OS を見て Cmd / Ctrl を出し分ける */}
+        <StyledTable headers={['操作', 'ショートカット']}>
+          {SHORTCUT_METADATA.map((meta) => (
+            <TableRow key={meta.id}>
+              <TableCell>{meta.desc}</TableCell>
               <TableCell>
                 <Chip
-                  label={s.mac}
-                  size='small'
-                  variant='outlined'
-                  sx={{
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    fontSize: 12,
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={s.win}
+                  label={formatShortcutLabel(chatShortcuts[meta.id])}
                   size='small'
                   variant='outlined'
                   sx={{

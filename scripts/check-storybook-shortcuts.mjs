@@ -1,244 +1,176 @@
 #!/usr/bin/env node
 /**
- * ガイドに書いたキーボードショートカットが、Storybook の既定値と一致するか。
+ * ガイドが掲げるキーボードショートカットが、Storybook の既定値と一致するか。
  *
  *   pnpm check:shortcuts
  *
  * ## なぜ要るか
  *
- * How to Use には手書きのショートカット表があり、**5 行とも間違っていた**。
- * 素の `S` / `T` / `A` / `F` と書いてあったが、実際はすべて `alt` 修飾が要る。
- * `/` は既定に存在せず、`D` は「Docs 切替」ではなくアドオンの向きだった。
+ * How to Use と Introduction が手書きの表を持っており、**15 行のうち 11 行が
+ * 間違っていた**。素の `S` / `T` / `A` / `F` / `K` / `D` と書いてあったが、
+ * 実際はすべて `alt` 修飾が要る。`/` は既定に存在せず、`D` は「Docs 切替」
+ * ではなくアドオンパネルの向きだった。
  *
- * 誰も気づかなかったのは、**照合する相手がいなかった**から。正解は
- * Storybook 自身が持っているので、そこと突き合わせる。
+ * 誰も気づかなかったのは、**照合する相手がいなかった**から。正解は Storybook
+ * 自身が持っているので、そこと突き合わせる。
  *
- * ## 照合の範囲
+ * ## 何を照合するか
  *
- * 2 つの形を見る。
+ * `src/stories/_shared/shortcutKeys.ts` の `STORYBOOK_SHORTCUTS` は、
+ * Storybook の `defaultShortcuts` と**同じコマンド名**でキー配列を持つ。
+ * 名前ごとに配列を突き合わせるので、
  *
- * 1. 修飾キー（⌘ / ⌥）で始まる表記
- * 2. ショートカット表のデータ（`shortcut: '...'` と、`action:` と対になった
- *    `key: '...'`）
+ * - 修飾キーの欠落（`S` と `alt+S`）
+ * - 存在しないキー（`/`）
+ * - 別のコマンドの値を書く取り違え
  *
- * **1 だけでは元のバグを捕まえられない。** 素の `key: 'S'` は修飾キーで
- * 始まらないため。2 を足して初めて反証が通った。
- *
- * 逆に `key:` を無条件に拾うと、ダイアログのサイズ（`key: 'sm'`）や
- * フォームの項目名（`key: 'serialNumber'`）を誤検出する。`action:` と
- * 並んでいるものだけに絞ってある。本文中の「Figma → コード」のような
- * 矢印も対象外。**取りこぼす代わりに誤検出を出さない。**
+ * のすべてが 1 つの照合で出る。表示文字列は OS から導出されるので検査しない
+ * （検査するのは値の定義だけ）。
  */
-import { readFileSync, readdirSync, existsSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
+import { relative, resolve } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const SB_BUNDLE = resolve(
   ROOT,
   'node_modules/storybook/dist/manager-api/index.js'
 )
-const SCAN_DIR = resolve(ROOT, 'src/stories')
+const OURS = resolve(ROOT, 'src/stories/_shared/shortcutKeys.ts')
+
+const die = (...lines) => {
+  for (const l of lines) console.error(l)
+  process.exit(1)
+}
 
 // ---------------------------------------------------------------------------
-// 1. Storybook の既定値を読む
+// 1. Storybook の既定値
 // ---------------------------------------------------------------------------
 
 if (!existsSync(SB_BUNDLE)) {
-  console.error(`❌ Storybook が見つかりません: ${relative(ROOT, SB_BUNDLE)}`)
-  console.error('   pnpm install してから実行してください')
-  process.exit(1)
+  die(
+    `❌ Storybook が見つかりません: ${relative(ROOT, SB_BUNDLE)}`,
+    '   pnpm install してから実行してください'
+  )
 }
 
 const bundle = readFileSync(SB_BUNDLE, 'utf-8')
-const declaration = bundle.match(/defaultShortcuts\s*=\s*Object\.freeze\(\{/)
-if (!declaration) {
+const decl = bundle.match(/defaultShortcuts\s*=\s*Object\.freeze\(\{/)
+if (!decl) {
   // 見つからないまま緑にすると、照合していないのに「一致」と報告してしまう
-  console.error('❌ Storybook の defaultShortcuts を見つけられませんでした')
-  console.error('   バンドルの形が変わった可能性があります。この検査を直すまで')
-  console.error('   ショートカットの記述は信用できません')
-  process.exit(1)
-}
-
-// Object.freeze({ ... }) の中身を括弧の対応で切り出す
-const bodyStart = bundle.indexOf(
-  '{',
-  declaration.index + declaration[0].length - 1
-)
-let depth = 0
-let bodyEnd = -1
-for (let i = bodyStart; i < bundle.length; i++) {
-  if (bundle[i] === '{') depth++
-  else if (bundle[i] === '}') {
-    depth--
-    if (depth === 0) {
-      bodyEnd = i
-      break
-    }
-  }
-}
-const body = bundle.slice(bodyStart, bodyEnd + 1)
-
-/** `controlOrMetaKey()` は実行環境依存。Mac / それ以外の両方を許す */
-const CONTROL_OR_META = '__ctrlOrMeta__'
-
-const canonical = new Map() // "alt+f" -> コマンド名
-for (const m of body.matchAll(/(\w+):\s*\[([^\]]*)\]/g)) {
-  const command = m[1]
-  const keys = [...m[2].matchAll(/"([^"]+)"|(controlOrMetaKey\d*\(\))/g)].map(
-    (k) => (k[1] !== undefined ? k[1] : CONTROL_OR_META)
+  die(
+    '❌ Storybook の defaultShortcuts を見つけられませんでした',
+    '   バンドルの形が変わった可能性があります。この検査を直すまで、',
+    '   ショートカットの記述は信用できません'
   )
-  if (!keys.length) continue
-  canonical.set(normalize(keys), command)
 }
 
-if (canonical.size < 15) {
-  console.error(`❌ 既定値の抽出が ${canonical.size} 件しかありません`)
-  console.error('   20 件前後あるはずです。抽出が壊れています')
-  process.exit(1)
-}
-
-/** 修飾キーを並び順に依存しない形へ */
-function normalize(keys) {
-  const mods = []
-  const rest = []
-  for (const raw of keys) {
-    const k = raw === CONTROL_OR_META ? CONTROL_OR_META : raw.toLowerCase()
-    if (['alt', 'shift', CONTROL_OR_META, 'meta', 'control'].includes(k)) {
-      mods.push(k === 'meta' || k === 'control' ? CONTROL_OR_META : k)
-    } else {
-      rest.push(k)
-    }
+/** `{ ... }` を括弧の対応で切り出す */
+const braceBody = (src, from) => {
+  const start = src.indexOf('{', from)
+  let depth = 0
+  for (let i = start; i < src.length; i++) {
+    if (src[i] === '{') depth++
+    else if (src[i] === '}' && --depth === 0) return src.slice(start, i + 1)
   }
-  return [...new Set(mods)].sort().concat(rest.sort()).join('+')
+  return null
 }
 
-// ---------------------------------------------------------------------------
-// 2. ガイドに書かれた表記を集める
-// ---------------------------------------------------------------------------
+/** `controlOrMetaKey()` は実行環境依存。こちらの `ctrlOrMeta` と同一視する */
+const CTRL_OR_META = 'ctrlOrMeta'
 
-const SYMBOL = {
-  '⌘': CONTROL_OR_META,
-  '⌥': 'alt',
-  '⇧': 'shift',
-  '↑': 'arrowup',
-  '↓': 'arrowdown',
-  '←': 'arrowleft',
-  '→': 'arrowright',
-}
-
-/** ⌘ か ⌥ で始まり、記号・英数字・カンマが続くもの */
-const WRITTEN = /[⌘⌥][⌘⌥⇧\s]*(?:[A-Za-z,]|[↑↓←→])/g
-
-/**
- * ショートカット表のデータ。**元のバグはこの形だった。**
- * 素の `key: 'S'` は修飾キーで始まらないので WRITTEN では拾えない。
- *
- * `key:` は色名やフィールド名にも使う語なので、**同じ行に `action:` が
- * 並んでいるものだけ**を対象にする。`shortcut:` は曖昧さが無いので単独で拾う。
- */
-const TABLE_ROW =
-  /(?:shortcut:\s*'([^']+)'|action:\s*'[^']*',\s*key:\s*'([^']+)'|key:\s*'([^']+)',\s*action:\s*'[^']*')/g
-
-/** ソースに書かれた `\uXXXX` を実文字へ。prettier がこの形で保存する */
-const decode = (src) =>
-  src.replace(/\\u([0-9a-fA-F]{4})/g, (_, h) =>
-    String.fromCodePoint(Number.parseInt(h, 16))
-  )
-
-/** 表記を Storybook のキー名の並びへ */
-const tokenize = (written) => {
-  const out = []
-  // "Alt + Up" のような英語表記も受ける
-  const words = written.split(/[\s+]+/).filter(Boolean)
-  for (const w of words) {
-    if (w.length === 1 && SYMBOL[w]) {
-      out.push(SYMBOL[w])
-      continue
-    }
-    if (w.length > 1 && [...w].every((c) => SYMBOL[c])) {
-      out.push(...[...w].map((c) => SYMBOL[c]))
-      continue
-    }
-    const lower = w.toLowerCase()
-    const alias = {
-      cmd: CONTROL_OR_META,
-      command: CONTROL_OR_META,
-      ctrl: CONTROL_OR_META,
-      control: CONTROL_OR_META,
-      meta: CONTROL_OR_META,
-      opt: 'alt',
-      option: 'alt',
-      alt: 'alt',
-      shift: 'shift',
-      up: 'arrowup',
-      down: 'arrowdown',
-      left: 'arrowleft',
-      right: 'arrowright',
-    }
-    out.push(alias[lower] ?? lower)
+const parseEntries = (body, keyPattern) => {
+  const out = new Map()
+  for (const m of body.matchAll(/([\w$]+)\s*:\s*\[([^\]]*)\]/g)) {
+    const tokens = [...m[2].matchAll(keyPattern)].map((k) =>
+      k[1] !== undefined ? k[1] : CTRL_OR_META
+    )
+    if (tokens.length) out.set(m[1], tokens)
   }
   return out
 }
 
-const files = []
-const walk = (dir) => {
-  for (const e of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, e.name)
-    if (e.isDirectory()) walk(full)
-    else if (/\.(tsx|ts)$/.test(e.name)) files.push(full)
-  }
-}
-walk(SCAN_DIR)
-
-const problems = []
-let checked = 0
-
-const record = (file, src, index, written) => {
-  checked++
-  const key = normalize(tokenize(written))
-  if (canonical.has(key)) return
-  problems.push({
-    file: relative(ROOT, file),
-    line: src.slice(0, index).split('\n').length,
-    written: written.replace(/\s+/g, ' ').trim(),
-    key,
-  })
-}
-
-for (const file of files) {
-  const src = decode(readFileSync(file, 'utf-8'))
-  for (const m of src.matchAll(WRITTEN)) record(file, src, m.index, m[0])
-  for (const m of src.matchAll(TABLE_ROW)) {
-    const written = m[1] ?? m[2] ?? m[3]
-    // 修飾キー始まりは WRITTEN 側で既に数えている
-    if (/^[⌘⌥]/.test(written.trim())) continue
-    record(file, src, m.index, written)
-  }
-}
-
-// ---------------------------------------------------------------------------
-// 3. 報告
-// ---------------------------------------------------------------------------
-
-console.log(
-  `Storybook の既定値 ${canonical.size} 件と、ガイドの表記 ${checked} 件を照合`
+const canonical = parseEntries(
+  braceBody(bundle, decl.index),
+  /"([^"]+)"|controlOrMetaKey\d*\(\)/g
 )
 
-if (checked === 0) {
-  // 1 件も拾えていないなら、検査が働いていないのと同じ
-  console.error('\n❌ 照合対象を 1 件も見つけられませんでした')
-  console.error('   表記の形が変わったか、走査範囲が外れています')
-  process.exit(1)
+if (canonical.size < 15) {
+  die(
+    `❌ Storybook 側の抽出が ${canonical.size} 件しかありません`,
+    '   20 件前後あるはずです。抽出が壊れています'
+  )
 }
 
-if (problems.length) {
-  console.error(`\n❌ 既定値に無い表記が ${problems.length} 件`)
-  for (const p of problems) {
-    console.error(`   ${p.file}:${p.line}  "${p.written}"  → ${p.key}`)
+// ---------------------------------------------------------------------------
+// 2. こちらの定義
+// ---------------------------------------------------------------------------
+
+if (!existsSync(OURS)) {
+  die(`❌ ${relative(ROOT, OURS)} が見つかりません`)
+}
+const ourSrc = readFileSync(OURS, 'utf-8')
+const ourDecl = ourSrc.match(/STORYBOOK_SHORTCUTS[^=]*=\s*\{/)
+if (!ourDecl) {
+  die(
+    `❌ ${relative(ROOT, OURS)} に STORYBOOK_SHORTCUTS が見つかりません`,
+    '   定義の形が変わったなら、この検査も直してください'
+  )
+}
+const ours = parseEntries(
+  braceBody(ourSrc, ourDecl.index),
+  /'([^']+)'|"([^"]+)"/g
+)
+
+if (ours.size === 0) {
+  // 1 件も拾えていないなら、検査が働いていないのと同じ
+  die(
+    '❌ こちらの定義を 1 件も読み取れませんでした',
+    '   走査が外れています。この状態を緑にしてはいけません'
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 3. 照合
+// ---------------------------------------------------------------------------
+
+const norm = (tokens) => {
+  const order = { [CTRL_OR_META]: 0, alt: 1, shift: 2 }
+  const mods = tokens
+    .filter((t) => t in order)
+    .map((t) => t)
+    .sort((a, b) => order[a] - order[b])
+  const rest = tokens.filter((t) => !(t in order)).map((t) => t.toLowerCase())
+  return [...mods, ...rest].join('+')
+}
+
+const problems = []
+for (const [command, tokens] of ours) {
+  const expected = canonical.get(command)
+  if (!expected) {
+    problems.push(
+      `${command}: Storybook にこの名前のコマンドがありません（綴り違いか、廃止された）`
+    )
+    continue
   }
-  console.error('\n   正解は Storybook 自身が持っています:')
+  const a = norm(tokens)
+  const b = norm(expected)
+  if (a !== b) {
+    problems.push(`${command}: こちら "${a}" / Storybook "${b}"`)
+  }
+}
+
+console.log(
+  `Storybook の既定値 ${canonical.size} 件のうち、` +
+    `ガイドが掲げる ${ours.size} 件を照合`
+)
+
+if (problems.length) {
+  console.error(`\n❌ ${problems.length} 件が一致しません`)
+  for (const p of problems) console.error(`   ${p}`)
+  console.error('')
+  console.error('   正解は Storybook 自身が持っています:')
   console.error('   /storybook/?path=/settings/shortcuts')
   process.exit(1)
 }
 
-console.log('\n✅ ガイドの表記はすべて Storybook の既定値と一致します')
+console.log('\n✅ ガイドのショートカットは Storybook の既定値と一致します')

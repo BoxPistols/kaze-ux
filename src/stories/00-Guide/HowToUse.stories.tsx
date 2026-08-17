@@ -16,6 +16,9 @@ import {
   Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
+import { useMemo } from 'react'
+
+import { isMacLike, shortcutLabel } from '../_shared/shortcutKeys'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -54,6 +57,9 @@ const SectionHeader = ({
 
 const HowToUseContent = () => {
   const theme = useTheme()
+  // 閲覧者の OS でキー表記を切り替える。判定は 1 回でよい
+  const mac = useMemo(() => isMacLike(), [])
+  const key = (command: string) => shortcutLabel(command, mac)
 
   const screenAreas = [
     {
@@ -108,7 +114,7 @@ const HowToUseContent = () => {
     },
     {
       q: 'テーマを切り替えても色が変わらない',
-      a: 'ブラウザのキャッシュをクリアしてリロードしてください（Cmd+Shift+R / Ctrl+Shift+R）。',
+      a: 'ブラウザのキャッシュをクリアしてリロードしてください（Ctrl+Shift+R / Mac は Cmd+Shift+R）。',
     },
     {
       q: 'コンポーネントの実際のコードを見たい',
@@ -513,7 +519,7 @@ const HowToUseContent = () => {
             </Typography>
             <Typography variant='body1' color='text.secondary'>
               <Chip
-                label='⌘ ⇧ ,'
+                label={key('shortcutsPage')}
                 size='small'
                 variant='outlined'
                 sx={{ fontFamily: 'monospace', mr: 1 }}
@@ -546,33 +552,29 @@ const HowToUseContent = () => {
           ストーリーとコンポーネントの移動、検索が並んでいます。割り当ては自分で
           変更でき、Restore defaults で元に戻せます。
         </Typography>
-        <Typography variant='body1' color='text.secondary' sx={{ mt: 1.5 }}>
-          ⌘ は Mac の Command、⌥ は Option です。Windows と Linux では それぞれ
-          Ctrl と Alt になります。
-        </Typography>
       </Paper>
 
       <Grid container spacing={2} sx={{ mb: 5 }}>
         {[
           {
             label: 'Show sidebar',
-            shortcut: '⌥ S',
+            shortcut: key('toggleNav'),
             description:
               'サイドバーの表示/非表示。プレビューを広く使いたい時にOFF。',
           },
           {
             label: 'Show toolbar',
-            shortcut: '⌥ T',
+            shortcut: key('toolbar'),
             description: 'ツールバー（テーマ切替など）の表示/非表示。',
           },
           {
             label: 'Show addons panel',
-            shortcut: '⌥ A',
+            shortcut: key('togglePanel'),
             description: 'Controls / Actions パネルの表示/非表示。',
           },
           {
             label: 'Collapse all',
-            shortcut: '⌘ ⇧ ↑',
+            shortcut: key('collapseAll'),
             description: 'サイドバーの全カテゴリを折りたたむ。',
           },
         ].map((item) => (
@@ -621,9 +623,10 @@ const HowToUseContent = () => {
           画面が狭いと感じたら
         </Typography>
         <Typography variant='body1' color='text.secondary'>
-          サイドバー（⌥ S）とアドオンパネル（⌥ A）を非表示にすると、
-          プレビュー領域を最大化できます。プレゼンやデザインレビュー時に便利です。
-          ⌥ F でフルスクリーンにすることもできます。
+          サイドバー（{key('toggleNav')}）とアドオンパネル（{key('togglePanel')}
+          ）を非表示にすると、プレビュー領域を最大化できます。プレゼンや
+          デザインレビュー時に便利です。{key('fullScreen')}{' '}
+          でフルスクリーンにすることもできます。
         </Typography>
       </Paper>
 
