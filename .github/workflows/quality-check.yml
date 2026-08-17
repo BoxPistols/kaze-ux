@@ -83,6 +83,13 @@ jobs:
       - name: Check skills reference things that exist
         run: pnpm check:skills
 
+      # ガイドに書いたショートカットを Storybook の既定値と突き合わせる。
+      # 手書きの表が 15 行あり、そのうち 11 行が間違っていた（素の S/T/A/F
+      # と書いてあったが実際は alt 修飾が要る）。照合する相手がいなかったので
+      # 誰も気づけなかった
+      - name: Check documented shortcuts match Storybook defaults
+        run: pnpm check:shortcuts
+
       # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
       # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
       # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば

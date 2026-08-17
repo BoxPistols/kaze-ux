@@ -39,6 +39,10 @@ const env = {
 }
 
 const config = {
+  // ブラウザのタブに出る名前。未設定だと Storybook は設定ディレクトリ名を
+  // 使うので `storybook - Storybook` になる（実際そうなっていた）。
+  // 末尾の ` - Storybook` は Storybook 側が付けるので、ここには書かない
+  title: 'Kaze UX',
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
     '@storybook/addon-a11y',

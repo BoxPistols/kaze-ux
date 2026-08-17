@@ -104,6 +104,7 @@
     "check:rules": "node scripts/check-ds-rules.mjs",
     "export-rules": "node scripts/export-prohibited-doc.mjs",
     "check:quickref": "tsx scripts/check-quickref.ts",
+    "check:shortcuts": "node scripts/check-storybook-shortcuts.mjs",
     "check:skills": "node scripts/check-skills.mjs"
   },
   "peerDependencies": {

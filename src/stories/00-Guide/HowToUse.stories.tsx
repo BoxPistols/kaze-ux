@@ -97,14 +97,6 @@ const HowToUseContent = () => {
     { type: 'カラー', operation: 'カラーピッカー', example: 'backgroundColor' },
   ]
 
-  const shortcuts = [
-    { key: '/', action: '検索にフォーカス' },
-    { key: 'S', action: 'サイドバーの表示/非表示' },
-    { key: 'A', action: 'アドオンパネルの表示/非表示' },
-    { key: 'D', action: 'Docs と Canvas の切り替え' },
-    { key: 'F', action: 'フルスクリーン表示' },
-  ]
-
   const faq = [
     {
       q: 'コンポーネントが見つからない',
@@ -496,182 +488,91 @@ const HowToUseContent = () => {
 
       <Divider sx={{ my: 5 }} />
 
-      {/* 設定メニュー */}
+      {/* キーボードショートカット */}
       <SectionHeader
-        title='設定メニュー'
-        subtitle='右上の歯車アイコンから表示レイアウトを変更できます'
+        title='キーボードショートカット'
+        subtitle='一覧は Storybook 自身が持っています。ここでは開き方だけ案内します'
       />
 
-      <Paper
-        variant='outlined'
-        sx={{ px: 3.5, py: 3, mb: 3, borderRadius: 2, overflow: 'hidden' }}>
-        <svg
-          viewBox='0 0 360 420'
-          width='360'
-          style={{ display: 'block', maxWidth: '100%' }}>
-          <defs>
-            <style>{`
-              .sm-text { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-              .sm-item { font-size: 13px; fill: ${theme.palette.text.primary}; }
-              .sm-key { font-size: 12px; fill: ${theme.palette.text.secondary}; font-family: ui-monospace, monospace; }
-              .sm-sep { stroke: ${theme.palette.divider}; stroke-width: 1; }
-              .sm-check { font-size: 13px; fill: ${theme.palette.primary.main}; font-weight: 700; }
-            `}</style>
-          </defs>
-          {/* 背景 */}
-          <rect
-            x='0'
-            y='0'
-            width='360'
-            height='420'
-            rx='12'
-            fill={theme.palette.mode === 'dark' ? '#1e1e2e' : '#ffffff'}
-            stroke={theme.palette.divider}
-            strokeWidth='1.5'
-          />
-
-          {/* About */}
-          <text x='20' y='32' className='sm-text sm-item'>
-            About your Storybook
-          </text>
-          {/* Onboarding */}
-          <text x='20' y='64' className='sm-text sm-item'>
-            Onboarding guide
-          </text>
-          <text x='290' y='64' className='sm-text sm-key'>
-            50%
-          </text>
-          {/* Keyboard shortcuts */}
-          <text x='20' y='96' className='sm-text sm-item'>
-            Keyboard shortcuts
-          </text>
-          <text x='250' y='96' className='sm-text sm-key'>
-            Cmd+Shift+,
-          </text>
-
-          {/* Separator 1 */}
-          <line x1='12' y1='114' x2='348' y2='114' className='sm-sep' />
-
-          {/* Show sidebar */}
-          <text x='20' y='142' className='sm-text sm-check'>
-            Show sidebar
-          </text>
-          <rect
-            x='308'
-            y='127'
-            width='32'
-            height='22'
-            rx='4'
-            fill={theme.palette.mode === 'dark' ? '#333' : '#eee'}
-          />
-          <text x='316' y='143' className='sm-text sm-key'>
-            S
-          </text>
-
-          {/* Show toolbar */}
-          <text x='20' y='174' className='sm-text sm-check'>
-            Show toolbar
-          </text>
-          <rect
-            x='308'
-            y='159'
-            width='32'
-            height='22'
-            rx='4'
-            fill={theme.palette.mode === 'dark' ? '#333' : '#eee'}
-          />
-          <text x='317' y='175' className='sm-text sm-key'>
-            T
-          </text>
-
-          {/* Show addons panel */}
-          <text x='20' y='206' className='sm-text sm-item'>
-            Show addons panel
-          </text>
-          <rect
-            x='308'
-            y='191'
-            width='32'
-            height='22'
-            rx='4'
-            fill={theme.palette.mode === 'dark' ? '#333' : '#eee'}
-          />
-          <text x='316' y='207' className='sm-text sm-key'>
-            A
-          </text>
-
-          {/* Separator 2 */}
-          <line x1='12' y1='224' x2='348' y2='224' className='sm-sep' />
-
-          {/* Navigation */}
-          <text x='20' y='252' className='sm-text sm-item'>
-            Previous component
-          </text>
-          <text x='270' y='252' className='sm-text sm-key'>
-            Alt + Up
-          </text>
-
-          <text x='20' y='284' className='sm-text sm-item'>
-            Next component
-          </text>
-          <text x='262' y='284' className='sm-text sm-key'>
-            Alt + Down
-          </text>
-
-          <text x='20' y='316' className='sm-text sm-item'>
-            Previous story
-          </text>
-          <text x='272' y='316' className='sm-text sm-key'>
-            Alt + Left
-          </text>
-
-          <text x='20' y='348' className='sm-text sm-item'>
-            Next story
-          </text>
-          <text x='264' y='348' className='sm-text sm-key'>
-            Alt + Right
-          </text>
-
-          <text x='20' y='380' className='sm-text sm-item'>
-            Collapse all
-          </text>
-          <text x='240' y='380' className='sm-text sm-key'>
-            Cmd+Shift+Up
-          </text>
-
-          {/* Separator 3 */}
-          <line x1='12' y1='396' x2='348' y2='396' className='sm-sep' />
-
-          <text x='20' y='414' className='sm-text sm-item'>
-            Documentation
-          </text>
-          <text x='316' y='414' className='sm-text sm-key'>
-            &#8599;
-          </text>
-        </svg>
+      <Paper variant='outlined' sx={{ px: 3.5, py: 3, mb: 3, borderRadius: 2 }}>
+        <Stack direction='row' spacing={1.5} alignItems='center' sx={{ mb: 2 }}>
+          <KeyboardIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+          <Typography variant='body1' sx={{ fontWeight: 700 }}>
+            ショートカット一覧の開き方
+          </Typography>
+        </Stack>
+        <Stack spacing={1.5}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 0.5, sm: 2 }}
+            alignItems={{ xs: 'flex-start', sm: 'baseline' }}>
+            <Typography
+              variant='body1'
+              sx={{ fontWeight: 700, minWidth: 116, flexShrink: 0 }}>
+              キーボードから
+            </Typography>
+            <Typography variant='body1' color='text.secondary'>
+              <Chip
+                label='⌘ ⇧ ,'
+                size='small'
+                variant='outlined'
+                sx={{ fontFamily: 'monospace', mr: 1 }}
+              />
+              を押します
+            </Typography>
+          </Stack>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 0.5, sm: 2 }}
+            alignItems={{ xs: 'flex-start', sm: 'baseline' }}>
+            <Typography
+              variant='body1'
+              sx={{ fontWeight: 700, minWidth: 116, flexShrink: 0 }}>
+              画面から
+            </Typography>
+            <Typography variant='body1' color='text.secondary'>
+              サイドバー右上の歯車
+              <SettingsIcon
+                aria-hidden
+                sx={{ fontSize: 16, verticalAlign: 'text-bottom', mx: 0.5 }}
+              />
+              から Keyboard shortcuts を選びます
+            </Typography>
+          </Stack>
+        </Stack>
+        <Divider sx={{ my: 2.5 }} />
+        <Typography variant='body1' color='text.secondary'>
+          開いたページには、表示の切り替え（サイドバー・ツールバー・アドオンパネル・フルスクリーン）、
+          ストーリーとコンポーネントの移動、検索が並んでいます。割り当ては自分で
+          変更でき、Restore defaults で元に戻せます。
+        </Typography>
+        <Typography variant='body1' color='text.secondary' sx={{ mt: 1.5 }}>
+          ⌘ は Mac の Command、⌥ は Option です。Windows と Linux では それぞれ
+          Ctrl と Alt になります。
+        </Typography>
       </Paper>
 
       <Grid container spacing={2} sx={{ mb: 5 }}>
         {[
           {
             label: 'Show sidebar',
-            shortcut: 'S',
+            shortcut: '⌥ S',
             description:
               'サイドバーの表示/非表示。プレビューを広く使いたい時にOFF。',
           },
           {
             label: 'Show toolbar',
-            shortcut: 'T',
+            shortcut: '⌥ T',
             description: 'ツールバー（テーマ切替など）の表示/非表示。',
           },
           {
             label: 'Show addons panel',
-            shortcut: 'A',
+            shortcut: '⌥ A',
             description: 'Controls / Actions パネルの表示/非表示。',
           },
           {
             label: 'Collapse all',
-            shortcut: 'Cmd+Shift+Up',
+            shortcut: '⌘ ⇧ ↑',
             description: 'サイドバーの全カテゴリを折りたたむ。',
           },
         ].map((item) => (
@@ -720,44 +621,11 @@ const HowToUseContent = () => {
           画面が狭いと感じたら
         </Typography>
         <Typography variant='body1' color='text.secondary'>
-          サイドバー（S キー）とアドオンパネル（A キー）を非表示にすると、
+          サイドバー（⌥ S）とアドオンパネル（⌥ A）を非表示にすると、
           プレビュー領域を最大化できます。プレゼンやデザインレビュー時に便利です。
-          F キーでフルスクリーンにすることもできます。
+          ⌥ F でフルスクリーンにすることもできます。
         </Typography>
       </Paper>
-
-      <Divider sx={{ my: 5 }} />
-
-      {/* キーボードショートカット */}
-      <SectionHeader title='キーボードショートカット' />
-      <TableContainer component={Paper} variant='outlined' sx={{ mb: 5 }}>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: 120 }}>ショートカット</TableCell>
-              <TableCell>操作</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {shortcuts.map((s) => (
-              <TableRow key={s.key}>
-                <TableCell>
-                  <Chip
-                    icon={<KeyboardIcon sx={{ fontSize: 14 }} />}
-                    label={s.key}
-                    size='small'
-                    variant='outlined'
-                    sx={{ fontFamily: 'monospace' }}
-                  />
-                </TableCell>
-                <TableCell>{s.action}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Divider sx={{ my: 5 }} />
 
       {/* FAQ */}
       <SectionHeader title='よくある質問' />

@@ -490,16 +490,16 @@ const IntroductionContent = () => {
         </SectionTitle>
         <StyledTable headers={['操作', 'ショートカット']}>
           {[
-            { action: 'コンポーネントを検索', key: 'K' },
-            { action: 'フルスクリーン', key: 'F' },
-            { action: 'サイドバーの表示/非表示', key: 'S' },
-            { action: 'アドオンパネルの表示/非表示', key: 'A' },
-            { action: 'アドオンパネルの向きを切替', key: 'D' },
-            { action: 'ツールバーの表示/非表示', key: 'T' },
-            { action: '前のコンポーネント', key: 'Alt + \u2191' },
-            { action: '次のコンポーネント', key: 'Alt + \u2193' },
-            { action: '前のストーリー', key: 'Alt + \u2190' },
-            { action: '次のストーリー', key: 'Alt + \u2192' },
+            { action: 'コンポーネントを検索', key: '\u2318 K' },
+            { action: 'フルスクリーン', key: '\u2325 F' },
+            { action: 'サイドバーの表示/非表示', key: '\u2325 S' },
+            { action: 'アドオンパネルの表示/非表示', key: '\u2325 A' },
+            { action: 'アドオンパネルの向きを切替', key: '\u2325 D' },
+            { action: 'ツールバーの表示/非表示', key: '\u2325 T' },
+            { action: '前のコンポーネント', key: '\u2325 \u2191' },
+            { action: '次のコンポーネント', key: '\u2325 \u2193' },
+            { action: '前のストーリー', key: '\u2325 \u2190' },
+            { action: '次のストーリー', key: '\u2325 \u2192' },
           ].map((s) => (
             <TableRow key={s.action}>
               <TableCell>{s.action}</TableCell>
@@ -525,7 +525,9 @@ const IntroductionContent = () => {
             Cmd + Shift + ,
           </Box>{' '}
           （Windows: Ctrl + Shift + ,）で設定画面を開き、「Keyboard
-          shortcuts」タブからすべてのショートカットを変更できます。
+          shortcuts」タブからすべてのショートカットを変更できます。上の表の
+          &#8984; は Command、&#8997; は Option です。Windows と Linux では
+          それぞれ Ctrl と Alt になります。
         </InfoCallout>
 
         {/* Concierge ショートカット */}
