@@ -24,11 +24,6 @@ const DesignPhilosophyOverview = () => {
   const brandIdentity = {
     slogan: 'デザインを、構造で支える',
     mission: '一貫した構造の上に、複数のプロダクトを置く',
-    vision: [
-      '共通の構造から、異なる表現が生まれる',
-      '同じものは、同じ形で現れる',
-      '見えないところに、精度がある',
-    ],
     values: [
       {
         title: '精度',
@@ -162,59 +157,6 @@ const DesignPhilosophyOverview = () => {
           }}>
           {brandIdentity.mission}
         </Typography>
-      </Box>
-
-      {/* ビジョン */}
-      <Box sx={{ mb: 10, px: { xs: 1, sm: 2 } }}>
-        <Typography
-          variant='overline'
-          sx={{
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            color: 'primary.main',
-            mb: 4,
-            display: 'block',
-          }}>
-          VISION
-        </Typography>
-        <Stack spacing={0}>
-          {brandIdentity.vision.map((vision, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: 'flex',
-                gap: { xs: 2.5, sm: 4 },
-                alignItems: 'baseline',
-                py: 3.5,
-                borderBottom: index < 2 ? 1 : 0,
-                borderColor: isDark
-                  ? 'rgba(255,255,255,0.06)'
-                  : 'rgba(0,0,0,0.06)',
-              }}>
-              <Typography
-                sx={{
-                  fontSize: { xs: 28, sm: 36 },
-                  fontWeight: 400,
-                  color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
-                  lineHeight: 1,
-                  fontVariantNumeric: 'tabular-nums',
-                  flexShrink: 0,
-                  minWidth: 36,
-                }}>
-                {index + 1}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: { xs: 15, sm: 17 },
-                  lineHeight: 1.85,
-                  color: isDark ? 'grey.300' : 'grey.700',
-                }}>
-                {vision}
-              </Typography>
-            </Box>
-          ))}
-        </Stack>
       </Box>
 
       {/* ブランドパーソナリティ */}
