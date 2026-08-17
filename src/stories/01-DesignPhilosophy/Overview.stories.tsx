@@ -51,21 +51,21 @@ const DesignPhilosophyOverview = () => {
   const designPrinciples = [
     {
       num: '01',
-      title: '拡張に耐える構造',
-      description: '用途が変わっても、壊れない',
-      details: '変化は前提であり、例外ではない',
+      title: '変化に開かれた形',
+      description: '明日の用途を、今日の形が妨げない',
+      details: '増えることは、乱れることではない',
     },
     {
       num: '02',
-      title: '最小の情報量',
-      description: '見えるものが少ないほど、迷いは少ない',
-      details: '足すより、削るほうが難しい',
+      title: '静けさのある画面',
+      description: '少ないほど、迷いはない',
+      details: '余白は、欠落ではない',
     },
     {
       num: '03',
-      title: '統一された秩序',
-      description: '同じものは、同じ形で現れる',
-      details: '例外は、秩序を薄める',
+      title: '揺るがない秩序',
+      description: '一貫は、細部にこそ現れる',
+      details: '例外のないところに、信頼が生まれる',
     },
   ]
 
@@ -324,7 +324,7 @@ const DesignPhilosophyOverview = () => {
             color: 'text.secondary',
             mb: 5,
           }}>
-          行動指針
+          めざす姿
         </Typography>
         <Grid container spacing={3}>
           {designPrinciples.map((principle, index) => (
