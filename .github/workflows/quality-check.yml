@@ -90,6 +90,12 @@ jobs:
       - name: Check documented shortcuts match Storybook defaults
         run: pnpm check:shortcuts
 
+      # GA4 の測定 ID は React 側と Storybook 側の 2 箇所にある。片方だけ
+      # 書き換えるとその面だけ別プロパティへ飛ぶが、エラーは出ず GA4 の
+      # 画面にも「片方が来ていない」とは表示されない
+      - name: Check GA measurement ID is consistent
+        run: pnpm check:ga
+
       # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
       # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
       # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば

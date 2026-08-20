@@ -66,9 +66,14 @@ const config = {
     // ストーリーは iframe の中で描画されるので、preview 側に入れると
     // 1 ストーリー開くたびに iframe の遷移まで数えてしまう。
     // 配信元が Vercel でないとき（ローカル等）は 404 になるだけで無害
+    // GA4 は manager 側だけ。測定 ID は src/utils/ga.ts と同じ値で、
+    // ずれると片方の面だけ別プロパティに飛ぶので check:ga が突き合わせる
+    const gaId = 'G-C017T9T5MS'
     const analytics = [
       `<script defer src="/_vercel/insights/script.js"></script>`,
       `<script defer src="/_vercel/speed-insights/script.js"></script>`,
+      `<script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>`,
+      `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaId}')</script>`,
     ].join('')
 
     const auth = password

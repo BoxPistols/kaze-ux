@@ -1,5 +1,8 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { useEffect } from 'react'
+
+import { initGa, sendPageView } from '@/utils/ga'
 
 /**
  * Vercel の計測 2 つ。Web Analytics（誰が何を見たか）と
@@ -35,6 +38,42 @@ export const foldHashRoute = (rawUrl: string): string => {
   }
 }
 
+/**
+ * GA4。SPA のルート変更を自分で拾う。
+ *
+ * `history.pushState` はイベントを出さないので差し替える。`popstate` は
+ * 戻る/進む、`hashchange` は hash だけの変更。**3 つとも要る。**
+ * 1 つ落とすと、その経路の遷移だけが静かに数えられなくなる。
+ */
+const GoogleAnalytics = () => {
+  useEffect(() => {
+    if (!initGa()) return
+    sendPageView()
+
+    const notify = () => sendPageView()
+    const origPush = history.pushState
+    const origReplace = history.replaceState
+    history.pushState = function (...args) {
+      origPush.apply(this, args)
+      notify()
+    }
+    history.replaceState = function (...args) {
+      origReplace.apply(this, args)
+      notify()
+    }
+    window.addEventListener('popstate', notify)
+    window.addEventListener('hashchange', notify)
+
+    return () => {
+      history.pushState = origPush
+      history.replaceState = origReplace
+      window.removeEventListener('popstate', notify)
+      window.removeEventListener('hashchange', notify)
+    }
+  }, [])
+  return null
+}
+
 export const SiteAnalytics = () => (
   <>
     <Analytics
@@ -43,5 +82,6 @@ export const SiteAnalytics = () => (
     {/* 実ユーザーの体感速度（LCP / CLS / INP）。訪問者が少ないうちは
         パーセンタイルがノイズになるので、極端な劣化の検知にとどめる */}
     <SpeedInsights />
+    <GoogleAnalytics />
   </>
 )
