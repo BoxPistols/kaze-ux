@@ -4,6 +4,7 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import App from '@/App'
+import { SiteAnalytics } from '@/components/SiteAnalytics'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import './index.css'
 
@@ -19,6 +20,7 @@ const Root = () => {
       <ThemeProvider>
         <CacheProvider value={cache}>
           <App />
+          <SiteAnalytics />
         </CacheProvider>
       </ThemeProvider>
     </StrictMode>
