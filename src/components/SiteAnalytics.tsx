@@ -1,7 +1,9 @@
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 /**
- * Vercel Web Analytics。
+ * Vercel の計測 2 つ。Web Analytics（誰が何を見たか）と
+ * Speed Insights（実ユーザーの体感速度）。
  *
  * 5 つの面（LP / Storybook / saas / kaze-eats / sky-kaze）が 1 つの Vercel
  * プロジェクトに同居しているので、パスを見ればどの面かが分かる。
@@ -34,7 +36,12 @@ export const foldHashRoute = (rawUrl: string): string => {
 }
 
 export const SiteAnalytics = () => (
-  <Analytics
-    beforeSend={(event) => ({ ...event, url: foldHashRoute(event.url) })}
-  />
+  <>
+    <Analytics
+      beforeSend={(event) => ({ ...event, url: foldHashRoute(event.url) })}
+    />
+    {/* 実ユーザーの体感速度（LCP / CLS / INP）。訪問者が少ないうちは
+        パーセンタイルがノイズになるので、極端な劣化の検知にとどめる */}
+    <SpeedInsights />
+  </>
 )

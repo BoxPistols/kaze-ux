@@ -62,11 +62,14 @@ const config = {
   managerHead: (head) => {
     const password = env.VITE_APP_PASSWORD || ''
 
-    // Vercel Web Analytics。**manager（外枠）にだけ入れる。**
+    // Vercel の計測。**manager（外枠）にだけ入れる。**
     // ストーリーは iframe の中で描画されるので、preview 側に入れると
     // 1 ストーリー開くたびに iframe の遷移まで数えてしまう。
     // 配信元が Vercel でないとき（ローカル等）は 404 になるだけで無害
-    const analytics = `<script defer src="/_vercel/insights/script.js"></script>`
+    const analytics = [
+      `<script defer src="/_vercel/insights/script.js"></script>`,
+      `<script defer src="/_vercel/speed-insights/script.js"></script>`,
+    ].join('')
 
     const auth = password
       ? `<script>window.__STORYBOOK_AUTH_PASSWORD__ = ${JSON.stringify(password)};</script>`
