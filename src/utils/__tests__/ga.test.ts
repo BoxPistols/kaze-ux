@@ -5,8 +5,8 @@ import {
   GA_MEASUREMENT_ID,
   __resetPageViewState,
   hasValidGaId,
+  sendGaEvent,
   sendPageView,
-  trackEvent,
 } from '../ga'
 
 describe('GA_MEASUREMENT_ID', () => {
@@ -70,9 +70,9 @@ describe('sendPageView', () => {
   })
 })
 
-describe('trackEvent', () => {
+describe('sendGaEvent', () => {
   it('gtag が無いときは落ちない', () => {
     ;(window as unknown as { gtag?: unknown }).gtag = undefined
-    expect(() => trackEvent('chat_opened')).not.toThrow()
+    expect(() => sendGaEvent('chat_opened')).not.toThrow()
   })
 })

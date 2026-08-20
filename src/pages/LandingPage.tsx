@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { KazeLogo } from '@/components/ui/logo'
 import { parseColor } from '@/themes/contrast'
 import { motionOf } from '@/themes/motion'
+import { ANALYTICS_EVENTS, trackEvent } from '@/utils/analytics'
 import {
   APP_LINKS,
   DEFAULT_PORTS,
@@ -277,6 +278,12 @@ const ProductCard = ({
       <Box
         component='a'
         href={href}
+        onClick={() =>
+          trackEvent(ANALYTICS_EVENTS.PRODUCT_OPENED, {
+            product: title,
+            href,
+          })
+        }
         sx={{
           display: 'block',
           textDecoration: 'none',

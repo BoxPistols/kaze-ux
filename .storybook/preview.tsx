@@ -11,11 +11,22 @@ import { useGlobals } from 'storybook/preview-api'
 import { ChatSupport } from '../src/components/ui/ChatSupport/ChatSupport'
 import { COLOR_SCHEME_STORAGE_KEY } from '../src/themes/colorToken'
 import { lightTheme, createDarkTheme } from '../src/themes/theme'
+import { initGa } from '../src/utils/ga'
 
 import type { ColorScheme } from '../src/themes/colorToken'
 import type { Preview, StoryFn, StoryContext } from '@storybook/react-vite'
 
 import '../src/index.css'
+
+// preview（iframe）側でも GA を初期化する。**イベントだけ送るため。**
+//
+// ChatSupport はこの iframe の中に描画されるので、ここに gtag が無いと
+// `trackEvent` が黙って no-op になり、チャットの行動が 1 件も記録されない。
+//
+// `initGa` は `send_page_view: false` で構成するので、**ページビューは
+// 送らない**。ストーリーごとのページビューは manager（外枠）側が持っており、
+// ここで送ると 1 ストーリーにつき 2 件に増える
+initGa()
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 // MUIのローカルストレージキーを統一

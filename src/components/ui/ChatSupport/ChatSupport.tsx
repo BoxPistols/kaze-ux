@@ -6,6 +6,7 @@ import { alpha, Box, Fab, Paper, Slide, Zoom, useTheme } from '@mui/material'
 import { useCallback } from 'react'
 
 import { motionOf } from '@/themes/motion'
+import { ANALYTICS_EVENTS, trackEvent } from '@/utils/analytics'
 
 import { BookConciergeIcon } from './BookConciergeIcon'
 import { isBackendMode } from './chatAiService'
@@ -81,10 +82,13 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
   } = useChatMessage({ currentStory, messages, setMessages, config })
 
   // handleSend のクロージャ（message / setMessage を束縛）
-  const onSend = useCallback(
-    () => handleSend(message, () => setMessage('')),
-    [handleSend, message, setMessage]
-  )
+  const onSend = useCallback(() => {
+    // 本文は送らない。**何を聞いたかは計測の対象にしない**
+    trackEvent(ANALYTICS_EVENTS.CHAT_MESSAGE_SENT, {
+      length: message.length,
+    })
+    return handleSend(message, () => setMessage(''))
+  }, [handleSend, message, setMessage])
 
   const { handleKeyDown } = useChatShortcuts({
     config,
@@ -125,7 +129,10 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
         onToggleSettings={() => setShowSettings(true)}
         onDownload={handleDownload}
         onClearChat={clearChat}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          trackEvent(ANALYTICS_EVENTS.CHAT_CLOSED)
+          setIsOpen(false)
+        }}
       />
 
       {!showSettings && (
@@ -241,7 +248,10 @@ export const ChatSupport = ({ currentStory }: ChatSupportProps) => {
       <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1200 }}>
         <Zoom in={!isOpen}>
           <Fab
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              trackEvent(ANALYTICS_EVENTS.CHAT_OPENED)
+              setIsOpen(true)
+            }}
             sx={{
               bgcolor:
                 theme.palette.mode === 'dark'

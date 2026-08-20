@@ -96,10 +96,10 @@ export const __resetPageViewState = (): void => {
 }
 
 /**
- * 任意のイベント。マーケ側で「AI チャットを開いた」「アプリへ遷移した」
- * のような行動を数えたくなったときの入口
+ * GA4 へイベントを送る低レベルの口。
+ * 呼ぶ側は `utils/analytics.ts` の `trackEvent` を使う（Vercel にも同時に送る）
  */
-export const trackEvent = (
+export const sendGaEvent = (
   name: string,
   params: Record<string, string | number | boolean> = {}
 ): void => {
