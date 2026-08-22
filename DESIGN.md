@@ -7,6 +7,7 @@ Kaze Design System の知識・ルール・部品を、**このリポジトリ�
 > **知識はデータに、強制は仕組みに、コードは最低限に。**
 
 - 個別計画: [`docs/plans/mcp-release.md`](docs/plans/mcp-release.md)（MCP 版リリースの要件定義・詳細設計）
+- 導入マニュアル: [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)（消費側） / [`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)（npm 公開）
 - リポジトリ内の開発規約: [`CLAUDE.md`](CLAUDE.md) / [`AI_DEVELOPMENT_RULES.md`](AI_DEVELOPMENT_RULES.md)
 
 ## 1. 全体図

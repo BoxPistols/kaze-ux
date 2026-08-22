@@ -7,6 +7,11 @@ MCP (Model Context Protocol) で AI エージェントに供給するサーバ�
 - thin server 設計。知識はすべてデータ（生成物）側にあり、コードは読むだけ
 - 横断アーキテクチャ全体は [`DESIGN.md`](../DESIGN.md) を参照
 
+**マニュアル**:
+
+- 他リポジトリからの導入手順（消費側向け・通し）: [`docs/guides/using-from-other-repos.md`](../docs/guides/using-from-other-repos.md)
+- npm 公開手順（メンテナ向け）: [`docs/guides/npm-publishing.md`](../docs/guides/npm-publishing.md)
+
 ## Quick Start
 
 ### Claude Code（このリポジトリ / clone がある場合）
