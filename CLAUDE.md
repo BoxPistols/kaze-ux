@@ -126,12 +126,14 @@ pnpm ds:adoption --strict # 未準拠があれば exit 1
 
 ### 機械可読データ
 
-| ファイル                           | 内容                                                                    |
-| ---------------------------------- | ----------------------------------------------------------------------- |
-| `metadata/components.json`         | 20+ コンポーネントのメタデータ (variants, sizes, accessibility, sample) |
-| `design-tokens/tokens.json`        | W3C DTCG 形式のデザイントークン                                         |
-| `foundations/prohibited.md`        | 禁止パターン一覧                                                        |
-| `foundations/design_philosophy.md` | 設計思想・7原則                                                         |
+| ファイル                           | 内容                                                                     |
+| ---------------------------------- | ------------------------------------------------------------------------ |
+| `metadata/components.json`         | 20+ コンポーネントのメタデータ (variants, sizes, accessibility, sample)  |
+| `design-tokens/tokens.json`        | W3C DTCG 形式のデザイントークン                                          |
+| `foundations/prohibited.md`        | 禁止パターン一覧                                                         |
+| `foundations/design_philosophy.md` | 設計思想・7原則                                                          |
+| `mcp/`                             | 上記 3 つを外部 AI エージェントへ供給する MCP サーバー (`mcp/README.md`) |
+| `DESIGN.md`                        | 横断アーキテクチャ（MCP / Skills / SubAgent / Hook / Plugin の役割分担） |
 
 <!-- claude-memory-sync: auto-generated -->
 

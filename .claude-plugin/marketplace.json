@@ -1,0 +1,12 @@
+{
+  "name": "kaze-ux",
+  "description": "Kaze Design System の公式 Claude Code marketplace",
+  "owner": "BoxPistols",
+  "plugins": [
+    {
+      "name": "kaze-design",
+      "description": "Kaze Design System 一括導入（MCP + Skills + SubAgent + Hook）",
+      "source": "./"
+    }
+  ]
+}

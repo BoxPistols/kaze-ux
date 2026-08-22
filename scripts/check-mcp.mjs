@@ -73,9 +73,27 @@ const rpc = (proc, messages, timeoutMs) =>
 
 let failed = 0
 
+/**
+ * Claude Code は .mcp.json の command / args / env で `${VAR}` と
+ * `${VAR:-default}` を展開する。ここで展開しないと、Plugin 共用のために
+ * 書いた `${CLAUDE_PLUGIN_ROOT:-.}` が**文字どおり tsx に渡って死ぬ**。
+ * 検査は本番と同じ解決を通す。
+ */
+const expand = (s) =>
+  s.replace(
+    /\$\{(\w+)(?::-([^}]*))?\}/g,
+    (_, name, def) => process.env[name] ?? def ?? ''
+  )
+
 for (const [name, spec] of targets) {
-  const proc = spawn(spec.command, spec.args ?? [], {
+  const proc = spawn(expand(spec.command), (spec.args ?? []).map(expand), {
     cwd: ROOT,
+    env: {
+      ...process.env,
+      ...Object.fromEntries(
+        Object.entries(spec.env ?? {}).map(([k, v]) => [k, expand(v)])
+      ),
+    },
     stdio: ['pipe', 'pipe', 'pipe'],
   })
   let stderr = ''

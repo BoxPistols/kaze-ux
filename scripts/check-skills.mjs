@@ -25,9 +25,12 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, normalize, resolve } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
-const SKILLS_DIR = resolve(ROOT, '.claude', 'skills')
 
-if (!existsSync(SKILLS_DIR)) {
+// リポジトリ内作業用（.claude/skills）と Plugin 配布用（skills/）の両方を見る。
+// 配布用は消費側リポジトリで AI がそのまま従う指示書なので、なおさら壊れに気づけない
+const SKILL_DIRS = ['.claude/skills', 'skills']
+
+if (!existsSync(resolve(ROOT, '.claude', 'skills'))) {
   console.error('❌ .claude/skills が見つかりません')
   process.exit(1)
 }
@@ -36,10 +39,13 @@ const scripts = JSON.parse(
   readFileSync(resolve(ROOT, 'package.json'), 'utf-8')
 ).scripts
 
-const skills = readdirSync(SKILLS_DIR, { withFileTypes: true })
-  .filter((e) => e.isDirectory())
-  .map((e) => join('.claude/skills', e.name, 'SKILL.md'))
-  .filter((p) => existsSync(resolve(ROOT, p)))
+const skills = SKILL_DIRS.filter((d) => existsSync(resolve(ROOT, d))).flatMap(
+  (dir) =>
+    readdirSync(resolve(ROOT, dir), { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => join(dir, e.name, 'SKILL.md'))
+      .filter((p) => existsSync(resolve(ROOT, p)))
+)
 
 if (skills.length === 0) {
   console.error('❌ SKILL.md が 1 つも見つかりません（検査対象なし）')
