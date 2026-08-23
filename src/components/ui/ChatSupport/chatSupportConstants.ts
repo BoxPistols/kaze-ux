@@ -331,6 +331,24 @@ export const GEMINI_MODELS: ModelOption[] = [
 /** 全モデル一覧（後方互換） */
 export const DEFAULT_MODELS = [...OPENAI_MODELS, ...GEMINI_MODELS]
 
+/** プロバイダーごとの既定モデル */
+const providerDefaultModel = (isGemini: boolean): string =>
+  isGemini ? (GEMINI_MODELS[0]?.value ?? DEFAULT_MODEL) : DEFAULT_MODEL
+
+/**
+ * 一覧から外れたモデル ID を同プロバイダーの既定へ寄せる。
+ * localStorage に旧世代（gpt-5.4-nano 等）が残っていると、ヘッダーが古い名前を
+ * 表示し、モデル選択が空欄になるため、読み込み時点で必ず現行の値へ正規化する
+ */
+export const resolveSupportedModel = (model: unknown): string => {
+  if (typeof model !== 'string' || !model) return DEFAULT_MODEL
+  const isGemini = model.includes('gemini')
+  const catalog = isGemini ? GEMINI_MODELS : OPENAI_MODELS
+  return catalog.some((m) => m.value === model)
+    ? model
+    : providerDefaultModel(isGemini)
+}
+
 // ---------------------------------------------------------------------------
 // Config正規化・ロード
 // ---------------------------------------------------------------------------
@@ -355,8 +373,7 @@ export const normalizeChatConfig = (value: unknown): ChatSupportConfig => {
       typeof value.apiKey === 'string' && value.apiKey
         ? value.apiKey
         : DEFAULT_CHAT_CONFIG.apiKey,
-    model:
-      typeof value.model === 'string' ? value.model : DEFAULT_CHAT_CONFIG.model,
+    model: resolveSupportedModel(value.model),
     uiMode: value.uiMode === 'sidebar' ? 'sidebar' : 'widget',
     sidebarWidth:
       typeof value.sidebarWidth === 'number'
