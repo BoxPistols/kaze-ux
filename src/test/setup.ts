@@ -13,6 +13,44 @@ import { afterEach, beforeAll, afterAll, expect } from 'vitest'
   return URLObj
 })()
 
+// Node 22+ が globalThis.localStorage をネイティブに持つため、jsdom の
+// window.localStorage より先に解決されてしまう（--localstorage-file 未設定だと
+// setItem が機能しない）。テスト用の in-memory 実装で明示的に上書きする。
+// Object.keys(localStorage) で実際の保存キーを拾えるよう、store 自体を
+// Proxy のターゲットにする（プレーンオブジェクトだとメソッド名しか返らない）
+;(() => {
+  const store: Record<string, string> = {}
+  const methods = {
+    getItem: (key: string) => (key in store ? store[key] : null),
+    setItem: (key: string, value: string) => {
+      store[key] = String(value)
+    },
+    removeItem: (key: string) => {
+      delete store[key]
+    },
+    clear: () => {
+      Object.keys(store).forEach((k) => delete store[k])
+    },
+    key: (i: number) => Object.keys(store)[i] ?? null,
+  }
+  const mockStorage = new Proxy(store, {
+    get(target, prop, receiver) {
+      if (prop === 'length') return Object.keys(target).length
+      if (prop in methods) return methods[prop as keyof typeof methods]
+      return Reflect.get(target, prop, receiver)
+    },
+    set(target, prop, value) {
+      if (typeof prop === 'string') target[prop] = String(value)
+      return true
+    },
+  })
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: mockStorage,
+    writable: true,
+    configurable: true,
+  })
+})()
+
 // Custom matchers for vitest to replace jest-dom functionality
 expect.extend({
   toBeInTheDocument(received) {

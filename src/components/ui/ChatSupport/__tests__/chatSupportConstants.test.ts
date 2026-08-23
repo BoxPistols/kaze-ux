@@ -279,6 +279,7 @@ describe('loadChatConfig', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   it('localStorageに値がなければデフォルトを返す', () => {
