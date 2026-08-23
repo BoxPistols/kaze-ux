@@ -111,12 +111,15 @@ Kaze Design System の知識を、**このリポジトリの外**にいる AI �
 コードの変更は配布メタデータのみ。ツール・リソースの追加はしない。
 
 - `mcp/package.json`
-  - `files: ["dist"]`, `prepublishOnly: pnpm build`, `engines.node >= 20`
+  - `files: ["dist", "data"]`, `prepack`（データ同梱 + tsc）, `engines.node >= 20`
   - `repository` / `homepage` / `keywords`（npm ページからの導線）
   - 公開名は `kaze-mcp`（`npx kaze-mcp` の打ちやすさを優先、scope 無し）
-  - **公開前の必須課題**: npm 配布物にはデータ層のファイルが含まれない。
-    publish 前に tokens / components / rules を `mcp/data/` へ同梱し
-    loader の既定パスをフォールバックさせる（Phase 2 で対応）
+  - **データ同梱（対応済み）**: `npx kaze-mcp` は node_modules の中で動くため、
+    リポジトリのルートにあるデータを読めない。`prepack` で
+    `scripts/sync-mcp-data.mjs` が生成物 3 件を `mcp/data/` へコピーし、
+    loader が既定パスに無ければそこへ落ちる。`DS_ROOT` を明示している場合は
+    落ちない（別 DS を指しているのに kaze のデータで埋めない）。
+    `pnpm check:mcp-package` が pack → 展開 → リポジトリ外で起動して検証する
 - `mcp/README.md`（新規）
   - Quick Start（Claude Code / Cursor / 汎用 client の 3 通り）
   - ツール・リソース・環境変数リファレンス
@@ -160,18 +163,20 @@ Kaze Design System の知識を、**このリポジトリの外**にいる AI �
 
 ### 3.5 検証
 
-| 対象               | 手段                                                     |
-| ------------------ | -------------------------------------------------------- |
-| MCP サーバー実起動 | `pnpm check:mcp`（initialize → tools/list → tools/call） |
-| サーバーユニット   | `pnpm --filter kaze-mcp test`                            |
-| Storybook ページ   | `pnpm build-storybook` + 既存 lint                       |
-| Skills 構文        | `pnpm check:skills`                                      |
-| DS ルール          | `pnpm check:rules` / `pnpm lint`                         |
+| 対象               | 手段                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| MCP サーバー実起動 | `pnpm check:mcp`（initialize → tools/list → tools/call）     |
+| npm 配布物         | `pnpm check:mcp-package`（pack → 展開 → リポジトリ外で起動） |
+| サーバーユニット   | `pnpm --filter kaze-mcp test`                                |
+| Storybook ページ   | `pnpm build-storybook` + 既存 lint                           |
+| Skills 構文        | `pnpm check:skills`                                          |
+| DS ルール          | `pnpm check:rules` / `pnpm lint`                             |
 
 ### 3.6 リリース手順（Phase）
 
-1. **Phase 1（この PR）**: 配布整備 + README + 紹介ページ + Plugin + DESIGN.md
-2. **Phase 2**: npm publish（メンテナが `cd mcp && pnpm build && npm publish`）。
-   紹介ページの「Coming soon」表記を外す
+1. **Phase 1（完了 / PR #129）**: 配布整備 + README + 紹介ページ + Plugin + DESIGN.md
+2. **Phase 2（配布物は完了）**: データ同梱・`prepack`・`check:mcp-package` を実装。
+   残るはメンテナ環境での `npm publish` のみ（手順は
+   [`../guides/npm-publishing.md`](../guides/npm-publishing.md)）
 3. **Phase 3（将来）**: `get_usage_examples`（story コードの供給）、HTTP transport、
    Figma variables 連携。**いずれもデータ拡張が先、コード追加は最後**

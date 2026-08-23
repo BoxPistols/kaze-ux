@@ -7,6 +7,8 @@
   （[`using-from-other-repos.md`](using-from-other-repos.md)）
 - 公開する価値があるのは: 社外・不特定の利用者に配りたいとき、
   uber.design/base-mcp のような「公開デザインシステム」を目指すとき
+- **配布物の準備は完了しています。** データ同梱・ビルド・検証は仕込み済みで、
+  残るは npm アカウントでの `npm publish` だけです（§1 と §3）
 
 ## 0. 前提知識
 
@@ -33,50 +35,49 @@ npm whoami   # ユーザー名が出れば OK
 npm view kaze-mcp   # → 404 なら未取得
 ```
 
-## 2. 公開前の必須課題: データ同梱
+## 2. データ同梱（実装済み・手作業は不要）
 
-**現状の配布物（`files: ["dist"]`）にはデータ層のファイルが入りません。**
-サーバーは `design-tokens/tokens.json` 等をリポジトリルートから読む設計のため、
-npm キャッシュから起動した `npx kaze-mcp` はデータを見つけられず空を返します。
+MCP サーバーはトークン・部品仕様・禁止ルールを**リポジトリのルートから**
+読みます。npm から入れた `npx kaze-mcp` は node_modules の中で動くため、
+そのままではデータがどこにもありません。**起動はする。ツール一覧も返る。
+中身だけが空になる。** 一番気づきにくい壊れ方です。
 
-公開前に次の対応が必要です:
+そのため次の 3 つが仕込んであり、publish 時に自動で効きます:
 
-1. `mcp/data/` に 3 ファイルを同梱する
-   - `tokens.json` ← `design-tokens/tokens.json`
-   - `components.json` ← `metadata/components.json`
-   - `prohibited.md` ← `foundations/prohibited.md`
-2. `mcp/src/utils/loader.ts` の既定パス解決にフォールバックを足す:
-   「`DS_ROOT` 基準で見つからなければ、パッケージ内 `data/` を読む」
-3. `mcp/package.json` の `files` に `"data"` を追加
-4. コピーを `prepublishOnly` に組み込み、鮮度を保証する:
+| 仕組み             | 場所                            | 働き                                                |
+| ------------------ | ------------------------------- | --------------------------------------------------- |
+| データのコピー     | `scripts/sync-mcp-data.mjs`     | 生成物 3 件を `mcp/data/` へコピー                  |
+| 自動実行           | `mcp/package.json` の `prepack` | `npm pack` / `npm publish` の直前に コピー + ビルド |
+| 読み込みの落とし先 | `mcp/src/utils/loader.ts`       | 既定パスに無ければ同梱 `data/` を読む               |
 
-```jsonc
-// mcp/package.json（イメージ）
-"scripts": {
-  "sync-data": "node ../scripts/sync-mcp-data.mjs", // ルートの生成物を data/ へコピー
-  "prepublishOnly": "pnpm sync-data && pnpm build"
-}
-```
+`mcp/data/` は **コピーであって第 2 の編集場所ではありません**。手で編集しても
+次の publish で上書きされます（`.gitignore` 済み。正はリポジトリ側の生成物）。
 
-> 設計原則との整合: `data/` は**コピーであって第 2 の編集場所ではない**。
-> 手で編集せず、必ず生成物からコピーする。コピー漏れは `check:mcp` 型の
-> 検査（pack した tarball を実起動して 1 件引く）で検出するのが望ましい。
+`DS_ROOT` を明示している場合は同梱データへ落ちません。別のデザインシステムを
+指しているのに kaze のデータで穴を埋めると、黙って別物を返すことになるためです。
+その場合は「どこを見て失敗したか」を言って落ちます。
 
 ## 3. 公開手順
 
 ```bash
+# 1) 配布物が本当に動くか（publish と同じ経路で pack → 展開 → リポジトリ外で起動）
+pnpm check:mcp-package
+
 cd mcp
 
-# 1) 内容物の最終確認（tarball に dist/ と data/ が入っているか目視）
+# 2) 内容物の確認（dist/ と data/ が入っているか）
 npm pack --dry-run
 
-# 2) 公開（スコープ無しパッケージは --access 指定不要だが明示しておく）
+# 3) 公開（スコープ無しパッケージは --access 指定不要だが明示しておく）
 npm publish --access public
 
-# 3) 確認
+# 4) 確認
 npm view kaze-mcp version
 npx -y kaze-mcp   # 消費側と同じ方法で起動確認（stderr に起動ログが出る）
 ```
+
+`pnpm check:mcp-package` は CI でも毎回走ります。同梱漏れやビルド漏れがあれば
+publish 前に赤くなります（実際に 3 ファイルを抜いて落ちることを確認済み）。
 
 バージョンは [Semantic Versioning](https://semver.org/lang/ja/) に従います:
 
@@ -105,8 +106,8 @@ npx -y kaze-mcp   # 消費側と同じ方法で起動確認（stderr に起動�
 ## 6. チェックリスト（公開直前に見る）
 
 - [ ] `npm view kaze-mcp` が 404（初回のみ）
-- [ ] `mcp/data/` が最新の生成物と一致（`prepublishOnly` で自動コピー）
-- [ ] `npm pack --dry-run` に `dist/` と `data/` が含まれる
-- [ ] pack した tarball からの起動で `get_component` が空でない結果を返す
-- [ ] `pnpm check:mcp` / `pnpm --filter kaze-mcp build` が通る
+- [ ] `pnpm check:mcp-package` が通る（同梱・ビルド・リポジトリ外での起動を一括で見る）
+- [ ] `pnpm check:mcp` が通る
+- [ ] 生成物が最新（`pnpm export-tokens && pnpm export-metadata && pnpm export-rules`）
 - [ ] バージョンを適切に上げた（`mcp/package.json`）
+- [ ] `npm whoami` でログイン済み

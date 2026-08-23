@@ -103,6 +103,14 @@ jobs:
       - name: Check the registered MCP server actually works
         run: pnpm check:mcp
 
+      # check:mcp はリポジトリの中で起動するので、データを同梱し忘れていても
+      # 緑になる。npm から入れた `npx kaze-mcp` は node_modules の中で動き、
+      # リポジトリのルートが無い。同梱漏れは「起動する・ツール一覧も返る・
+      # 中身だけ空」という一番気づけない壊れ方になるので、publish と同じ
+      # 経路（npm pack → 展開 → リポジトリ外で起動）で実際に引いて確かめる
+      - name: Check the npm tarball works outside the repository
+        run: pnpm check:mcp-package
+
       # design-tokens/tokens.json は src/themes と story から生成する派生物。
       # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
       # なので、古いまま配ると相手は黙って古い値を掴む。

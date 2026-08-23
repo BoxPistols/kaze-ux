@@ -65,3 +65,6 @@ figma-plugin/code.js
 
 # Playwright MCP の一時出力（スナップショット・コンソールログ）
 .playwright-mcp/
+
+# MCP 配布物へ同梱するデータのコピー（publish 時に生成。正はリポジトリ側の生成物）
+mcp/data

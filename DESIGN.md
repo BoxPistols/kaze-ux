@@ -106,7 +106,10 @@ MCP `check_rule` / `kaze://rules` → Plugin hook → 消費側リポジトリ�
 }
 ```
 
-npm 公開後（Phase 2）は `"args": ["-y", "kaze-mcp"]` に置き換わる。
+npm 公開後は `"args": ["-y", "kaze-mcp"]` に置き換わる。配布物にはデータが
+同梱される（`prepack` → `scripts/sync-mcp-data.mjs`）ので、npm 経由でも
+リポジトリ無しで動く。手順は
+[`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)。
 
 ### 4.2 他のデザインシステムへの転用
 

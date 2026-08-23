@@ -56,7 +56,7 @@ MCP に加えて Skills / SubAgent / Hook も入る。詳細は [`DESIGN.md`](..
 }
 ```
 
-### npm（Phase 2 / 公開後）
+### npm（公開後）
 
 ```jsonc
 {
@@ -66,8 +66,9 @@ MCP に加えて Skills / SubAgent / Hook も入る。詳細は [`DESIGN.md`](..
 }
 ```
 
-> 注: npm 配布時はデータ（tokens / components / rules）の同梱が必要。
-> 公開前チェックリストは [`docs/plans/mcp-release.md`](../docs/plans/mcp-release.md) を参照。
+> データ（tokens / components / rules）は `prepack` で配布物に同梱されるので、
+> npm 経由でもそのまま動く。公開手順は
+> [`docs/guides/npm-publishing.md`](../docs/guides/npm-publishing.md) を参照。
 
 ## Tools
 

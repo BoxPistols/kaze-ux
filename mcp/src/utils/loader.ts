@@ -14,9 +14,12 @@
  * | `DS_RULES_PATH` | `foundations/prohibited.md` | 禁止パターン |
  *
  * 既定値はこのリポジトリの配置なので、**何も設定しなければ従来どおり動く**。
+ *
+ * npm から入れた場合はリポジトリのルートが存在しないので、パッケージに
+ * 同梱した `data/` へ落ちる（`dataPath` を参照）。
  */
 
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -32,10 +35,48 @@ const ROOT = process.env.DS_ROOT
   ? resolve(process.env.DS_ROOT)
   : resolve(__dirname, '..', '..', '..')
 
-/** 相対パスは ROOT 基準、絶対パスはそのまま */
-const dataPath = (envVar: string, fallback: string): string => {
+/** パッケージのルート。`src/utils` と `dist/utils` のどちらから見ても `mcp/` */
+const PKG_ROOT = resolve(__dirname, '..', '..')
+
+/**
+ * データの実体を探す。
+ *
+ * 1. 環境変数の明示指定があればそれだけを見る
+ * 2. 無ければ `ROOT` 基準の既定パス（リポジトリの中で動かす通常のケース）
+ * 3. それも無ければパッケージ同梱の `data/`（npm から入れたケース）
+ *
+ * 3 が要るのは、`npx kaze-mcp` が node_modules の中で動くから。リポジトリの
+ * ルートはそこに無いので、同梱しないと**起動はするのに中身だけ空**になる。
+ *
+ * ただし `DS_ROOT` や個別パスを明示している人は、自分のデザインシステムを
+ * 指している。そこに実体が無いのは設定ミスなので、**kaze のデータで穴を
+ * 埋めない**。黙って別物を返すより、どこを見て失敗したかを言って落ちる。
+ */
+const dataPath = (
+  envVar: string,
+  fallback: string,
+  bundled: string
+): string => {
   const configured = process.env[envVar]
-  return configured ? resolve(ROOT, configured) : resolve(ROOT, fallback)
+  if (configured) return resolve(ROOT, configured)
+
+  const fromRoot = resolve(ROOT, fallback)
+  if (existsSync(fromRoot)) return fromRoot
+
+  // 明示的に別プロジェクトを指しているなら、同梱データへは降りない
+  if (!process.env.DS_ROOT) {
+    const fromPackage = resolve(PKG_ROOT, 'data', bundled)
+    if (existsSync(fromPackage)) return fromPackage
+  }
+
+  throw new Error(
+    `デザインシステムのデータが見つかりません (${fallback})。探した場所:\n` +
+      `  ${fromRoot}\n` +
+      (process.env.DS_ROOT
+        ? `  DS_ROOT=${process.env.DS_ROOT} を指定しているため同梱データは使いません。` +
+          `${envVar} で個別に指すこともできます`
+        : `  ${resolve(PKG_ROOT, 'data', bundled)}`)
+  )
 }
 
 // キャッシュ
@@ -48,7 +89,11 @@ let prohibitedCache: string | null = null
  */
 export const loadTokens = (): Record<string, unknown> => {
   if (tokensCache) return tokensCache
-  const path = dataPath('DS_TOKENS_PATH', 'design-tokens/tokens.json')
+  const path = dataPath(
+    'DS_TOKENS_PATH',
+    'design-tokens/tokens.json',
+    'tokens.json'
+  )
   tokensCache = JSON.parse(readFileSync(path, 'utf-8')) as Record<
     string,
     unknown
@@ -61,7 +106,11 @@ export const loadTokens = (): Record<string, unknown> => {
  */
 export const loadComponents = (): Record<string, unknown> => {
   if (componentsCache) return componentsCache
-  const path = dataPath('DS_COMPONENTS_PATH', 'metadata/components.json')
+  const path = dataPath(
+    'DS_COMPONENTS_PATH',
+    'metadata/components.json',
+    'components.json'
+  )
   componentsCache = JSON.parse(readFileSync(path, 'utf-8')) as Record<
     string,
     unknown
@@ -74,7 +123,11 @@ export const loadComponents = (): Record<string, unknown> => {
  */
 export const loadProhibited = (): string => {
   if (prohibitedCache) return prohibitedCache
-  const path = dataPath('DS_RULES_PATH', 'foundations/prohibited.md')
+  const path = dataPath(
+    'DS_RULES_PATH',
+    'foundations/prohibited.md',
+    'prohibited.md'
+  )
   prohibitedCache = readFileSync(path, 'utf-8')
   return prohibitedCache
 }
