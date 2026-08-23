@@ -282,6 +282,16 @@ const ProductCard = ({
         duration: 0.6,
         delay: index * 0.15,
         ease: [0.25, 0.1, 0, 1],
+      }}
+      // subgrid は親グリッドの行を継承する仕組みなので、間にある要素も
+      // グリッドで繋いでおかないと連鎖が切れてカード内の行が揃わない。
+      // rowGap: 0 が要る — 継承した行間に親の gap(24px) が全行に入り、
+      // 要素の margin と二重になって間延びする
+      style={{
+        display: 'grid',
+        gridTemplateRows: 'subgrid',
+        gridRow: 'span 5',
+        rowGap: 0,
       }}>
       <Box
         component='a'
@@ -293,7 +303,14 @@ const ProductCard = ({
           })
         }
         sx={{
-          display: 'block',
+          // カード内も subgrid にして、キャプチャ・アイコン・タイトル・説明・
+          // techNote の各行を**カード間で**揃える。行数が違うカードが混ざっても
+          // 説明の開始位置がずれない（グリッドの行を親から継承する）
+          display: 'grid',
+          gridTemplateRows: 'subgrid',
+          gridRow: 'span 5',
+          rowGap: 0,
+          alignContent: 'start',
           textDecoration: 'none',
           color: 'inherit',
           p: { xs: 3, md: 4 },
@@ -777,6 +794,7 @@ export const LandingPage = () => {
       label: 'Documentation',
       // Storybook のテーマはツールバーの globals で持つため light のみ
       capture: { id: 'storybook', hasDark: false },
+      techNote: 'Kaze DS の定義元。トークンと部品はここが単一ソース',
     },
     {
       title: 'SaaS Dashboard',
@@ -786,26 +804,29 @@ export const LandingPage = () => {
       href: APP_LINKS.saas(),
       label: 'Product Demo',
       capture: { id: 'saas', hasDark: true },
+      techNote: 'Kaze DS を workspace 参照で直接 import',
     },
     {
       title: 'KazeEats',
-      description: 'レストラン検索・カート・注文フロー・レビューシステム',
+      description: 'レストラン検索・カート・注文フロー・レビュー・配達状況',
       icon: <RestaurantIcon sx={{ color: 'warning.main' }} />,
       href: APP_LINKS.kazeEats(),
       label: 'Product Demo',
       capture: { id: 'kaze-eats', hasDark: true },
+      techNote: 'Kaze DS を workspace 参照で直接 import',
     },
     {
       title: 'KazeLogistics',
-      description: '配送ルート・物流拠点管理・距離/コスト計算・3Dマップ',
+      description: '配送ルート最適化・物流拠点管理・距離/コスト計算・3Dマップ',
       icon: <LocalShippingIcon sx={{ color: 'info.main' }} />,
       href: APP_LINKS.skyKaze(),
       label: 'Product Demo',
       capture: { id: 'sky-kaze', hasDark: true },
+      techNote: 'Kaze DS を workspace 参照で直接 import',
     },
     {
       title: 'kaze-ec',
-      description: '出品検索・タグ絞り込み・画像ギャラリー・決済 × 暗号資産ウォレット',
+      description: 'CtoC フリマサイト・出品検索・決済 × 暗号資産ウォレット',
       icon: <StorefrontIcon sx={{ color: 'success.main' }} />,
       // 他の 4 つと違い**別ホスト**にあるため APP_LINKS を通さない。
       // APP_LINKS.resolve は現在の origin からの相対で解決するので、
@@ -815,8 +836,7 @@ export const LandingPage = () => {
       href: 'https://kaze-ec.vercel.app/',
       label: 'MCP Demo',
       capture: { id: 'kaze-ec', hasDark: true },
-      techNote:
-        '別リポジトリから kaze MCP（get_token / get_component / check_rule）経由で仕様を引いて再生成。仕様↔実装のドリフトを CI で検査',
+      techNote: 'kaze MCP 経由で作成。仕様↔実装のドリフトを CI で検査',
     },
   ]
 
@@ -1073,8 +1093,17 @@ export const LandingPage = () => {
             viewport={{ once: true }}>
             <Typography sx={EYEBROW_SX}>Products</Typography>
             <Typography sx={DISPLAY_SX}>Built with Kaze</Typography>
-            <Typography sx={SECTION_LEAD_SX}>
-              同じコンポーネント基盤で構築したプロダクト
+            {/* 1 行が長いと目が戻れなくなるので、読み物の幅に制限する */}
+            <Typography sx={{ ...SECTION_LEAD_SX, mb: 2, maxWidth: '62ch' }}>
+              業種の違う 4 プロダクトが、同じトークンと同じ部品定義で動いています。
+              色・余白・文字・角丸はすべて Storybook が単一ソースで、変えれば
+              全プロダクトに同時に反映されます。
+            </Typography>
+            <Typography sx={{ ...SECTION_LEAD_SX, mb: 4, maxWidth: '62ch' }}>
+              取り込み方は 2 通りあります。workspace 参照で部品を直接 import
+              するか（3 プロダクト）、別リポジトリから kaze MCP で仕様だけを
+              引いて再生成するか（kaze-ec）。後者は仕様と実装のずれを CI
+              で検査しています。
             </Typography>
           </motion.div>
 
@@ -1082,6 +1111,10 @@ export const LandingPage = () => {
             sx={{
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              // カード内の 5 行（キャプチャ / アイコン / タイトル / 説明 /
+              // techNote）を subgrid で継承させるため、行の高さは中身の最大に
+              // 合わせる。これで説明文の行数が違ってもカード間で行頭が揃う
+              gridAutoRows: 'auto auto auto auto auto',
               gap: 3,
             }}>
             {products.map((product, i) => (
