@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 導入手順を読む / Getting started
+    url: https://github.com/BoxPistols/kaze-ux/blob/main/docs/guides/using-from-other-repos.md
+    about: 他リポジトリから MCP / Plugin を使う通しの手順
+  - name: Storybook（実物を見る）
+    url: https://kaze-ux.vercel.app
+    about: コンポーネント・トークン・MCP の紹介ページ
+  - name: セキュリティ報告 / Security
+    url: https://github.com/BoxPistols/kaze-ux/security/advisories/new
+    about: 脆弱性は公開 Issue ではなくこちらから非公開で報告してください

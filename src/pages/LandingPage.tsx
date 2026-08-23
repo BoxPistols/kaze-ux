@@ -1154,6 +1154,152 @@ export const LandingPage = () => {
       {/* セパレーター */}
       <BauhausDivider variant='c' />
 
+      {/* ===== MCP Server ===== */}
+      <Box sx={{ py: { xs: 8, md: 14 } }}>
+        <Box sx={{ ...CONTAINER_SX }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}>
+            <Typography sx={EYEBROW_SX}>MCP Server</Typography>
+            <Typography sx={DISPLAY_SX}>AI に設計知識を配る</Typography>
+            <Typography sx={{ ...SECTION_LEAD_SX, mb: 4 }}>
+              トークン・部品仕様・禁止ルールを MCP
+              で供給する。別のリポジトリでも AI が Kaze
+              に準拠したコードを書けるようになる
+            </Typography>
+          </motion.div>
+
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 3, md: 6 },
+              alignItems: 'start',
+            }}>
+            {/* 導入 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}>
+              <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, mb: 1.5 }}>
+                Claude Code なら 2 コマンド
+              </Typography>
+              <Box
+                component='pre'
+                sx={{
+                  m: 0,
+                  p: 2.5,
+                  borderRadius: 2,
+                  overflowX: 'auto',
+                  fontSize: '0.86rem',
+                  lineHeight: 1.9,
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                  color: 'text.primary',
+                  border: '1px solid',
+                  borderColor: isDark
+                    ? 'rgba(255,255,255,0.12)'
+                    : 'rgba(0,0,0,0.12)',
+                  bgcolor: isDark
+                    ? 'rgba(255,255,255,0.03)'
+                    : 'rgba(0,0,0,0.02)',
+                }}>
+                {'/plugin marketplace add BoxPistols/kaze-ux\n'}
+                {'/plugin install kaze-design@kaze-ux'}
+              </Box>
+              <Typography
+                sx={{
+                  fontSize: '0.9rem',
+                  color: 'text.secondary',
+                  lineHeight: 1.9,
+                  mt: 2,
+                }}>
+                MCP に加えて Skills・レビュー用の SubAgent・禁止パターンを止める
+                Hook が一度に入る。Cursor などは
+                <Box component='code' sx={{ mx: 0.5 }}>
+                  .mcp.json
+                </Box>
+                に登録すれば MCP だけ使える
+              </Typography>
+            </motion.div>
+
+            {/* 何が引けるか */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}>
+              <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, mb: 1.5 }}>
+                エージェントが引けるもの
+              </Typography>
+              <Box sx={{ display: 'grid', gap: 1.5 }}>
+                {[
+                  {
+                    name: 'get_token',
+                    desc: 'デザイントークンをドットパスで取得',
+                  },
+                  {
+                    name: 'get_component',
+                    desc: '部品の props・a11y・import 元',
+                  },
+                  {
+                    name: 'check_rule',
+                    desc: '書いたコードを禁止パターンに照合',
+                  },
+                  { name: 'search', desc: 'トークンと部品を横断検索' },
+                ].map((tool) => (
+                  <Box
+                    key={tool.name}
+                    sx={{
+                      display: 'flex',
+                      gap: 1.5,
+                      alignItems: 'baseline',
+                      flexWrap: 'wrap',
+                    }}>
+                    <Box
+                      component='code'
+                      sx={{
+                        fontSize: '0.86rem',
+                        fontWeight: 700,
+                        color: 'primary.main',
+                        fontFamily:
+                          'ui-monospace, SFMono-Regular, Menlo, monospace',
+                      }}>
+                      {tool.name}
+                    </Box>
+                    <Typography
+                      sx={{ fontSize: '0.9rem', color: 'text.secondary' }}>
+                      {tool.desc}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+              <Box
+                component='a'
+                href={`${APP_LINKS.storybook()}?path=/story/guide-mcp-server--overview`}
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  mt: 3,
+                  fontSize: '0.9rem',
+                  fontWeight: 700,
+                  color: 'primary.main',
+                  textDecoration: 'none',
+                  transition: motionOf(['opacity'], 'macro'),
+                  '&:hover': { opacity: 0.7 },
+                }}>
+                導入手順と仕組みを見る →
+              </Box>
+            </motion.div>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* セパレーター */}
+      <BauhausDivider variant='b' />
+
       {/* ===== 使い方 ===== */}
       <Box sx={{ py: { xs: 8, md: 14 } }}>
         <Box sx={{ ...CONTAINER_SX }}>

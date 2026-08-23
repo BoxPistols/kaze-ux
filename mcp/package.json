@@ -1,7 +1,7 @@
 {
   "name": "kaze-mcp",
   "version": "0.2.0",
-  "description": "Kaze Design System MCP Server — AI エージェント向けトークン検索・コンポーネント仕様取得・ルールチェック",
+  "description": "Design system knowledge for AI agents — design tokens, component specs, and rule checks (Kaze Design System) / デザインシステムの知識を AI エージェントへ供給する MCP サーバー",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -10,6 +10,7 @@
   "files": [
     "dist",
     "data",
+    "server.json",
     "README.md"
   ],
   "engines": {
@@ -28,10 +29,16 @@
   "homepage": "https://github.com/BoxPistols/kaze-ux/tree/main/mcp",
   "keywords": [
     "mcp",
+    "mcp-server",
     "design-system",
     "design-tokens",
-    "ai",
+    "ai-agents",
     "claude",
+    "claude-code",
+    "cursor",
+    "storybook",
+    "mui",
+    "tailwindcss",
     "kaze"
   ],
   "dependencies": {
@@ -43,5 +50,6 @@
     "typescript": "^5.9.3",
     "vitest": "^1.6.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "mcpName": "io.github.boxpistols/kaze-mcp"
 }

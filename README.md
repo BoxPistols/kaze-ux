@@ -1,5 +1,16 @@
 # Kaze Design System
 
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![MCP Server](https://img.shields.io/badge/MCP-kaze--mcp-0057B8.svg)](mcp/README.md)
+[![Storybook](https://img.shields.io/badge/Storybook-live-FF4785.svg)](https://kaze-ux.vercel.app)
+
+> **Design system knowledge for AI agents.** Tokens, component specs, and
+> prohibited patterns are generated from a single machine-readable source and
+> served to Claude Code / Cursor over MCP — so agents write UI code that matches
+> the system, in any repository.
+> [Get started →](docs/guides/using-from-other-repos.md) ·
+> [Architecture →](DESIGN.md)
+
 MUI + Tailwind CSS + Storybook で構築したデザインシステム。
 
 このプロジェクトが他と違うのは 2 点です。
@@ -50,6 +61,21 @@ MUI + Tailwind CSS + Storybook で構築したデザインシステム。
 | **KazeLogistics**  | 配送監視・地図・リアルタイムダッシュボード          | `/sky-kaze/`  |
 
 ## Quick Start
+
+### 他のリポジトリで使う（デザインシステムとして）
+
+Claude Code なら 2 コマンドで、MCP・Skills・レビュー用 SubAgent・禁止パターンを
+止める Hook まで入ります。
+
+```
+/plugin marketplace add BoxPistols/kaze-ux
+/plugin install kaze-design@kaze-ux
+```
+
+Cursor など他のクライアントは `.mcp.json` に登録すれば MCP だけ使えます。
+通しの手順は [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)。
+
+### このリポジトリを動かす（開発）
 
 ```bash
 pnpm install

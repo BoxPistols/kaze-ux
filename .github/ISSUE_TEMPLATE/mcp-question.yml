@@ -1,0 +1,54 @@
+name: MCP / Plugin の質問・不具合
+description: kaze-mcp や Claude Code Plugin を他リポジトリで使うときの質問・不具合
+title: '[mcp] '
+labels: [mcp]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        導入手順は [docs/guides/using-from-other-repos.md](https://github.com/BoxPistols/kaze-ux/blob/main/docs/guides/using-from-other-repos.md)、
+        仕組みは [DESIGN.md](https://github.com/BoxPistols/kaze-ux/blob/main/DESIGN.md) にあります。
+        **セキュリティに関わる問題はここではなく [Security Advisories](https://github.com/BoxPistols/kaze-ux/security/advisories/new) からお願いします。**
+
+  - type: dropdown
+    id: route
+    attributes:
+      label: 導入方法
+      options:
+        - Claude Code Plugin（/plugin install）
+        - .mcp.json に手動登録（Claude Code）
+        - .cursor/mcp.json に手動登録（Cursor）
+        - npm（npx kaze-mcp）
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: 何が起きましたか
+      description: 期待した動きと実際の動き
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 再現手順
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: env
+    attributes:
+      label: 環境
+      description: |
+        `pnpm check:mcp` の出力があれば貼ってください（リポジトリ内で試せる場合）。
+      placeholder: |
+        OS:
+        Node:
+        クライアント（Claude Code / Cursor / その他）:
+        kaze-mcp のバージョン:
