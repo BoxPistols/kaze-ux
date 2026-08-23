@@ -9,6 +9,7 @@
   },
   "files": [
     "dist",
+    "data",
     "README.md"
   ],
   "engines": {
@@ -17,7 +18,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "prepublishOnly": "pnpm build"
+    "prepack": "node ../scripts/sync-mcp-data.mjs && tsc"
   },
   "repository": {
     "type": "git",

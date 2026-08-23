@@ -106,7 +106,9 @@
     "check:quickref": "tsx scripts/check-quickref.ts",
     "check:ga": "node scripts/check-ga.mjs",
     "check:shortcuts": "node scripts/check-storybook-shortcuts.mjs",
-    "check:skills": "node scripts/check-skills.mjs"
+    "check:skills": "node scripts/check-skills.mjs",
+    "sync:mcp-data": "node scripts/sync-mcp-data.mjs",
+    "check:mcp-package": "node scripts/check-mcp-package.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.13.5",

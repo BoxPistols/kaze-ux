@@ -28,6 +28,8 @@ import {
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 
+import { initializeMessage, rpc, toolCallMessage } from './lib/mcp-rpc.mjs'
+
 const ROOT = resolve(import.meta.dirname, '..')
 const config = JSON.parse(readFileSync(resolve(ROOT, '.mcp.json'), 'utf-8'))
 
@@ -40,36 +42,6 @@ if (targets.length === 0) {
   console.error('❌ .mcp.json に stdio のサーバが 1 つもありません')
   process.exit(1)
 }
-
-/** 応答を待つ。無言のまま終わるのが一番ありがちな失敗なので必ず打ち切る */
-const rpc = (proc, messages, timeoutMs) =>
-  new Promise((done) => {
-    let buf = ''
-    const seen = []
-    proc.stdout.on('data', (d) => {
-      buf += d
-      const lines = buf.split('\n')
-      buf = lines.pop() ?? ''
-      for (const l of lines) {
-        if (!l.trim()) continue
-        try {
-          seen.push(JSON.parse(l))
-        } catch {
-          /* 部分行は無視 */
-        }
-      }
-    })
-    for (const [delay, msg] of messages) {
-      setTimeout(() => {
-        try {
-          proc.stdin.write(`${JSON.stringify(msg)}\n`)
-        } catch {
-          /* 相手が死んでいる */
-        }
-      }, delay)
-    }
-    setTimeout(() => done(seen), timeoutMs)
-  })
 
 let failed = 0
 
@@ -104,31 +76,11 @@ for (const [name, spec] of targets) {
   const replies = await rpc(
     proc,
     [
-      [
-        0,
-        {
-          jsonrpc: '2.0',
-          id: 1,
-          method: 'initialize',
-          params: {
-            protocolVersion: '2024-11-05',
-            capabilities: {},
-            clientInfo: { name: 'kaze-check', version: '1' },
-          },
-        },
-      ],
+      [0, initializeMessage(1)],
       [1500, { jsonrpc: '2.0', method: 'notifications/initialized' }],
       [1600, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }],
       [1700, { jsonrpc: '2.0', id: 4, method: 'resources/list', params: {} }],
-      [
-        2600,
-        {
-          jsonrpc: '2.0',
-          id: 3,
-          method: 'tools/call',
-          params: { name: 'get_component', arguments: { name: 'statCard' } },
-        },
-      ],
+      [2600, toolCallMessage(3, 'get_component', { name: 'statCard' })],
     ],
     5000
   )
@@ -223,40 +175,12 @@ const portable = spawn('npx', ['tsx', 'mcp/src/index.ts'], {
 const portableReplies = await rpc(
   portable,
   [
-    [
-      0,
-      {
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'initialize',
-        params: {
-          protocolVersion: '2024-11-05',
-          capabilities: {},
-          clientInfo: { name: 'kaze-check', version: '1' },
-        },
-      },
-    ],
+    [0, initializeMessage(1)],
     [1500, { jsonrpc: '2.0', method: 'notifications/initialized' }],
-    [
-      1600,
-      {
-        jsonrpc: '2.0',
-        id: 5,
-        method: 'tools/call',
-        params: { name: 'get_component', arguments: { name: 'widget' } },
-      },
-    ],
+    [1600, toolCallMessage(5, 'get_component', { name: 'widget' })],
     [
       2400,
-      {
-        jsonrpc: '2.0',
-        id: 6,
-        method: 'tools/call',
-        params: {
-          name: 'get_token',
-          arguments: { path: 'color.light.primary.main' },
-        },
-      },
+      toolCallMessage(6, 'get_token', { path: 'color.light.primary.main' }),
     ],
   ],
   5000
