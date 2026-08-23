@@ -7,7 +7,7 @@ Kaze Design System の知識・ルール・部品を、**このリポジトリ�
 > **知識はデータに、強制は仕組みに、コードは最低限に。**
 
 - 個別計画: [`docs/plans/mcp-release.md`](docs/plans/mcp-release.md)（MCP 版リリースの要件定義・詳細設計）
-- 導入マニュアル: [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)（消費側） / [`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)（npm 公開）
+- 導入マニュアル: [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)（消費側） / [`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)（npm / MCP Registry 公開） / [`docs/guides/going-public.md`](docs/guides/going-public.md)（公開と流布）
 - リポジトリ内の開発規約: [`CLAUDE.md`](CLAUDE.md) / [`AI_DEVELOPMENT_RULES.md`](AI_DEVELOPMENT_RULES.md)
 
 ## 1. 全体図
@@ -214,7 +214,25 @@ SubAgent・Hook がすべて入る。個別導入（MCP だけ欲しい）は §
 | 新しい機械検査       | `hooks/check-prohibited.mjs` + `scripts/`                | ESLint で書けるものを Hook に書く |
 | MCP 新ツール         | 最終手段。まずデータ拡張で解決できないか検討             | —                                 |
 
-## 10. 検証
+## 10. 流布（見つけてもらう）
+
+作っただけでは使われない。**置き場所を用意して初めて発見される。**
+
+| 段階       | 何を用意するか             | 置き場所                                                                 |
+| ---------- | -------------------------- | ------------------------------------------------------------------------ |
+| 見つかる   | パッケージとカタログ登録   | npm（`kaze-mcp`）→ MCP Registry（`io.github.boxpistols/kaze-mcp`）       |
+| わかる     | 30 秒で何かが伝わる説明    | README 冒頭（英語）/ LP の MCP セクション / Storybook `Guide/MCP Server` |
+| 試せる     | 迷わず 1 回動かせる手順    | [`using-from-other-repos.md`](docs/guides/using-from-other-repos.md)     |
+| 使い続ける | 古びていないと外から分かる | CI の検査 + リリース                                                     |
+
+MCP Registry は**メタデータしか持たない**ので、npm 公開が先。順序と手順は
+[`going-public.md`](docs/guides/going-public.md)。
+
+配布の導線には必ず owner が出る（`/plugin marketplace add <owner>/<repo>`、
+`io.github.<owner>/`）。そのため `check:anon` が守る範囲は「個人に届く情報」
+（メール・実名・ローカルパス）で、**リポジトリの公開名義は通す**。
+
+## 11. 検証
 
 | コマンド                    | 保証すること                                 |
 | --------------------------- | -------------------------------------------- |

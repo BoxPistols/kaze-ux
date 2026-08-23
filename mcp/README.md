@@ -1,5 +1,15 @@
 # kaze-mcp — Kaze Design System MCP Server
 
+**Design system knowledge for AI agents.** Serves design tokens, component
+specs, and prohibited-pattern checks over MCP, so Claude Code / Cursor write UI
+code that matches the system — in any repository. Runs over stdio, reads local
+files only: **no network access, no writes**.
+
+Works with any design system that provides the same data files
+（[see below](#他のデザインシステムで使う)）.
+
+---
+
 Kaze Design System の設計知識（デザイントークン・コンポーネント仕様・禁止ルール）を
 MCP (Model Context Protocol) で AI エージェントに供給するサーバー。
 

@@ -56,27 +56,81 @@ const deriveIdentity = () => {
     if (t.length > 2) values.add(t)
   }
 
+  /**
+   * プロジェクトとして公開している名義。**ここは伏せる対象ではない。**
+   *
+   * リポジトリを公開して配る以上、導線には必ずリポジトリのパスが出る。
+   * Plugin の導入は `/plugin marketplace add <owner>/<repo>`、MCP Registry の
+   * 名前空間は `io.github.<owner>/...` で、どちらも owner を含む形しか無い。
+   * つまり**配布と owner の秘匿は両立しない**。
+   *
+   * そこで守る範囲を分ける。伏せるのは個人に届く情報（メールアドレス・実名・
+   * noreply の数字 ID）で、リポジトリの owner とパスは公開名義として通す。
+   * public なリポジトリでは owner はすでに誰でも見られるので、成果物に載っても
+   * 情報は増えない。一方メールと実名は、載せなければ載らない。
+   */
+  const publicIdentity = new Set()
+  const addPublic = (v) => {
+    const t = (v ?? '').trim()
+    if (t.length > 2) publicIdentity.add(t.toLowerCase())
+  }
+
   const remote = git('remote get-url origin')
   if (remote) {
-    add(remote.replace(/\.git$/, ''))
+    addPublic(remote.replace(/\.git$/, ''))
     // git@host:owner/repo / https://host/owner/repo の両方から owner を取る
     const m = remote.match(/[:/]([^/:]+)\/([^/]+?)(\.git)?$/)
     if (m) {
-      add(m[1])
-      add(`${m[1]}/${m[2]}`)
+      addPublic(m[1])
+      addPublic(`${m[1]}/${m[2]}`)
     }
   }
-  add(git('config user.email'))
-  add(git('config user.name'))
-  for (const line of git('log --format=%an%x09%ae -200').split('\n')) {
-    const [name, email] = line.split('\t')
+  /**
+   * 人ではない作者かどうか。**bot と AI は伏せる対象ではない。**
+   *
+   * 名前まで伏せると、**その名前を説明した本文が身元の混入として弾かれる**。
+   * 実際 `user.name = Claude` の環境でビルドした瞬間、「Claude Code に
+   * 対応している」と書いたページが一斉に落ちた。伏せても個人には辿れない
+   * 一方、デザインシステムの説明としては書かないわけにいかない語だった。
+   *
+   * 判定は名前ではなくメールで行う。GitHub の users.noreply.github.com は
+   * 実在の人物を隠したものなので対象に残す（数字 ID が本人に紐づく）。
+   * それ以外の noreply は自動化とみなす。
+   */
+  const isMachine = (name, email) =>
+    /\[bot\]$/.test(name ?? '') ||
+    (/^noreply@/i.test(email ?? '') &&
+      !/users\.noreply\.github\.com$/i.test(email ?? ''))
+
+  /**
+   * 作者を 1 人ぶん取り込む。
+   *
+   * ローカルの git 設定とコミット履歴の両方を通す。**片方だけに判定を
+   * 掛けても意味が無い**（履歴側だけ除外していたとき、CI の
+   * `user.name` が素通りして同じ誤検出が残った）。
+   */
+  const addAuthor = (name, email) => {
+    if (isMachine(name, email)) return
     add(name)
     add(email)
+  }
+
+  addAuthor(git('config user.name'), git('config user.email'))
+  for (const line of git('log --format=%an%x09%ae -200').split('\n')) {
+    const [name, email] = line.split('\t')
+    addAuthor(name, email)
   }
   // noreply の数字 ID も本人に紐づく
   for (const v of [...values]) {
     const m = v.match(/^(\d+)\+/)
     if (m) add(m[1])
+  }
+
+  // git の user.name やコミット作者が owner と同じ文字列のことがある。
+  // 公開名義と一致するものはここで落とす（大文字小文字は無視。GitHub は
+  // 表記を変えても同じアカウントに解決するため、片方だけ残すと意味が無い）
+  for (const v of [...values]) {
+    if (publicIdentity.has(v.toLowerCase())) values.delete(v)
   }
 
   const escape = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

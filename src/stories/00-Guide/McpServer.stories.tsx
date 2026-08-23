@@ -150,7 +150,7 @@ const McpServerContent = () => {
       <CodeBlock
         language='bash'
         caption='Claude Code Plugin なら 2 コマンドで全部入り（MCP + Skills + SubAgent + Hook）'>
-        {`/plugin marketplace add boxpistols/kaze-ux
+        {`/plugin marketplace add BoxPistols/kaze-ux
 /plugin install kaze-design@kaze-ux`}
       </CodeBlock>
 

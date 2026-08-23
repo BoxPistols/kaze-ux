@@ -24,6 +24,7 @@ import { spawn } from 'node:child_process'
 import {
   existsSync,
   mkdtempSync,
+  readFileSync,
   readdirSync,
   rmSync,
   symlinkSync,
@@ -44,7 +45,61 @@ const MCP = resolve(ROOT, 'mcp')
 const work = mkdtempSync(resolve(tmpdir(), 'kaze-mcp-pack-'))
 let failed = false
 
+/**
+ * MCP Registry は `package.json` の `mcpName` と `server.json` の `name` が
+ * 一致することで、そのパッケージの所有者を確かめる。**ずれると publish が
+ * 弾かれる**が、ずれても手元では何も起きないので気づけない。
+ * バージョンも同じ理由で揃っている必要がある（上げ忘れが起きやすい）。
+ */
+const checkRegistryManifest = () => {
+  const pkg = JSON.parse(readFileSync(resolve(MCP, 'package.json'), 'utf-8'))
+  const server = JSON.parse(readFileSync(resolve(MCP, 'server.json'), 'utf-8'))
+  const npmPkg = server.packages?.[0] ?? {}
+
+  const mismatches = [
+    [
+      'package.json の mcpName',
+      pkg.mcpName,
+      'server.json の name',
+      server.name,
+    ],
+    [
+      'package.json の version',
+      pkg.version,
+      'server.json の version',
+      server.version,
+    ],
+    [
+      'package.json の version',
+      pkg.version,
+      'server.json の packages[0].version',
+      npmPkg.version,
+    ],
+    [
+      'package.json の name',
+      pkg.name,
+      'server.json の packages[0].identifier',
+      npmPkg.identifier,
+    ],
+  ].filter(([, a, , b]) => a !== b)
+
+  if (mismatches.length) {
+    console.error('❌ MCP Registry 用の名義が揃っていません:')
+    for (const [aLabel, a, bLabel, b] of mismatches) {
+      console.error(
+        `   ${aLabel} = ${a ?? '(未設定)'} / ${bLabel} = ${b ?? '(未設定)'}`
+      )
+    }
+    process.exit(1)
+  }
+  console.log(
+    `✅ レジストリ名義 ${server.name} (v${server.version}) が揃っています`
+  )
+}
+
 try {
+  checkRegistryManifest()
+
   // --- 1. publish と同じ経路で tarball を作る ---
   console.log('📦 npm pack（prepack でデータ同梱 + ビルド）...')
   execFileSync('npm', ['pack', '--pack-destination', work], {

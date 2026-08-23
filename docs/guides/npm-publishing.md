@@ -85,6 +85,46 @@ publish 前に赤くなります（実際に 3 ファイルを抜いて落ちる
 - ツール・リソースの追加 → minor (`0.x.0`)
 - ツールの引数・返却形式の破壊的変更 → major
 
+## 3.5 MCP Registry に登録する（発見される場所に載せる）
+
+npm 公開は「入れられる」状態を作るだけで、**探している人に見つかる場所には
+まだ載っていません**。MCP クライアントがサーバーを探すカタログが
+[MCP Registry](https://registry.modelcontextprotocol.io/) で、
+uber.design/base-mcp のような公開デザインシステムが並ぶのはここです。
+
+Registry は**メタデータしか持ちません**。実体は npm 側にあるので、
+必ず npm publish（§3）を先に済ませてください。
+
+準備は済んでいます:
+
+| ファイル                        | 役割                                                            |
+| ------------------------------- | --------------------------------------------------------------- |
+| `mcp/server.json`               | Registry へ渡すマニフェスト（名前・説明・npm パッケージの指定） |
+| `mcp/package.json` の `mcpName` | 所有者の検証。`server.json` の `name` と一致する必要がある      |
+
+名義は `io.github.boxpistols/kaze-mcp`。GitHub 認証を使う場合、
+名前空間は `io.github.<アカウント名>/` に固定されます。
+両者のずれは `pnpm check:mcp-package` が検出します（CI でも走ります）。
+
+```bash
+# 1) publisher CLI を入れる（Homebrew / Snap / GitHub Releases のいずれか）
+brew install mcp-publisher
+
+# 2) GitHub でログイン（io.github.boxpistols/* の名前空間が付与される）
+mcp-publisher login github
+
+# 3) 登録（mcp/ で実行。server.json を読む）
+cd mcp && mcp-publisher publish
+```
+
+登録後は各 MCP クライアントのカタログから `kaze-mcp` が見つかります。
+GitHub Actions で自動化する場合は `mcp-publisher login github-oidc` を使い、
+ワークフローに `permissions: id-token: write` を与えます。
+
+**バージョンを上げたら Registry 側も publish し直します。**
+`server.json` の `version` と `packages[0].version` を `package.json` と
+揃えてから実行してください（揃っていなければ検査が止めます）。
+
 ## 4. 公開後にやること
 
 | 対象                                    | 変更                                                                         |
@@ -106,7 +146,8 @@ publish 前に赤くなります（実際に 3 ファイルを抜いて落ちる
 ## 6. チェックリスト（公開直前に見る）
 
 - [ ] `npm view kaze-mcp` が 404（初回のみ）
-- [ ] `pnpm check:mcp-package` が通る（同梱・ビルド・リポジトリ外での起動を一括で見る）
+- [ ] `pnpm check:mcp-package` が通る（レジストリ名義・同梱・リポジトリ外での起動を一括で見る）
+- [ ] npm publish 後に MCP Registry へも登録した（§3.5）
 - [ ] `pnpm check:mcp` が通る
 - [ ] 生成物が最新（`pnpm export-tokens && pnpm export-metadata && pnpm export-rules`）
 - [ ] バージョンを適切に上げた（`mcp/package.json`）
