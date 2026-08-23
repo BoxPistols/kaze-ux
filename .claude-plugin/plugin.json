@@ -1,0 +1,11 @@
+{
+  "name": "kaze-design",
+  "displayName": "Kaze Design System",
+  "description": "Kaze Design System を消費側リポジトリに一括導入する。MCP（トークン・部品仕様・ルール検証）+ Skills + レビュー SubAgent + 禁止パターン Hook",
+  "version": "0.2.0",
+  "author": { "name": "BoxPistols" },
+  "homepage": "https://github.com/BoxPistols/kaze-ux",
+  "repository": "https://github.com/BoxPistols/kaze-ux",
+  "license": "MIT",
+  "keywords": ["design-system", "mcp", "mui", "tailwind", "kaze"]
+}

@@ -205,6 +205,19 @@ search("spacing")                         → トークン横断検索
 initialize → tools/list → tools/call まで通し、返答が空でないことまで見ます。
 以前はビルド成果物を指しており、clone した環境では起動しませんでした。
 
+**他リポジトリから使う**（Claude Code Plugin なら 2 コマンド）:
+
+```
+/plugin marketplace add BoxPistols/kaze-ux
+/plugin install kaze-design@kaze-ux
+```
+
+MCP + Skills + レビュー SubAgent + 禁止パターン Hook が一括で入ります。
+Cursor 等は `.mcp.json` の手動登録で MCP のみ利用できます。
+通しの導入手順は [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)、
+npm 公開手順（任意・Phase 2）は [`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)、
+アーキテクチャは [`DESIGN.md`](DESIGN.md) を参照してください。
+
 ### Skills
 
 | Skill               | Description                                                  |

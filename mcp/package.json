@@ -1,16 +1,38 @@
 {
-  "name": "@kaze-ux/mcp-server",
-  "version": "0.1.0",
+  "name": "kaze-mcp",
+  "version": "0.2.0",
   "description": "Kaze Design System MCP Server — AI エージェント向けトークン検索・コンポーネント仕様取得・ルールチェック",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "kaze-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoxPistols/kaze-ux.git",
+    "directory": "mcp"
+  },
+  "homepage": "https://github.com/BoxPistols/kaze-ux/tree/main/mcp",
+  "keywords": [
+    "mcp",
+    "design-system",
+    "design-tokens",
+    "ai",
+    "claude",
+    "kaze"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "zod": "^4.4.3"
