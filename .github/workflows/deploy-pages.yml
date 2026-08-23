@@ -90,7 +90,7 @@ jobs:
       - name: Build Storybook
         if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'storybook'
         env:
-          VITE_OPENAI_MODEL: 'gpt-4.1-nano'
+          VITE_OPENAI_MODEL: 'gpt-5.6-luna'
         run: |
           pnpm run build-storybook
           mkdir -p gh-pages/storybook

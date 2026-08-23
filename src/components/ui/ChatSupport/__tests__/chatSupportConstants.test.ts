@@ -15,6 +15,8 @@ import {
   ENGINEER_PROMPT_EXTENSION,
   OPENAI_MODELS,
   GEMINI_MODELS,
+  DEFAULT_MODEL,
+  resolveSupportedModel,
 } from '../chatSupportConstants'
 import type { ShortcutBinding } from '../chatSupportTypes'
 
@@ -247,6 +249,11 @@ describe('normalizeChatConfig', () => {
     expect(result.apiKey).toBe(DEFAULT_CHAT_CONFIG.apiKey)
   })
 
+  it('一覧から外れた旧モデルを既定モデルに寄せる', () => {
+    const result = normalizeChatConfig({ model: 'gpt-5.4-nano' })
+    expect(result.model).toBe(DEFAULT_MODEL)
+  })
+
   it('shortcutsが不正でもデフォルトショートカットを返す', () => {
     const result = normalizeChatConfig({ shortcuts: 'bad' })
     expect(result.shortcuts.sendMessage).toBeDefined()
@@ -321,6 +328,18 @@ describe('loadChatConfig', () => {
     )
     const config = loadChatConfig()
     expect(config.model).toBe('gpt-5.6-luna')
+  })
+
+  it('保存済みの旧モデルは読み込み時に既定モデルへ戻す', () => {
+    getItemSpy.mockReturnValue(
+      JSON.stringify({
+        apiKey: 'sk-custom-key',
+        model: 'gpt-5.4-nano',
+        uiMode: 'widget',
+      })
+    )
+    const config = loadChatConfig()
+    expect(config.model).toBe(DEFAULT_MODEL)
   })
 
   it('カスタムAPIキー使用時はモデルをそのまま保持する', () => {
@@ -442,5 +461,34 @@ describe('プロンプト拡張定数', () => {
   it('ENGINEER_PROMPT_EXTENSIONが非空', () => {
     expect(ENGINEER_PROMPT_EXTENSION.length).toBeGreaterThan(0)
     expect(ENGINEER_PROMPT_EXTENSION).toContain('エンジニア')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// resolveSupportedModel
+// ---------------------------------------------------------------------------
+
+describe('resolveSupportedModel', () => {
+  it('一覧にあるモデルはそのまま返す', () => {
+    for (const model of [...OPENAI_MODELS, ...GEMINI_MODELS]) {
+      expect(resolveSupportedModel(model.value)).toBe(model.value)
+    }
+  })
+
+  it('未知の OpenAI モデルは OpenAI の既定に寄せる', () => {
+    expect(resolveSupportedModel('gpt-5.4-nano')).toBe(DEFAULT_MODEL)
+    expect(resolveSupportedModel('gpt-4.1-nano')).toBe(DEFAULT_MODEL)
+  })
+
+  it('未知の Gemini モデルは Gemini の既定に寄せる', () => {
+    expect(resolveSupportedModel('gemini-1.5-flash')).toBe(
+      GEMINI_MODELS[0].value
+    )
+  })
+
+  it('空文字・非文字列は既定モデルに寄せる', () => {
+    expect(resolveSupportedModel('')).toBe(DEFAULT_MODEL)
+    expect(resolveSupportedModel(undefined)).toBe(DEFAULT_MODEL)
+    expect(resolveSupportedModel(42)).toBe(DEFAULT_MODEL)
   })
 })
