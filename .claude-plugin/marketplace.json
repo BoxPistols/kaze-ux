@@ -1,7 +1,9 @@
 {
   "name": "kaze-ux",
   "description": "Kaze Design System の公式 Claude Code marketplace",
-  "owner": "BoxPistols",
+  "owner": {
+    "name": "BoxPistols"
+  },
   "plugins": [
     {
       "name": "kaze-design",
