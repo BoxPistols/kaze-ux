@@ -38,6 +38,8 @@ const PORT = 4599
 const DARK_STORAGE = {
   'mui-mode': 'dark',
   'kaze-eats-theme': 'dark',
+  // kaze-ec は別リポジトリ・別ホスト。保存先は ColorModeContext.tsx の STORAGE_KEY
+  'kaze-ec:color-mode': 'dark',
 }
 
 /**
@@ -46,12 +48,22 @@ const DARK_STORAGE = {
  * `wait` は「その画面が出来上がるまで」の待ち時間。地図やアニメーションを
  * 持つ画面は描画完了が遅く、短いと空の状態が写る。
  * `dark` はダーク版も撮るか（Storybook はモードの持ち方が違うので撮らない）。
+ * `origin` があるものは**このリポジトリの dist に含まれない**外部プロダクト。
+ * ローカルの配信ではなくその URL を直接開く（→ ネットワークが要る。
+ * `--skip-external` で飛ばせる）。
  */
 const TARGETS = [
   { id: 'storybook', path: '/storybook/', wait: 4000, dark: false },
   { id: 'saas', path: '/saas/', wait: 2500, dark: true },
   { id: 'kaze-eats', path: '/kaze-eats/', wait: 2500, dark: true },
   { id: 'sky-kaze', path: '/sky-kaze/', wait: 3500, dark: true },
+  {
+    id: 'kaze-ec',
+    path: '/',
+    origin: 'https://kaze-ec.vercel.app',
+    wait: 2500,
+    dark: true,
+  },
 ]
 
 const VIEWPORT = { width: 1440, height: 900 }
@@ -105,14 +117,24 @@ const serve = () =>
   })
 
 const main = async () => {
+  // 外部プロダクト（origin つき）はネットワークが要る。オフラインや
+  // 相手側の障害でスクリプト全体が落ちないよう、明示的に外せるようにする
+  const skipExternal = process.argv.includes('--skip-external')
+  const targets = TARGETS.filter((t) => !(skipExternal && t.origin))
+  if (skipExternal) {
+    const skipped = TARGETS.filter((t) => t.origin).map((t) => t.id)
+    if (skipped.length) console.log(`外部プロダクトを飛ばします: ${skipped.join(', ')}`)
+  }
+
   if (!process.argv.includes('--skip-build')) {
     run('node scripts/vercel-build.mjs')
   }
   // dist/ は build-sandbox（LP だけ）でも作られる。中身が本番構成である
   // ことを先に確かめる。確かめないと、空の画面を撮って気づけない
-  const missing = TARGETS.filter(
-    (t) => !existsSync(join(DIST, t.path, 'index.html'))
-  ).map((t) => t.path)
+  // （外部プロダクトは dist に無いのが正しいので対象外）
+  const missing = targets
+    .filter((t) => !t.origin && !existsSync(join(DIST, t.path, 'index.html')))
+    .map((t) => t.path)
   if (!existsSync(DIST) || missing.length) {
     console.error(
       `dist/ が本番構成ではありません（見つからない: ${missing.join(', ') || 'dist/'}）。`,
@@ -128,7 +150,7 @@ const main = async () => {
   const browser = await chromium.launch()
 
   try {
-    for (const t of TARGETS) {
+    for (const t of targets) {
       const bg = {}
       for (const scheme of t.dark ? ['light', 'dark'] : ['light']) {
         const ctx = await browser.newContext({
@@ -144,7 +166,7 @@ const main = async () => {
           }, DARK_STORAGE)
         }
         const page = await ctx.newPage()
-        const url = `http://localhost:${PORT}${t.path}`
+        const url = `${t.origin ?? `http://localhost:${PORT}`}${t.path}`
         await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 })
         // 動きが落ち着くまで待つ。networkidle だけだと描画途中が写る
         await page.waitForTimeout(t.wait)
@@ -180,7 +202,7 @@ const main = async () => {
     server.close()
   }
 
-  const shots = TARGETS.reduce((n, t) => n + (t.dark ? 2 : 1), 0)
+  const shots = targets.reduce((n, t) => n + (t.dark ? 2 : 1), 0)
   console.log(`\n出力: public/captures/ (${shots} 枚)`)
 }
 

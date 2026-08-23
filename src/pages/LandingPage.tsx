@@ -3,6 +3,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard'
+import StorefrontIcon from '@mui/icons-material/Storefront'
 import { Box, Typography, alpha, useTheme } from '@mui/material'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
@@ -202,6 +203,12 @@ interface ProductCardProps {
   index: number
   /** public/captures/ のファイル名の頭。ダークが無いものは light だけ使う */
   capture?: { id: string; hasDark: boolean }
+  /**
+   * そのプロダクト固有の作り方。全プロダクトに共通する技術（React / MUI /
+   * Tailwind 等）はページ下部の Tech Stack で述べているので、ここには
+   * **そのプロダクトだけが持つ性質**だけを書く
+   */
+  techNote?: string
 }
 
 /** キャプチャの実寸。撮影時のビューポート (scripts/capture-products.mjs) と揃える */
@@ -259,6 +266,7 @@ const ProductCard = ({
   label,
   index,
   capture,
+  techNote,
 }: ProductCardProps) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
@@ -357,6 +365,29 @@ const ProductCard = ({
           }}>
           {description}
         </Typography>
+
+        {techNote && (
+          <Box
+            sx={{
+              mt: 2,
+              pt: 2,
+              borderTop: '1px solid',
+              borderColor: isDark
+                ? 'rgba(255,255,255,0.08)'
+                : 'rgba(0,0,0,0.08)',
+            }}>
+            <Typography
+              sx={{
+                // 14px 基準なので 0.9rem = 12.6px。0.85rem だと 11.9px となり
+                // 「12px 未満を使わない」に反する（typography-usage.test.ts が検出）
+                fontSize: '0.9rem',
+                color: 'text.secondary',
+                lineHeight: 1.7,
+              }}>
+              {techNote}
+            </Typography>
+          </Box>
+        )}
       </Box>
     </motion.div>
   )
@@ -772,6 +803,21 @@ export const LandingPage = () => {
       label: 'Product Demo',
       capture: { id: 'sky-kaze', hasDark: true },
     },
+    {
+      title: 'kaze-ec',
+      description: '出品検索・タグ絞り込み・画像ギャラリー・決済 × 暗号資産ウォレット',
+      icon: <StorefrontIcon sx={{ color: 'success.main' }} />,
+      // 他の 4 つと違い**別ホスト**にあるため APP_LINKS を通さない。
+      // APP_LINKS.resolve は現在の origin からの相対で解決するので、
+      // ここで使うと kaze-ux 側の 404 になる。
+      // （リポジトリ URL が env 制御なのは個人へ辿れる導線を残さないためで、
+      //   デモの公開ホストである以下は既存の公開パスと同じ扱いでよい）
+      href: 'https://kaze-ec.vercel.app/',
+      label: 'MCP Demo',
+      capture: { id: 'kaze-ec', hasDark: true },
+      techNote:
+        '別リポジトリから kaze MCP（get_token / get_component / check_rule）経由で仕様を引いて再生成。仕様↔実装のドリフトを CI で検査',
+    },
   ]
 
   const features = [
@@ -1107,9 +1153,9 @@ export const LandingPage = () => {
               { label: 'Tailwind CSS', desc: 'ユーティリティ CSS' },
               { label: 'TypeScript', desc: '型安全' },
               { label: 'Storybook', desc: 'コンポーネントドキュメント' },
+              { label: 'kaze MCP', desc: '設計知識を AI へ供給' },
               { label: 'Vite', desc: 'ビルドツール' },
               { label: 'Vitest', desc: 'テストフレームワーク' },
-              { label: 'pnpm', desc: 'パッケージマネージャ' },
             ].map((tech, i) => (
               <motion.div
                 key={tech.label}
