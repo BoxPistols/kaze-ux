@@ -6,6 +6,8 @@ Kaze Design System の知識・ルール・部品を、**このリポジトリ�
 > 人の注意力に頼らず、仕組みで完結させる。
 > **知識はデータに、強制は仕組みに、コードは最低限に。**
 
+- **運用モデル（人の役割）**: [`docs/operating-model.md`](docs/operating-model.md)（誰が何を決め、AI に何をさせるか）
+- **Figma ワークフロー**: [`docs/figma-workflow.md`](docs/figma-workflow.md)（code → design で キャンバスを動かす手順）
 - 個別計画: [`docs/plans/mcp-release.md`](docs/plans/mcp-release.md)（MCP 版リリースの要件定義・詳細設計）
 - 導入マニュアル: [`docs/guides/using-from-other-repos.md`](docs/guides/using-from-other-repos.md)（消費側） / [`docs/guides/npm-publishing.md`](docs/guides/npm-publishing.md)（npm / MCP Registry 公開） / [`docs/guides/going-public.md`](docs/guides/going-public.md)（公開と流布）
 - リポジトリ内の開発規約: [`CLAUDE.md`](CLAUDE.md) / [`AI_DEVELOPMENT_RULES.md`](AI_DEVELOPMENT_RULES.md)
