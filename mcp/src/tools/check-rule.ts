@@ -14,7 +14,7 @@
  *   prohibited.md から引くので、**違反理由が実際の検出内容と食い違う**
  *
  * 後者は検出漏れより悪い。読んだ AI は書かれた理由を信じて直そうとする。
- * so 検出器は ds-rules.mjs から読む（`loadRuleDetectors`）。
+ * なので検出器は ds-rules.mjs から読む（`loadRuleDetectors`）。
  *
  * ## 検出器が無いときは「違反なし」と言わない
  *
