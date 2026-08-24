@@ -306,9 +306,7 @@ const ProductCard = ({
       <Box
         component='a'
         href={href}
-        {...(external
-          ? { target: '_blank', rel: 'noopener noreferrer' }
-          : {})}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         onClick={() =>
           trackEvent(ANALYTICS_EVENTS.PRODUCT_OPENED, {
             product: title,
