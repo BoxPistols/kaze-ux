@@ -107,7 +107,9 @@ export const OrderTrackingPage = () => {
           sx={{
             mb: 3,
             overflow: 'hidden',
-            borderLeft: 4,
+            // 角丸カードの一辺だけを太くするアクセントは使わない。
+            // キャンセルであることは地色と文言で伝わる
+            border: 1,
             borderColor: 'error.main',
             bgcolor: (theme) =>
               theme.palette.mode === 'dark'
