@@ -1095,7 +1095,8 @@ export const LandingPage = () => {
             <Typography sx={DISPLAY_SX}>Built with Kaze</Typography>
             {/* 1 行が長いと目が戻れなくなるので、読み物の幅に制限する */}
             <Typography sx={{ ...SECTION_LEAD_SX, mb: 2, maxWidth: '62ch' }}>
-              業種の違う 4 プロダクトが、同じトークンと同じ部品定義で動いています。
+              業種の違う 4
+              プロダクトが、同じトークンと同じ部品定義で動いています。
               色・余白・文字・角丸はすべて Storybook が単一ソースで、変えれば
               全プロダクトに同時に反映されます。
             </Typography>

@@ -123,7 +123,8 @@ const main = async () => {
   const targets = TARGETS.filter((t) => !(skipExternal && t.origin))
   if (skipExternal) {
     const skipped = TARGETS.filter((t) => t.origin).map((t) => t.id)
-    if (skipped.length) console.log(`外部プロダクトを飛ばします: ${skipped.join(', ')}`)
+    if (skipped.length)
+      console.log(`外部プロダクトを飛ばします: ${skipped.join(', ')}`)
   }
 
   if (!process.argv.includes('--skip-build')) {
