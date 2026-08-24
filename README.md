@@ -24,6 +24,13 @@ MUI + Tailwind CSS + Storybook で構築したデザインシステム。
 フォント・配布物の鮮度・MCP の稼働まで、実際に描画・起動して数えています
 （[docs/verification.md](docs/verification.md)）。
 
+**カバレッジと、守れていない範囲を公開しています。** 禁止パターン 21 件のうち
+何が実際に止まるか、部品メタデータのどの項目が埋まっていないかを測っています
+（[docs/coverage.md](docs/coverage.md)、`pnpm ds:coverage`）。
+**分かっている穴と、過去に壊れていた箇所**も隠さず並べています
+（[docs/known-gaps.md](docs/known-gaps.md)）。0 件の検査結果は「準拠している」ではなく
+「検査した範囲で違反がない」でしかないので、範囲のほうを書いています。
+
 **この仕組みは kaze-ux 専用ではありません。** 同じ形のファイルを置けば、
 あなたのプロジェクトでも同じように動きます。手順:
 [docs/adopt-the-scheme.md](docs/adopt-the-scheme.md)

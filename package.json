@@ -102,6 +102,8 @@
     "export-metadata": "node scripts/export-component-metadata.mjs",
     "check:mcp": "node scripts/check-mcp.mjs",
     "check:rules": "node scripts/check-ds-rules.mjs",
+    "ds:coverage": "node scripts/ds-coverage.mjs",
+    "ds:coverage:write": "node scripts/ds-coverage.mjs --write",
     "export-rules": "node scripts/export-prohibited-doc.mjs",
     "check:quickref": "tsx scripts/check-quickref.ts",
     "check:ga": "node scripts/check-ga.mjs",

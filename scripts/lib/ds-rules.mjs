@@ -302,7 +302,7 @@ export const DS_RULES = [
     category: 'コンポーネント',
     forbidden: '`<Grid item xs={12}>`（MUI v6 以前の API）',
     instead: '`<Grid size={{ xs: 12 }}>`',
-    enforcedBy: null,
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
     detect: codeMatcher(/<Grid\s+item\b/),
   },
   {
@@ -342,7 +342,7 @@ export const DS_RULES = [
     category: 'コンポーネント',
     forbidden: '`window.confirm()` / `window.alert()`',
     instead: '`ConfirmDialog`',
-    enforcedBy: null,
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
     detect: codeMatcher(/window\.(confirm|alert)\s*\(/),
   },
   {
@@ -420,7 +420,7 @@ export const DS_RULES = [
     category: 'アクセシビリティ',
     forbidden: '`outline: none` でフォーカスリングを消す',
     instead: '`focus-visible` で出し直す',
-    enforcedBy: null,
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
     detect: outlineWithoutFocusVisible,
   },
   {
@@ -462,7 +462,7 @@ export const DS_RULES = [
     category: 'AI 生成',
     forbidden: '角丸と、片側だけの太い（2px 以上）ボーダーの併用',
     instead: '全周を細い線で囲むか、面の色で区別する',
-    enforcedBy: null,
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
     detect: roundedWithThickSideBorder,
   },
 ]
