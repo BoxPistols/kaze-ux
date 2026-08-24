@@ -241,7 +241,9 @@ if (adoption) {
   p('| アプリ | DS 経由 | MUI 直 | 準拠率 |')
   p('| ------ | ------- | ------ | ------ |')
   for (const a of adoption.apps) {
-    p(`| ${a.app} | ${a.dsUse} | ${a.bypass} | ${a.rate === null ? '—' : a.rate + '%'} |`)
+    p(
+      `| ${a.app} | ${a.dsUse} | ${a.bypass} | ${a.rate === null ? '—' : a.rate + '%'} |`
+    )
   }
   p()
   p(
@@ -261,7 +263,9 @@ const text = lines.join('\n') + '\n'
 if (write) {
   const out = resolve(ROOT, 'docs/coverage.md')
   writeFileSync(out, text)
-  console.log(`docs/coverage.md を生成: ルール ${rules.total} / 部品 ${metadata.total} / トークン ${tokens.total}`)
+  console.log(
+    `docs/coverage.md を生成: ルール ${rules.total} / 部品 ${metadata.total} / トークン ${tokens.total}`
+  )
 } else {
   console.log(text)
 }
