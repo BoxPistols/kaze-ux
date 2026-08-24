@@ -159,9 +159,16 @@ const roundedSideBorderInStyleObject = (src) => {
 
     const block = innermostBlock(src, m.index)
     if (!block) continue
-    // 角丸が 0 のものは対象外（`borderRadius: 0` / `'0 0 0 0'`）
     const radius = block.match(/border-?[Rr]adius\s*:\s*([^,;\n}]+)/)
-    if (!radius || /^\s*[`'"]?0(px)?[`'"]?\s*$/.test(radius[1])) continue
+    if (radius) {
+      // 角丸が 0 のものは対象外（`borderRadius: 0` / `'0 0 0 0'`）
+      if (/^\s*[`'"]?0(px)?[`'"]?\s*$/.test(radius[1])) continue
+    } else if (!isThemeRoundedTag(enclosingJsxTag(src, m.index))) {
+      // sx に borderRadius が無くても、MUI の Card / Paper 等は
+      // **テーマで角丸になる**。ここを見ないと
+      // `<Card sx={{ borderLeft: 4 }}>` が素通りする（実際に素通りしていた）
+      continue
+    }
 
     hits.push({
       line: src.slice(0, m.index).split('\n').length,
@@ -169,6 +176,39 @@ const roundedSideBorderInStyleObject = (src) => {
     })
   }
   return hits
+}
+
+/**
+ * テーマで角丸が付く MUI の要素。
+ *
+ * `sx` に `borderRadius` を書かなくても丸くなるので、片側だけ太い
+ * ボーダーを足すと AI04 の見た目になる。`Box` は角丸にならないので入れない
+ */
+const THEME_ROUNDED_TAGS = new Set([
+  'Card',
+  'Paper',
+  'Dialog',
+  'Menu',
+  'Popover',
+  'Accordion',
+  'Alert',
+  'Chip',
+  'TableContainer',
+])
+
+const isThemeRoundedTag = (tag) => tag !== null && THEME_ROUNDED_TAGS.has(tag)
+
+/**
+ * pos より前にある一番近い JSX の開始タグ名を返す。
+ *
+ * `sx={{ ... }}` の中から、それが付いている要素を引くための近似。
+ * 閉じタグ（`</Card>`）は数えない
+ */
+const enclosingJsxTag = (src, pos) => {
+  const before = src.slice(0, pos)
+  let found = null
+  for (const m of before.matchAll(/<\s*([A-Z][A-Za-z0-9_]*)/g)) found = m[1]
+  return found
 }
 
 /** pos を含む一番内側の `{ ... }` を返す。見つからなければ null */
@@ -196,6 +236,49 @@ const innermostBlock = (src, pos) => {
     }
   }
   return null
+}
+
+/**
+ * 12px 未満のフォントサイズ（T01）。
+ *
+ * `check:typo` は実描画を測る本命の検査だが、**リポジトリの中でしか動かない**。
+ * MCP はコード片を受け取るだけなので、書かれた値から判る分だけを見る。
+ * ルート font-size は 16px 前提（`0.75rem` = 12px が下限）
+ */
+const fontSizeUnder12px = (src) => {
+  const hits = []
+  const push = (index, text) =>
+    hits.push({ line: src.slice(0, index).split('\n').length, text })
+
+  // sx / style: fontSize: 11 / '11px' / '0.7rem'
+  for (const m of src.matchAll(
+    /font-?[Ss]ize\s*:\s*[`'"]?\s*(\d*\.?\d+)\s*(px|rem|em)?[`'"]?/g
+  )) {
+    const value = Number(m[1])
+    const unit = m[2] ?? 'px'
+    const px = unit === 'px' ? value : value * 16
+    if (px < 12) push(m.index, m[0].trim())
+  }
+  // Tailwind の任意値: text-[11px]
+  for (const m of src.matchAll(/text-\[(\d*\.?\d+)(px|rem)\]/g)) {
+    const px = m[2] === 'px' ? Number(m[1]) : Number(m[1]) * 16
+    if (px < 12) push(m.index, m[0])
+  }
+  return hits
+}
+
+/** カードに `rounded-full`（AI03）。角丸トークンを使わず全周を丸めるもの */
+const roundedFullOnCard = (src) => {
+  const hits = []
+  const lines = src.split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    if (!/\brounded-full\b/.test(lines[i])) continue
+    // className は複数行に分かれるため、前後 3 行をまとめて見る
+    const around = lines.slice(Math.max(0, i - 3), i + 4).join(' ')
+    if (!/[Cc]ard/.test(around)) continue
+    hits.push({ line: i + 1, text: lines[i].trim() })
+  }
+  return hits
 }
 
 /**
@@ -303,8 +386,8 @@ export const DS_RULES = [
     category: 'タイポグラフィ',
     forbidden: '12px 未満のフォントサイズ',
     instead: '最小 12px',
-    enforcedBy: 'check:typo（実描画の測定）',
-    detect: null,
+    enforcedBy: 'check:typo（実描画の測定） / check_rule（書かれた値）',
+    detect: fontSizeUnder12px,
   },
   {
     id: 'T02',
@@ -371,8 +454,8 @@ export const DS_RULES = [
     category: 'AI 生成',
     forbidden: 'カードに `rounded-full`',
     instead: 'テーマの borderRadius トークン',
-    enforcedBy: null,
-    detect: null,
+    enforcedBy: 'check_rule',
+    detect: roundedFullOnCard,
   },
   {
     id: 'AI04',

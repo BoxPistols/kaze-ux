@@ -21,7 +21,7 @@
 
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -203,4 +203,64 @@ export const parseProhibitedRules = (): ProhibitedRule[] => {
   }
 
   return rules
+}
+
+/**
+ * 禁止パターンの**検出器**を読む。
+ *
+ * ルールの説明文（prohibited.md）と検出ロジックは別物で、後者は関数なので
+ * markdown には載らない。だが**説明文だけ配って検出を別実装すると、
+ * 同じ ID で違うものを検査する**ことになる。実際そうなっていた:
+ * `check-rule.ts` が独自にパターンを持ち、A01 を「24x24 未満の操作対象」
+ * ではなく「IconButton の aria-label 欠落」として検査していた。
+ * 違反理由が実際の検出内容と食い違って表示される、検出漏れより悪い状態。
+ *
+ * なので検出器も `scripts/lib/ds-rules.mjs` から読む。探す順は
+ * `dataPath` と同じ考え方（リポジトリ → 同梱物）。
+ *
+ * **見つからなければ空を返す。**別のデザインシステムを `DS_ROOT` で
+ * 指している場合、そこに kaze の検出器は無い。そこで kaze のルールを
+ * 当てると、相手のデザインシステムを kaze の基準で採点することになる。
+ * 呼び出し側は「検出器が無い」ことを利用者に伝える責任がある
+ * （「違反なし」と言ってはいけない）。
+ */
+export interface RuleDetector {
+  id: string
+  detect: (src: string) => Array<{ line: number; text: string }>
+}
+
+export interface DetectorSet {
+  detectors: RuleDetector[]
+  /** どこから読めたか。'none' のとき検査は成立していない */
+  source: 'repo' | 'bundled' | 'none'
+}
+
+let detectorCache: DetectorSet | null = null
+
+export const loadRuleDetectors = async (): Promise<DetectorSet> => {
+  if (detectorCache) return detectorCache
+
+  const candidates: Array<{ path: string; source: 'repo' | 'bundled' }> = [
+    { path: resolve(ROOT, 'scripts/lib/ds-rules.mjs'), source: 'repo' },
+  ]
+  // 明示的に別プロジェクトを指しているなら、同梱物へは降りない
+  if (!process.env.DS_ROOT) {
+    candidates.push({
+      path: resolve(PKG_ROOT, 'data', 'ds-rules.mjs'),
+      source: 'bundled',
+    })
+  }
+
+  for (const c of candidates) {
+    if (!existsSync(c.path)) continue
+    const mod = (await import(pathToFileURL(c.path).href)) as {
+      DETECTABLE_RULES?: RuleDetector[]
+    }
+    const detectors = mod.DETECTABLE_RULES ?? []
+    detectorCache = { detectors, source: c.source }
+    return detectorCache
+  }
+
+  detectorCache = { detectors: [], source: 'none' }
+  return detectorCache
 }

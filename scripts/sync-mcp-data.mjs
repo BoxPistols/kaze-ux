@@ -30,6 +30,9 @@ const FILES = [
   ['design-tokens/tokens.json', 'tokens.json'],
   ['metadata/components.json', 'components.json'],
   ['foundations/prohibited.md', 'prohibited.md'],
+  // 検出器。prohibited.md は説明文しか運べないので、これを同梱しないと
+  // npm から入れた kaze-mcp は「何も検査せずに違反なしと言う」状態になる
+  ['scripts/lib/ds-rules.mjs', 'ds-rules.mjs'],
 ]
 
 const missing = FILES.filter(([src]) => !existsSync(resolve(ROOT, src)))
