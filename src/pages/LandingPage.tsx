@@ -209,6 +209,8 @@ interface ProductCardProps {
    * **そのプロダクトだけが持つ性質**だけを書く
    */
   techNote?: string
+  /** 別ホストのプロダクト。新規タブで開く（LP から離脱させない） */
+  external?: boolean
 }
 
 /** キャプチャの実寸。撮影時のビューポート (scripts/capture-products.mjs) と揃える */
@@ -267,11 +269,24 @@ const ProductCard = ({
   index,
   capture,
   techNote,
+  external = false,
 }: ProductCardProps) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
   const theme = useTheme()
   const isDark = theme.palette.mode === 'dark'
+
+  // 実際に描画する行数から span を出す。固定値にすると、capture や techNote を
+  // 持たないプロダクトを足したときに行が 1 つ余り、そこから下が全部ずれる
+  // （揃えるための subgrid が、逆にずれの原因になる）
+  const ALWAYS_ROWS = 3 // アイコン / タイトル / 説明
+  const rowCount = ALWAYS_ROWS + (capture ? 1 : 0) + (techNote ? 1 : 0)
+  const subgridSx = {
+    display: 'grid',
+    gridTemplateRows: 'subgrid',
+    gridRow: `span ${rowCount}`,
+    rowGap: 0,
+  } as const
 
   return (
     <motion.div
@@ -287,15 +302,13 @@ const ProductCard = ({
       // グリッドで繋いでおかないと連鎖が切れてカード内の行が揃わない。
       // rowGap: 0 が要る — 継承した行間に親の gap(24px) が全行に入り、
       // 要素の margin と二重になって間延びする
-      style={{
-        display: 'grid',
-        gridTemplateRows: 'subgrid',
-        gridRow: 'span 5',
-        rowGap: 0,
-      }}>
+      style={subgridSx}>
       <Box
         component='a'
         href={href}
+        {...(external
+          ? { target: '_blank', rel: 'noopener noreferrer' }
+          : {})}
         onClick={() =>
           trackEvent(ANALYTICS_EVENTS.PRODUCT_OPENED, {
             product: title,
@@ -306,10 +319,7 @@ const ProductCard = ({
           // カード内も subgrid にして、キャプチャ・アイコン・タイトル・説明・
           // techNote の各行を**カード間で**揃える。行数が違うカードが混ざっても
           // 説明の開始位置がずれない（グリッドの行を親から継承する）
-          display: 'grid',
-          gridTemplateRows: 'subgrid',
-          gridRow: 'span 5',
-          rowGap: 0,
+          ...subgridSx,
           alignContent: 'start',
           textDecoration: 'none',
           color: 'inherit',
@@ -834,6 +844,7 @@ export const LandingPage = () => {
       // （リポジトリ URL が env 制御なのは個人へ辿れる導線を残さないためで、
       //   デモの公開ホストである以下は既存の公開パスと同じ扱いでよい）
       href: 'https://kaze-ec.vercel.app/',
+      external: true,
       label: 'MCP Demo',
       capture: { id: 'kaze-ec', hasDark: true },
       techNote: 'kaze MCP 経由で作成。仕様↔実装のドリフトを CI で検査',
@@ -1112,10 +1123,12 @@ export const LandingPage = () => {
             sx={{
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              // カード内の 5 行（キャプチャ / アイコン / タイトル / 説明 /
+              // カード内の各行（キャプチャ / アイコン / タイトル / 説明 /
               // techNote）を subgrid で継承させるため、行の高さは中身の最大に
-              // 合わせる。これで説明文の行数が違ってもカード間で行頭が揃う
-              gridAutoRows: 'auto auto auto auto auto',
+              // 合わせる。これで説明文の行数が違ってもカード間で行頭が揃う。
+              // 行数はカード側が実際の描画内容から算出するので、ここは
+              // 「暗黙の行はすべて auto」とだけ言えばよい（本数を固定しない）
+              gridAutoRows: 'auto',
               gap: 3,
             }}>
             {products.map((product, i) => (

@@ -2,12 +2,15 @@
 /**
  * LP に載せるプロダクトのキャプチャを生成する。
  *
- * 4 プロダクトを本番と同じ構成でビルドして配信し、実ブラウザで撮る。
+ * このリポジトリのプロダクトは本番と同じ構成でビルドして配信し、実ブラウザで
+ * 撮る。別リポジトリ・別ホストのもの（TARGETS の origin つき）はその URL を
+ * 直接開くので、**ネットワークが要る**。
  * 出力先は public/captures/。生成物だがコミットする（LP から静的に
  * 参照するため。CDN も外部ホスティングも増やさない）。
  *
- *   pnpm capture:products            全プロダクトを撮り直す
- *   pnpm capture:products --skip-build  既存の dist を使う（撮り直しだけ）
+ *   pnpm capture:products                  全プロダクトを撮り直す
+ *   pnpm capture:products --skip-build     既存の dist を使う（撮り直しだけ）
+ *   pnpm capture:products --skip-external  外部ホストのものを飛ばす（オフライン時）
  *
  * 前提: dist/ が本番と同じ構成であること（scripts/vercel-build.mjs が作る）。
  */
@@ -168,7 +171,14 @@ const main = async () => {
         }
         const page = await ctx.newPage()
         const url = `${t.origin ?? `http://localhost:${PORT}`}${t.path}`
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 })
+        // 外部プロダクトで networkidle を待つと、Analytics のビーコンや
+        // ポーリングで「500ms 静か」が来ず 60s まで粘ってタイムアウトする。
+        // goto の失敗は main() ごと落とすので、外部だけ条件を緩める
+        // （どのみち下の t.wait で描画が落ち着くまで待っている）
+        await page.goto(url, {
+          waitUntil: t.origin ? 'domcontentloaded' : 'networkidle',
+          timeout: 60000,
+        })
         // 動きが落ち着くまで待つ。networkidle だけだと描画途中が写る
         await page.waitForTimeout(t.wait)
         // 撮影中にアニメーションが動くと毎回違う絵になり、差分が無意味になる

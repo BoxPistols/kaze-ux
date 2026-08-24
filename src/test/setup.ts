@@ -13,15 +13,24 @@ import { afterEach, beforeAll, afterAll, expect } from 'vitest'
   return URLObj
 })()
 
-// Node 22+ が globalThis.localStorage をネイティブに持つため、jsdom の
-// window.localStorage より先に解決されてしまう（--localstorage-file 未設定だと
+// Node 22+ が globalThis.localStorage / sessionStorage をネイティブに持つため、
+// jsdom の window.* より先に解決されてしまう（--localstorage-file 未設定だと
 // setItem が機能しない）。テスト用の in-memory 実装で明示的に上書きする。
-// Object.keys(localStorage) で実際の保存キーを拾えるよう、store 自体を
-// Proxy のターゲットにする（プレーンオブジェクトだとメソッド名しか返らない）
-;(() => {
-  const store: Record<string, string> = {}
+//
+// **sessionStorage も同じ問題を持つ。** useChatState が
+// sessionStorage.getItem('chat_support_open') を読み書きしているので、
+// localStorage だけ直すと「保存したはずの値が既定値で返る」テストが
+// 黙って通ってしまう。
+//
+// Object.keys(storage) で実際の保存キーを拾えるよう、store 自体を Proxy の
+// ターゲットにする（プレーンオブジェクトだとメソッド名しか返らない）
+const createMockStorage = () => {
+  // Object.create(null) にして prototype を持たせない。プレーンな {} だと
+  // getItem('constructor') が関数を返し、setItem('__proto__', …) が
+  // prototype を汚染する
+  const store: Record<string, string> = Object.create(null)
   const methods = {
-    getItem: (key: string) => (key in store ? store[key] : null),
+    getItem: (key: string) => (Object.hasOwn(store, key) ? store[key] : null),
     setItem: (key: string, value: string) => {
       store[key] = String(value)
     },
@@ -33,10 +42,11 @@ import { afterEach, beforeAll, afterAll, expect } from 'vitest'
     },
     key: (i: number) => Object.keys(store)[i] ?? null,
   }
-  const mockStorage = new Proxy(store, {
+  return new Proxy(store, {
     get(target, prop, receiver) {
       if (prop === 'length') return Object.keys(target).length
-      if (prop in methods) return methods[prop as keyof typeof methods]
+      if (Object.hasOwn(methods, prop))
+        return methods[prop as keyof typeof methods]
       return Reflect.get(target, prop, receiver)
     },
     set(target, prop, value) {
@@ -44,12 +54,15 @@ import { afterEach, beforeAll, afterAll, expect } from 'vitest'
       return true
     },
   })
-  Object.defineProperty(globalThis, 'localStorage', {
-    value: mockStorage,
+}
+
+for (const name of ['localStorage', 'sessionStorage'] as const) {
+  Object.defineProperty(globalThis, name, {
+    value: createMockStorage(),
     writable: true,
     configurable: true,
   })
-})()
+}
 
 // Custom matchers for vitest to replace jest-dom functionality
 expect.extend({
@@ -150,4 +163,10 @@ afterAll(() => {
 // テスト後のクリーンアップ
 afterEach(() => {
   cleanup()
+  // ストレージを毎回空に戻す。以前は Node の native storage が実質 no-op
+  // だったので書き込みが残らなかったが、上の in-memory 実装にしたことで
+  // **テスト間で値が持ち越される**ようになった。既定値を検証するテストが
+  // 前のテストの書き込みを読んでしまい、実行順で結果が変わる
+  localStorage.clear()
+  sessionStorage.clear()
 })
