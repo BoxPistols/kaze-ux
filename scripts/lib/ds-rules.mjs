@@ -75,6 +75,69 @@ export const stripLiteralsAndComments = (src) => {
   return out
 }
 
+/**
+ * コメントだけを落とす。**文字列リテラルは残す。**
+ *
+ * `stripLiteralsAndComments` は文字列の中身も `''` にするので、
+ * `fontSize: '11px'` のような**引用符付きの値を見る検出器では使えない**
+ * （実測: この repo の font-size / border 宣言 812 件のうち 347 件が
+ * 引用符付き。落とすと 43% が見えなくなる）。
+ *
+ * 一方でコメントを残すと、**正しい方針を書いた文章が違反になる**。
+ * 「12px 未満は使わない」と注意書きした行が落ちる、という壊れ方をする。
+ * peer から共有された実例では、走査検査の正解サンプル 6 件が全部これで落ちた。
+ *
+ * URL の `//` をコメントと誤認しないよう、文字列の中かどうかを追跡する。
+ * 「直前がコロンなら除外」のような手当てだと、文字列中の他の `//` を取り逃す
+ */
+export const stripComments = (src) => {
+  let out = ''
+  let i = 0
+  const n = src.length
+  const keepNewlines = (from, to) => {
+    for (let k = from; k < to && k < n; k++) if (src[k] === '\n') out += '\n'
+  }
+  while (i < n) {
+    const c = src[i]
+    const next = src[i + 1]
+    if (c === '/' && next === '/') {
+      while (i < n && src[i] !== '\n') i++
+      continue
+    }
+    if (c === '/' && next === '*') {
+      const start = i
+      i += 2
+      while (i < n && !(src[i] === '*' && src[i + 1] === '/')) i++
+      i += 2
+      keepNewlines(start, i)
+      continue
+    }
+    // 文字列はそのまま写す（中の `//` をコメント扱いしない）
+    if (c === "'" || c === '"' || c === '`') {
+      const quote = c
+      out += c
+      i++
+      while (i < n) {
+        if (src[i] === '\\') {
+          out += src[i] + (src[i + 1] ?? '')
+          i += 2
+          continue
+        }
+        out += src[i]
+        if (src[i] === quote) {
+          i++
+          break
+        }
+        i++
+      }
+      continue
+    }
+    out += c
+    i++
+  }
+  return out
+}
+
 /** 行番号付きで正規表現に一致する箇所を返す */
 const matchLines = (src, re) => {
   const hits = []
@@ -120,10 +183,15 @@ const outlineWithoutFocusVisible = (src) => {
  * 同じ形の `sx` を 4 箇所取りこぼした**（3 つの重複した InfoCallout と
  * カード上端のカラーバー）。片方だけの検出は、検出していないのと同じ。
  */
-const roundedWithThickSideBorder = (src) => [
-  ...roundedSideBorderInClassName(src),
-  ...roundedSideBorderInStyleObject(src),
-]
+const roundedWithThickSideBorder = (raw) => {
+  // コメントを落としてから当てる。「角丸と片側ボーダーの併用は禁止」と
+  // 書いた注意書きが違反になる
+  const src = stripComments(raw)
+  return [
+    ...roundedSideBorderInClassName(src),
+    ...roundedSideBorderInStyleObject(src),
+  ]
+}
 
 /** Tailwind: `rounded-*` と `border-{t,r,b,l}-{2以上}` が同居する */
 const roundedSideBorderInClassName = (src) => {
@@ -245,7 +313,8 @@ const innermostBlock = (src, pos) => {
  * MCP はコード片を受け取るだけなので、書かれた値から判る分だけを見る。
  * ルート font-size は 16px 前提（`0.75rem` = 12px が下限）
  */
-const fontSizeUnder12px = (src) => {
+const fontSizeUnder12px = (raw) => {
+  const src = stripComments(raw)
   const hits = []
   const push = (index, text) =>
     hits.push({ line: src.slice(0, index).split('\n').length, text })
@@ -268,7 +337,8 @@ const fontSizeUnder12px = (src) => {
 }
 
 /** カードに `rounded-full`（AI03）。角丸トークンを使わず全周を丸めるもの */
-const roundedFullOnCard = (src) => {
+const roundedFullOnCard = (raw) => {
+  const src = stripComments(raw)
   const hits = []
   const lines = src.split('\n')
   for (let i = 0; i < lines.length; i++) {

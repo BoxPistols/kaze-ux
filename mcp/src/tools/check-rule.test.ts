@@ -156,3 +156,52 @@ describe('A05 の誤検出（読み上げ名がある形を違反にしない）
     })
   }
 })
+
+/**
+ * 正しい方針をコメントに書いた文章を、違反として数えない。
+ *
+ * peer（adlumetra）が同じ型を自分の走査検査に当てたところ、正解サンプル
+ * 6 件が全部落ちた。とくに「業界平均は使わない」という**正しい方針を
+ * コメントに書いた瞬間に落ちる**検出器だった。
+ *
+ * こちらも T01 / AI03 / AI04 が同じ状態だったので `stripComments` を通した。
+ * 文字列リテラルは残す（`fontSize: '11px'` は本物の違反で、この repo の
+ * font-size / border 宣言 812 件のうち 347 件が引用符付き）
+ */
+describe('コメントに書いた注意書きを違反にしない', () => {
+  const OK: Array<[string, string]> = [
+    [
+      'T01 行コメント',
+      '// 12px 未満のフォントサイズは使わない\nexport const x = 1',
+    ],
+    [
+      'T01 ブロックコメント',
+      '/** fontSize: 11 のような指定は禁止 */\nexport const x = 1',
+    ],
+    ['AI03', '// カードに rounded-full を使わない\nexport const x = 1'],
+    [
+      'AI04',
+      '// Card の borderRadius と borderTop: 3 の併用は禁止\nexport const x = 1',
+    ],
+    ['C01', '// React' + '.FC は使わない\nexport const x = 1'],
+    ['A05', '// IconButton には aria-label を付ける\nexport const x = 1'],
+  ]
+
+  for (const [label, code] of OK) {
+    it(`${label}`, async () => {
+      expect(await run(code)).toContain('違反なし')
+    })
+  }
+
+  it('引用符付きの値は落とさない（文字列リテラルは残す）', async () => {
+    expect(await run("const sx = { fontSize: '11px' }")).toContain('[T01]')
+  })
+
+  it('文字列中の // をコメントと誤認しない（URL を壊さない）', async () => {
+    // 「直前がコロンなら除外」のような手当てでは、URL 以外の // を取り逃す。
+    // 文字列の状態を追跡しているので、その後ろの違反も見える
+    const code =
+      "const u = 'https://example.com/a//b'\nconst sx = { fontSize: 11 }"
+    expect(await run(code)).toContain('[T01]')
+  })
+})
