@@ -107,6 +107,9 @@ export const MenuItemButton = ({
         <ListItemText primary={item.label} />
         <IconButton
           size='small'
+          // アイコンだけのボタンなので読み上げ名が要る（DS ルール A05）。
+          // 開閉状態で語を変える（何が起きるかを名前で伝える）
+          aria-label={`${item.label}を${isExpanded ? '閉じる' : '開く'}`}
           sx={{
             color: 'inherit',
             transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',

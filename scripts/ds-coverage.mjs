@@ -25,9 +25,9 @@
  * **数えられないものは数えられないと書く。** 意匠の質・ドメイン知識は
  * ここに現れない（docs/operating-model.md の「守れないもの」）。
  */
+import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { execFileSync } from 'node:child_process'
 
 import { DS_RULES } from './lib/ds-rules.mjs'
 

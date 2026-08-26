@@ -282,6 +282,116 @@ const roundedFullOnCard = (src) => {
 }
 
 /**
+ * JSX の開始タグ本文を取り出す。`<` の位置から、対応する `>` まで。
+ *
+ * 素朴に `>` を探すと `sx={{ ... }}` の中の比較演算子や、属性値の
+ * 文字列に入った `>` で切れる。波括弧の深さと引用符を見る
+ */
+const jsxOpeningTag = (src, start) => {
+  let depth = 0
+  let quote = null
+  for (let i = start; i < src.length; i++) {
+    const c = src[i]
+    if (quote) {
+      if (c === '\\') i++
+      else if (c === quote) quote = null
+      continue
+    }
+    if (c === "'" || c === '"' || c === '`') quote = c
+    else if (c === '{') depth++
+    else if (c === '}') depth--
+    else if (c === '>' && depth === 0) return src.slice(start, i + 1)
+  }
+  return null
+}
+
+/**
+ * 指定タグの開始タグを走査し、判定関数が真を返したものを違反にする。
+ *
+ * **コメントを落としてから当てる。** JSDoc の `@example` に書いた
+ * 使用例を違反として数えたため（`iconButton.tsx` の 1 件）。
+ * 文字列リテラルも落ちるが、属性名は残るので判定には影響しない
+ * （`aria-label='X'` → `aria-label=''`）
+ */
+const scanJsxTag = (tagRe, isViolation) => (raw) => {
+  const src = stripLiteralsAndComments(raw)
+  const hits = []
+  for (const m of src.matchAll(tagRe)) {
+    const tag = jsxOpeningTag(src, m.index)
+    if (tag === null || !isViolation(tag, src, m.index)) continue
+    hits.push({
+      line: src.slice(0, m.index).split('\n').length,
+      // 表示は原文から。リテラルを落とした側だと '' だらけで読めない
+      text: (jsxOpeningTag(raw, m.index) ?? tag).replace(/\s+/g, ' ').slice(0, 80),
+    })
+  }
+  return hits
+}
+
+/**
+ * 直前が `<Tooltip title='文字列'>` かどうか。
+ *
+ * **MUI の Tooltip は、title が文字列なら子に `aria-label` を付ける**
+ * （`Tooltip.js` の `nameOrDescProps['aria-label'] = titleIsString ? title : null`、
+ * describeChild が false のとき = 既定）。つまり Tooltip で包んだ
+ * IconButton には読み上げ名がある。
+ *
+ * ここを見ないと 17 箇所を誤検出した。**検出器は既知の違反と既知の正解の
+ * 両方で確かめてから信じる。**
+ *
+ * `title={<ReactNode>}` は aria-label にならない（open 時の
+ * aria-labelledby だけ）ので、文字列リテラルのときに限る
+ */
+const wrappedInLabelingTooltip = (src, pos) => {
+  // 直前の数行だけ見る。JSX の入れ子を厳密に追わないぶん、
+  // 遠くの Tooltip を拾わないよう窓を狭くする
+  const before = src.slice(0, pos)
+  const window = before.split('\n').slice(-6).join('\n')
+  const idx = window.lastIndexOf('<Tooltip')
+  if (idx < 0) return false
+  const tag = jsxOpeningTag(window, idx)
+  if (tag === null) return false
+  // title の値は問わない。MUI は title が文字列のとき aria-label にする
+  // （実行時にしか分からない値もあるので、静的には区別しない）。
+  // 取りこぼす方向の判断で、理由は docs/known-gaps.md に書いた
+  return /\btitle\s*=/.test(tag)
+}
+
+/**
+ * アイコンだけのボタンに読み上げ名が無い（A05）。
+ *
+ * 見た目はアイコンなので、名前を持たないと読み上げでは
+ * 「ボタン」としか言われない。何のボタンか分からない。
+ *
+ * `aria-label` / `aria-labelledby` / `title` のどれかがあれば足りる。
+ * **展開が動的な場合（`{...props}`）は判定できないので見逃す。**
+ * 誤検出で信用を落とすより、取りこぼしを known-gaps に書くほうを選ぶ
+ */
+const iconButtonWithoutLabel = scanJsxTag(
+  /<IconButton\b/g,
+  (tag, src, pos) =>
+    !/aria-label\b/.test(tag) &&
+    !/aria-labelledby\b/.test(tag) &&
+    !/\btitle\s*=/.test(tag) &&
+    // DS の IconButton は tooltip を aria-label に流す
+    // （iconButton.tsx: `const accessibleLabel = ariaLabel || tooltip`）
+    !/\btooltip\s*=/.test(tag) &&
+    !/\{\s*\.\.\./.test(tag) &&
+    !wrappedInLabelingTooltip(src, pos)
+)
+
+/**
+ * img に alt が無い（A06）。
+ *
+ * `alt=""` は装飾画像の正しい書き方なので違反にしない。
+ * **属性の有無だけを見る**
+ */
+const imgWithoutAlt = scanJsxTag(
+  /<img\b/g,
+  (tag) => !/\balt\s*=/.test(tag) && !/\{\s*\.\.\./.test(tag)
+)
+
+/**
  * ルール一覧。
  *
  * - `enforcedBy`: 何が破綻を止めるか。`null` は**止めるものが無い**
@@ -430,6 +540,22 @@ export const DS_RULES = [
     instead: 'アイコン・テキストを併用',
     enforcedBy: null,
     detect: null,
+  },
+  {
+    id: 'A05',
+    category: 'アクセシビリティ',
+    forbidden: 'アイコンだけのボタンに読み上げ名が無い',
+    instead: 'aria-label / aria-labelledby / title のいずれかを付ける',
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
+    detect: iconButtonWithoutLabel,
+  },
+  {
+    id: 'A06',
+    category: 'アクセシビリティ',
+    forbidden: '`<img>` に alt が無い',
+    instead: '内容を説明する alt。装飾なら `alt=""`',
+    enforcedBy: 'check:rules（CI）/ check_rule（MCP）',
+    detect: imgWithoutAlt,
   },
 
   // --- AI 生成で出やすいもの ---

@@ -38,6 +38,8 @@ const VIOLATIONS: Record<string, string> = {
   C07: 'const ok = () => window.confirm("いいですか")',
   T01: 'const sx = { fontSize: 11 }',
   A03: 'const sx = { "&:focus": { outline: none } }',
+  A05: 'const C = () => <IconButton onClick={onCopy}><CopyIcon /></IconButton>',
+  A06: 'const C = () => <img src={url} width={40} />',
   AI03: 'const C = () => <Card className="rounded-full p-4" />',
   AI04:
     'const C = () => (\n' +
@@ -54,6 +56,8 @@ const CLEAN: Record<string, string> = {
   C07: 'const ok = () => setConfirmOpen(true)',
   T01: 'const sx = { fontSize: 12 }',
   A03: 'const sx = { "&:focus-visible": { outline: none } }',
+  A05: "const C = () => <IconButton aria-label='コピー'><CopyIcon /></IconButton>",
+  A06: "const C = () => <img src={url} alt='商品の写真' />",
   AI03: 'const C = () => <Card className="rounded-lg p-4" />',
   AI04: 'const C = () => <Card sx={{ borderRadius: 1.5, border: 1 }} />',
 }
@@ -115,4 +119,40 @@ describe('検査していない範囲を明示する', () => {
     expect(text).toContain('検査したルール:')
     expect(text).toContain('検査していないルール')
   })
+})
+
+/**
+ * A05 は「読み上げ名がある形」を何通りも取りうる。
+ * **既知の違反だけでなく、既知の正解でも確かめる。**
+ * ここを怠って、実装済みの 17 箇所を誤検出した
+ */
+describe('A05 の誤検出（読み上げ名がある形を違反にしない）', () => {
+  const OK: Array<[string, string]> = [
+    [
+      'MUI の Tooltip で包む',
+      "const C = () => (<Tooltip title='編集'><IconButton onClick={e}><EditIcon /></IconButton></Tooltip>)",
+    ],
+    [
+      'DS の IconButton の tooltip prop',
+      "const C = () => <IconButton tooltip='メモ追加' size='small'><NoteIcon /></IconButton>",
+    ],
+    [
+      'aria-labelledby',
+      'const C = () => <IconButton aria-labelledby={labelId}><Icon /></IconButton>',
+    ],
+    [
+      'props 展開（静的には判定できないので見逃す）',
+      'const C = () => <IconButton {...rest}><Icon /></IconButton>',
+    ],
+    [
+      'JSDoc の使用例（コメントは数えない）',
+      '/**\n * @example\n * <IconButton onClick={x}><Icon /></IconButton>\n */\nexport const C = () => null',
+    ],
+  ]
+
+  for (const [label, code] of OK) {
+    it(`${label}`, async () => {
+      expect(await run(code)).not.toContain('[A05]')
+    })
+  }
 })

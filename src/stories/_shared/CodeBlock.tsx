@@ -46,6 +46,7 @@ const CodeBlock = ({ children, language = 'tsx', caption }: CodeBlockProps) => {
         <IconButton
           size='small'
           onClick={handleCopy}
+          aria-label={copied ? 'コピーしました' : 'コードをコピー'}
           sx={{
             position: 'absolute',
             top: 6,

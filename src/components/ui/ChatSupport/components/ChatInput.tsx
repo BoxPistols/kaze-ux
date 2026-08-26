@@ -67,6 +67,8 @@ export const ChatInput = ({
           color='primary'
           disabled={!message.trim() || isTyping}
           onClick={onSend}
+          // アイコンだけのボタンなので読み上げ名が要る（DS ルール A05）
+          aria-label='送信'
           sx={{
             alignSelf: 'stretch',
             width: 44,

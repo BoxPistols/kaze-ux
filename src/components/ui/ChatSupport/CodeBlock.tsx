@@ -49,6 +49,8 @@ export const CodeBlockPre = ({ children }: { children?: React.ReactNode }) => {
       <IconButton
         size='small'
         onClick={handleCopy}
+        // アイコンだけのボタンなので読み上げ名が要る（DS ルール A05）
+        aria-label={copied ? 'コピーしました' : 'コードをコピー'}
         sx={{
           position: 'absolute',
           top: 4,
