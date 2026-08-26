@@ -322,7 +322,9 @@ const scanJsxTag = (tagRe, isViolation) => (raw) => {
     hits.push({
       line: src.slice(0, m.index).split('\n').length,
       // 表示は原文から。リテラルを落とした側だと '' だらけで読めない
-      text: (jsxOpeningTag(raw, m.index) ?? tag).replace(/\s+/g, ' ').slice(0, 80),
+      text: (jsxOpeningTag(raw, m.index) ?? tag)
+        .replace(/\s+/g, ' ')
+        .slice(0, 80),
     })
   }
   return hits
