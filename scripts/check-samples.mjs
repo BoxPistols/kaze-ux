@@ -50,7 +50,9 @@ if (entries.length === 0) {
 
 /** sample に現れる大文字始まりの JSX タグ名 */
 const jsxTags = (sample) => [
-  ...new Set([...sample.matchAll(/<\s*([A-Z][A-Za-z0-9_]*)/g)].map((m) => m[1])),
+  ...new Set(
+    [...sample.matchAll(/<\s*([A-Z][A-Za-z0-9_]*)/g)].map((m) => m[1])
+  ),
 ]
 
 const problems = []
@@ -101,15 +103,17 @@ if (blocks.length > 0) {
   })
 
   try {
-    execFileSync(
-      'npx',
-      ['tsc', '--noEmit', '-p', 'tsconfig.json'],
-      { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' }
-    )
+    execFileSync('npx', ['tsc', '--noEmit', '-p', 'tsconfig.json'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    })
   } catch (e) {
     const out = `${e.stdout ?? ''}${e.stderr ?? ''}`
     for (const line of out.split('\n')) {
-      const m = line.match(/__sample-check__\/sample-(\d+)\.tsx\((\d+),\d+\): error (.+)/)
+      const m = line.match(
+        /__sample-check__\/sample-(\d+)\.tsx\((\d+),\d+\): error (.+)/
+      )
       if (!m) continue
       const key = entries.filter(([, c]) => c.sample)[Number(m[1])]?.[0] ?? '?'
       problems.push(`${key}: ${m[3]}`)

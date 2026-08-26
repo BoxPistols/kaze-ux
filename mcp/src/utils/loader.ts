@@ -19,7 +19,7 @@
  * 同梱した `data/` へ落ちる（`dataPath` を参照）。
  */
 
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -80,56 +80,66 @@ const dataPath = (
 }
 
 // キャッシュ
-let tokensCache: Record<string, unknown> | null = null
-let componentsCache: Record<string, unknown> | null = null
-let prohibitedCache: string | null = null
+/**
+ * ファイルを読み、**更新されていたら読み直す**キャッシュ。
+ *
+ * 以前はプロセス生存中ずっと最初の内容を返していた。MCP サーバは
+ * エディタが起動している間ずっと動いているので、**デザインシステム側が
+ * トークンや部品仕様を更新しても、消費側は再起動するまで古い値を受け取る**。
+ *
+ * 実際に踏んだ。`metadata/components.json` に sample を 19 件足した直後に
+ * `get_component('statusTag')` を呼んだら、sample の無い古い応答が返った。
+ * 気づきにくいのは、**古い値も正しい形をしている**こと。「まだ sample が
+ * 無い部品なのだろう」と読める。
+ *
+ * これは MCP が単一ソースの「古い写し」になる、という設計違反そのもの。
+ * mtime を見て変わっていれば読み直す
+ */
+const fileCache = new Map<string, { mtimeMs: number; text: string }>()
+
+const readCached = (path: string): string => {
+  const mtimeMs = statSync(path).mtimeMs
+  const hit = fileCache.get(path)
+  if (hit && hit.mtimeMs === mtimeMs) return hit.text
+  const text = readFileSync(path, 'utf-8')
+  fileCache.set(path, { mtimeMs, text })
+  return text
+}
 
 /**
  * design-tokens/tokens.json を読み込み
  */
 export const loadTokens = (): Record<string, unknown> => {
-  if (tokensCache) return tokensCache
   const path = dataPath(
     'DS_TOKENS_PATH',
     'design-tokens/tokens.json',
     'tokens.json'
   )
-  tokensCache = JSON.parse(readFileSync(path, 'utf-8')) as Record<
-    string,
-    unknown
-  >
-  return tokensCache
+  return JSON.parse(readCached(path)) as Record<string, unknown>
 }
 
 /**
  * metadata/components.json を読み込み
  */
 export const loadComponents = (): Record<string, unknown> => {
-  if (componentsCache) return componentsCache
   const path = dataPath(
     'DS_COMPONENTS_PATH',
     'metadata/components.json',
     'components.json'
   )
-  componentsCache = JSON.parse(readFileSync(path, 'utf-8')) as Record<
-    string,
-    unknown
-  >
-  return componentsCache
+  return JSON.parse(readCached(path)) as Record<string, unknown>
 }
 
 /**
  * foundations/prohibited.md を読み込み
  */
 export const loadProhibited = (): string => {
-  if (prohibitedCache) return prohibitedCache
   const path = dataPath(
     'DS_RULES_PATH',
     'foundations/prohibited.md',
     'prohibited.md'
   )
-  prohibitedCache = readFileSync(path, 'utf-8')
-  return prohibitedCache
+  return readCached(path)
 }
 
 /**
