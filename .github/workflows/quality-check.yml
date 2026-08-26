@@ -72,6 +72,11 @@ jobs:
       - name: Check prohibited patterns
         run: pnpm check:rules
 
+      # カバレッジ表が実態とズレていないか。検出器があるのに enforcedBy が
+      # 空だと「何も止めない」を過大に報告する（実際 4 件そうなっていた）
+      - name: Check design system coverage consistency
+        run: pnpm ds:coverage > /dev/null
+
       # CLAUDE.md の Quick Reference は「このファイルだけで基本 UI 生成可能」と
       # 謳っている、AI が最初に読む場所。ここがズレると以降の生成すべてに
       # 効くうえ、読んだ側からは正しいか判断できない
