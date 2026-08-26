@@ -58,11 +58,32 @@
 
 ### 1.4 部品メタデータの充足率が低い項目がある
 
-`sample`（動くコード例）7.3%、`prohibited`（部品固有の禁止事項）3.6%、
-`accessibility` 25.5%。
+`accessibility` 25.5%、`sizes` 30.9%、`variants` 32.7%、`description` 54.5%。
 
 これは「AI が引ける情報」の欠落なので、**引けなかった AI は推測で埋める**。
 数字は [`coverage.md`](coverage.md) が測っている。
+
+`sample` は 7.3% → 41.8%、`prohibited` は 3.6% → 20% まで埋めた。やり方が
+2 つに分かれる。
+
+**`sample` は型検査に接続した。** 手で書いた文字列を検査せずに配るのは、
+守られていないルールを `prohibited.md` に載せるのと同じ「嘘の仕様」になる。
+`pnpm check:samples` が sample を本物の tsx に組み立てて `tsc` に通す。
+書いた時点で 11 件が落ちた（自由変数が残っていて、読んだ側が補う必要が
+あった）。`<Snackbar open={open}>` は `window.open` を拾って型エラーになり、
+sample 自体が誤りだったことも分かった。
+
+**`prohibited` は導出にした。** 「アプリからこの MUI 部品を直接 import
+しない」は `scripts/ds-equivalents.mjs` が既に持っている。手で書くと
+2 つの正になり、DS に部品を足したとき片方だけ古くなる。ESLint と
+DS 準拠率の計測も同じ表を見ているので、ここも同じ表から出す。
+
+導出の条件を間違えて、最初は **DS 部品側にも「DS を使え」と付いた**
+（「IconButton を使うな、DS の IconButton を使え」という循環）。
+DS 実体と MUI 実体が同名なので、名前だけでは判別できない。
+`import` が `@mui/material` のエントリに限定して解消した。
+
+残る 4 項目は導出元が無いので、埋めるなら人が書くことになる。
 
 ### 1.5 `check-react-fc.sh` は検体と実使用を区別できない
 

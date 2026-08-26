@@ -40,6 +40,7 @@
         "aria-expanded",
         "aria-haspopup"
       ],
+      "sample": "<ActionMenu items={[{ id: 'edit', label: '編集', onClick: () => {} }]} ariaLabel='操作' />",
       "props": {}
     },
     "alert": {
@@ -50,6 +51,10 @@
       "import": "@mui/material",
       "description": "MUI Alertコンポーネント。standard/outlined/filledバリアント、4段階の重要度、カスタムborderRadiusとカラーテーマが適用されている。",
       "variants": ["standard", "outlined", "filled"],
+      "sample": "<Alert severity='warning' variant='outlined'>保存されていません</Alert>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomToaster を使う"
+      ],
       "props": {
         "severity": {
           "control": "select",
@@ -68,6 +73,7 @@
       "storyFile": "src/stories/04-Components/UI/Badge/Badge.stories.tsx",
       "import": "@mui/material",
       "variants": ["standard", "dot"],
+      "sample": "<Badge badgeContent={4} color='primary' max={99}><MailIcon /></Badge>",
       "props": {
         "badgeContent": {
           "control": "number"
@@ -105,6 +111,7 @@
       "story": "Components/UI/Breadcrumbs",
       "storyFile": "src/stories/04-Components/UI/Breadcrumbs/Breadcrumbs.stories.tsx",
       "import": "@mui/material",
+      "sample": "<Breadcrumbs aria-label='現在地'><Link href='/'>ホーム</Link><Typography>詳細</Typography></Breadcrumbs>",
       "props": {
         "separator": {
           "control": "text"
@@ -126,6 +133,10 @@
       "description": "MUI Buttonコンポーネント。contained / outlined / text の3バリアント、6カラー、3サイズをテーマカスタマイズ付きで表示する。",
       "variants": ["contained", "outlined", "text"],
       "sizes": ["small", "medium", "large"],
+      "sample": "<Button variant='contained' size='medium'>保存</Button>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の Button / LoadingButton / SaveButton を使う"
+      ],
       "props": {
         "variant": {
           "control": "select",
@@ -202,6 +213,10 @@
       "storyFile": "src/stories/04-Components/UI/Card/Card.stories.tsx",
       "import": "@mui/material",
       "variants": ["elevation", "outlined"],
+      "sample": "<Card variant='outlined'>内容</Card>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の Card / CardContent / CardHeader / CardTitle / CardDescription / CardFooter / ServiceCard を使う"
+      ],
       "props": {
         "variant": {
           "control": "select",
@@ -238,6 +253,10 @@
       "import": "@mui/material",
       "variants": ["filled", "outlined"],
       "sizes": ["small", "medium"],
+      "sample": "<Chip label='下書き' size='small' variant='outlined' />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomChip / ConnectionStatusChip を使う"
+      ],
       "props": {
         "label": {
           "control": "text"
@@ -476,6 +495,7 @@
       "import": "@/components/ui/feedback",
       "description": "一覧が 0 件のときに出す。\n\nただ何も出さないと「読み込み中なのか」「壊れているのか」「本当に無いのか」が\n区別できない。**何が無いのか**と**次に何をすればよいか**を必ず出す。\n\n404 のような「経路の誤り」には NotFoundView を使う。\nこちらは「経路は正しいが中身が無い」ときのもの。",
       "sizes": ["compact", "page"],
+      "sample": "<EmptyState title='まだ出品がありません' description='商品を登録すると、ここに並びます' size='compact' />",
       "props": {
         "title": {
           "control": "text"
@@ -631,6 +651,7 @@
       "story": "Components/UI/List",
       "storyFile": "src/stories/04-Components/UI/List/List.stories.tsx",
       "import": "@mui/material",
+      "sample": "<List dense disablePadding><ListItem><ListItemText primary='項目' /></ListItem></List>",
       "props": {
         "dense": {
           "control": "boolean",
@@ -710,6 +731,9 @@
       "storyFile": "src/stories/04-Components/UI/Menu/Menu.stories.tsx",
       "import": "@mui/material",
       "description": "MUI Menuコンポーネント。Paper borderRadius、boxShadow、MenuItemのフォントサイズ・パディングがテーマでカスタマイズされている。",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の ActionMenu を使う"
+      ],
       "props": {
         "open": {
           "control": "boolean",
@@ -755,6 +779,7 @@
       "storyFile": "src/stories/04-Components/UI/Paper/Paper.stories.tsx",
       "import": "@mui/material",
       "variants": ["elevation", "outlined"],
+      "sample": "<Paper variant='outlined' sx={{ p: 2 }}>内容</Paper>",
       "props": {
         "variant": {
           "control": "select",
@@ -824,6 +849,7 @@
       "storyFile": "src/stories/04-Components/UI/Button/SaveButton.stories.tsx",
       "import": "@/components/ui/button/saveButton",
       "description": "フォーム保存用のボタンコンポーネント。アウトライン形式で、ラベルのカスタマイズと無効化状態に対応。",
+      "sample": "<SaveButton onClick={() => {}} label='保存' />",
       "props": {
         "disabled": {
           "control": "boolean"
@@ -840,6 +866,7 @@
       "storyFile": "src/stories/04-Components/Form/Select.stories.tsx",
       "accessibility": ["aria-label", "aria-required", "aria-invalid"],
       "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
+      "import": "@/components/Form/CustomSelect",
       "props": {}
     },
     "serviceCard": {
@@ -909,6 +936,10 @@
       "story": "Components/UI/Snackbar",
       "storyFile": "src/stories/04-Components/UI/Snackbar/Snackbar.stories.tsx",
       "import": "@mui/material",
+      "sample": "<Snackbar open message='保存しました' autoHideDuration={3000} />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomToaster を使う"
+      ],
       "props": {
         "message": {
           "control": "text",
@@ -989,6 +1020,7 @@
       "storyFile": "src/stories/04-Components/UI/Tag/StatusTag.stories.tsx",
       "import": "@/components/ui/tag/statusTag",
       "description": "ステータスを視覚的に表現するタグコンポーネント。MUI Chipベースで、ステータスに応じた配色を自動適用する。",
+      "sample": "<StatusTag text='承認待ち' status='pending' />",
       "props": {
         "text": {
           "control": "text"
@@ -1036,6 +1068,7 @@
       "storyFile": "src/stories/04-Components/UI/Switch/Switch.stories.tsx",
       "import": "@mui/material",
       "sizes": ["small", "medium"],
+      "sample": "<Switch defaultChecked size='small' color='primary' />",
       "props": {
         "color": {
           "control": "select",
@@ -1069,6 +1102,10 @@
       "import": "@mui/material",
       "description": "MUI Tableコンポーネント。カスタムTableContainer、TableHead、TableBody、TableCellのスタイリングがテーマで適用されている。",
       "sizes": ["medium", "small"],
+      "sample": "<Table size='small' stickyHeader><TableBody><TableRow><TableCell>値</TableCell></TableRow></TableBody></Table>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTable / ResourceTable / TableToolbar を使う"
+      ],
       "props": {
         "size": {
           "control": "select",
@@ -1225,6 +1262,10 @@
       "description": "MUI TextFieldコンポーネント。テーマでInputLabelのshrink固定、notch非表示、デフォルトsize: small が設定されている。",
       "variants": ["outlined", "filled", "standard"],
       "sizes": ["small", "medium"],
+      "sample": "<TextField label='件名' placeholder='入力してください' size='small' required />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTextField を使う"
+      ],
       "props": {
         "label": {
           "control": "text"
@@ -1280,6 +1321,7 @@
       "import": "@/components/ui/toggle-button",
       "description": "トグルボタングループ。排他的選択(exclusive)と複数選択に対応。アイコン、ラベル、水平/垂直レイアウトをサポート。",
       "sizes": ["small", "medium", "large"],
+      "sample": "<ToggleButtonGroup options={[{ value: 'list', label: '一覧' }]} value='list' onChange={() => {}} />",
       "props": {
         "color": {
           "control": "select",
@@ -1318,6 +1360,10 @@
       "story": "Components/UI/Tooltip",
       "storyFile": "src/stories/04-Components/UI/Tooltip/Tooltip.stories.tsx",
       "import": "@mui/material",
+      "sample": "<Tooltip title='編集' arrow placement='top'><span>対象</span></Tooltip>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTooltip を使う"
+      ],
       "props": {
         "title": {
           "control": "text",
@@ -1356,6 +1402,7 @@
       "variants": ["circular", "rounded", "square"],
       "sizes": ["small", "medium", "large"],
       "accessibility": ["alt text", "aria-label"],
+      "sample": "<UserAvatar name='山田 太郎' size='medium' />",
       "props": {
         "name": {
           "control": "text"

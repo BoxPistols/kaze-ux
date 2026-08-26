@@ -26,6 +26,7 @@ import { resolve } from 'node:path'
 
 import { format, resolveConfig } from 'prettier'
 
+import { EQUIVALENTS } from './ds-equivalents.mjs'
 import { extractComponent, findStoryFiles } from './lib/story-metadata.mjs'
 
 const ROOT = resolve(import.meta.dirname, '..')
@@ -72,6 +73,25 @@ if (components.length === 0) {
   process.exit(1)
 }
 
+/**
+ * 「アプリからこの MUI 部品を直接 import しない」を、対応表から**導出**する。
+ *
+ * 手で書くと `ds-equivalents.mjs` と 2 つの正になり、DS に部品を足したときに
+ * 片方だけ古くなる。ESLint と DS 準拠率の計測も同じ表を見ているので、
+ * ここも同じ表から出す
+ */
+const dsEquivalentRule = (name, importPath) => {
+  // **MUI 側のエントリにだけ付ける。** DS 部品のエントリに付けると
+  // 「IconButton を使うな、DS の IconButton を使え」という循環になる
+  // （実際そうなった。DS 実体と MUI 実体が同名なので name だけでは判別できない）
+  if (importPath !== '@mui/material') return []
+  const hit = EQUIVALENTS.find((e) => e.mui.includes(name))
+  if (!hit) return []
+  return [
+    `アプリ（apps/* と src/pages）から直接 import しない。DS の ${hit.ds.join(' / ')} を使う`,
+  ]
+}
+
 const out = {}
 const usedCurated = new Set()
 for (const c of components.sort((a, b) => a.name.localeCompare(b.name))) {
@@ -88,6 +108,14 @@ for (const c of components.sort((a, b) => a.name.localeCompare(b.name))) {
     ...(c.variants ? { variants: c.variants } : {}),
     ...(c.sizes ? { sizes: c.sizes } : {}),
     ...(extra ?? {}),
+    // 導出したものと手で書いたものを合わせる（重複は落とす）
+    ...(() => {
+      const merged = [
+        ...dsEquivalentRule(c.name, c.import),
+        ...(extra?.prohibited ?? []),
+      ]
+      return merged.length > 0 ? { prohibited: [...new Set(merged)] } : {}
+    })(),
     props: c.props,
   }
 }

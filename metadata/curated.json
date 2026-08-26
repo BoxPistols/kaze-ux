@@ -37,7 +37,8 @@
     },
     "select": {
       "accessibility": ["aria-label", "aria-required", "aria-invalid"],
-      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />"
+      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
+      "import": "@/components/Form/CustomSelect"
     },
     "dateTimePicker": {
       "accessibility": ["aria-label", "LocalizationProvider"]
@@ -49,7 +50,8 @@
       "accessibility": ["role=button", "aria-expanded", "keyboard navigation"]
     },
     "userAvatar": {
-      "accessibility": ["alt text", "aria-label"]
+      "accessibility": ["alt text", "aria-label"],
+      "sample": "<UserAvatar name='山田 太郎' size='medium' />"
     },
     "actionMenu": {
       "accessibility": [
@@ -57,7 +59,8 @@
         "aria-controls",
         "aria-expanded",
         "aria-haspopup"
-      ]
+      ],
+      "sample": "<ActionMenu items={[{ id: 'edit', label: '編集', onClick: () => {} }]} ariaLabel='操作' />"
     },
     "fab": {
       "accessibility": ["aria-label", "tooltip"]
@@ -67,6 +70,57 @@
     },
     "chatSupport": {
       "accessibility": ["keyboard shortcuts", "aria-live"]
+    },
+    "paper": {
+      "sample": "<Paper variant='outlined' sx={{ p: 2 }}>内容</Paper>"
+    },
+    "button": {
+      "sample": "<Button variant='contained' size='medium'>保存</Button>"
+    },
+    "chip": {
+      "sample": "<Chip label='下書き' size='small' variant='outlined' />"
+    },
+    "card": {
+      "sample": "<Card variant='outlined'>内容</Card>"
+    },
+    "textField": {
+      "sample": "<TextField label='件名' placeholder='入力してください' size='small' required />"
+    },
+    "table": {
+      "sample": "<Table size='small' stickyHeader><TableBody><TableRow><TableCell>値</TableCell></TableRow></TableBody></Table>"
+    },
+    "alert": {
+      "sample": "<Alert severity='warning' variant='outlined'>保存されていません</Alert>"
+    },
+    "list": {
+      "sample": "<List dense disablePadding><ListItem><ListItemText primary='項目' /></ListItem></List>"
+    },
+    "switch": {
+      "sample": "<Switch defaultChecked size='small' color='primary' />"
+    },
+    "snackbar": {
+      "sample": "<Snackbar open message='保存しました' autoHideDuration={3000} />"
+    },
+    "tooltip": {
+      "sample": "<Tooltip title='編集' arrow placement='top'><span>対象</span></Tooltip>"
+    },
+    "badge": {
+      "sample": "<Badge badgeContent={4} color='primary' max={99}><MailIcon /></Badge>"
+    },
+    "breadcrumbs": {
+      "sample": "<Breadcrumbs aria-label='現在地'><Link href='/'>ホーム</Link><Typography>詳細</Typography></Breadcrumbs>"
+    },
+    "statusTag": {
+      "sample": "<StatusTag text='承認待ち' status='pending' />"
+    },
+    "saveButton": {
+      "sample": "<SaveButton onClick={() => {}} label='保存' />"
+    },
+    "emptyState": {
+      "sample": "<EmptyState title='まだ出品がありません' description='商品を登録すると、ここに並びます' size='compact' />"
+    },
+    "toggleButton": {
+      "sample": "<ToggleButtonGroup options={[{ value: 'list', label: '一覧' }]} value='list' onChange={() => {}} />"
     }
   },
   "pending": {
