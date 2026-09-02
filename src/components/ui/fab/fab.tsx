@@ -198,16 +198,24 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(
       </Zoom>
     )
 
+    // visible={false} のときは Zoom が閉じたまま何も描かない（unmountOnExit）。
+    // 以前は `visible ? animatedButton : fabButton` と三項が逆で、
+    // **非表示にしたいときにだけ Zoom を迂回して素の FAB を返していた**ため、
+    // visible は永久に効かなかった。常に Zoom に渡せば両方向を扱える。
+    //
+    // Tooltip は要素の子を 1 つ要求するので、非表示のときは Tooltip ごと外す
+    if (!visible) return animatedButton
+
     // ツールチップ
     if (tooltip && !disabled && !isExtended) {
       return (
         <Tooltip title={tooltip} placement={tooltipPlacement} arrow>
-          {visible ? animatedButton : fabButton}
+          {animatedButton}
         </Tooltip>
       )
     }
 
-    return visible ? animatedButton : fabButton
+    return animatedButton
   }
 )
 
