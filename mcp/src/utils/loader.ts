@@ -245,11 +245,22 @@ export interface DetectorSet {
   source: 'repo' | 'bundled' | 'none'
 }
 
-let detectorCache: DetectorSet | null = null
+/**
+ * 検出器のキャッシュ。**どのファイルの、いつの版か**まで持つ。
+ *
+ * 以前は `DetectorSet` だけを持ち、一度読んだら二度と読み直さなかった。
+ * トークン・部品仕様・prohibited は `readCached` が mtime を見て
+ * 読み直すのに、`ds-rules.mjs` だけが同じ `sync-mcp-data.mjs` で配られる
+ * ファイルなのに更新経路が違う、という状態になっていた。
+ *
+ * 実害は黙って古いルールで検査することではなく、**そう言わないこと**。
+ * `check-rule.ts` は「検査したルール: ...」と一覧を出すので、実際には
+ * 検査していないルール集合を検査したと能動的に主張してしまう。
+ */
+let detectorCache: (DetectorSet & { path: string; mtimeMs: number }) | null =
+  null
 
 export const loadRuleDetectors = async (): Promise<DetectorSet> => {
-  if (detectorCache) return detectorCache
-
   const candidates: Array<{ path: string; source: 'repo' | 'bundled' }> = [
     { path: resolve(ROOT, 'scripts/lib/ds-rules.mjs'), source: 'repo' },
   ]
@@ -263,14 +274,31 @@ export const loadRuleDetectors = async (): Promise<DetectorSet> => {
 
   for (const c of candidates) {
     if (!existsSync(c.path)) continue
-    const mod = (await import(pathToFileURL(c.path).href)) as {
+    const mtimeMs = statSync(c.path).mtimeMs
+    if (
+      detectorCache &&
+      detectorCache.path === c.path &&
+      detectorCache.mtimeMs === mtimeMs
+    ) {
+      return {
+        detectors: detectorCache.detectors,
+        source: detectorCache.source,
+      }
+    }
+    // ESM のモジュールキャッシュは URL 単位なので、同じパスを import し直しても
+    // 最初に読んだ版が返る。mtime をクエリに付けて別の URL にする。
+    // 版ごとにモジュールが 1 つ残るが、増えるのは検出器を書き換えたときだけ
+    const url = `${pathToFileURL(c.path).href}?mtime=${mtimeMs}`
+    const mod = (await import(url)) as {
       DETECTABLE_RULES?: RuleDetector[]
     }
     const detectors = mod.DETECTABLE_RULES ?? []
-    detectorCache = { detectors, source: c.source }
-    return detectorCache
+    detectorCache = { detectors, source: c.source, path: c.path, mtimeMs }
+    return { detectors, source: c.source }
   }
 
-  detectorCache = { detectors: [], source: 'none' }
-  return detectorCache
+  // 実体が見つからない状態は覚えない。あとから置かれることがあるし、
+  // 「検査が成立していない」を固定してしまうと復帰できない
+  detectorCache = null
+  return { detectors: [], source: 'none' }
 }

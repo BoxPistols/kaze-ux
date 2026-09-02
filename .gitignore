@@ -68,3 +68,6 @@ figma-plugin/code.js
 
 # MCP 配布物へ同梱するデータのコピー（publish 時に生成。正はリポジトリ側の生成物）
 mcp/data
+
+# テストが作る一時ディレクトリ（vitest は project 外の file URL を解決できないため中に作る）
+mcp/.tmp-*
