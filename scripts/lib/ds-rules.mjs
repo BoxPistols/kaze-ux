@@ -20,13 +20,25 @@
  */
 
 /**
- * ソースから文字列リテラルとコメントを取り除く。
+ * ソースを走査して、コメントと文字列リテラルを見分ける。
  *
- * これをしないと、ルールを説明した文章そのものを違反として数える。
- * 実際 `React.FC` を素朴に grep したら 12 件出たが、全部 FAQ や
- * チャット知識ベースの**解説文**で、実使用は 0 件だった。
+ * `blankLiterals` が真なら文字列の中身を `''` に潰し、偽ならそのまま写す。
+ * どちらの利用側も同じ走査を通るので、片方だけ直して食い違うことがない。
+ *
+ * ## 引用符は「その行で閉じる」まで
+ *
+ * `'` を見たら常に文字列の開始とみなしていたため、**閉じ側が来ないと
+ * ファイル末尾まで飲んでいた**。`<p>Don't panic</p>` を 1 行足すだけで、
+ * それ以降の違反が全部消える（実測: A06 が 1 件 → 0 件）。
+ *
+ * JS の `'` / `"` 文字列は行をまたげない（またせるのは行末の `\` による
+ * 継続だけ）。だから**その行で閉じなければ文字列ではない**と決められる。
+ * JSX テキストのアポストロフィも、正規表現リテラルの中の引用符も、
+ * これで巻き込まれなくなる。被害はその 1 行に閉じる。
+ *
+ * テンプレートリテラルは行をまたげるので、こちらは従来どおり閉じ側を探す。
  */
-export const stripLiteralsAndComments = (src) => {
+const scanLiterals = (src, blankLiterals) => {
   let out = ''
   let i = 0
   const n = src.length
@@ -51,22 +63,20 @@ export const stripLiteralsAndComments = (src) => {
       continue
     }
     if (c === "'" || c === '"' || c === '`') {
-      const quote = c
-      const start = i
-      i++
-      while (i < n) {
-        if (src[i] === '\\') {
-          i += 2
-          continue
-        }
-        if (src[i] === quote) {
-          i++
-          break
-        }
+      const end = literalEnd(src, i)
+      if (end === null) {
+        // その行で閉じなかった。文字列ではないので普通の文字として写す
+        out += c
         i++
+        continue
       }
-      out += "''"
-      keepNewlines(start, i)
+      if (blankLiterals) {
+        out += "''"
+        keepNewlines(i, end)
+      } else {
+        out += src.slice(i, end)
+      }
+      i = end
       continue
     }
     out += c
@@ -74,6 +84,39 @@ export const stripLiteralsAndComments = (src) => {
   }
   return out
 }
+
+/**
+ * `src[start]` の引用符に対応する閉じ位置の次を返す。閉じていなければ null。
+ *
+ * `'` / `"` はその行の中だけを見る（行末が `\` なら次の行へ継続する）。
+ * バッククォートは行をまたげるので末尾まで探す。
+ */
+const literalEnd = (src, start) => {
+  const quote = src[start]
+  const multiline = quote === '`'
+  let i = start + 1
+  while (i < src.length) {
+    const c = src[i]
+    if (c === '\\') {
+      // 行末の `\` は継続。それ以外は次の 1 文字を読み飛ばす
+      i += 2
+      continue
+    }
+    if (c === quote) return i + 1
+    if (c === '\n' && !multiline) return null
+    i++
+  }
+  return multiline ? src.length : null
+}
+
+/**
+ * ソースから文字列リテラルとコメントを取り除く。
+ *
+ * これをしないと、ルールを説明した文章そのものを違反として数える。
+ * 実際 `React.FC` を素朴に grep したら 12 件出たが、全部 FAQ や
+ * チャット知識ベースの**解説文**で、実使用は 0 件だった。
+ */
+export const stripLiteralsAndComments = (src) => scanLiterals(src, true)
 
 /**
  * コメントだけを落とす。**文字列リテラルは残す。**
@@ -90,53 +133,7 @@ export const stripLiteralsAndComments = (src) => {
  * URL の `//` をコメントと誤認しないよう、文字列の中かどうかを追跡する。
  * 「直前がコロンなら除外」のような手当てだと、文字列中の他の `//` を取り逃す
  */
-export const stripComments = (src) => {
-  let out = ''
-  let i = 0
-  const n = src.length
-  const keepNewlines = (from, to) => {
-    for (let k = from; k < to && k < n; k++) if (src[k] === '\n') out += '\n'
-  }
-  while (i < n) {
-    const c = src[i]
-    const next = src[i + 1]
-    if (c === '/' && next === '/') {
-      while (i < n && src[i] !== '\n') i++
-      continue
-    }
-    if (c === '/' && next === '*') {
-      const start = i
-      i += 2
-      while (i < n && !(src[i] === '*' && src[i + 1] === '/')) i++
-      i += 2
-      keepNewlines(start, i)
-      continue
-    }
-    // 文字列はそのまま写す（中の `//` をコメント扱いしない）
-    if (c === "'" || c === '"' || c === '`') {
-      const quote = c
-      out += c
-      i++
-      while (i < n) {
-        if (src[i] === '\\') {
-          out += src[i] + (src[i + 1] ?? '')
-          i += 2
-          continue
-        }
-        out += src[i]
-        if (src[i] === quote) {
-          i++
-          break
-        }
-        i++
-      }
-      continue
-    }
-    out += c
-    i++
-  }
-  return out
-}
+export const stripComments = (src) => scanLiterals(src, false)
 
 /** 行番号付きで正規表現に一致する箇所を返す */
 const matchLines = (src, re) => {
@@ -154,18 +151,31 @@ const codeMatcher = (re) => (src) =>
   matchLines(stripLiteralsAndComments(src), re)
 
 /**
+ * フォーカスリングを**消している**値だけを拾う。
+ * `none` / `0` / `0px` を、引用符の有無どちらでも見る。
+ * `outline: '2px solid ...'` のように**描いている**値には当てない
+ */
+const RING_REMOVED =
+  /\boutline\s*:\s*['"`]?\s*(?:none|0(?:px)?)\s*['"`]?\s*(?:[,;}]|$)/
+
+/**
  * `outline: none` は、フォーカスリングを別途出していれば違反ではない。
  * 近傍に focus-visible の指定があるかまで見る。素朴に数えると 5 件全部を
  * 誤検出した（実際は全部 focus-visible と併用されていた）
  */
 const outlineWithoutFocusVisible = (src) => {
-  const codeLines = stripLiteralsAndComments(src).split('\n')
+  // 文字列を落とした側を見てはいけない。`outline: 'none'` も
+  // `outline: '2px solid #0057B8'` も等しく `outline: ''` になるので、
+  // **リングを描いたコードが違反になり、消したコードが見逃される**
+  // （実測: src/themes/focus.ts のリング定義が誤検出の対象だった）。
+  // コメントだけ落とした側で、値そのものを見る
+  const codeLines = stripComments(src).split('\n')
   // focus-visible は `'&:focus-visible'` のように**文字列の中**に書かれる。
-  // リテラルを落とした側で探すと必ず消えているので、原文を見る
+  // こちらも原文と同じ内容の行を見ればよい
   const rawLines = src.split('\n')
   const hits = []
   for (let i = 0; i < codeLines.length; i++) {
-    if (!/outline:\s*(''|none)/.test(codeLines[i])) continue
+    if (!RING_REMOVED.test(codeLines[i])) continue
     const around = rawLines.slice(Math.max(0, i - 8), i + 10).join('\n')
     if (/focus-?[Vv]isible/.test(around)) continue
     hits.push({ line: i + 1, text: rawLines[i]?.trim() ?? '' })
@@ -328,12 +338,46 @@ const fontSizeUnder12px = (raw) => {
     const px = unit === 'px' ? value : value * 16
     if (px < 12) push(m.index, m[0].trim())
   }
+  // レスポンシブ記法: fontSize: { xs: 10, md: 14 }
+  //
+  // 上のパターンはコロンの直後に数字を要求するので、`{` で始まるこの形は
+  // **1 件も返さない**（実測: この書き方は src と apps で 28 箇所ある）。
+  // 「書かれた値しか見ない」という既知の制約ではなく、書かれているのに
+  // 解析できていない状態だった。ブレークポイントごとの値を 1 つずつ見る
+  for (const m of src.matchAll(/font-?[Ss]ize\s*:\s*\{/g)) {
+    const open = m.index + m[0].length - 1
+    const close = matchingBrace(src, open)
+    if (close === null) continue
+    const body = src.slice(open + 1, close)
+    for (const v of body.matchAll(
+      /([A-Za-z0-9_$]+)\s*:\s*[`'"]?\s*(\d*\.?\d+)\s*(px|rem|em)?[`'"]?/g
+    )) {
+      const value = Number(v[2])
+      const unit = v[3] ?? 'px'
+      const px = unit === 'px' ? value : value * 16
+      if (px < 12)
+        push(open + 1 + v.index, `fontSize.${v[1]}: ${v[2]}${v[3] ?? ''}`)
+    }
+  }
   // Tailwind の任意値: text-[11px]
   for (const m of src.matchAll(/text-\[(\d*\.?\d+)(px|rem)\]/g)) {
     const px = m[2] === 'px' ? Number(m[1]) : Number(m[1]) * 16
     if (px < 12) push(m.index, m[0])
   }
   return hits
+}
+
+/** `src[open]` の `{` に対応する `}` の位置。閉じていなければ null */
+const matchingBrace = (src, open) => {
+  let depth = 0
+  for (let i = open; i < src.length; i++) {
+    if (src[i] === '{') depth++
+    else if (src[i] === '}') {
+      depth--
+      if (depth === 0) return i
+    }
+  }
+  return null
 }
 
 /** カードに `rounded-full`（AI03）。角丸トークンを使わず全周を丸めるもの */
