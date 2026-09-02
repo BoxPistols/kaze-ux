@@ -129,7 +129,10 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
           },
           ...(success && {
             bgcolor: 'success.main',
-            color: 'common.white',
+            // 白は success.main に対して light 2.92:1 / dark 1.96:1 しかない。
+            // contrastText なら 6.77 / 7.40:1。statusTag.tsx にも同じ趣旨の
+            // 注意書きがあるが、コメントは検査されないので実装を合わせる
+            color: 'success.contrastText',
             '&:hover': {
               bgcolor: 'success.dark',
             },
