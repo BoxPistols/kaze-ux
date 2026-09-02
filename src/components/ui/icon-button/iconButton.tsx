@@ -131,6 +131,15 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       const colorValue = color === 'inherit' ? 'text.primary' : `${color}.main`
       const colorDark =
         color === 'inherit' ? 'action.selected' : `${color}.dark`
+      // 塗り面の上の文字色。common.white を固定すると、明るい塗り色
+      // (success 2.92:1 / warning 2.73:1 / info 2.64:1) や dark の塗り色
+      // (全色 3:1 未満、info は 1.77:1) で読めない。色 6 種 x スキーム 3 種
+      // x モード 2 = 36 通りのうち 27 通りが 3:1 に届いていなかった。
+      // contrastText は colorToken.ts が実測で決めているのでスキームを
+      // 足しても追従する。inherit の塗り面は text.primary なので、
+      // その上に載せる色は面の色 (background.paper) を使う
+      const onFilled =
+        color === 'inherit' ? 'background.paper' : `${color}.contrastText`
 
       switch (variant) {
         case 'outlined':
@@ -147,7 +156,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         case 'filled':
           return {
             bgcolor: active ? colorDark : colorValue,
-            color: 'common.white',
+            color: onFilled,
             '&:hover': {
               bgcolor: colorDark,
             },
