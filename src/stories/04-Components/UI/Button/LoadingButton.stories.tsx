@@ -57,3 +57,18 @@ export const Default: Story = {
     loading: false,
   },
 }
+
+/**
+ * 成功状態。
+ *
+ * success を描画する story が無かったため、塗り面の上の文字色が
+ * 白固定で 3:1 に届いていなかった (#139) 間も、実描画を測る check:a11y は
+ * この状態を一度も見ていなかった
+ */
+export const Success: Story = {
+  args: {
+    children: '保存しました',
+    startIcon: <SaveIcon />,
+    success: true,
+  },
+}

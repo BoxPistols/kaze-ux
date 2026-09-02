@@ -64,6 +64,35 @@ const NOISE_RATIO = 0.5
  */
 const NOISE_SAMPLES = 5
 
+/**
+ * 画素比較は ImageMagick の `compare` に任せている。**入っていないと
+ * 比較そのものが成立しない。**
+ *
+ * 以前はここを確かめておらず、`compare` が無い環境では pixelDiff が -1 を
+ * 返し、判定が `d > 0` なので**全 story が「完全一致」に数えられていた**。
+ * 20 分かけてビルドと撮影をしたうえで「差分 0 件」と報告する、という
+ * 一番たちの悪い壊れ方をする（実際に 2 回それをやった）。
+ * ビルドを始める前に落とす。
+ */
+const assertCompareAvailable = () => {
+  try {
+    execFileSync('sh', ['-c', 'command -v compare'], { stdio: 'ignore' })
+  } catch {
+    console.error(
+      [
+        'ImageMagick の `compare` が見つかりません。画素比較ができないので中止します。',
+        '',
+        '  macOS:  brew install imagemagick',
+        '  Ubuntu: sudo apt-get install imagemagick',
+        '',
+        'これが無いまま実行すると、比較せずに「完全一致」と報告してしまいます。',
+      ].join('\n')
+    )
+    process.exit(1)
+  }
+}
+assertCompareAvailable()
+
 const args = process.argv.slice(2)
 const limitAt = args.indexOf('--limit')
 const LIMIT = limitAt >= 0 ? Number.parseInt(args[limitAt + 1], 10) : Infinity
@@ -232,6 +261,16 @@ try {
       continue
     }
     const d = pixelDiff(bf, hf, df)
+    // 負値は「比較できなかった」。一致として数えると、検査が成立して
+    // いないのに緑を返すことになる
+    if (d < 0) {
+      failures.push({
+        id,
+        side: '比較',
+        reason: 'compare が画素数を返さなかった',
+      })
+      continue
+    }
     if (d > 0) diffs.push({ id, diff: d })
   }
 
