@@ -51,6 +51,7 @@
     "test:all:watch": "vitest --coverage --reporter=basic",
     "format": "prettier --write .",
     "lint": "eslint --fix ./src ./scripts",
+    "lint:ci": "eslint ./src ./scripts --max-warnings=0",
     "fix": "pnpm run lint && pnpm run format",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6007",
