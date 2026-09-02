@@ -34,6 +34,12 @@ export const SECRET_PATTERN = [
   'xox[baprs]-[A-Za-z0-9-]{10,}',
   // AWS
   'AKIA[0-9A-Z]{16}',
+  // 資格情報そのものではなく、資格情報を成果物に載せる仕組みの痕跡。
+  // パスワードには形が無いので値では検出できない。Storybook の
+  // managerHead が window.__STORYBOOK_AUTH_PASSWORD__ に平文を書いていた
+  // 期間があり、読み手 (PasswordGate) は eb6a3a7 で消えたのに注入だけが
+  // 残っていた。再導入されたらここで落とす
+  '__STORYBOOK_AUTH_PASSWORD__',
 ].join('|')
 
 /** 毎回新しい RegExp を返す。g フラグ付きの使い回しは lastIndex で事故る */

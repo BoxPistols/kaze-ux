@@ -454,7 +454,7 @@ framework: '@storybook/react-vite'
 addons: ['addon-a11y', 'addon-links', 'addon-docs', 'addon-mcp']
 ```
 
-環境変数を `viteFinal` で明示注入 (VITE_APP_PASSWORD, VITE_OPENAI_API_KEY 等)。
+環境変数を `viteFinal` で明示注入 (VITE_OPENAI_API_KEY, VITE_MAPBOX_ACCESS_TOKEN 等)。資格情報は `configType === 'PRODUCTION'` で空にする。
 
 ---
 
