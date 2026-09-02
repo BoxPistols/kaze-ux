@@ -36,6 +36,7 @@
       "sample": "<CustomTextField label='名前' required placeholder='入力してください' />"
     },
     "select": {
+      "exportName": "CustomSelect",
       "accessibility": ["aria-label", "aria-required", "aria-invalid"],
       "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
       "import": "@/components/Form/CustomSelect"

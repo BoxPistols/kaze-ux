@@ -6,6 +6,7 @@
   "components": {
     "accordion": {
       "name": "Accordion",
+      "exportName": "CustomAccordion",
       "category": "UI",
       "story": "Components/UI/Accordion",
       "storyFile": "src/stories/04-Components/UI/Accordion/Accordion.stories.tsx",
@@ -794,6 +795,7 @@
     },
     "progress": {
       "name": "Progress",
+      "exportName": "CircularProgress",
       "category": "UI",
       "story": "Components/UI/Progress",
       "storyFile": "src/stories/04-Components/UI/Progress/Progress.stories.tsx",
@@ -864,6 +866,7 @@
       "category": "Form",
       "story": "Components/Form/Select",
       "storyFile": "src/stories/04-Components/Form/Select.stories.tsx",
+      "exportName": "CustomSelect",
       "accessibility": ["aria-label", "aria-required", "aria-invalid"],
       "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
       "import": "@/components/Form/CustomSelect",
@@ -1158,6 +1161,7 @@
     },
     "tailwindButton": {
       "name": "TailwindButton",
+      "exportName": "Button",
       "category": "UI/Button",
       "story": "Components/UI/Button/TailwindButton",
       "storyFile": "src/stories/04-Components/UI/Button/TailwindButton.stories.tsx",
@@ -1204,6 +1208,7 @@
     },
     "text": {
       "name": "Text",
+      "exportName": "PageTitle",
       "category": "UI",
       "story": "Components/UI/Text",
       "storyFile": "src/stories/04-Components/UI/Text/Text.stories.tsx",
@@ -1306,6 +1311,7 @@
     },
     "toast": {
       "name": "Toast",
+      "exportName": "CustomToaster",
       "category": "UI",
       "story": "Components/UI/Toast",
       "storyFile": "src/stories/04-Components/UI/Toast/Toast.stories.tsx",
@@ -1315,6 +1321,7 @@
     },
     "toggleButton": {
       "name": "ToggleButton",
+      "exportName": "ToggleButtonGroup",
       "category": "UI/Button",
       "story": "Components/UI/Button/ToggleButton",
       "storyFile": "src/stories/04-Components/UI/Button/ToggleButton.stories.tsx",

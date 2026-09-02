@@ -106,6 +106,7 @@
     "check:mcp": "node scripts/check-mcp.mjs",
     "check:rules": "node scripts/check-ds-rules.mjs",
     "check:samples": "node scripts/check-samples.mjs",
+    "check:exports": "node scripts/check-component-exports.mjs",
     "ds:coverage": "node scripts/ds-coverage.mjs",
     "ds:coverage:write": "node scripts/ds-coverage.mjs --write",
     "export-rules": "node scripts/export-prohibited-doc.mjs",

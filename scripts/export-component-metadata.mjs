@@ -100,6 +100,11 @@ for (const c of components.sort((a, b) => a.name.localeCompare(b.name))) {
   if (extra) usedCurated.add(key)
   out[key] = {
     name: c.name,
+    // 実体の名前が見出しと違うときだけ出す。読んだ側はこちらを import する。
+    // import 元が無いもの（story の中だけのデモ）は import できないので出さない
+    ...(c.import && c.exportName && c.exportName !== c.name
+      ? { exportName: c.exportName }
+      : {}),
     category: c.category,
     story: c.story,
     storyFile: c.storyFile,

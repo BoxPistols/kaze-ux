@@ -98,6 +98,14 @@ jobs:
       - name: Check component samples compile
         run: pnpm check:samples
 
+      # metadata が名乗る名前が実際に export されているか。
+      # story のタイトルは見出しで、export 名とは限らない
+      # (Accordion / CustomAccordion)。読んだ AI は存在しない名前を
+      # import してビルドが落ちるが、sample の無いエントリには
+      # 訂正する材料が無い
+      - name: Check component metadata names match real exports
+        run: pnpm check:exports
+
       # CLAUDE.md の Quick Reference は「このファイルだけで基本 UI 生成可能」と
       # 謳っている、AI が最初に読む場所。ここがズレると以降の生成すべてに
       # 効くうえ、読んだ側からは正しいか判断できない
