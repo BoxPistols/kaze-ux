@@ -205,3 +205,79 @@ describe('コメントに書いた注意書きを違反にしない', () => {
     expect(await run(code)).toContain('[T01]')
   })
 })
+
+/**
+ * 検出器の「検出しない側」を検体で固定する。
+ *
+ * A03 が両方向に反転していたのに気づけなかった直接の原因は、検体が
+ * `outline: none`（引用符なし）の 2 件しか無く、**実際のコードが通る
+ * 引用符付きの経路を一度も踏んでいなかった**こと。0 件という結果は
+ * 「守れている」ではなく「宣言した範囲で違反がない」でしかない。
+ *
+ * だから 1 ルールにつき、破っている検体と破っていない検体の両方を置く。
+ */
+const REGRESSIONS: Array<[string, string, string, boolean]> = [
+  // アポストロフィが以降の検査を飲まないこと。
+  // `'` を常に文字列の開始とみなしていたため、閉じ側が来ないまま
+  // ファイル末尾まで飲み、その先の違反が全部消えていた
+  [
+    'A06',
+    'JSX テキストのアポストロフィが後続の検査を消さない',
+    "const t = <p>Don't panic</p>\nconst x = <img src={url} />",
+    true,
+  ],
+  [
+    'A06',
+    '正規表現リテラル中の引用符が後続の検査を消さない',
+    'const re = /["\']/g\nconst x = <img src={url} />',
+    true,
+  ],
+
+  // A03 は「リングを消した値」だけを見る。
+  // 文字列を落とした側で見ていたときは、`outline: '2px solid #0057B8'` も
+  // `outline: 'none'` も等しく `outline: ''` になり、**描いたコードが
+  // 違反になり、`outline: 0` は見逃されていた**
+  [
+    'A03',
+    'リングを描いている outline は違反にしない',
+    "const sx = { '&:focus': { outline: '2px solid #0057B8' } }",
+    false,
+  ],
+  [
+    'A03',
+    'outline: 0 でリングを消すのも違反にする',
+    'const sx = { outline: 0 }',
+    true,
+  ],
+  [
+    'A03',
+    "引用符付きの outline: 'none' も違反にする",
+    "const sx = { outline: 'none' }",
+    true,
+  ],
+
+  // T01 はコロンの直後に数字を要求していたので、ブレークポイントごとに
+  // 値を書く普通の記法を 1 件も返していなかった
+  [
+    'T01',
+    'レスポンシブ記法の中の 12px 未満を見る',
+    'const C = () => <Box sx={{ fontSize: { xs: 10, md: 14 } }} />',
+    true,
+  ],
+  [
+    'T01',
+    'レスポンシブ記法でも 12px 以上なら違反にしない',
+    'const C = () => <Box sx={{ fontSize: { xs: 12, md: 14 } }} />',
+    false,
+  ],
+]
+
+describe('検出器の両側を固定する（片側だけの検体で通さない）', () => {
+  for (const [id, label, code, shouldDetect] of REGRESSIONS) {
+    it(`${id}: ${label}`, async () => {
+      const text = await run(code)
+      if (shouldDetect) expect(text).toContain(`[${id}]`)
+      else expect(text).not.toContain(`[${id}]`)
+    })
+  }
+})
