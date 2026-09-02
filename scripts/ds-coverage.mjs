@@ -140,6 +140,8 @@ const tokens = {
  * `--json` は標準出力ではなく生成物へ書き出す仕様なので、それを読む
  */
 const ADOPTION_JSON = 'src/stories/00-Guide/ds-adoption.generated.json'
+/** ds-adoption を実行できなかった理由。成立していない検査を緑にしない */
+let adoptionError = null
 const adoption = (() => {
   try {
     execFileSync(
@@ -148,7 +150,8 @@ const adoption = (() => {
       { encoding: 'utf8' }
     )
     return JSON.parse(readFileSync(resolve(ROOT, ADOPTION_JSON), 'utf8'))
-  } catch {
+  } catch (e) {
+    adoptionError = e instanceof Error ? e.message : String(e)
     return null
   }
 })()
@@ -259,6 +262,18 @@ p()
 p('再生成: `pnpm ds:coverage --write`')
 
 const text = lines.join('\n') + '\n'
+
+// 表の 1 節が測れていないなら、この検査は成立していない。
+// 本文には「実行できなかった」と書いていたが exit 0 だったため、
+// CI が `> /dev/null` で呼んでいる限りその一行は捨てられ、緑になっていた
+if (adoptionError !== null) {
+  console.error(
+    `❌ pnpm ds:adoption を実行できませんでした: ${adoptionError}\n` +
+      '   採用状況を測れないままカバレッジ表を出すと、測れていない節が' +
+      '「該当なし」と読まれます'
+  )
+  process.exit(1)
+}
 
 if (write) {
   const out = resolve(ROOT, 'docs/coverage.md')

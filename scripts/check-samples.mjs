@@ -44,8 +44,15 @@ const meta = JSON.parse(
 const entries = Object.entries(meta.components).filter(([, c]) => c.sample)
 
 if (entries.length === 0) {
-  console.log('sample を持つ部品がありません')
-  process.exit(0)
+  // 他の検査（check:rules / check:a11y / check:ga / check:mcp /
+  // check:ds-core / check:skills）はいずれも対象 0 件で exit 1 する。
+  // ここだけ 0 を返していたため、sample が全部消えても緑になった。
+  // **対象が無いのは「違反が無い」ではなく「検査していない」。**
+  console.error(
+    '❌ sample を持つ部品が 1 件もありません（検査対象なし）\n' +
+      '   metadata/curated.json と export-metadata の生成を確認してください'
+  )
+  process.exit(1)
 }
 
 /** sample に現れる大文字始まりの JSX タグ名 */
