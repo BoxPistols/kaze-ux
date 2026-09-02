@@ -1,6 +1,15 @@
 name: Shared Security Scan
 
 on:
+  # main への直 push でも走らせる。pull_request だけだと、その経路が
+  # 素通りする。直近のコミットは実際に main への直 push（マージコミット
+  # 無し）なので、この経路は一度もスキャンされていなかった。
+  # quality-check.yml は同じことに気づいて両方に付けてある
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
   pull_request:
     paths-ignore:
       - '*.md'
@@ -73,9 +82,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Gitleaks scan (PR diff only)
+      # 差分の起点は push と pull_request で違う。
+      # pull_request のときだけ有効な式をそのまま使うと、push では
+      # `..<sha>` という不正な範囲になって gitleaks が走らない。
+      # 起点が取れないとき（新しいブランチや force push）は範囲を渡さず
+      # 全体を見る。**走らないより多く見るほうを既定にする**
+      - name: Decide the diff range
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "起点が取れないので全体を検査します"
+            echo "GITLEAKS_LOG_OPTS=" >> "$GITHUB_ENV"
+          else
+            echo "検査範囲: ${base}..${{ github.sha }}"
+            echo "GITLEAKS_LOG_OPTS=${base}..${{ github.sha }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Gitleaks scan (diff only)
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
-          GITLEAKS_LOG_OPTS: ${{ github.event.pull_request.base.sha }}..${{ github.sha }}
