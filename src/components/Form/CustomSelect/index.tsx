@@ -133,10 +133,19 @@ const useSelectState = (
     value: string | string[] | number | number[]
   ) => void
 ) => {
-  // 状態管理の初期化
-  const [value, setValue] = useState<string | string[] | number | number[]>(
-    () => getInitialValue(propValue, multiple)
-  )
+  // 内部状態。**value を渡さない使い方のときだけ効く。**
+  //
+  // 以前はここが唯一の正で、`value` prop はマウント時に 1 回読まれるだけ
+  // だった。制御コンポーネントの見た目をしていて制御されておらず、
+  // フォームのリセットや非同期の初期値の流し込みで表示が親の state と
+  // ずれる（エラーは出ないので気づけない）。
+  //
+  // value を渡しているときは prop を正とし、以後の変更にも追従する。
+  // 姉妹の MultiSelectAutocomplete と同じ形
+  const [internalValue, setInternalValue] = useState<
+    string | string[] | number | number[]
+  >(() => getInitialValue(propValue, multiple))
+  const value = propValue !== undefined ? propValue : internalValue
 
   // 値変更のハンドラー
   const handleChange = useCallback(
@@ -158,7 +167,7 @@ const useSelectState = (
         ? (newValue as string[] | number[])
         : (newValue as string | number)
 
-      setValue(processedValue)
+      setInternalValue(processedValue)
       if (onChange) {
         onChange(event, processedValue)
       }
@@ -166,7 +175,7 @@ const useSelectState = (
     [multiple, required, onChange]
   )
 
-  return { value, setValue, handleChange }
+  return { value, setValue: setInternalValue, handleChange }
 }
 
 export const CustomSelect = ({
@@ -183,7 +192,10 @@ export const CustomSelect = ({
   inputProps,
   multiple = false,
   placeholder = multiple ? '複数の選択が可能です' : '選択してください',
-  value: propValue = multiple ? [] : '',
+  // 既定値を置かない。置くと `value` を渡していないときも propValue が
+  // 埋まってしまい、制御・非制御の判別（undefined かどうか）が成立しない。
+  // 未指定のときの値は useSelectState 側の getInitialValue が決める
+  value: propValue,
   onChange,
   clearable = true,
   ...props

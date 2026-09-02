@@ -118,4 +118,99 @@ describe('CustomSelect コンポーネント', () => {
       console.log('成功: エラーメッセージが表示されました')
     })
   })
+
+  /**
+   * `value` を渡したら、マウント後の変更にも追従することを固定する。
+   *
+   * 以前は useState の初期値としてしか読んでおらず、制御コンポーネントの
+   * 見た目をしていて制御されていなかった。エラーは出ず、表示だけが親の
+   * state とずれるので、フォームのリセットや非同期の初期値の流し込みで
+   * 静かに壊れる。ds-equivalents.mjs が MUI の Select の代替として
+   * CustomSelect を強制しているので、全アプリのフォームがこの経路を通る。
+   */
+  describe('制御コンポーネントとして振る舞う', () => {
+    it('value prop の変更に追従する', () => {
+      const { rerender } = render(
+        <TestWrapper>
+          <CustomSelect
+            label='テストセレクト'
+            options={mockOptions}
+            value='option1'
+            onChange={() => {}}
+          />
+        </TestWrapper>
+      )
+      expect(screen.getByDisplayValue('option1')).toBeInTheDocument()
+
+      rerender(
+        <TestWrapper>
+          <CustomSelect
+            label='テストセレクト'
+            options={mockOptions}
+            value='option3'
+            onChange={() => {}}
+          />
+        </TestWrapper>
+      )
+      // ここが option1 のままだと、親の state と表示がずれたまま気づけない
+      expect(screen.getByDisplayValue('option3')).toBeInTheDocument()
+    })
+
+    it('フォームのリセット（空文字に戻す）にも追従する', () => {
+      const { rerender } = render(
+        <TestWrapper>
+          <CustomSelect
+            label='テストセレクト'
+            options={mockOptions}
+            value='option2'
+            onChange={() => {}}
+          />
+        </TestWrapper>
+      )
+      expect(screen.getByDisplayValue('option2')).toBeInTheDocument()
+
+      rerender(
+        <TestWrapper>
+          <CustomSelect
+            label='テストセレクト'
+            options={mockOptions}
+            value=''
+            onChange={() => {}}
+          />
+        </TestWrapper>
+      )
+      expect(screen.queryByDisplayValue('option2')).not.toBeInTheDocument()
+    })
+
+    it('value を渡さないときは今までどおり自分で状態を持つ', () => {
+      // 制御化のために既定値を外したので、非制御の使い方が壊れていないことを見る
+      render(
+        <TestWrapper>
+          <CustomSelect label='テストセレクト' options={mockOptions} />
+        </TestWrapper>
+      )
+
+      fireEvent.mouseDown(screen.getByRole('combobox'))
+      fireEvent.click(screen.getByRole('option', { name: 'オプション2' }))
+      expect(screen.getByDisplayValue('option2')).toBeInTheDocument()
+    })
+
+    it('選択すると onChange に選んだ値が渡る', () => {
+      const seen: string[] = []
+      render(
+        <TestWrapper>
+          <CustomSelect
+            label='テストセレクト'
+            options={mockOptions}
+            value='option1'
+            onChange={(_, v) => seen.push(v as string)}
+          />
+        </TestWrapper>
+      )
+
+      fireEvent.mouseDown(screen.getByRole('combobox'))
+      fireEvent.click(screen.getByRole('option', { name: 'オプション3' }))
+      expect(seen).toEqual(['option3'])
+    })
+  })
 })
