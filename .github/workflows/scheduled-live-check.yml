@@ -1,0 +1,67 @@
+name: Scheduled Live Check
+
+# 配信中の成果物に資格情報が載っていないかを、本番 URL に当てて見る。
+#
+# なぜ日次なのか。この検査はデプロイ後にしか走らせられない。ビルド時に
+# define で埋め込まれる値は環境変数がある環境でしか焼き込まれないので、
+# 手元でも pull_request でも同じ位置が空文字になり、ソース走査も
+# git 履歴走査もローカル成果物走査もすべて緑を返す。git に入っていない
+# ので Gitleaks も通る。実際にこの穴で、本番の Storybook バンドルに
+# OpenAI の実キーが平文で配信されていた。
+#
+# check:live はスクリプトとしては存在していたが、どのワークフローからも
+# 呼ばれていなかった。つまり再発しても気づく手段が無かった。
+#
+# schedule はデフォルトブランチの定義しか動かない。手で確かめたいときは
+# workflow_dispatch から実行する。
+on:
+  schedule:
+    # 毎日 21:00 UTC（日本時間の朝 6 時）
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: '検査する URL（省略時は既定の共有 URL）'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  live-secrets:
+    name: Live Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 取得失敗でも exit 1 になる検査なので、そのまま日次で回すと
+      # 一時的なネットワークの揺れで赤くなる。赤が続くと人は見なくなり、
+      # 本当の検出を見落とす。取得失敗と検出を回数で切り分ける
+      - name: Check live artifacts for credentials
+        env:
+          SHARE_BASE_URL: ${{ inputs.base_url }}
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm check:live; then
+              exit 0
+            fi
+            echo "::warning::check:live が失敗しました（${attempt} 回目）。取得失敗の可能性があるため再試行します"
+            sleep 30
+          done
+          echo "::error::check:live が 3 回とも失敗しました。配信物か疎通を確認してください"
+          exit 1
