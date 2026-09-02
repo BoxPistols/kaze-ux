@@ -25,19 +25,6 @@ const fileUrlResolvePlugin = {
   },
 }
 
-// 環境変数を読み込む（.envファイルとprocess.envの両方から）
-const envFromFile = loadEnv(
-  'development',
-  path.resolve(__dirname, '..'),
-  'VITE_'
-)
-// CI環境では環境変数が直接設定されるため、process.envも確認
-const env = {
-  ...envFromFile,
-  VITE_APP_PASSWORD:
-    process.env.VITE_APP_PASSWORD || envFromFile.VITE_APP_PASSWORD || '',
-}
-
 const config = {
   // ブラウザのタブに出る名前。未設定だと Storybook は設定ディレクトリ名を
   // 使うので `storybook - Storybook` になる（実際そうなっていた）。
@@ -58,10 +45,8 @@ const config = {
     reactDocgen: false,
     check: false,
   },
-  // Manager（サイドバー・ツールバー）に認証スクリプトを注入
+  // Manager（サイドバー・ツールバー）に計測スクリプトを注入
   managerHead: (head) => {
-    const password = env.VITE_APP_PASSWORD || ''
-
     // Vercel の計測。**manager（外枠）にだけ入れる。**
     // ストーリーは iframe の中で描画されるので、preview 側に入れると
     // 1 ストーリー開くたびに iframe の遷移まで数えてしまう。
@@ -76,11 +61,7 @@ const config = {
       `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaId}')</script>`,
     ].join('')
 
-    const auth = password
-      ? `<script>window.__STORYBOOK_AUTH_PASSWORD__ = ${JSON.stringify(password)};</script>`
-      : ''
-
-    return `${auth}${analytics}${head}`
+    return `${analytics}${head}`
   },
   async viteFinal(config, { configType }) {
     // 環境変数を明示的に読み込む（.envファイルから）
@@ -119,9 +100,6 @@ const config = {
       // 公開ビルドで AI を動かす場合は VITE_API_BASE のバックエンド経由か、
       // 利用者が自分のキーを入力する運用（設定パネル）を使う。
       define: {
-        'import.meta.env.VITE_APP_PASSWORD': JSON.stringify(
-          freshEnv.VITE_APP_PASSWORD || ''
-        ),
         'import.meta.env.VITE_MAPBOX_ACCESS_TOKEN': JSON.stringify(
           configType === 'PRODUCTION'
             ? ''

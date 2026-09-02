@@ -453,7 +453,7 @@ framework: '@storybook/react-vite'
 addons: ['addon-a11y', 'addon-links', 'addon-docs', 'addon-mcp']
 ```
 
-Environment variables are explicitly injected via `viteFinal` (VITE_APP_PASSWORD, VITE_OPENAI_API_KEY, etc.).
+Environment variables are explicitly injected via `viteFinal` (VITE_OPENAI_API_KEY, VITE_MAPBOX_ACCESS_TOKEN, etc.). Credentials are blanked when `configType === 'PRODUCTION'`.
 
 ---
 
