@@ -242,12 +242,16 @@ const findings = []
 // 走査したファイルの集合をそのまま報告に使う。二度数えると、
 // 間に増減があったときに「検査した数」と実際がずれる
 const files = listFiles()
+/** 読めなかったファイル。未検査の範囲として最後に報告する */
+const unreadable = []
 
 for (const file of files) {
   let content
   try {
     content = readFileSync(file, 'utf8')
   } catch {
+    // 黙って飛ばすと、読めないファイルが「異常なし」に含まれる
+    unreadable.push(file.replace(ROOT + '/', ''))
     continue
   }
   const lines = content.split('\n')
@@ -296,6 +300,14 @@ for (const file of files) {
       })
     }
   }
+}
+
+if (unreadable.length > 0) {
+  console.error(
+    `\n❌ ${unreadable.length} 件のファイルを読めませんでした（未検査）`
+  )
+  for (const f of unreadable.slice(0, 20)) console.error(`  ${f}`)
+  process.exit(1)
 }
 
 if (findings.length === 0) {

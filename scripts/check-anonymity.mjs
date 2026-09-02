@@ -202,16 +202,23 @@ if (!present.length) {
 const identity = deriveIdentity()
 const findings = []
 let scanned = 0
+/** 読めなかったファイル。検査が成立していない範囲として報告する */
+const unreadable = []
 
 for (const target of present) {
   for (const file of walk(target)) {
-    scanned++
     let content
     try {
       content = readFileSync(file, 'utf8')
     } catch {
+      // 読めなかったものを「検査した」に数えない。
+      // 以前は scanned++ の後に continue していたので、識別子を含む
+      // 読めないファイルが「221 ファイル走査、身元情報なし」の中に
+      // 混ざっていた（実測で確認）。**未検査は検査済みではない。**
+      unreadable.push(file.replace(ROOT + '/', ''))
       continue
     }
+    scanned++
     const rel = file.replace(ROOT + '/', '')
 
     for (const { re } of identity) {
@@ -242,6 +249,18 @@ const unique = [
 ]
 
 const scope = present.map((p) => p.replace(ROOT + '/', '')).join(', ')
+
+if (unreadable.length > 0) {
+  console.error(
+    `\n❌ ${unreadable.length} 件のファイルを読めませんでした（未検査）\n`
+  )
+  for (const f of unreadable.slice(0, 20)) console.error(`  ${f}`)
+  console.error(
+    '\n  読めない範囲が残ったまま「身元情報なし」とは言えません。' +
+      '\n  権限を直すか、対象から外す理由を決めてください。'
+  )
+  process.exit(1)
+}
 
 if (!unique.length) {
   console.log(

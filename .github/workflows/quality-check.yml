@@ -90,8 +90,11 @@ jobs:
 
       # カバレッジ表が実態とズレていないか。検出器があるのに enforcedBy が
       # 空だと「何も止めない」を過大に報告する（実際 4 件そうなっていた）
+      # 出力を捨てない。以前 ds:coverage は「ds:adoption が実行できなかった」を
+      # 本文にだけ書いて exit 0 していたので、`> /dev/null` と組み合わさると
+      # 測れていないことが誰にも見えなかった（終了コード側も直してある）
       - name: Check design system coverage consistency
-        run: pnpm ds:coverage > /dev/null
+        run: pnpm ds:coverage
 
       # sample は AI が「書く前」に読むもの。検査は書いた後にしか効かないので、
       # 間違った sample はそのまま間違ったコードになる。型で確かめる

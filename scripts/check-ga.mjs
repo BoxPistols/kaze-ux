@@ -38,11 +38,15 @@ const files = execFileSync(
   .filter((f) => /\.(ts|tsx|js|jsx|cjs|mjs|html)$/.test(f))
 
 const found = new Map() // id -> [場所]
+/** 読めなかったファイル。未検査の範囲として報告する */
+const unreadable = []
 for (const f of files) {
   let src
   try {
     src = readFileSync(resolve(ROOT, f), 'utf-8')
   } catch {
+    // 黙って飛ばすと、測定 ID がその中にあっても気づけない
+    unreadable.push(f)
     continue
   }
   for (const m of src.matchAll(ID)) {
@@ -55,6 +59,13 @@ for (const f of files) {
 }
 
 const ids = [...found.keys()]
+
+if (unreadable.length > 0) {
+  die(
+    `❌ ${unreadable.length} 件のファイルを読めませんでした（未検査）`,
+    ...unreadable.slice(0, 20).map((f) => `   ${f}`)
+  )
+}
 
 if (ids.length === 0) {
   // 1 件も無いなら、検査が働いていないか GA が外れている
