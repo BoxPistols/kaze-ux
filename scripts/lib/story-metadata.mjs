@@ -136,6 +136,11 @@ export const extractComponent = (file, root) => {
 
   return {
     name,
+    // story のタイトルは見出しなので、実際に export されている名前とは
+    // 限らない（Accordion / CustomAccordion、Toast / CustomToaster）。
+    // `component:` に書かれた識別子が実体なので、それも持って回る。
+    // これを落とすと、metadata を読んだ AI が存在しない名前を import する
+    exportName: symbol,
     category: parts.length > 2 ? parts.slice(1, -1).join('/') : 'UI',
     story: title[1],
     storyFile: root ? relative(root, file) : file,
