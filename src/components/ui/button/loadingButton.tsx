@@ -127,16 +127,22 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
           '&.MuiLoadingButton-loading': {
             opacity: 0.8,
           },
-          ...(success && {
-            bgcolor: 'success.main',
-            // 白は success.main に対して light 2.92:1 / dark 1.96:1 しかない。
-            // contrastText なら 6.77 / 7.40:1。statusTag.tsx にも同じ趣旨の
-            // 注意書きがあるが、コメントは検査されないので実装を合わせる
-            color: 'success.contrastText',
-            '&:hover': {
-              bgcolor: 'success.dark',
-            },
-          }),
+          // success の塗りと文字色はここに書かない。**到達しない。**
+          //
+          // 上の `disabled={disabled || success}` により success のときは
+          // Mui-disabled が付き、MUI の disabled スタイルが sx の bgcolor と
+          // color に勝つ。実際に描画して computed style を読むと
+          // background-color: rgb(224, 224, 224) / color: rgb(10, 10, 10) で、
+          // success.main の緑は一度も出ていない（15.00:1 なので読みやすさ
+          // 自体に問題は無い）。
+          //
+          // 以前はここに bgcolor: 'success.main' と色指定が書いてあり、
+          // 「緑の塗り面に白文字で 2.92:1」という**画面には存在しない違反**を
+          // 直す修正まで入っていた。書いてあるだけで効いていない指定は、
+          // 読んだ人にも検査にも嘘をつく。
+          //
+          // 緑の完了状態として見せたくなったら、disabled をやめて
+          // aria-disabled と pointer-events で押せなくする必要がある。
           ...sx,
         }}
         {...props}>
