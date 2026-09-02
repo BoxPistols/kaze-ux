@@ -180,7 +180,9 @@ export default tseslint.config({
       argsIgnorePattern: '^_'
     }],
     '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
-    '@typescript-eslint/no-explicit-any': 'warn',
+    // CLAUDE.md は any を禁止と書いている。warn のままだと lint に
+    // --max-warnings が無い限り一度も落ちないので、宣言に合わせて error にする
+    '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-extra-non-null-assertion': 'warn',
     'react/display-name': 'off',
     '@typescript-eslint/no-non-null-assertion': 'error', // Changed from array to string
