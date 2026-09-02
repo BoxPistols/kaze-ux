@@ -19,6 +19,7 @@ import {
   type DriverPosition,
 } from '~/data/simulation'
 import { HUB_COLORS, LOGI_NAVY } from '~/theme/colors'
+import { selectionChanged } from '~/utils/markerSelection'
 
 export const LiveMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null)
@@ -29,6 +30,8 @@ export const LiveMap = () => {
 
   // refで最新値を参照（クロージャ問題修正）
   const selectedRef = useRef<string | null>(null)
+  // 前回の選択。selectedRef は描画時に最新へ同期するので「前回」にはならない
+  const prevSelectedIdRef = useRef<string | null>(null)
   const selectDriverRef = useRef(useSimulation.getState().selectDriver)
 
   const positions = useSimulation((s) => s.positions)
@@ -239,10 +242,13 @@ export const LiveMap = () => {
 
         // ステータス/選択が変わった場合だけ SVG 色更新
         const statusChanged = !prev || prev.status !== dp.status
-        const prevSelected = prev ? prev.driverId === selectedDriverId : false
-        const selectionChanged = isSelected !== prevSelected
+        const selChanged = selectionChanged(
+          dp.driverId,
+          selectedDriverId,
+          prevSelectedIdRef.current
+        )
 
-        if (statusChanged || selectionChanged) {
+        if (statusChanged || selChanged) {
           const color = DRIVER_STATUS_COLOR[dp.status] ?? '#64748B'
           const el = marker.getElement()
           const circle = el.querySelector('.driver-circle')
@@ -285,6 +291,9 @@ export const LiveMap = () => {
         }
       }
     })
+
+    // 次回比較用に現在の選択を保持
+    prevSelectedIdRef.current = selectedDriverId
 
     // 次回比較用に現在の positions を保持
     const nextPrevMap = new Map<string, DriverPosition>()
