@@ -61,3 +61,32 @@ export const Default: Story = {
     tooltip: '追加',
   },
 }
+
+/**
+ * 塗り面のバリアント。**全色を並べる。**
+ *
+ * variant='filled' を描画する story が 1 つも無かったため、実描画を測る
+ * check:a11y も、見た目の退行を見る vrt も、この状態を一度も見ていなかった。
+ * 前景色に common.white を固定していて 36 通り中 27 通りが 3:1 未満だった
+ * (#139) のに、どちらの検査も緑を返していた。**検査は宣言した範囲しか見ない。**
+ */
+export const Filled: Story = {
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+      {(
+        ['primary', 'secondary', 'error', 'warning', 'info', 'success'] as const
+      ).map((color) => (
+        <IconButton
+          key={color}
+          variant='filled'
+          color={color}
+          aria-label={color}>
+          <AddIcon />
+        </IconButton>
+      ))}
+      <IconButton variant='filled' color='inherit' aria-label='inherit'>
+        <AddIcon />
+      </IconButton>
+    </Box>
+  ),
+}
