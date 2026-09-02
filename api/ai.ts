@@ -215,11 +215,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error)
-    const statusCode =
-      error instanceof Error && error.name === 'TimeoutError' ? 504 : 502
+    const isTimeout = error instanceof Error && error.name === 'TimeoutError'
+    const statusCode = isTimeout ? 504 : 502
+
+    // 上流の文言をそのまま返さない。**この経路は無認証で呼べる。**
+    // どのプロバイダを使っているか、どのモデル名か、quota と billing の
+    // どちらで止まっているかといった内部構成がそのまま出る。
+    // 呼び出し元にはコードと定型文だけを返し、詳細はログに残す
+    console.error('[api/ai] upstream error:', message)
+
     res.status(statusCode).json({
-      error: message,
-      code: statusCode === 504 ? 'TIMEOUT' : 'AI_PROVIDER_ERROR',
+      error: isTimeout
+        ? 'The AI provider timed out'
+        : 'The request to the AI provider failed',
+      code: isTimeout ? 'TIMEOUT' : 'AI_PROVIDER_ERROR',
     })
   }
 }

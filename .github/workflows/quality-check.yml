@@ -64,6 +64,18 @@ jobs:
         run: pnpm lint:ci
         continue-on-error: false
 
+      # 型検査を明示的に置く。これまで src が型検査されていたのは
+      # check:samples が副作用でプロジェクト全体の tsc を走らせていたから
+      # で、意図した配線ではなかった（sample が 1 件も無いと tsc 自体が
+      # 走らない）。api/ と lib/ はそもそも対象外だった
+      - name: Type check (src)
+        run: pnpm check:types
+
+      # サーバー側 API キーを持つ唯一のコード。ルートの tsconfig は
+      # include が ["src"] で、api/ にも lib/ にも tsconfig が無かった
+      - name: Type check (api / lib)
+        run: pnpm check:types:server
+
       # DS コア層が UI ライブラリに依存していないこと。
       # ESLint はファイル単位でしか見ないので、コア外を 1 枚挟んだ経路
       # (core → helper → @mui) を素通りさせる。こちらは依存グラフを辿る。
