@@ -22,6 +22,7 @@ import { toast } from '@/components/ui/toast'
 import type { ScheduleEvent } from '~/data/schedules'
 
 import { scheduleEvents as initialEvents } from '~/data/schedules'
+import { formatDuration, isTimeOfDay } from '~/utils/schedule'
 
 type EventType = ScheduleEvent['type']
 
@@ -81,17 +82,12 @@ export const CalendarPage = () => {
         const start = dayjs(e.start)
         const end = dayjs(e.end)
         const durationMinutes = end.diff(start, 'minute')
-        const hours = Math.floor(durationMinutes / 60)
-        const mins = durationMinutes % 60
         return {
           id: e.id,
           title: e.title,
           date: start.format('YYYY-MM-DD'),
           time: start.format('HH:mm'),
-          duration:
-            mins > 0
-              ? `${Math.max(hours, 1)}h ${mins}m`
-              : `${Math.max(hours, 1)}h`,
+          duration: formatDuration(durationMinutes),
           type: e.type,
           assignee: e.attendees?.[0] ?? '',
         }
@@ -161,8 +157,24 @@ export const CalendarPage = () => {
       return
     }
 
-    const startStr = `${form.date}T${form.startTime}`
-    const endStr = `${form.date}T${form.endTime}`
+    // 時刻を検証してから解析する。dayjs の既定の解析は緩く、時刻が空でも
+    // 25:99 のような値でも isValid: true を返して黙って別の時刻にする
+    if (!isTimeOfDay(form.startTime) || !isTimeOfDay(form.endTime)) {
+      toast.error('Start and end time are required (HH:mm)')
+      return
+    }
+
+    const start = dayjs(`${form.date}T${form.startTime}`)
+    const end = dayjs(`${form.date}T${form.endTime}`)
+    if (!start.isValid() || !end.isValid()) {
+      toast.error('Invalid date or time')
+      return
+    }
+    if (!end.isAfter(start)) {
+      toast.error('End time must be after start time')
+      return
+    }
+
     const attendees = form.attendees
       .split(',')
       .map((a) => a.trim())
@@ -175,8 +187,8 @@ export const CalendarPage = () => {
             ? {
                 ...e,
                 title: form.title,
-                start: new Date(startStr).toISOString(),
-                end: new Date(endStr).toISOString(),
+                start: start.toISOString(),
+                end: end.toISOString(),
                 type: form.type,
                 description: form.description || undefined,
                 attendees: attendees.length > 0 ? attendees : undefined,
@@ -189,8 +201,8 @@ export const CalendarPage = () => {
       const newEvent: ScheduleEvent = {
         id: `s${Date.now()}`,
         title: form.title,
-        start: new Date(startStr).toISOString(),
-        end: new Date(endStr).toISOString(),
+        start: start.toISOString(),
+        end: end.toISOString(),
         type: form.type,
         description: form.description || undefined,
         attendees: attendees.length > 0 ? attendees : undefined,
