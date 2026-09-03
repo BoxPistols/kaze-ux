@@ -63,11 +63,15 @@ describe('resolveMaxOutputTokens', () => {
       }
     })
 
-    it('コスト最適枠（nano / luna）は reasoning 系の拡大を受けない', () => {
+    it('コスト最適枠（nano）は reasoning 系の拡大を受けない', () => {
       const base = resolveMaxOutputTokens('gpt-4o')
-      // gpt-5.6-luna は gpt-5 にも一致するが、luna 判定が先に効く
-      expect(resolveMaxOutputTokens('gpt-5.6-luna')).toBe(base)
       expect(resolveMaxOutputTokens('gpt-5-nano')).toBe(base)
+    })
+
+    it('gpt-5.6-luna は reasoning 系として拡大される', () => {
+      // 上限を絞ると推論トークンが食い切って可視出力が空になる（実測）
+      const base = resolveMaxOutputTokens('gpt-4o')
+      expect(resolveMaxOutputTokens('gpt-5.6-luna')).toBeGreaterThan(base)
     })
   })
 })

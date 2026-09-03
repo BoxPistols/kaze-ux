@@ -53,8 +53,9 @@ export const resolveMaxOutputTokens = (
     return requested
   }
 
-  // コスト最適枠（nano / luna）は出力上限を絞る
-  if (model.includes('nano') || model.includes('luna')) {
+  // コスト最適枠（nano）は出力上限を絞る
+  // luna をここに入れると推論トークンが上限を食い切り可視出力が空になる（実測）
+  if (model.includes('nano')) {
     return DEFAULT_OUTPUT_TOKENS + buffer
   }
   if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
