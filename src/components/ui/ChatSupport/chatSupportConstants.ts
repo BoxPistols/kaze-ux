@@ -276,7 +276,7 @@ export const CONFIG_STORAGE_KEY = 'storybook_chat_config'
 
 // デフォルトAPIキー（ビルド時に埋め込み）
 export const DEFAULT_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
-export const DEFAULT_MODEL = 'gpt-5.6-luna'
+export const DEFAULT_MODEL = 'gpt-6-luna'
 
 export interface ModelOption {
   value: string
@@ -291,11 +291,11 @@ export interface ModelOption {
 
 export const OPENAI_MODELS: ModelOption[] = [
   {
-    value: 'gpt-5.6-luna',
-    label: 'gpt-5.6-luna',
+    value: 'gpt-6-luna',
+    label: 'gpt-6-luna',
     description: '最新世代のコスト最適モデル。日常的なQAに十分な品質',
     features: [
-      'GPT-5.6系の推論能力',
+      'GPT-6系の推論能力',
       '高速レスポンス',
       '月間1000回でも約140円の低コスト',
     ],

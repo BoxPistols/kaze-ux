@@ -17,7 +17,7 @@ describe('resolveMaxOutputTokens', () => {
 
     it('接続テストでも Gemini 2.5 は buffer を確保する', () => {
       const gemini = resolveMaxOutputTokens('gemini-2.5-pro', { isTest: true })
-      const other = resolveMaxOutputTokens('gpt-5.6-luna', { isTest: true })
+      const other = resolveMaxOutputTokens('gpt-6-luna', { isTest: true })
       expect(gemini).toBeGreaterThan(GEMINI_REASONING_BUFFER)
       expect(other).toBeLessThan(GEMINI_REASONING_BUFFER)
     })
@@ -72,6 +72,12 @@ describe('resolveMaxOutputTokens', () => {
       // 上限を絞ると推論トークンが食い切って可視出力が空になる（実測）
       const base = resolveMaxOutputTokens('gpt-4o')
       expect(resolveMaxOutputTokens('gpt-5.6-luna')).toBeGreaterThan(base)
+    })
+
+    it('gpt-6-lunaもreasoning系として拡大される', () => {
+      // gpt-5だけの判定だと既定値に落ち、可視出力が空になる
+      const base = resolveMaxOutputTokens('gpt-4o')
+      expect(resolveMaxOutputTokens('gpt-6-luna')).toBeGreaterThan(base)
     })
   })
 })
