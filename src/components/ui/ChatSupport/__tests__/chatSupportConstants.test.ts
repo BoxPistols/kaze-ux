@@ -479,7 +479,8 @@ describe('resolveSupportedModel', () => {
   it('未知の OpenAI モデルは OpenAI の既定に寄せる', () => {
     expect(resolveSupportedModel('gpt-5.4-nano')).toBe(DEFAULT_MODEL)
     expect(resolveSupportedModel('gpt-4.1-nano')).toBe(DEFAULT_MODEL)
-    // gpt-5.6-lunaを保存していた利用者は現行の既定へ寄る
+    // gpt-5.6-lunaを保存していた利用者は現行の既定へ寄る。保存済みの旧IDを既定へ戻すことの確認なので旧IDが要る
+    // ai-api:allow-superseded
     expect(resolveSupportedModel('gpt-5.6-luna')).toBe(DEFAULT_MODEL)
   })
 

@@ -68,11 +68,14 @@ describe('resolveMaxOutputTokens', () => {
       expect(resolveMaxOutputTokens('gpt-5-nano')).toBe(base)
     })
 
+    // b61ce26で直した旧モデルの回帰確認なので旧IDが残るのが正しい
+    // ai-api:allow-superseded-start
     it('gpt-5.6-luna は reasoning 系として拡大される', () => {
       // 上限を絞ると推論トークンが食い切って可視出力が空になる（実測）
       const base = resolveMaxOutputTokens('gpt-4o')
       expect(resolveMaxOutputTokens('gpt-5.6-luna')).toBeGreaterThan(base)
     })
+    // ai-api:allow-superseded-end
 
     it('gpt-6-lunaもreasoning系として拡大される', () => {
       // gpt-5だけの判定だと既定値に落ち、可視出力が空になる

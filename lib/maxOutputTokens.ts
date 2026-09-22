@@ -59,12 +59,15 @@ export const resolveMaxOutputTokens = (
     return DEFAULT_OUTPUT_TOKENS + buffer
   }
   // gpt-6系もreasoning系。gpt-5だけの判定だとgpt-6-lunaが既定値に落ちる
+  // 世代の前方一致で判定するので旧IDが要る
+  // ai-api:allow-superseded-start
   if (
     model.includes('gpt-5') ||
     model.includes('gpt-6') ||
     model.includes('o1') ||
     model.includes('o3')
   ) {
+    // ai-api:allow-superseded-end
     return REASONING_MODEL_OUTPUT_TOKENS + buffer
   }
   return DEFAULT_OUTPUT_TOKENS + buffer
