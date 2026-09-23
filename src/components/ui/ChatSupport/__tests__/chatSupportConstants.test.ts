@@ -308,7 +308,10 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({ apiKey: 'AIza-stored', model: 'gemini-2.5-flash' })
     )
-    expect(loadChatConfig().model).toBe('gpt-6-luna')
+    const config = loadChatConfig()
+    expect(config.model).toBe('gpt-6-luna')
+    // GeminiのキーをOpenAIへ送らないよう既定のキーに戻す
+    expect(config.apiKey).toBe(DEFAULT_CHAT_CONFIG.apiKey)
   })
 
   it('不正なJSONでデフォルトを返す', () => {

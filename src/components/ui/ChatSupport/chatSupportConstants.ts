@@ -353,12 +353,18 @@ export const normalizeChatConfig = (value: unknown): ChatSupportConfig => {
   if (!isRecord(value)) {
     return { ...DEFAULT_CHAT_CONFIG, shortcuts: createDefaultShortcuts() }
   }
+  const model = resolveSupportedModel(value.model)
+  // 外したGeminiからOpenAIへ戻したときは、保存されたGeminiのキーをOpenAIへ送らない
+  const leftGemini =
+    typeof value.model === 'string' &&
+    value.model.includes('gemini') &&
+    !model.includes('gemini')
   return {
     apiKey:
-      typeof value.apiKey === 'string' && value.apiKey
+      typeof value.apiKey === 'string' && value.apiKey && !leftGemini
         ? value.apiKey
         : DEFAULT_CHAT_CONFIG.apiKey,
-    model: resolveSupportedModel(value.model),
+    model,
     uiMode: value.uiMode === 'sidebar' ? 'sidebar' : 'widget',
     sidebarWidth:
       typeof value.sidebarWidth === 'number'
