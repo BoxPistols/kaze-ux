@@ -15,7 +15,7 @@ const TEST_OUTPUT_TOKENS = 50
 const TEST_BODY_TOKENS = 10
 
 const DEFAULT_OUTPUT_TOKENS = 4000
-// gpt-5 / o1 / o3 系は reasoning に使う分だけ上限を広げる
+// gpt-5 / gpt-6 / o1 / o3系はreasoningに使う分だけ上限を広げる
 const REASONING_MODEL_OUTPUT_TOKENS = 16000
 // 呼び出し側の希望値として受け付ける上限
 const MAX_REQUESTED_TOKENS = 32000
@@ -58,7 +58,16 @@ export const resolveMaxOutputTokens = (
   if (model.includes('nano')) {
     return DEFAULT_OUTPUT_TOKENS + buffer
   }
-  if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
+  // gpt-6系もreasoning系。gpt-5だけの判定だとgpt-6-lunaが既定値に落ちる
+  // 世代の前方一致で判定するので旧IDが要る
+  // ai-api:allow-superseded-start
+  if (
+    model.includes('gpt-5') ||
+    model.includes('gpt-6') ||
+    model.includes('o1') ||
+    model.includes('o3')
+  ) {
+    // ai-api:allow-superseded-end
     return REASONING_MODEL_OUTPUT_TOKENS + buffer
   }
   return DEFAULT_OUTPUT_TOKENS + buffer

@@ -208,14 +208,14 @@ describe('normalizeChatConfig', () => {
   it('有効な入力をそのまま返す', () => {
     const input = {
       apiKey: 'sk-test',
-      model: 'gpt-5.6-luna',
+      model: 'gpt-6-luna',
       uiMode: 'sidebar',
       sidebarWidth: 500,
       shortcuts: createDefaultShortcuts(),
     }
     const result = normalizeChatConfig(input)
     expect(result.apiKey).toBe('sk-test')
-    expect(result.model).toBe('gpt-5.6-luna')
+    expect(result.model).toBe('gpt-6-luna')
     expect(result.uiMode).toBe('sidebar')
     expect(result.sidebarWidth).toBe(500)
   })
@@ -293,14 +293,14 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'stored-key',
-        model: 'gpt-5.6-luna',
+        model: 'gpt-6-luna',
         uiMode: 'sidebar',
         sidebarWidth: 600,
       })
     )
     const config = loadChatConfig()
     expect(config.apiKey).toBe('stored-key')
-    expect(config.model).toBe('gpt-5.6-luna')
+    expect(config.model).toBe('gpt-6-luna')
     expect(config.uiMode).toBe('sidebar')
   })
 
@@ -323,12 +323,12 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: '',
-        model: 'gpt-5.6-luna',
+        model: 'gpt-6-luna',
         uiMode: 'widget',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-5.6-luna')
+    expect(config.model).toBe('gpt-6-luna')
   })
 
   it('保存済みの旧モデルは読み込み時に既定モデルへ戻す', () => {
@@ -347,12 +347,12 @@ describe('loadChatConfig', () => {
     getItemSpy.mockReturnValue(
       JSON.stringify({
         apiKey: 'sk-custom-key',
-        model: 'gpt-5.6-luna',
+        model: 'gpt-6-luna',
         uiMode: 'sidebar',
       })
     )
     const config = loadChatConfig()
-    expect(config.model).toBe('gpt-5.6-luna')
+    expect(config.model).toBe('gpt-6-luna')
   })
 })
 
@@ -479,6 +479,9 @@ describe('resolveSupportedModel', () => {
   it('未知の OpenAI モデルは OpenAI の既定に寄せる', () => {
     expect(resolveSupportedModel('gpt-5.4-nano')).toBe(DEFAULT_MODEL)
     expect(resolveSupportedModel('gpt-4.1-nano')).toBe(DEFAULT_MODEL)
+    // gpt-5.6-lunaを保存していた利用者は現行の既定へ寄る。保存済みの旧IDを既定へ戻すことの確認なので旧IDが要る
+    // ai-api:allow-superseded
+    expect(resolveSupportedModel('gpt-5.6-luna')).toBe(DEFAULT_MODEL)
   })
 
   it('未知の Gemini モデルは Gemini の既定に寄せる', () => {

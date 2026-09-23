@@ -109,7 +109,7 @@ const config = {
           configType === 'PRODUCTION' ? '' : freshEnv.VITE_OPENAI_API_KEY || ''
         ),
         'import.meta.env.VITE_OPENAI_MODEL': JSON.stringify(
-          freshEnv.VITE_OPENAI_MODEL || 'gpt-5.6-luna'
+          freshEnv.VITE_OPENAI_MODEL || 'gpt-6-luna'
         ),
       },
     })

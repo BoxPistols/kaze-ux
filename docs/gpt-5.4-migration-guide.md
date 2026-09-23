@@ -18,19 +18,19 @@
 
 | 項目            | 現在の値                                                     |
 | --------------- | ------------------------------------------------------------ |
-| `OPENAI_MODELS` | `gpt-5.6-luna` のみ                                          |
+| `OPENAI_MODELS` | `gpt-6-luna` のみ                                            |
 | `GEMINI_MODELS` | `gemini-2.5-flash` のみ                                      |
-| `DEFAULT_MODEL` | `gpt-5.6-luna`                                               |
+| `DEFAULT_MODEL` | `gpt-6-luna`                                                 |
 | アクセス制御    | `ModelOption.requiresUserKey` フラグ。立てたモデルは現在なし |
 
 ### 本文と現状が食い違う箇所
 
 | 本文の記述                                               | 現状                                                                  |
 | -------------------------------------------------------- | --------------------------------------------------------------------- |
-| OpenAI は `gpt-5.4` / `gpt-5.4-mini` / `gpt-5.4-nano`    | `gpt-5.6-luna` の 1 件のみ                                            |
-| 無料版の既定は `gpt-5.4-nano`                            | 既定は `gpt-5.6-luna`                                                 |
+| OpenAI は `gpt-5.4` / `gpt-5.4-mini` / `gpt-5.4-nano`    | `gpt-6-luna` の 1 件のみ                                              |
+| 無料版の既定は `gpt-5.4-nano`                            | 既定は `gpt-6-luna`                                                   |
 | `accessTier`（`free` / `open` / `locked`）で三段階制御   | `accessTier` は kaze-ux に存在しない。真偽値の `requiresUserKey` のみ |
-| 「DEFAULT_MODEL / .env / CI を全て gpt-5.4-nano に統一」 | 統一先は `gpt-5.6-luna`                                               |
+| 「DEFAULT_MODEL / .env / CI を全て gpt-5.4-nano に統一」 | 統一先は `gpt-6-luna`                                                 |
 
 なお `gpt-5.4-nano` は kaze-ux の `OPENAI_MODELS` に一度も存在していない。
 この文書が書かれた時点で、既に記述と実装がずれていた可能性がある。

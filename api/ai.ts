@@ -24,7 +24,7 @@ import {
 // 現在は該当モデルなし。高コストモデルを足すときにここへ登録する
 const REQUIRES_USER_KEY_MODELS = new Set<string>()
 
-const DEFAULT_MODEL = 'gpt-5.6-luna'
+const DEFAULT_MODEL = 'gpt-6-luna'
 
 // ---------------------------------------------------------------------------
 // リクエスト/レスポンス型

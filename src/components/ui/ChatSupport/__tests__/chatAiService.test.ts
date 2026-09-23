@@ -121,7 +121,12 @@ describe('callAI', () => {
     it('gpt-5/o1/o3 系は 16000', async () => {
       const { callAI } = await loadModule()
 
-      for (const model of ['gpt-5-mini', 'o1-preview', 'o3-mini']) {
+      for (const model of [
+        'gpt-5-mini',
+        'gpt-6-luna',
+        'o1-preview',
+        'o3-mini',
+      ]) {
         mockSuccess('ok')
         await callAI({ ...baseConfig, model }, userMessage)
         const lastCall = generateTextMock.mock.calls.at(-1)?.[0]
