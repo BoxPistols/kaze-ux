@@ -309,24 +309,9 @@ export const OPENAI_MODELS: ModelOption[] = [
   },
 ]
 
-export const GEMINI_MODELS: ModelOption[] = [
-  {
-    value: 'gemini-2.5-flash',
-    label: 'Gemini 2.5 Flash (Google)',
-    description: '大きなコンテキスト窓。長文解析・要約に強い',
-    features: [
-      '100万トークンのコンテキスト',
-      '無料枠が広い',
-      'マルチモーダル対応',
-    ],
-    usecases: [
-      '長いソースコードの読解・要約',
-      'ドキュメント全体の分析',
-      '複数ファイルの横断比較',
-    ],
-    tier: 'standard',
-  },
-]
+// Gemini 2.5 Flashは新規の利用者に404を返すため選択肢から外した。
+// 保存済みのGemini IDはresolveSupportedModelでOpenAIの既定へ戻る
+export const GEMINI_MODELS: ModelOption[] = []
 
 /** 全モデル一覧（後方互換） */
 export const DEFAULT_MODELS = [...OPENAI_MODELS, ...GEMINI_MODELS]
@@ -368,12 +353,18 @@ export const normalizeChatConfig = (value: unknown): ChatSupportConfig => {
   if (!isRecord(value)) {
     return { ...DEFAULT_CHAT_CONFIG, shortcuts: createDefaultShortcuts() }
   }
+  const model = resolveSupportedModel(value.model)
+  // 外したGeminiからOpenAIへ戻したときは、保存されたGeminiのキーをOpenAIへ送らない
+  const leftGemini =
+    typeof value.model === 'string' &&
+    value.model.includes('gemini') &&
+    !model.includes('gemini')
   return {
     apiKey:
-      typeof value.apiKey === 'string' && value.apiKey
+      typeof value.apiKey === 'string' && value.apiKey && !leftGemini
         ? value.apiKey
         : DEFAULT_CHAT_CONFIG.apiKey,
-    model: resolveSupportedModel(value.model),
+    model,
     uiMode: value.uiMode === 'sidebar' ? 'sidebar' : 'widget',
     sidebarWidth:
       typeof value.sidebarWidth === 'number'

@@ -1,6 +1,6 @@
 // 設定パネル
 // - 接続状態表示
-// - カスタム API キー入力（OpenAI / Gemini プロバイダータブ）
+// - カスタム API キー入力（OpenAI）
 // - モデル選択ドロップダウン
 // - 接続テストボタン
 // - キーボードショートカット設定テーブル
@@ -42,6 +42,9 @@ import {
 import { DAILY_LIMIT, remainingUses } from '../dailyUsageLimit'
 
 import type { ChatSupportConfig, ShortcutActionId } from '../chatSupportTypes'
+
+// Geminiは選べるモデルが無いためタブを出さない
+const PROVIDERS: readonly ('openai' | 'gemini')[] = ['openai']
 
 interface ChatSettingsProps {
   config: ChatSupportConfig
@@ -196,7 +199,7 @@ export const ChatSettings = ({
 
           {/* プロバイダー選択タブ */}
           <Stack direction='row' spacing={1} sx={{ mb: 1.5 }}>
-            {(['openai', 'gemini'] as const).map((provider) => {
+            {PROVIDERS.map((provider) => {
               const isGemini = (config.model ?? '').includes('gemini')
               const active =
                 (provider === 'gemini' && isGemini) ||
@@ -454,17 +457,6 @@ export const ChatSettings = ({
                   platform.openai.com
                 </Link>{' '}
                 でアカウント作成後、API Keysページでキーを発行（従量課金制）
-              </li>
-              <li>
-                <strong>Google Gemini</strong>:{' '}
-                <Link
-                  href='https://aistudio.google.com/apikey'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  sx={{ fontSize: 'inherit' }}>
-                  aistudio.google.com
-                </Link>{' '}
-                でGoogleアカウントでログイン後、APIキーを発行（無料枠あり）
               </li>
             </Box>
           </Typography>

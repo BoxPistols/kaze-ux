@@ -304,6 +304,16 @@ describe('loadChatConfig', () => {
     expect(config.uiMode).toBe('sidebar')
   })
 
+  it('保存値がGeminiのモデルならgpt-6-lunaに戻す', () => {
+    getItemSpy.mockReturnValue(
+      JSON.stringify({ apiKey: 'AIza-stored', model: 'gemini-2.5-flash' })
+    )
+    const config = loadChatConfig()
+    expect(config.model).toBe('gpt-6-luna')
+    // GeminiのキーをOpenAIへ送らないよう既定のキーに戻す
+    expect(config.apiKey).toBe(DEFAULT_CHAT_CONFIG.apiKey)
+  })
+
   it('不正なJSONでデフォルトを返す', () => {
     getItemSpy.mockReturnValue('{invalid json}')
     const config = loadChatConfig()
@@ -484,10 +494,10 @@ describe('resolveSupportedModel', () => {
     expect(resolveSupportedModel('gpt-5.6-luna')).toBe(DEFAULT_MODEL)
   })
 
-  it('未知の Gemini モデルは Gemini の既定に寄せる', () => {
-    expect(resolveSupportedModel('gemini-1.5-flash')).toBe(
-      GEMINI_MODELS[0].value
-    )
+  it('保存済みのGeminiモデルはOpenAIの既定に戻す', () => {
+    expect(GEMINI_MODELS).toHaveLength(0)
+    expect(resolveSupportedModel('gemini-2.5-flash')).toBe(DEFAULT_MODEL)
+    expect(resolveSupportedModel('gemini-1.5-flash')).toBe(DEFAULT_MODEL)
   })
 
   it('空文字・非文字列は既定モデルに寄せる', () => {
