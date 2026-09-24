@@ -120,7 +120,6 @@ export const useChatMessage = ({
       '何を見て',
       'ここは何',
       'ここって何',
-      'ここは',
       'what is this',
       'what page',
     ]
