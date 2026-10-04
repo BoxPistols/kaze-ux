@@ -5,9 +5,17 @@
 // 以前は同じロジックを 2 箇所に書いていたため、Gemini 2.5 の buffer 分岐が
 // サーバー側にだけ無く、バックエンド経由の Gemini が空応答になっていた。
 
-// Gemini 2.5 系は reasoning tokens を maxOutputTokens から消費する。
+// Gemini 2.5 系・3 系は reasoning tokens を maxOutputTokens から消費する。
 // 消費分は応答に現れないため、加算しないと finishReason='length' で本文が空になる
 export const GEMINI_REASONING_BUFFER = 1200
+
+/**
+ * reasoning tokens を maxOutputTokens から消費するモデルか。
+ * 2.5系と3系が該当する（2.0系はreasoningを持たないので加算しない）。
+ * モデルIDの前方一致で判定すると3.6や3.8を取りこぼすので、世代で見る。
+ */
+const usesReasoningBuffer = (model: string): boolean =>
+  model.includes('gemini-2.5') || /gemini-3[.-]/.test(model)
 
 // 接続テストは疎通だけ見るので最小トークンに絞る
 const TEST_OUTPUT_TOKENS = 50
@@ -39,7 +47,7 @@ export const resolveMaxOutputTokens = (
   options: MaxOutputTokensOptions = {}
 ): number => {
   const { requested, isTest = false } = options
-  const buffer = model.includes('gemini-2.5') ? GEMINI_REASONING_BUFFER : 0
+  const buffer = usesReasoningBuffer(model) ? GEMINI_REASONING_BUFFER : 0
 
   if (isTest) {
     return buffer > 0 ? buffer + TEST_BODY_TOKENS : TEST_OUTPUT_TOKENS
@@ -57,6 +65,7 @@ export const resolveMaxOutputTokens = (
   if (model.includes('nano') || model.includes('luna')) {
     return DEFAULT_OUTPUT_TOKENS + buffer
   }
+  // ai-api:allow-superseded 世代の前方一致で判定するので旧IDが要る（gpt-6は未対応）
   if (model.includes('gpt-5') || model.includes('o1') || model.includes('o3')) {
     return REASONING_MODEL_OUTPUT_TOKENS + buffer
   }

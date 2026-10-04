@@ -311,12 +311,33 @@ export const OPENAI_MODELS: ModelOption[] = [
 
 export const GEMINI_MODELS: ModelOption[] = [
   {
-    value: 'gemini-2.5-flash',
-    label: 'Gemini 2.5 Flash (Google)',
+    // 3.8が現行の最新Flash（2026-09-03にGAとして発表。docs/latest-model?hl=jaに
+    // 「一般提供（GA）」と明記があり、gemini-flash-latestの解決先でもある）。
+    value: 'gemini-3.8-flash',
+    label: 'Gemini 3.8 Flash (Google)',
     description: '大きなコンテキスト窓。長文解析・要約に強い',
     features: [
       '100万トークンのコンテキスト',
       '無料枠が広い',
+      'マルチモーダル対応',
+    ],
+    usecases: [
+      '長いソースコードの読解・要約',
+      'ドキュメント全体の分析',
+      '複数ファイルの横断比較',
+    ],
+    tier: 'standard',
+  },
+  {
+    // 無料枠は1日20回でプロジェクトとモデルごとに別勘定（429のquotaIdが
+    // GenerateRequestsPerDayPerProjectPerModel-FreeTier、quotaValueが20）。
+    // 価格は3.8と同額なので、3.8の枠を使い切った日の逃げ先として並べる。
+    value: 'gemini-3.6-flash',
+    label: 'Gemini 3.6 Flash (Google)',
+    description: '3.8と同額。3.8の無料枠を使い切った日の代替',
+    features: [
+      '100万トークンのコンテキスト',
+      '3.8とは別枠の無料枠',
       'マルチモーダル対応',
     ],
     usecases: [

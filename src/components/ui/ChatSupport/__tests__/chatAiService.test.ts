@@ -1,3 +1,4 @@
+// ai-api:allow-superseded-file 世代ごとの出力上限を確かめるテスト
 // chatAiService ユニットテスト（AI SDK v6 ベース）
 // - AI SDK の generateText をモックして public interface を検証
 // - 実装詳細（fetch/URL/headers/body）ではなく、入出力契約と境界条件をテスト
@@ -143,7 +144,7 @@ describe('callAI', () => {
       mockSuccess('ok')
       const { callAI } = await loadModule()
 
-      await callAI({ ...baseConfig, model: 'gemini-2.5-flash' }, userMessage)
+      await callAI({ ...baseConfig, model: 'gemini-2.5-flash' }, userMessage) // ai-api:allow-superseded 世代ごとの buffer を確かめるテスト
 
       expect(generateTextMock.mock.calls[0][0].maxOutputTokens).toBe(5200)
     })
@@ -153,7 +154,7 @@ describe('callAI', () => {
       const { callAI } = await loadModule()
 
       await callAI(
-        { ...baseConfig, model: 'gemini-2.5-flash' },
+        { ...baseConfig, model: 'gemini-2.5-flash' }, // ai-api:allow-superseded 世代ごとの buffer を確かめるテスト
         userMessage,
         true
       )

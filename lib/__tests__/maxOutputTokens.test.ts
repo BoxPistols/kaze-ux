@@ -1,3 +1,4 @@
+// ai-api:allow-superseded-file 世代ごとの出力上限を確かめるテスト
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -6,7 +7,7 @@ import {
 } from '../maxOutputTokens'
 
 describe('resolveMaxOutputTokens', () => {
-  describe('Gemini 2.5 の reasoning buffer', () => {
+  describe('Gemini 2.5 / 3 系の reasoning buffer', () => {
     // この分岐が無いと reasoning が上限を食い切って本文が空になる。
     // buffer を外すと落ちること（＝この test が分岐を守っていること）を確認済み
     it('Gemini 2.5 は buffer 分だけ他モデルより大きい', () => {
@@ -22,7 +23,15 @@ describe('resolveMaxOutputTokens', () => {
       expect(other).toBeLessThan(GEMINI_REASONING_BUFFER)
     })
 
-    it('Gemini 2.5 以外に buffer を足さない', () => {
+    it('Gemini 3 系にも buffer を足す', () => {
+      // 分岐を 'gemini-2.5' の部分一致で書くと 3.6 / 3.8 を取りこぼす。
+      // セレクタの既定が 3.6 に上がったので、この test が世代判定を守る
+      const gemini36 = resolveMaxOutputTokens('gemini-3.6-flash')
+      const other = resolveMaxOutputTokens('gemini-2.0-flash')
+      expect(gemini36 - other).toBe(GEMINI_REASONING_BUFFER)
+    })
+
+    it('reasoning を持たない世代に buffer を足さない', () => {
       expect(resolveMaxOutputTokens('gpt-4o')).toBe(
         resolveMaxOutputTokens('gemini-2.0-flash')
       )
@@ -33,16 +42,16 @@ describe('resolveMaxOutputTokens', () => {
     // 呼び出し側はこの関数の戻り値をそのまま送ってくる（buffer 加算済み）。
     // サーバー側で再加算すると二重になる
     it('範囲内の requested はそのまま返す（二重加算しない）', () => {
-      const clientValue = resolveMaxOutputTokens('gemini-2.5-flash')
+      const clientValue = resolveMaxOutputTokens('gemini-3.8-flash')
       expect(
-        resolveMaxOutputTokens('gemini-2.5-flash', { requested: clientValue })
+        resolveMaxOutputTokens('gemini-3.8-flash', { requested: clientValue })
       ).toBe(clientValue)
     })
 
     it('範囲外の requested は無視してモデル既定にフォールバックする', () => {
-      const fallback = resolveMaxOutputTokens('gemini-2.5-flash')
+      const fallback = resolveMaxOutputTokens('gemini-3.8-flash')
       for (const requested of [0, -1, 32001, Number.NaN]) {
-        expect(resolveMaxOutputTokens('gemini-2.5-flash', { requested })).toBe(
+        expect(resolveMaxOutputTokens('gemini-3.8-flash', { requested })).toBe(
           fallback
         )
       }
