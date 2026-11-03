@@ -1,0 +1,227 @@
+// レート制限
+//
+// 現行構成では外部ストアを使わないため、実際に動くのは in-memory 経路。
+// サーバーレスは呼び出しごとにインスタンスが変わるので、これで止まるのは
+// 「同じインスタンスに連続で当たったバースト」だけで、利用者ごとの通算回数は
+// 数えられない。回数の目安はクライアント側 (dailyUsageLimit.ts) が持ち、
+// 請求額の天井は OpenAI 側の予算上限で設ける。
+//
+// UPSTASH_REDIS_REST_URL / _TOKEN を設定すれば slidingWindow の本実装に
+// 切り替わり、そこで初めて IP ごとの厳密な上限になる。導入しない限りは
+// 上の前提で運用する。
+//
+// - IP ベース、X-Vercel-Forwarded-For を優先
+
+import { createHash } from 'node:crypto'
+
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+// ---------------------------------------------------------------------------
+// 設定
+// ---------------------------------------------------------------------------
+
+const DEFAULT_DAILY_LIMIT = 20
+const DAILY_LIMIT = (() => {
+  const raw = process.env.DAILY_LIMIT
+  if (!raw) return DEFAULT_DAILY_LIMIT
+  const parsed = parseInt(raw, 10)
+  return Number.isNaN(parsed) || parsed <= 0 ? DEFAULT_DAILY_LIMIT : parsed
+})()
+
+// Redis キーの名前空間。1 つの Upstash DB を複数プロダクトで共有するとき、
+// ここが同じだとカウンタが混ざる（別プロダクトの利用で枠が減る）。
+// プロダクトごとに RATELIMIT_PREFIX を変えれば、無料枠の 1 DB のまま
+// 上限を独立させられる
+const RATELIMIT_PREFIX = process.env.RATELIMIT_PREFIX || 'kaze-ux/ai'
+
+// ---------------------------------------------------------------------------
+// Upstash インスタンス（lazy init）
+// ---------------------------------------------------------------------------
+
+let cachedRatelimit: Ratelimit | null = null
+let upstashAvailable: boolean | null = null
+
+const getUpstashRatelimit = (): Ratelimit | null => {
+  if (cachedRatelimit) return cachedRatelimit
+  if (upstashAvailable === false) return null
+
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+
+  if (!url || !token) {
+    upstashAvailable = false
+    return null
+  }
+
+  try {
+    const redis = new Redis({ url, token })
+    cachedRatelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(DAILY_LIMIT, '1 d'),
+      analytics: true,
+      prefix: RATELIMIT_PREFIX,
+    })
+    upstashAvailable = true
+    return cachedRatelimit
+  } catch (error) {
+    console.error('[ratelimit] Upstash 初期化失敗:', error)
+    upstashAvailable = false
+    return null
+  }
+}
+
+// ---------------------------------------------------------------------------
+// In-memory カウンタ（外部ストア未設定時の実経路。バースト抑止のみ）
+// ---------------------------------------------------------------------------
+
+interface InMemoryEntry {
+  count: number
+  resetAt: number
+}
+
+// インスタンスに紐づくため、スケールアウトすると各インスタンスが別々に数える
+const inMemoryStore = new Map<string, InMemoryEntry>()
+const DAY_MS = 24 * 60 * 60 * 1000
+
+const checkInMemory = (identifier: string): RateLimitResult => {
+  const now = Date.now()
+  const entry = inMemoryStore.get(identifier)
+
+  if (!entry || entry.resetAt < now) {
+    inMemoryStore.set(identifier, { count: 1, resetAt: now + DAY_MS })
+    return {
+      success: true,
+      limit: DAILY_LIMIT,
+      remaining: DAILY_LIMIT - 1,
+      reset: now + DAY_MS,
+    }
+  }
+
+  entry.count += 1
+  return {
+    success: entry.count <= DAILY_LIMIT,
+    limit: DAILY_LIMIT,
+    remaining: Math.max(0, DAILY_LIMIT - entry.count),
+    reset: entry.resetAt,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 公開 API
+// ---------------------------------------------------------------------------
+
+export interface RateLimitResult {
+  success: boolean
+  limit: number
+  remaining: number
+  reset: number
+}
+
+export const checkRateLimit = async (
+  identifier: string
+): Promise<RateLimitResult> => {
+  const upstash = getUpstashRatelimit()
+
+  if (upstash) {
+    const result = await upstash.limit(identifier)
+    return {
+      success: result.success,
+      limit: result.limit,
+      remaining: result.remaining,
+      reset: result.reset,
+    }
+  }
+
+  return checkInMemory(identifier)
+}
+
+export const getDailyLimit = (): number => DAILY_LIMIT
+
+// ---------------------------------------------------------------------------
+// クライアント識別子（IP）取得
+// ---------------------------------------------------------------------------
+
+interface RequestLike {
+  headers: Record<string, string | string[] | undefined>
+}
+
+const headerToString = (
+  value: string | string[] | undefined
+): string | undefined => {
+  if (!value) return undefined
+  if (Array.isArray(value)) return value[0]
+  return value
+}
+
+/**
+ * IP を復元できない形に変換する。
+ *
+ * ## なぜ必要か
+ *
+ * 以前は生の IP をそのまま Upstash のキーにしていた
+ * （`kaze-ux/ai:203.0.113.5`）。**濫用を止めるのに IP そのものを保存する
+ * 必要はない**。必要なのは「同じ相手か」が分かることだけ。
+ *
+ * ## 単なるハッシュでは足りない
+ *
+ * IPv4 は 2^32 通りしかないので、素の sha256 は総当たりで逆引きできる。
+ * **秘密のソルトが要る**。`RATELIMIT_SALT` を設定するとそれを使う。
+ *
+ * 未設定なら日付だけをソルトにする。この場合は逆引き可能なので保護に
+ * ならないが、**黙って弱いまま動くより、設定漏れが分かるほうがよい**ので
+ * 起動時に一度だけ警告する。
+ *
+ * 日付を混ぜているのは、上限が 1 日単位で、翌日には別のキーになるため。
+ * 過去の識別子を溜め込まない。
+ */
+const hashIdentifier = (raw: string): string => {
+  const secret = process.env.RATELIMIT_SALT
+  if (!secret && !saltWarned) {
+    saltWarned = true
+    console.warn(
+      '[ratelimit] RATELIMIT_SALT が未設定です。IP のハッシュは逆引き可能な状態です。' +
+        '本番では必ず設定してください'
+    )
+  }
+  const day = new Date().toISOString().slice(0, 10)
+  return createHash('sha256')
+    .update(`${secret ?? ''}:${day}:${raw}`)
+    .digest('hex')
+    .slice(0, 32)
+}
+
+let saltWarned = false
+
+/**
+ * レート制限のキーを返す。**戻り値に生の IP は含まれない。**
+ *
+ * IP ヘッダを読むこと自体は避けられない（あらゆるリクエストが運んでくる）が、
+ * 保存・記録するかは選べる。ここで断つ。
+ */
+export const getClientIdentifier = (req: RequestLike): string => {
+  // Vercel 環境では x-vercel-forwarded-for が最も信頼可能
+  const vercelFwd = headerToString(req.headers['x-vercel-forwarded-for'])
+  if (vercelFwd) return hashIdentifier(vercelFwd.split(',')[0].trim())
+
+  // 標準フォールバック
+  const xff = headerToString(req.headers['x-forwarded-for'])
+  if (xff) return hashIdentifier(xff.split(',')[0].trim())
+
+  const realIp = headerToString(req.headers['x-real-ip'])
+  if (realIp) return hashIdentifier(realIp)
+
+  // 識別子が取れない場合。ハッシュ化しても意味が無いので固定値
+  return 'unknown'
+}
+
+// ---------------------------------------------------------------------------
+// テスト用ヘルパー
+// ---------------------------------------------------------------------------
+
+/** 内部状態をリセット（テスト専用） */
+export const __resetRateLimitState = (): void => {
+  inMemoryStore.clear()
+  cachedRatelimit = null
+  upstashAvailable = null
+}

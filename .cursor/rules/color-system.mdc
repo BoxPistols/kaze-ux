@@ -1,0 +1,27 @@
+---
+description: Kaze カラーシステム
+globs: ["src/themes/**", "src/components/**/*.tsx"]
+---
+
+# Kaze Color System
+
+## セマンティックカラー (Light)
+- primary: main=#0057B8, dark=#00458F, light=#3D82D2
+- secondary: main=#696881
+- success: main=#46ab4a
+- info: main=#1dafc2
+- warning: main=#eb8117
+- error: main=#da3737
+
+## ダークスキーム
+- Dracula: primary=#7FA8F8, bg=#282A36 / paper=#343746
+- Kaze: primary=#5AA9FF, bg=#18181b / paper=#27272a
+- Monotone: primary=#86ADD9, bg=#1a1a1e / paper=#26262a
+
+## 使い方
+- OK: `color='primary.main'`, `bgcolor='background.paper'`
+- NG: `color='#0057B8'`, `bgcolor='#fff'`
+- 定義: `src/themes/colorToken.ts`
+
+## グレースケール
+grey.50=#fafafa → grey.900=#292929 (11段階, 850はカスタム)

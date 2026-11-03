@@ -1,0 +1,65 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'Asia/Tokyo'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+    groups:
+      dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'Asia/Tokyo'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+    groups:
+      dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: 'gomod'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'Asia/Tokyo'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+    groups:
+      dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'Asia/Tokyo'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+    groups:
+      dependencies:
+        patterns:
+          - '*'

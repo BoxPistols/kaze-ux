@@ -1,0 +1,52 @@
+// src/layouts/header/index.tsx
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
+import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
+
+import { LAYOUT_CONSTANTS } from '@/constants/layout'
+import { motionOf } from '@/themes/motion'
+
+interface HeaderProps {
+  toggleDrawer: () => void
+  open: boolean
+}
+
+export const Header = ({ toggleDrawer, open }: HeaderProps) => {
+  return (
+    <AppBar
+      position='fixed'
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 100,
+        '& .MuiToolbar-root': {
+          minHeight: `${LAYOUT_CONSTANTS.HEADER.HEIGHT}px`,
+        },
+      }}>
+      <Toolbar>
+        <IconButton
+          color='inherit'
+          aria-label={open ? 'close drawer' : 'open drawer'}
+          onClick={toggleDrawer}
+          edge='start'
+          sx={{
+            marginRight: 2,
+            marginLeft: -1,
+            transition: motionOf(['transform'], 'short'),
+            transform: open ? 'rotate(0deg)' : 'rotate(-180deg)', // 矢印の向きを調整
+          }}>
+          <MenuOpenIcon />
+        </IconButton>
+        <Typography
+          component='h1'
+          variant='lg'
+          noWrap
+          sx={{
+            // サイズ帯は太さを持たない。見出しとして使うので明示する
+            fontWeight: 'bold',
+            fontSize: '1.25rem',
+            flexGrow: 1,
+          }}>
+          Theme Sandbox - Kaze UX
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  )
+}

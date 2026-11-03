@@ -1,0 +1,143 @@
+name: Deploy to GitHub Pages
+
+# 【一時的な措置】main への push で自動デプロイしない。
+#
+# GitHub Pages の URL はホスト名がそのままアカウント名になる
+# (`https://<アカウント名>.github.io/<リポジトリ名>/`)。
+# 成果物を匿名で共有している間は、この URL 自体が本人への導線になる。
+# 共有面は Vercel に一本化する。
+#
+# 【元に戻すとき】匿名で共有する必要がなくなったら、下の `push:` の
+# コメントを外すだけでよい。Pages 側の設定も再度有効にすること
+# (`gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow`)。
+# 手動実行 (workflow_dispatch) は残してあるので、設定を戻せばすぐ配信できる。
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'デプロイ対象'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - storybook
+          - dashboard
+          - kaze-eats
+
+# GitHub Pages デプロイ用の権限設定
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行の制御
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # デプロイ対象の判定
+      - name: Determine deploy target
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "target=${{ github.event.inputs.deploy_target }}" >> $GITHUB_OUTPUT
+          else
+            echo "target=all" >> $GITHUB_OUTPUT
+          fi
+
+      # Storybookのビルド
+      # 資格情報はビルドに渡さない。define した値はバンドルに平文で残り、
+      # 配信された時点で無認証の GET で取得できる。AI を動かす場合は
+      # VITE_API_BASE のバックエンド経由か、利用者自身のキー入力を使う。
+      - name: Build Storybook
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'storybook'
+        env:
+          VITE_OPENAI_MODEL: 'gpt-6-luna'
+        run: |
+          pnpm run build-storybook
+          mkdir -p gh-pages/storybook
+          cp -r storybook-static/* gh-pages/storybook/
+
+      # SaaS Dashboardのビルド
+      - name: Build SaaS Dashboard Demo
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'dashboard'
+        run: pnpm --filter saas-dashboard build:gh-pages
+
+      # KazeEats のビルド
+      - name: Build KazeEats Demo
+        if: steps.target.outputs.target == 'all' || steps.target.outputs.target == 'kaze-eats'
+        run: pnpm --filter kaze-eats build:gh-pages
+
+      # ランディングページ（Vite ビルド）
+      - name: Build Landing Page
+        if: steps.target.outputs.target == 'all'
+        run: |
+          VITE_BASE_PATH="/kaze-ux/" pnpm build-sandbox
+          cp -r dist/* gh-pages/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './gh-pages'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Output deployment URLs
+        run: |
+          echo "Deployment completed!"
+          echo "Landing Page: ${{ steps.deployment.outputs.page_url }}"
+          echo "Storybook: ${{ steps.deployment.outputs.page_url }}storybook/"
+          echo "SaaS Dashboard: ${{ steps.deployment.outputs.page_url }}saas/"
+          echo "KazeEats: ${{ steps.deployment.outputs.page_url }}kaze-eats/"

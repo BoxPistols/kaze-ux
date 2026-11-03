@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.boxpistols/kaze-mcp",
+  "description": "Design system knowledge for AI agents — design tokens, component specs, and prohibited-pattern checks from the Kaze Design System (MUI + Tailwind + Storybook). Works with any design system that provides the same data files.",
+  "version": "0.2.0",
+  "repository": {
+    "url": "https://github.com/BoxPistols/kaze-ux",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "kaze-mcp",
+      "version": "0.2.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

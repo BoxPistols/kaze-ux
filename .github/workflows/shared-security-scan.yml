@@ -1,0 +1,109 @@
+name: Shared Security Scan
+
+on:
+  # main への直 push でも走らせる。pull_request だけだと、その経路が
+  # 素通りする。直近のコミットは実際に main への直 push（マージコミット
+  # 無し）なので、この経路は一度もスキャンされていなかった。
+  # quality-check.yml は同じことに気づいて両方に付けてある
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+
+jobs:
+  secrets-detection:
+    runs-on: ubuntu-latest
+    name: Secrets Detection
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secrets detection with git-secrets
+        run: |
+          git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
+          cd /tmp/git-secrets
+          sudo make install
+          cd $GITHUB_WORKSPACE
+
+          # Register patterns for AWS access keys and secret keys
+          git secrets --add '(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'
+          git secrets --add '("|'"'"')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)("|'"'"')?\s*(:|=>|=)\s*("|'"'"')?[A-Za-z0-9/\+=]{40}("|'"'"')?'
+          git secrets --install
+
+          git secrets --scan
+          echo "git-secrets scan passed"
+        continue-on-error: false
+
+  sca-scan:
+    runs-on: ubuntu-latest
+    name: SCA Scan (Trivy)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SCA scan with Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+          trivy fs . \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --include-dev-deps \
+            --format sarif \
+            --output trivy-results.sarif
+        continue-on-error: false
+
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+          category: 'trivy'
+        continue-on-error: true
+
+  gitleaks-scan:
+    runs-on: ubuntu-latest
+    name: Secrets Detection (Gitleaks)
+    # Skip for dependabot as it cannot access secrets
+    if: github.actor != 'dependabot[bot]'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 差分の起点は push と pull_request で違う。
+      # pull_request のときだけ有効な式をそのまま使うと、push では
+      # `..<sha>` という不正な範囲になって gitleaks が走らない。
+      # 起点が取れないとき（新しいブランチや force push）は範囲を渡さず
+      # 全体を見る。**走らないより多く見るほうを既定にする**
+      - name: Decide the diff range
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "起点が取れないので全体を検査します"
+            echo "GITLEAKS_LOG_OPTS=" >> "$GITHUB_ENV"
+          else
+            echo "検査範囲: ${base}..${{ github.sha }}"
+            echo "GITLEAKS_LOG_OPTS=${base}..${{ github.sha }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Gitleaks scan (diff only)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}

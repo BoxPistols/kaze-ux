@@ -1,0 +1,438 @@
+name: Quality Check
+
+on:
+  # main への直 push / 管理者マージでも走らせる。pull_request だけだと、
+  # その経路が素通りしたまま deploy-pages.yml が公開してしまう
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Lint & Type Check
+  lint-and-typecheck:
+    name: Lint & TypeCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # `pnpm lint` は --fix 付きで、自動修正できる違反を直したうえで
+      # 報告も終了コードも出さない。CI ではその修正がランナーごと捨てられ、
+      # 違反は main に残ったままサマリだけが Passed になる。
+      # CI は --fix を外した lint:ci を呼ぶ
+      - name: Run ESLint
+        run: pnpm lint:ci
+        continue-on-error: false
+
+      # 型検査を明示的に置く。これまで src が型検査されていたのは
+      # check:samples が副作用でプロジェクト全体の tsc を走らせていたから
+      # で、意図した配線ではなかった（sample が 1 件も無いと tsc 自体が
+      # 走らない）。api/ と lib/ はそもそも対象外だった
+      - name: Type check (src)
+        run: pnpm check:types
+
+      # サーバー側 API キーを持つ唯一のコード。ルートの tsconfig は
+      # include が ["src"] で、api/ にも lib/ にも tsconfig が無かった
+      - name: Type check (api / lib)
+        run: pnpm check:types:server
+
+      # DS コア層が UI ライブラリに依存していないこと。
+      # ESLint はファイル単位でしか見ないので、コア外を 1 枚挟んだ経路
+      # (core → helper → @mui) を素通りさせる。こちらは依存グラフを辿る。
+      - name: Check DS core has no UI-library dependency
+        run: pnpm check:ds-core
+
+      # 禁止パターンが実際に守られているか。
+      # 「書いてあるが守られていない」ルールは AI にとって嘘の仕様になる。
+      # 説明を読んだ AI は従い、コードを読んだ AI は真似る
+      - name: Check prohibited patterns
+        run: pnpm check:rules
+
+      # カバレッジ表が実態とズレていないか。検出器があるのに enforcedBy が
+      # 空だと「何も止めない」を過大に報告する（実際 4 件そうなっていた）
+      # 出力を捨てない。以前 ds:coverage は「ds:adoption が実行できなかった」を
+      # 本文にだけ書いて exit 0 していたので、`> /dev/null` と組み合わさると
+      # 測れていないことが誰にも見えなかった（終了コード側も直してある）
+      - name: Check design system coverage consistency
+        run: pnpm ds:coverage
+
+      # sample は AI が「書く前」に読むもの。検査は書いた後にしか効かないので、
+      # 間違った sample はそのまま間違ったコードになる。型で確かめる
+      - name: Check component samples compile
+        run: pnpm check:samples
+
+      # metadata が名乗る名前が実際に export されているか。
+      # story のタイトルは見出しで、export 名とは限らない
+      # (Accordion / CustomAccordion)。読んだ AI は存在しない名前を
+      # import してビルドが落ちるが、sample の無いエントリには
+      # 訂正する材料が無い
+      - name: Check component metadata names match real exports
+        run: pnpm check:exports
+
+      # CLAUDE.md の Quick Reference は「このファイルだけで基本 UI 生成可能」と
+      # 謳っている、AI が最初に読む場所。ここがズレると以降の生成すべてに
+      # 効くうえ、読んだ側からは正しいか判断できない
+      - name: Check CLAUDE.md Quick Reference matches the implementation
+        run: pnpm check:quickref
+
+      # Skill は AI がそのまま従う指示書で、間違っていても人には見えない。
+      # 参照先が消えていれば読めず、案内するコマンドが無ければそこで止まる
+      - name: Check skills reference things that exist
+        run: pnpm check:skills
+
+      # ガイドに書いたショートカットを Storybook の既定値と突き合わせる。
+      # 手書きの表が 15 行あり、そのうち 11 行が間違っていた（素の S/T/A/F
+      # と書いてあったが実際は alt 修飾が要る）。照合する相手がいなかったので
+      # 誰も気づけなかった
+      - name: Check documented shortcuts match Storybook defaults
+        run: pnpm check:shortcuts
+
+      # GA4 の測定 ID は React 側と Storybook 側の 2 箇所にある。片方だけ
+      # 書き換えるとその面だけ別プロパティへ飛ぶが、エラーは出ず GA4 の
+      # 画面にも「片方が来ていない」とは表示されない
+      - name: Check GA measurement ID is consistent
+        run: pnpm check:ga
+
+      # .mcp.json に登録した MCP サーバが実際に起動して答えるか。
+      # 以前は .gitignore 済みの mcp/dist を指しており、clone した環境では
+      # 登録されているのに常に起動失敗していた。登録の有無は設定を読めば
+      # 分かるが、動くかどうかは起動しないと分からない
+      - name: Check the registered MCP server actually works
+        run: pnpm check:mcp
+
+      # check:mcp はリポジトリの中で起動するので、データを同梱し忘れていても
+      # 緑になる。npm から入れた `npx kaze-mcp` は node_modules の中で動き、
+      # リポジトリのルートが無い。同梱漏れは「起動する・ツール一覧も返る・
+      # 中身だけ空」という一番気づけない壊れ方になるので、publish と同じ
+      # 経路（npm pack → 展開 → リポジトリ外で起動）で実際に引いて確かめる
+      - name: Check the npm tarball works outside the repository
+        run: pnpm check:mcp-package
+
+      # design-tokens/tokens.json は src/themes と story から生成する派生物。
+      # 外部（他フレームワークのプロダクト）が参照する唯一の機械可読な入口
+      # なので、古いまま配ると相手は黙って古い値を掴む。
+      # 実際 StatCard / EmptyState を DS に足したときに再生成が漏れていた。
+      # 生成物が古いまま配られないようにする。
+      #
+      # metadata/components.json は MCP サーバが AI に配る唯一の部品情報。
+      # 手書きだった間は公開 54 件のうち 18 件しか載っておらず、載っていない
+      # ものについては AI が prop を推測して書いていた（エラーは出ない）
+      - name: Check generated artifacts are up to date
+        run: |
+          pnpm export-tokens
+          pnpm export-css
+          pnpm export-metadata
+          pnpm export-rules
+          if ! git diff --quiet design-tokens/ metadata/ foundations/; then
+            echo "::error::生成物が古いです。pnpm export-tokens && pnpm export-css && pnpm export-metadata && pnpm export-rules を実行してコミットしてください"
+            git diff --stat design-tokens/ metadata/ foundations/
+            exit 1
+          fi
+
+      # 件数を出すだけの参考情報。パイプの末尾に head を置くと、
+      # 終了コードが head のものになって常に 0 になり、
+      # 何も見つからなくても Warning を出す形になっていた
+      - name: Check for console.log
+        run: |
+          hits=$(grep -rn "console\.log" --include="*.ts" --include="*.tsx" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "// eslint-disable" | grep -v ".stories." || true)
+          count=$(printf '%s' "$hits" | grep -c . || true)
+          echo "console.log: ${count} 件"
+          if [ "$count" -gt 0 ]; then
+            printf '%s\n' "$hits" | head -20
+          fi
+
+      # any の検査は grep をやめて ESLint に一本化した
+      # (@typescript-eslint/no-explicit-any を error に上げてある)。
+      # 同じ規約を 2 箇所で持つと、片方だけ緩いときに気づけない
+
+      # サンプルデータへの実在ブランド名の再混入を止める (#74)
+      # 上の console.log と違い警告では済ませない。公開後は履歴にも成果物にも残り、
+      # 作業ツリーを直しても消えないため、入る前に落とす
+      - name: Check for real brand names in sample data
+        run: pnpm check:brand
+
+  # Unit Tests
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm test:all
+        continue-on-error: false
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # Storybook Build Check
+  storybook-build:
+    name: Storybook Build
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc for pnpm hoisting
+        run: |
+          echo "auto-install-peers=true" > .npmrc
+          echo "public-hoist-pattern[]=*types*" >> .npmrc
+          echo "public-hoist-pattern[]=prop-types" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+      # preview.tsx は axe の自動実行を切っている（開発が重くなるため）。
+      # パネルから手で押せば動くが CI では誰も押さないので、
+      # ビルドした物を実際に描画して測る
+      - name: Install Chromium for a11y check
+        run: pnpm exec playwright install --with-deps chromium
+
+      # design-tokens/kaze-tokens.css は MUI を入れないプロダクトが読む
+      # 唯一の色の入口。詳細度と順序（スキーム属性とモード属性が同じ重み、
+      # prefers-color-scheme と明示指定の優先関係）はソースを読んでも
+      # 判定できないので、実ブラウザで computed value を測る
+      - name: Check CSS variables resolve as intended
+        run: pnpm check:css-vars
+
+      # README の手順どおりに組んだ「kaze-ux を参照しない Tailwind
+      # プロジェクト」を実際にビルドして描画する。利用者が踏む経路は
+      # 「README を読む → 設定を書く → ビルド → 描画」で、途中のどこが
+      # 欠けても色は付かない。CSS 単体の検査では通ってしまう
+      - name: Check the documented Tailwind integration actually works
+        run: pnpm check:tailwind-consumer
+
+      # 配信と検査を 1 ステップにまとめる。
+      # ステップをまたいで背景プロセスが生きている前提を持たない
+      - name: Check contrast (rendered)
+        run: |
+          # 出力を捨てないと、背景プロセスがステップの stdout を掴んだままになり
+          # ログ収集が EOF を待って終わらない（ローカル実行で実際に詰まった）。
+          # 停止処理は置かない。非対話 bash では背景ジョブがスクリプト自身と
+          # 同じプロセスグループに入るため、グループごと kill すると
+          # ステップ自体が死ぬ（これもローカル実行で踏んだ）。
+          # job の終了時にランナーごと片付くので放置してよい
+          npx --yes http-server storybook-static -p 6099 --silent >/dev/null 2>&1 &
+          ready=0
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:6099/index.json; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            echo "Storybook を配信できませんでした"; exit 1
+          fi
+          pnpm check:a11y
+
+      # 描画されたフォントサイズ・ウェイトを測る。Storybook だけでなく
+      # LP と 3 アプリも見る。**面の設定が壊れていて 4 面が一度も
+      # 検査されていなかった**（アプリは /saas/ 等のベースパスで
+      # ビルドされるので、切り出したポートのルートに置くと資産が
+      # 全部 404 になり、1 テキストしか描画されない画面を「違反 0」と
+      # 数えていた）。本番と同じ 1 オリジン + サブパスで測る
+      - name: Check typography (rendered)
+        run: |
+          REUSE_STORYBOOK=1 node scripts/vercel-build.mjs
+          npx --yes http-server dist -p 6110 --silent >/dev/null 2>&1 &
+          ready=0
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:6110/storybook/index.json; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            echo "dist を配信できませんでした"; exit 1
+          fi
+          pnpm check:typo
+
+  # Change Analysis
+  change-analysis:
+    name: Change Analysis
+    runs-on: ubuntu-latest
+    outputs:
+      has_component_changes: ${{ steps.check.outputs.has_component_changes }}
+      has_story_changes: ${{ steps.check.outputs.has_story_changes }}
+      changed_files_count: ${{ steps.check.outputs.changed_files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze changes
+        id: check
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          CHANGED_FILES=$(git diff --name-only "origin/${BASE_REF}...HEAD" 2>/dev/null || echo "")
+
+          if echo "$CHANGED_FILES" | grep -q "src/components/"; then
+            echo "has_component_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_component_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          if echo "$CHANGED_FILES" | grep -q "\.stories\."; then
+            echo "has_story_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_story_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          CHANGED_COUNT=$(echo "$CHANGED_FILES" | grep -c "\.tsx\|\.ts") || CHANGED_COUNT=0
+          echo "changed_files_count=$CHANGED_COUNT" >> $GITHUB_OUTPUT
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES" | head -30
+
+  # Quality Summary
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test, storybook-build, change-analysis]
+    if: always()
+    steps:
+      - name: Create summary
+        env:
+          LINT_RESULT: ${{ needs.lint-and-typecheck.result }}
+          TEST_RESULT: ${{ needs.test.result }}
+          SB_RESULT: ${{ needs.storybook-build.result }}
+          HAS_COMPONENT: ${{ needs.change-analysis.outputs.has_component_changes }}
+          HAS_STORY: ${{ needs.change-analysis.outputs.has_story_changes }}
+          CHANGED_COUNT: ${{ needs.change-analysis.outputs.changed_files_count }}
+        run: |
+          echo "## Quality Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${LINT_RESULT}" == "success" ]; then
+            echo "- Lint & TypeCheck: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Lint & TypeCheck: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${TEST_RESULT}" == "success" ]; then
+            echo "- Unit Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Unit Tests: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${SB_RESULT}" == "success" ]; then
+            echo "- Storybook Build: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Storybook Build: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Change Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "- Component changes: ${HAS_COMPONENT}" >> $GITHUB_STEP_SUMMARY
+          echo "- Storybook changes: ${HAS_STORY}" >> $GITHUB_STEP_SUMMARY
+          echo "- Changed files count: ${CHANGED_COUNT}" >> $GITHUB_STEP_SUMMARY

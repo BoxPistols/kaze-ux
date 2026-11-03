@@ -1,0 +1,299 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks'
+import { useEffect } from 'react'
+import { colorData } from '../../../themes/colorToken'
+
+export const DarkBackgroundEffect = () => {
+  useEffect(() => {
+    // Create and inject dark theme styles
+    const styleId = 'dark-palette-styles'
+    let styleElement = document.getElementById(styleId)
+
+    if (!styleElement) {
+      styleElement = document.createElement('style')
+      styleElement.id = styleId
+      document.head.appendChild(styleElement)
+    }
+
+    styleElement.textContent = `
+      [data-testid="docs-container"] {
+        background-color: #18181b !important;
+      }
+
+      [data-testid="docs-container"] .sbdocs.sbdocs-wrapper {
+        background-color: #18181b !important;
+        color: #f5f5f7 !important;
+      }
+
+      [data-testid="docs-container"] .sbdocs .sbdocs-content {
+        background-color: #18181b !important;
+      }
+
+      [data-testid="docs-container"] h1,
+      [data-testid="docs-container"] h2,
+      [data-testid="docs-container"] h3,
+      [data-testid="docs-container"] h4,
+      [data-testid="docs-container"] h5,
+      [data-testid="docs-container"] h6 {
+        color: #f5f5f7 !important;
+      }
+
+      [data-testid="docs-container"] p,
+      [data-testid="docs-container"] li,
+      [data-testid="docs-container"] .sbdocs-p,
+      [data-testid="docs-container"] .sbdocs-li {
+        color: #f5f5f7 !important;
+      }
+
+      [data-testid="docs-container"] code {
+        background-color: #27272a !important;
+        color: #fbbf24 !important;
+        border-color: #52525b !important;
+      }
+
+      [data-testid="docs-container"] a {
+        color: #60a5fa !important;
+      }
+
+      [data-testid="docs-container"] .sbdocs-table {
+        color: #f5f5f7 !important;
+      }
+
+      [data-testid="docs-container"] .sbdocs-table th,
+      [data-testid="docs-container"] .sbdocs-table td {
+        border-color: #52525b !important;
+        color: #f5f5f7 !important;
+      }
+    `
+
+    return () => {
+      if (styleElement) {
+        styleElement.remove()
+      }
+    }
+
+}, [])
+
+return null
+}
+
+<Meta
+  title='Design Tokens/Colors/04-ColorPalette:dark'
+  parameters={{ forceDarkTheme: true }}
+/>
+
+<DarkBackgroundEffect />
+
+# Color Palette : dark
+
+This design system uses colors shared between MUI and Tailwind CSS for consistency across components. This palette is optimized for dark mode interfaces with enhanced contrast and reduced eye strain.
+
+## Primary Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Primary'
+    subtitle='Brand primary color'
+    colors={{
+      Main: colorData.dark.primary.main,
+      Dark: colorData.dark.primary.dark,
+      Light: colorData.dark.primary.light,
+      Lighter: colorData.dark.primary.lighter,
+    }}
+  />
+  <ColorItem
+    title='Secondary'
+    subtitle='Brand secondary color'
+    colors={{
+      Main: colorData.dark.secondary.main,
+      Dark: colorData.dark.secondary.dark,
+      Light: colorData.dark.secondary.light,
+      Lighter: colorData.dark.secondary.lighter,
+    }}
+  />
+</ColorPalette>
+
+## Semantic Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Success'
+    subtitle='Success states'
+    colors={{
+      Main: colorData.dark.success.main,
+      Dark: colorData.dark.success.dark,
+      Light: colorData.dark.success.light,
+      Lighter: colorData.dark.success.lighter,
+    }}
+  />
+  <ColorItem
+    title='Warning'
+    subtitle='Warning states'
+    colors={{
+      Main: colorData.dark.warning.main,
+      Dark: colorData.dark.warning.dark,
+      Light: colorData.dark.warning.light,
+      Lighter: colorData.dark.warning.lighter,
+    }}
+  />
+  <ColorItem
+    title='Error'
+    subtitle='Error states'
+    colors={{
+      Main: colorData.dark.error.main,
+      Dark: colorData.dark.error.dark,
+      Light: colorData.dark.error.light,
+      Lighter: colorData.dark.error.lighter,
+    }}
+  />
+  <ColorItem
+    title='Info'
+    subtitle='Information states'
+    colors={{
+      Main: colorData.dark.info.main,
+      Dark: colorData.dark.info.dark,
+      Light: colorData.dark.info.light,
+      Lighter: colorData.dark.info.lighter,
+    }}
+  />
+</ColorPalette>
+
+## Text Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Text'
+    subtitle='Text hierarchy'
+    colors={{
+      Primary: colorData.dark.text.primary,
+      Secondary: colorData.dark.text.secondary,
+      Disabled: colorData.dark.text.disabled,
+      White: colorData.dark.text.white,
+    }}
+  />
+</ColorPalette>
+
+## Background Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Background'
+    subtitle='Surface colors'
+    colors={{
+      Default: colorData.dark.background.default,
+      Paper: colorData.dark.background.paper,
+    }}
+  />
+  <ColorItem
+    title='Surface'
+    subtitle='Additional surface colors'
+    colors={{
+      Background: colorData.dark.surface.background,
+      'Background Dark': colorData.dark.surface.backgroundDark,
+      'Background Disabled': colorData.dark.surface.backgroundDisabled,
+    }}
+  />
+</ColorPalette>
+
+## Grey Scale
+
+<ColorPalette>
+  <ColorItem
+    title='Grey Shades'
+    subtitle='Neutral colors'
+    colors={{
+      50: colorData.dark.grey[50],
+      100: colorData.dark.grey[100],
+      200: colorData.dark.grey[200],
+      300: colorData.dark.grey[300],
+      400: colorData.dark.grey[400],
+      500: colorData.dark.grey[500],
+      600: colorData.dark.grey[600],
+      700: colorData.dark.grey[700],
+      800: colorData.dark.grey[800],
+      850: colorData.dark.grey[850],
+      900: colorData.dark.grey[900],
+    }}
+  />
+</ColorPalette>
+
+## Action Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Action'
+    subtitle='Interactive states'
+    colors={{
+      Hover: colorData.dark.action.hover,
+      Selected: colorData.dark.action.selected,
+      Disabled: colorData.dark.action.disabled,
+      Active: colorData.dark.action.active,
+    }}
+  />
+</ColorPalette>
+
+## Icon Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Icon'
+    subtitle='Icon color variants'
+    colors={{
+      White: colorData.dark.icon.white,
+      Light: colorData.dark.icon.light,
+      Dark: colorData.dark.icon.dark,
+      Action: colorData.dark.icon.action,
+      Disabled: colorData.dark.icon.disabled,
+    }}
+  />
+</ColorPalette>
+
+## Common Colors
+
+<ColorPalette>
+  <ColorItem
+    title='Common'
+    subtitle='Basic colors'
+    colors={{
+      Black: colorData.dark.common.black,
+      White: colorData.dark.common.white,
+      Divider: colorData.dark.divider,
+    }}
+  />
+</ColorPalette>
+
+## Usage
+
+### MUI Components
+
+```tsx
+import { useTheme } from '@mui/material/styles'
+
+function MyComponent() {
+  const theme = useTheme()
+  return (
+    <Box
+      sx={{
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.primary.main,
+      }}>
+      Dark Mode Component
+    </Box>
+  )
+}
+```
+
+### Tailwind CSS Classes
+
+```tsx
+function MyComponent() {
+  return (
+    <div className='dark:bg-zinc-900 dark:text-primary-main'>
+      Dark Mode Component
+    </div>
+  )
+}
+```
+
+### Shared Usage
+
+Both MUI and Tailwind use the same color tokens from `colorData.dark`, ensuring design consistency across all components in dark mode.

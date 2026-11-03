@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './Motion.stories'
+
+<Meta of={Stories} />
+
+# Motion
+
+## 概要
+
+MUIテーマのトランジション・アニメーションシステム。
+
+### イージング
+
+- `sharp`: `cubic-bezier(0.4, 0, 0.6, 1)` -- 素早いフィードバック
+- `smooth`: `cubic-bezier(0.4, 0, 0.2, 1)` -- 自然な動き
+
+### デュレーション
+
+- `leavingScreen`: 150ms（退出アニメーション）
+- `enteringScreen`: 200ms（進入アニメーション）
+
+## イージングカーブ
+
+<Canvas of={Stories.EasingCurvesStory} />
+
+## デュレーションスケール
+
+<Canvas of={Stories.DurationScaleStory} />
+
+## インタラクティブデモ
+
+<Canvas of={Stories.InteractiveDemoStory} />

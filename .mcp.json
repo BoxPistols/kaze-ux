@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "kaze": {
+      "command": "npx",
+      "args": ["-y", "tsx", "${CLAUDE_PLUGIN_ROOT:-.}/mcp/src/index.ts"],
+      "env": {
+        "DS_ROOT": "${CLAUDE_PLUGIN_ROOT:-.}"
+      }
+    },
+    "storybook-mcp": {
+      "type": "http",
+      "url": "http://localhost:6007/mcp"
+    }
+  }
+}

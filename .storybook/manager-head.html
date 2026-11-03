@@ -1,0 +1,58 @@
+<!-- Kaze Design System - Manager Head -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<!-- 共有されたとき（Slack・SNS）に出るカード。og:image は LP の public/ から配信される -->
+<meta
+  name="description"
+  content="Kaze UX の Storybook。部品・トークン・禁止パターンの定義元で、同じ仕様を MCP で Claude Code などの AI エージェントへ配っています。導入手順と検査の範囲もここにあります。" />
+<link rel="canonical" href="https://kaze-ux.vercel.app/storybook/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Kaze UX" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:url" content="https://kaze-ux.vercel.app/storybook/" />
+<meta
+  property="og:title"
+  content="Kaze UX Storybook — AI エージェントに仕様を配るデザインシステム" />
+<meta
+  property="og:description"
+  content="部品・トークン・禁止パターンの定義元。同じ仕様を MCP で AI エージェントへ配り、守られているかを CI で実測しています。" />
+<meta
+  property="og:image"
+  content="https://kaze-ux.vercel.app/og-storybook.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<script>
+  // Storybook の HTML テンプレートは lang="en" 固定。dev でも読み上げを日本語にする
+  // （build 成果物は scripts/set-storybook-lang.mjs が静的に書き換える）
+  document.documentElement.lang = 'ja'
+</script>
+<style>
+  /* 選択中のストーリー: 背景がティールなので白文字にする */
+  [data-selected='true'] {
+    color: #ffffff !important;
+  }
+
+  /* 検索ボックスのフォーカスリング */
+  [class*='search'] input:focus {
+    border-color: #5aa9ff;
+    box-shadow: 0 0 0 1px #5aa9ff;
+  }
+
+  /* スクロールバー */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #6b7a90;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5aa9ff;
+  }
+
+  /* サイドバーフォント */
+  .sidebar-container,
+  [class*='Sidebar'] {
+    font-family: 'Inter', 'Noto Sans JP', sans-serif !important;
+  }
+</style>

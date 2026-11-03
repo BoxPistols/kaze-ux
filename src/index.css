@@ -1,0 +1,99 @@
+/* 色の CSS 変数は src/themes/colorToken.ts の createCssVars() が
+   テーマ適用時に :root へ注入する。ここに手打ちすると MUI 側の
+   トークンを直しても Tailwind 側が古い値のまま残り、同じ画面で
+   明暗が食い違うため、定義を置かないこと。 */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* Kaze 骨格フォント (v0) — 既存 Inter/Noto と並行ロード。opt-in で使う */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* === ベース組版（色は CssBaseline 経由でテーマが注入する） === */
+:root {
+  font-family: Inter, 'Noto Sans JP', system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* === Kaze 骨格 CSS 変数 (v0) ===
+   * 値の TypeScript ミラー: src/themes/kazeTokens.ts
+   * 既存 --color-* とは独立した additive な namespace。
+   * opt-in で使用: var(--kaze-blue), var(--kaze-r-sharp), etc.
+   */
+  --kaze-blue: #0057b8;
+  --kaze-sumi: #0a0a0a;
+  --kaze-washi: #f7f4ee;
+  --kaze-asagi: #5b8fb9;
+  --kaze-beni: #e34e3a;
+  --kaze-ink: rgba(10, 10, 10, 0.88);
+  --kaze-ink-muted: rgba(10, 10, 10, 0.54);
+  --kaze-ink-hair: rgba(10, 10, 10, 0.12);
+  --kaze-ink-mist: rgba(10, 10, 10, 0.04);
+  --kaze-r-sharp: 2px;
+  --kaze-r-soft: 8px;
+  --kaze-r-gen: 24px;
+  --kaze-r-full: 9999px;
+  --kaze-ease: cubic-bezier(0.33, 0, 0, 1);
+  --kaze-dur-micro: 120ms;
+  --kaze-dur-macro: 240ms;
+  --kaze-dur-scene: 480ms;
+  --kaze-font-display: 'Inter', 'Noto Sans JP', Helvetica, Arial, sans-serif;
+  --kaze-font-body:
+    'IBM Plex Sans', 'IBM Plex Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --kaze-font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark モードの ink/washi 反転（Kaze 骨格 dark 対応） */
+.dark {
+  --kaze-washi: #0a0a0a;
+  --kaze-sumi: #f7f4ee;
+  --kaze-ink: rgba(247, 244, 238, 0.88);
+  --kaze-ink-muted: rgba(247, 244, 238, 0.54);
+  --kaze-ink-hair: rgba(247, 244, 238, 0.12);
+  --kaze-ink-mist: rgba(247, 244, 238, 0.04);
+}
+
+/* --color-* は createCssVars() が注入する（冒頭の注記を参照）。
+   Tailwind からは bg-[var(--color-primary)] のように参照できる。
+   かつてここにライト/ダークの定義が並んでいたが、MUI 側と二重管理に
+   なっていたため削除した。見出しだけが残っていたので整理する。 */
+
+body {
+  overscroll-behavior: none;
+}
+
+/* テーマ切替トランジション */
+html[data-theme-transitioning] body {
+  transition:
+    background-color var(--motion-duration-long) var(--motion-ease-standard),
+    color var(--motion-duration-long) var(--motion-ease-standard);
+}
+
+main > main {
+  inset: 0;
+}
+
+.maplibregl-map {
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* MapLibre Popup - デフォルトスタイルを非表示にしてカスタムスタイルを使用 */
+.maplibregl-popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.maplibregl-popup-tip {
+  display: none !important;
+}

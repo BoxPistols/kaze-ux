@@ -1,0 +1,139 @@
+{
+  "$schema": "https://kaze-ux.dev/schema/curated-metadata.json",
+  "$description": "story から機械的に取れないものだけを手で持つ。キーは components.json の生成キーに一致させる（名前で寄せると別部品に重なる）。pending は重ね先が決まらないもので、story を整備したら components へ移す",
+  "components": {
+    "tailwindButton": {
+      "accessibility": [
+        "focus-visible:ring",
+        "disabled:opacity-50",
+        "aria-disabled"
+      ],
+      "prohibited": ["React.FC使用禁止", "MUI Buttonとの混在禁止"],
+      "sample": "<Button variant='outline' size='sm'>Click</Button>"
+    },
+    "iconButton": {
+      "accessibility": ["aria-label必須", "aria-busy", "tooltip"],
+      "sample": "<IconButton tooltip='Edit' aria-label='Edit'><EditIcon /></IconButton>"
+    },
+    "loadingButton": {
+      "accessibility": ["aria-busy", "aria-disabled"]
+    },
+    "dialog": {
+      "accessibility": [
+        "role=alertdialog",
+        "aria-labelledby",
+        "aria-describedby"
+      ],
+      "prohibited": ["window.confirm使用禁止"]
+    },
+    "customTextField": {
+      "accessibility": [
+        "aria-label",
+        "aria-required",
+        "aria-invalid",
+        "aria-describedby"
+      ],
+      "sample": "<CustomTextField label='名前' required placeholder='入力してください' />"
+    },
+    "select": {
+      "exportName": "CustomSelect",
+      "accessibility": ["aria-label", "aria-required", "aria-invalid"],
+      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
+      "import": "@/components/Form/CustomSelect"
+    },
+    "dateTimePicker": {
+      "accessibility": ["aria-label", "LocalizationProvider"]
+    },
+    "pagination": {
+      "accessibility": ["aria-label", "keyboard navigation"]
+    },
+    "accordion": {
+      "accessibility": ["role=button", "aria-expanded", "keyboard navigation"]
+    },
+    "userAvatar": {
+      "accessibility": ["alt text", "aria-label"],
+      "sample": "<UserAvatar name='山田 太郎' size='medium' />"
+    },
+    "actionMenu": {
+      "accessibility": [
+        "aria-label",
+        "aria-controls",
+        "aria-expanded",
+        "aria-haspopup"
+      ],
+      "sample": "<ActionMenu items={[{ id: 'edit', label: '編集', onClick: () => {} }]} ariaLabel='操作' />"
+    },
+    "fab": {
+      "accessibility": ["aria-label", "tooltip"]
+    },
+    "splitButton": {
+      "accessibility": ["aria-controls", "aria-expanded", "aria-haspopup=menu"]
+    },
+    "chatSupport": {
+      "accessibility": ["keyboard shortcuts", "aria-live"]
+    },
+    "paper": {
+      "sample": "<Paper variant='outlined' sx={{ p: 2 }}>内容</Paper>"
+    },
+    "button": {
+      "sample": "<Button variant='contained' size='medium'>保存</Button>"
+    },
+    "chip": {
+      "sample": "<Chip label='下書き' size='small' variant='outlined' />"
+    },
+    "card": {
+      "sample": "<Card variant='outlined'>内容</Card>"
+    },
+    "textField": {
+      "sample": "<TextField label='件名' placeholder='入力してください' size='small' required />"
+    },
+    "table": {
+      "sample": "<Table size='small' stickyHeader><TableBody><TableRow><TableCell>値</TableCell></TableRow></TableBody></Table>"
+    },
+    "alert": {
+      "sample": "<Alert severity='warning' variant='outlined'>保存されていません</Alert>"
+    },
+    "list": {
+      "sample": "<List dense disablePadding><ListItem><ListItemText primary='項目' /></ListItem></List>"
+    },
+    "switch": {
+      "sample": "<Switch defaultChecked size='small' color='primary' />"
+    },
+    "snackbar": {
+      "sample": "<Snackbar open message='保存しました' autoHideDuration={3000} />"
+    },
+    "tooltip": {
+      "sample": "<Tooltip title='編集' arrow placement='top'><span>対象</span></Tooltip>"
+    },
+    "badge": {
+      "sample": "<Badge badgeContent={4} color='primary' max={99}><MailIcon /></Badge>"
+    },
+    "breadcrumbs": {
+      "sample": "<Breadcrumbs aria-label='現在地'><Link href='/'>ホーム</Link><Typography>詳細</Typography></Breadcrumbs>"
+    },
+    "statusTag": {
+      "sample": "<StatusTag text='承認待ち' status='pending' />"
+    },
+    "saveButton": {
+      "sample": "<SaveButton onClick={() => {}} label='保存' />"
+    },
+    "emptyState": {
+      "sample": "<EmptyState title='まだ出品がありません' description='商品を登録すると、ここに並びます' size='compact' />"
+    },
+    "toggleButton": {
+      "sample": "<ToggleButtonGroup options={[{ value: 'list', label: '一覧' }]} value='list' onChange={() => {}} />"
+    }
+  },
+  "pending": {
+    "Card": {
+      "sample": "<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardContent>Body</CardContent></Card>",
+      "$reason": "DS の Card (src/components/ui/Card.tsx) に部品 story が無い。story 名 Card は MUI の Card を指すので、そこへ重ねると別物の説明になる",
+      "path": "src/components/ui/Card.tsx"
+    },
+    "MultiSelectAutocomplete": {
+      "accessibility": ["aria-label", "aria-required"],
+      "$reason": "Form/Select story に CustomSelect と同居している。story を分けるまで重ね先が一意に決まらない",
+      "path": "src/components/Form/MultiSelectAutocomplete/index.tsx"
+    }
+  }
+}

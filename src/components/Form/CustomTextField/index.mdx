@@ -1,0 +1,605 @@
+import { theme } from '@/themes/theme'
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  InputLabel,
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
+import { Meta } from '@storybook/blocks'
+import { useState } from 'react'
+import { CustomTextField } from '.'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
+
+<Meta title='Components/CustomTextField/Info' />
+
+<ThemeProvider theme={theme}>
+
+<Container>
+# CustomTextField
+
+## 概要
+
+- CustomTextField は、Material-UI の TextField をベースにカスタマイズされた入力コンポーネントです。
+- MUI の機能性を活かしながら、マテリアルデザイン固有のクセを廃し、よりシンプルで使いやすい UI を提供します。
+
+### 主要な Props
+
+- `label`: ラベル
+- `placeholder`: プレースホルダー
+- `helperText`: ヘルパーテキスト
+- `error`: エラー状態
+- `disabled`: 無効化
+- `required`: 必須
+- `tooltip`: ツールチップ
+- `size`: サイズ（'small' | 'medium'）
+- `fullWidth`: 幅 100%
+- `multiline`: 複数行
+- `rows`: 行数
+- `rowsMax`: 最大行数
+- `aria-label`: アクセシビリティラベル
+- `aria-describedby`: アクセシビリティ説明
+- `inputProps`: input 要素の props
+
+この中で Tooltip は独自にラベルに組み込んでします。ユーザーに入力フォームの使い方を説明するための補助的な情報を提供します。
+
+その他の props については、[MUI TextField API](https://mui.com/api/text-field/)を参照してください。
+
+## 使用例
+
+### 基本的な使用方法
+
+<CustomTextField
+  label='ユーザー名'
+  placeholder='ユーザー名を入力してください'
+  required
+/>
+
+```tsx
+<CustomTextField
+  label='ユーザー名'
+  placeholder='ユーザー名を入力してください'
+  required
+/>
+```
+
+### ツールチップ付きの例
+
+<CustomTextField
+  label='メールアドレス'
+  placeholder='example@example.com'
+  tooltip='有効なメールアドレスを入力してください'
+/>
+
+```tsx
+<CustomTextField
+  label='メールアドレス'
+  placeholder='example@example.com'
+  tooltip='有効なメールアドレスを入力してください'
+/>
+```
+
+### エラー状態の例
+
+<CustomTextField
+  label='パスワード'
+  type='password'
+  error
+  helperText='パスワードは8文字以上である必要があります'
+/>
+
+```tsx
+<CustomTextField
+  label='パスワード'
+  type='password'
+  error
+  helperText='パスワードは8文字以上である必要があります'
+/>
+```
+
+## 実践的な例: グループ化されたフォーム
+
+以下は、FormControl を使用してフィールドをグループ化した、より複雑なフォームの例です。この例では、個人情報と住所情報を別々のグループに分けています。
+
+export const GroupedForm = () => {
+  const [formData, setFormData] = useState({
+    lastName: '',
+    firstName: '',
+    email: '',
+    postalCode: '',
+    city: '',
+    streetAddress: '',
+  })
+  const [errors, setErrors] = useState({})
+  const [openDialog, setOpenDialog] = useState(false)
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+const requiredFields = ['lastName', 'email'] // 必須フィールドのリスト
+
+const handleChange = (e) => { const { name, value } = e.target; setFormData((prevData) => ({ ...prevData, [name]: value, })) }
+
+const handleSubmit = (e) => { e.preventDefault(); const newErrors = {}
+
+// 必須フィールドのみをチェック requiredFields.forEach((field) => { if (!formData[field]) { newErrors[field] = 'このフィールドは必須です' } })
+
+    if (Object.keys(newErrors).length === 0) {
+      setOpenDialog(true)
+    } else {
+      setErrors(newErrors)
+    }
+
+}
+
+const handleCloseDialog = () => { setOpenDialog(false) }
+
+return (
+
+<>
+<Box
+component='form'
+onSubmit={handleSubmit}
+sx={{
+          maxWidth: 600,
+          margin: 'auto',
+          border: `1px solid ${theme.palette.divider}`,
+          p: 8,
+          borderRadius: 2,
+        }}>
+<FormControl component='fieldset' sx={{ width: '100%', mb: 2 }}>
+<Typography variant='h6' component='legend' sx={{ mb: 2 }}>
+個人情報
+</Typography>
+
+<Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
+
+<CustomTextField
+              label='姓'
+              name='lastName'
+              value={formData.lastName}
+              onChange={handleChange}
+              error={!!errors.lastName}
+              helperText={errors.lastName}
+              required
+            />
+<CustomTextField
+              label='名'
+              name='firstName'
+              value={formData.firstName}
+              onChange={handleChange}
+              error={!!errors.firstName}
+              helperText={errors.firstName}
+            />
+</Box>
+<CustomTextField
+            label='メールアドレス'
+            name='email'
+            type='email'
+            value={formData.email}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
+            required
+            tooltip='有効なメールアドレスを入力してください'
+          />
+</FormControl>
+
+        <FormControl component='fieldset' sx={{ width: '100%', mb: 2, mt: 4 }}>
+          <Typography variant='h6' component='legend' sx={{ mb: 2 }}>
+            住所情報
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+            <CustomTextField
+              label='郵便番号'
+              name='postalCode'
+              value={formData.postalCode}
+              onChange={handleChange}
+              error={!!errors.postalCode}
+              helperText={errors.postalCode}
+            />
+            <CustomTextField
+              label='市区町村'
+              name='city'
+              value={formData.city}
+              onChange={handleChange}
+              error={!!errors.city}
+              helperText={errors.city}
+            />
+          </Box>
+          <CustomTextField
+            label='住所'
+            name='streetAddress'
+            value={formData.streetAddress}
+            onChange={handleChange}
+            error={!!errors.streetAddress}
+            helperText={errors.streetAddress}
+          />
+        </FormControl>
+
+        <Button
+          type='submit'
+          variant='contained'
+          color='primary'
+          sx={{ mt: 2 }}>
+          送信内容の確認
+        </Button>
+      </Box>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        sx={{ p: 8 }}
+        fullWidth={true}
+        maxWidth='sm'>
+        <DialogTitle>送信内容の確認</DialogTitle>
+        <DialogContent>
+          <Typography
+            component='pre'
+            sx={{ whiteSpace: 'pre-wrap' }}>
+            {JSON.stringify(formData, null, 2)}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ flexGrow: 1 }}/>
+          <Button
+            onClick={handleCloseDialog}
+            variant='outlined'
+            color='secondary'>
+            閉じる
+          </Button>
+          <Button>送信</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+
+) }
+
+// フォームの表示
+
+<GroupedForm />
+
+<details>
+<summary>コードを表示</summary>
+```tsx
+export const GroupedForm = () => {
+  const [formData, setFormData] = useState({
+    lastName: '',
+    firstName: '',
+    email: '',
+    postalCode: '',
+    city: '',
+    streetAddress: '',
+  })
+  const [errors, setErrors] = useState({})
+  const [openDialog, setOpenDialog] = useState(false)
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+const requiredFields = ['lastName', 'email'] // 必須フィールドのリスト
+
+const handleChange = (e) => { const { name, value } = e.target setFormData((prevData) => ({ ...prevData, [name]: value, })) }
+
+const handleSubmit = (e) => { e.preventDefault() const newErrors = {}
+
+    // 必須フィールドのみをチェック
+    requiredFields.forEach((field) => {
+      if (!formData[field]) {
+        newErrors[field] = 'このフィールドは必須です'
+      }
+    })
+
+    if (Object.keys(newErrors).length === 0) {
+      setOpenDialog(true)
+    } else {
+      setErrors(newErrors)
+    }
+
+}
+
+const handleCloseDialog = () => { setOpenDialog(false) }
+
+return (
+
+<>
+<Box
+component='form'
+onSubmit={handleSubmit}
+sx={{
+          maxWidth: 600,
+          margin: 'auto',
+          border: `1px solid ${theme.palette.divider}`,
+          p: 8,
+          borderRadius: 2,
+        }}>
+<FormControl component='fieldset' sx={{ width: '100%', mb: 2 }}>
+
+<Typography variant='h6' component='legend' sx={{ mb: 2 }}>
+  個人情報
+</Typography>
+
+<Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
+
+<CustomTextField
+              label='姓'
+              name='lastName'
+              value={formData.lastName}
+              onChange={handleChange}
+              error={!!errors.lastName}
+              helperText={errors.lastName}
+              required
+            />
+<CustomTextField
+              label='名'
+              name='firstName'
+              value={formData.firstName}
+              onChange={handleChange}
+              error={!!errors.firstName}
+              helperText={errors.firstName}
+            />
+</Box>
+<CustomTextField
+            label='メールアドレス'
+            name='email'
+            type='email'
+            value={formData.email}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
+            required
+            tooltip='有効なメールアドレスを入力してください'
+          />
+</FormControl>
+
+        <FormControl component='fieldset' sx={{ width: '100%', mb: 2, mt: 4 }}>
+          <Typography variant='h6' component='legend' sx={{ mb: 2 }}>
+            住所情報
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+            <CustomTextField
+              label='郵便番号'
+              name='postalCode'
+              value={formData.postalCode}
+              onChange={handleChange}
+              error={!!errors.postalCode}
+              helperText={errors.postalCode}
+            />
+            <CustomTextField
+              label='市区町村'
+              name='city'
+              value={formData.city}
+              onChange={handleChange}
+              error={!!errors.city}
+              helperText={errors.city}
+            />
+          </Box>
+          <CustomTextField
+            label='住所'
+            name='streetAddress'
+            value={formData.streetAddress}
+            onChange={handleChange}
+            error={!!errors.streetAddress}
+            helperText={errors.streetAddress}
+          />
+        </FormControl>
+
+        <Button
+          type='submit'
+          variant='contained'
+          color='primary'
+          sx={{ mt: 2 }}>
+          送信内容の確認
+        </Button>
+      </Box>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        sx={{ p: 8 }}
+        fullWidth={true}
+        maxWidth='sm'>
+        <DialogTitle>送信内容の確認</DialogTitle>
+        <DialogContent>
+          <Typography
+            component='pre'
+            sx={{ whiteSpace: 'pre-wrap' }}>
+            {JSON.stringify(formData, null, 2)}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ flexGrow: 1 }}/>
+          <Button
+            onClick={handleCloseDialog}
+            variant='outlined'
+            color='secondary'>
+            閉じる
+          </Button>
+          <Button>送信</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+
+) }
+
+```
+</details>
+
+この例では、`FormControl`コンポーネントを使用して、関連するフィールドをグループ化しています。主な特徴は以下の通りです：
+
+1. `FormControl`を使用して、個人情報と住所情報を別々のセクションに分けています
+1. フォーム特有のやや」複雑なレイアウトを実現しています
+1. 所定のフィールドに対して、バリデーションとエラー表示を実装しています
+5. レスポンシブなレイアウトを実現しています
+
+このようなグループ化されたフォームレイアウトは、ユーザーにとって情報を整理しやすく、入力しやすいインターフェースを提供します。また、開発者にとっても、関連するフィールドを論理的にグループ化できるため、コードの管理が容易になります。
+
+この例では、フォームの状態管理、バリデーション、エラー表示、そしてSubmit時の値の確認を表示するためのダイアログを実装しています。
+
+## カスタマイズ
+
+CustomTextFieldのさらなるカスタマイズが必要な場合は、[MUIカスタマイズガイド](https://mui.com/customization/how-to-customize/)を参照し、プロジェクトの要件に合わせて調整してください。
+
+## 関連リンク
+
+- [MUI TextField](https://mui.com/components/text-fields/)
+- [MUI Form API](https://mui.com/api/form-control/)
+- [MUI Input API](https://mui.com/api/input/)
+
+その他UIのカスタマイズは、[公式ドキュメント](https://mui.com/components/text-fields/#customized-inputs)を参照してください。
+
+特にMuiを業務システムで開発する場合は、細かなUIカスタマイズのニーズが出てくると思います。その際は、[公式ドキュメント](https://mui.com/customization/how-to-customize/)を参照し、細かなアップデートを繰り返し、自社のデザインシステムに近づけていくことをおすすめします。
+
+## API Props一覧
+
+TextFieldのオプションは、以下の通りです。詳細なAPIは[公式ドキュメント](https://mui.com/api/text-field/)も参照してください
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>label</td>
+    <td>node</td>
+    <td></td>
+    <td>ラベル</td>
+  </tr>
+  <tr>
+    <td>placeholder</td>
+    <td>string</td>
+    <td></td>
+    <td>プレースホルダー</td>
+  </tr>
+  <tr>
+    <td>helperText</td>
+    <td>node</td>
+    <td></td>
+    <td>ヘルパーテキスト</td>
+  </tr>
+  <tr>
+    <td>error</td>
+    <td>bool</td>
+    <td>false</td>
+    <td>エラー</td>
+  </tr>
+  <tr>
+    <td>disabled</td>
+    <td>bool</td>
+    <td>false</td>
+    <td>無効化</td>
+  </tr>
+  <tr>
+    <td>fullWidth</td>
+    <td>bool</td>
+    <td>false</td>
+    <td>幅100%</td>
+  </tr>
+  <tr>
+    <td>multiline</td>
+    <td>bool</td>
+    <td>false</td>
+    <td>複数行</td>
+  </tr>
+  <tr>
+    <td>rows</td>
+    <td>number</td>
+    <td>1</td>
+    <td>行数</td>
+  </tr>
+  <tr>
+    <td>rowsMax</td>
+    <td>number</td>
+    <td></td>
+    <td>最大行数</td>
+  </tr>
+  <tr>
+    <td>inputProps</td>
+    <td>object</td>
+    <td></td>
+    <td>input要素のprops</td>
+  </tr>
+  <tr>
+    <td>InputProps</td>
+    <td>object</td>
+    <td></td>
+    <td>Input要素のprops</td>
+  </tr>
+  <tr>
+    <td>InputLabelProps</td>
+    <td>object</td>
+    <td></td>
+    <td>InputLabel要素のprops</td>
+  </tr>
+  <tr>
+    <td>FormHelperTextProps</td>
+    <td>object</td>
+    <td></td>
+    <td>FormHelperText要素のprops</td>
+  </tr>
+  <tr>
+    <td>variant</td>
+    <td>'standard' \| 'outlined' \| 'filled'</td>
+    <td>'standard'</td>
+    <td>バリエーション</td>
+  </tr>
+  <tr>
+    <td>color</td>
+    <td>'primary' \| 'secondary'</td>
+    <td>'primary'</td>
+    <td>色</td>
+  </tr>
+  <tr>
+    <td>size</td>
+    <td>'small' \| 'medium'</td>
+    <td>'medium'</td>
+    <td>サイズ</td>
+  </tr>
+  <tr>
+    <td>select</td>
+    <td>bool</td>
+    <td>false</td>
+    <td>セレクトボックス</td>
+  </tr>
+</table>
+
+## Form API Links
+
+- [TextField](https://mui.com/api/text-field/)
+- [OutlinedInput](https://mui.com/api/outlined-input/)
+- [FilledInput](https://mui.com/api/filled-input/)
+- [Input](https://mui.com/api/input/)
+- [InputBase](https://mui.com/api/input-base/)
+- [InputAdornment](https://mui.com/api/input-adornment/)
+- [InputLabel](https://mui.com/api/input-label/)
+- [FormHelperText](https://mui.com/api/form-helper-text/)
+- [Select](https://mui.com/api/select/)
+- [TextareaAutosize](https://mui.com/api/textarea-autosize/)
+
+## Link
+
+<div className="link-list">
+  <a
+    className="link-item"
+    href="https://mui.com/components/text-fields/"
+    target="_blank"
+    rel="noreferrer"
+  >
+    <span>
+      <strong>MUI</strong>
+      TextField
+    </span>
+  </a>
+</div>
+
+</Container>
+</ThemeProvider>
+```

@@ -1,0 +1,101 @@
+name: Publish Package
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version bump (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+          pnpm add -D @types/node
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Check Git status before version bump
+        run: |
+          echo "=== Git Status Before Version Bump ==="
+          git status
+          echo "=== End Git Status ==="
+
+      - name: Bump version (for workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION_BUMP: ${{ github.event.inputs.version }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+
+          git add -A
+
+          if ! git diff --staged --quiet; then
+            echo "Uncommitted changes found. Auto-committing."
+            git commit -m "chore: auto-commit build artifacts [skip ci]"
+          else
+            echo "No uncommitted changes. Proceeding."
+          fi
+
+          npm version "${VERSION_BUMP}" -m "chore: bump version to %s [skip ci]"
+          git push
+          git push --tags
+
+      - name: Check Git status after version bump
+        run: |
+          echo "=== Git Status After Version Bump ==="
+          git status
+          echo "=== End Git Status ==="
+          echo "Current Package Version: $(node -e "console.log(require('./package.json').version)")"
+
+      - name: Publish to npm
+        if: github.event_name == 'workflow_dispatch'
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publishing Debug Info
+        run: |
+          echo "=== Publishing Debug Info ==="
+          echo "Package Name: $(node -e "console.log(require('./package.json').name)")"
+          echo "Package Version: $(node -e "console.log(require('./package.json').version)")"
+          echo "=== End Debug Info ==="

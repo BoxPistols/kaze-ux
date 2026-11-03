@@ -1,0 +1,28 @@
+import { Meta, Canvas } from '@storybook/blocks'
+import * as Stories from './Accessibility.stories'
+
+<Meta of={Stories} />
+
+# Accessibility
+
+## 概要
+
+WCAG 2.1準拠のアクセシビリティガイドライン。コントラスト比、タッチターゲット、フォントサイズの基準を定義。
+
+### 基準
+
+- **コントラスト比**: 通常テキスト 4.5:1以上、大テキスト 3:1以上
+- **タッチターゲット**: 最小 44x44px
+- **フォントサイズ**: 最小 12px（本テーマの最小フォントサイズ原則）
+
+## コントラスト比
+
+<Canvas of={Stories.ContrastRatios} />
+
+## タッチターゲット
+
+<Canvas of={Stories.TouchTargets} />
+
+## フォントサイズ
+
+<Canvas of={Stories.FontSizes} />

@@ -1,0 +1,1442 @@
+{
+  "$schema": "https://kaze-ux.dev/schema/components.json",
+  "$description": "生成物。手で編集しない（pnpm export-metadata）。story が単一ソースで、禁止事項などは metadata/curated.json で重ねる",
+  "version": "2.0.0",
+  "framework": "React + MUI + Tailwind CSS",
+  "components": {
+    "accordion": {
+      "name": "Accordion",
+      "exportName": "CustomAccordion",
+      "category": "UI",
+      "story": "Components/UI/Accordion",
+      "storyFile": "src/stories/04-Components/UI/Accordion/Accordion.stories.tsx",
+      "import": "@/components/ui/accordion",
+      "description": "カスタムアコーディオン。アイコン、バッジ、ネスト対応のExpandable/Collapsibleパネルコンポーネント。",
+      "accessibility": ["role=button", "aria-expanded", "keyboard navigation"],
+      "props": {
+        "highlight": {
+          "control": "boolean",
+          "description": "ハイライト表示"
+        },
+        "canExpand": {
+          "control": "boolean",
+          "description": "展開可能かどうか"
+        },
+        "defaultExpanded": {
+          "control": "boolean",
+          "description": "初期展開状態"
+        }
+      }
+    },
+    "actionMenu": {
+      "name": "ActionMenu",
+      "category": "UI/Menu",
+      "story": "Components/UI/Menu/ActionMenu",
+      "storyFile": "src/stories/04-Components/UI/Menu/ActionMenu.stories.tsx",
+      "import": "@/components/ui/menu/actionMenu",
+      "description": "3点ドットメニュー形式のアクションメニュー。テーブル行やカードのコンテキストメニューとして使用。danger指定で削除等の危険操作を視覚的に区別する。",
+      "accessibility": [
+        "aria-label",
+        "aria-controls",
+        "aria-expanded",
+        "aria-haspopup"
+      ],
+      "sample": "<ActionMenu items={[{ id: 'edit', label: '編集', onClick: () => {} }]} ariaLabel='操作' />",
+      "props": {}
+    },
+    "alert": {
+      "name": "Alert",
+      "category": "UI",
+      "story": "Components/UI/Alert",
+      "storyFile": "src/stories/04-Components/UI/Alert/Alert.stories.tsx",
+      "import": "@mui/material",
+      "description": "MUI Alertコンポーネント。standard/outlined/filledバリアント、4段階の重要度、カスタムborderRadiusとカラーテーマが適用されている。",
+      "variants": ["standard", "outlined", "filled"],
+      "sample": "<Alert severity='warning' variant='outlined'>保存されていません</Alert>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomToaster を使う"
+      ],
+      "props": {
+        "severity": {
+          "control": "select",
+          "options": ["success", "error", "warning", "info"]
+        },
+        "variant": {
+          "control": "select",
+          "options": ["standard", "outlined", "filled"]
+        }
+      }
+    },
+    "badge": {
+      "name": "Badge",
+      "category": "UI",
+      "story": "Components/UI/Badge",
+      "storyFile": "src/stories/04-Components/UI/Badge/Badge.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["standard", "dot"],
+      "sample": "<Badge badgeContent={4} color='primary' max={99}><MailIcon /></Badge>",
+      "props": {
+        "badgeContent": {
+          "control": "number"
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "default",
+            "primary",
+            "secondary",
+            "error",
+            "info",
+            "success",
+            "warning"
+          ]
+        },
+        "variant": {
+          "control": "select",
+          "options": ["standard", "dot"]
+        },
+        "max": {
+          "control": "number"
+        },
+        "invisible": {
+          "control": "boolean"
+        },
+        "showZero": {
+          "control": "boolean"
+        }
+      }
+    },
+    "breadcrumbs": {
+      "name": "Breadcrumbs",
+      "category": "UI",
+      "story": "Components/UI/Breadcrumbs",
+      "storyFile": "src/stories/04-Components/UI/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "import": "@mui/material",
+      "sample": "<Breadcrumbs aria-label='現在地'><Link href='/'>ホーム</Link><Typography>詳細</Typography></Breadcrumbs>",
+      "props": {
+        "separator": {
+          "control": "text"
+        },
+        "itemsBeforeCollapse": {
+          "control": "number"
+        },
+        "itemsAfterCollapse": {
+          "control": "number"
+        }
+      }
+    },
+    "button": {
+      "name": "Button",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/Button",
+      "storyFile": "src/stories/04-Components/UI/Button/Button.stories.tsx",
+      "import": "@mui/material",
+      "description": "MUI Buttonコンポーネント。contained / outlined / text の3バリアント、6カラー、3サイズをテーマカスタマイズ付きで表示する。",
+      "variants": ["contained", "outlined", "text"],
+      "sizes": ["small", "medium", "large"],
+      "sample": "<Button variant='contained' size='medium'>保存</Button>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の Button / LoadingButton / SaveButton を使う"
+      ],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["contained", "outlined", "text"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "inherit",
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "fullWidth": {
+          "control": "boolean"
+        }
+      }
+    },
+    "buttonGroup": {
+      "name": "ButtonGroup",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/ButtonGroup",
+      "storyFile": "src/stories/04-Components/UI/Button/ButtonGroup.stories.tsx",
+      "import": "@/components/ui/button-group",
+      "description": "選択式ボタングループ。単一選択・複数選択に対応し、アイコン付きオプションもサポート。ビュー切替や期間選択等に使用。",
+      "variants": ["outlined", "contained", "text"],
+      "sizes": ["small", "medium", "large"],
+      "props": {
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "variant": {
+          "control": "select",
+          "options": ["outlined", "contained", "text"]
+        },
+        "multiple": {
+          "control": "boolean"
+        },
+        "fullWidth": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        }
+      }
+    },
+    "card": {
+      "name": "Card",
+      "category": "UI/Card",
+      "story": "Components/UI/Card/Card",
+      "storyFile": "src/stories/04-Components/UI/Card/Card.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["elevation", "outlined"],
+      "sample": "<Card variant='outlined'>内容</Card>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の Card / CardContent / CardHeader / CardTitle / CardDescription / CardFooter / ServiceCard を使う"
+      ],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["elevation", "outlined"],
+          "description": "カードのバリアント"
+        },
+        "square": {
+          "control": "boolean",
+          "description": "角丸を無効化"
+        }
+      }
+    },
+    "chatSupport": {
+      "name": "ChatSupport",
+      "category": "UI",
+      "story": "Components/UI/ChatSupport",
+      "storyFile": "src/stories/04-Components/UI/ChatSupport/ChatSupport.stories.tsx",
+      "import": "@/components/ui/ChatSupport/ChatSupport",
+      "accessibility": ["keyboard shortcuts", "aria-live"],
+      "props": {}
+    },
+    "checkboxRadio": {
+      "name": "Checkbox & Radio",
+      "category": "Form",
+      "story": "Components/Form/Checkbox & Radio",
+      "storyFile": "src/stories/04-Components/Form/CheckboxRadio.stories.tsx",
+      "props": {}
+    },
+    "chip": {
+      "name": "Chip",
+      "category": "UI",
+      "story": "Components/UI/Chip",
+      "storyFile": "src/stories/04-Components/UI/Chip/Chip.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["filled", "outlined"],
+      "sizes": ["small", "medium"],
+      "sample": "<Chip label='下書き' size='small' variant='outlined' />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomChip / ConnectionStatusChip を使う"
+      ],
+      "props": {
+        "label": {
+          "control": "text"
+        },
+        "variant": {
+          "control": "select",
+          "options": ["filled", "outlined"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "default",
+            "primary",
+            "secondary",
+            "success",
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium"]
+        },
+        "clickable": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        }
+      }
+    },
+    "connectionStatusChip": {
+      "name": "ConnectionStatusChip",
+      "category": "UI/Chip",
+      "story": "Components/UI/Chip/ConnectionStatusChip",
+      "storyFile": "src/stories/04-Components/UI/Chip/ConnectionStatusChip.stories.tsx",
+      "import": "@/components/ui/chip/connectionStatusChip",
+      "description": "接続状態チップ。連携済み/未連携のステータスを色とアイコンで視覚的に表示する。",
+      "props": {
+        "connected": {
+          "control": "boolean"
+        },
+        "connectedLabel": {
+          "control": "text"
+        },
+        "disconnectedLabel": {
+          "control": "text"
+        }
+      }
+    },
+    "customTextField": {
+      "name": "CustomTextField",
+      "category": "Form",
+      "story": "Components/Form/CustomTextField",
+      "storyFile": "src/stories/04-Components/Form/CustomTextField.stories.tsx",
+      "import": "@/components/Form/CustomTextField",
+      "description": "ツールチップ付きカスタムTextField。ラベル横に情報アイコンを表示し、ホバーで補足説明を提示する。",
+      "sizes": ["small", "medium"],
+      "accessibility": [
+        "aria-label",
+        "aria-required",
+        "aria-invalid",
+        "aria-describedby"
+      ],
+      "sample": "<CustomTextField label='名前' required placeholder='入力してください' />",
+      "props": {
+        "label": {
+          "control": "text"
+        },
+        "placeholder": {
+          "control": "text"
+        },
+        "required": {
+          "control": "boolean"
+        },
+        "error": {
+          "control": "boolean"
+        },
+        "tooltip": {
+          "control": "text"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "helperText": {
+          "control": "text"
+        },
+        "size": {
+          "control": "radio",
+          "options": ["small", "medium"]
+        }
+      }
+    },
+    "customTooltip": {
+      "name": "CustomTooltip",
+      "category": "UI/Tooltip",
+      "story": "Components/UI/Tooltip/CustomTooltip",
+      "storyFile": "src/stories/04-Components/UI/Tooltip/CustomTooltip.stories.tsx",
+      "import": "@/components/ui/tooltip/customTooltip",
+      "description": "カスタムスタイルのTooltipコンポーネント。MUI Tooltipをベースに、矢印付きのスタイリングを適用。",
+      "props": {
+        "title": {
+          "control": "text",
+          "description": "ツールチップのテキスト"
+        },
+        "placement": {
+          "control": "select",
+          "options": [
+            "top",
+            "top-start",
+            "top-end",
+            "bottom",
+            "bottom-start",
+            "bottom-end",
+            "left",
+            "left-start",
+            "left-end",
+            "right",
+            "right-start",
+            "right-end"
+          ],
+          "description": "表示位置"
+        },
+        "arrow": {
+          "control": "boolean",
+          "description": "矢印の表示"
+        }
+      }
+    },
+    "dateTimePicker": {
+      "name": "DateTimePicker",
+      "category": "Form",
+      "story": "Components/Form/DateTimePicker",
+      "storyFile": "src/stories/04-Components/Form/DateTimePicker.stories.tsx",
+      "import": "@/components/Form/DateTimePicker",
+      "description": "日時選択コンポーネント。MUI X DateTimePickerベースで、ラベル・ツールチップ・バリデーション機能を統合。",
+      "sizes": ["small", "medium"],
+      "accessibility": ["aria-label", "LocalizationProvider"],
+      "props": {
+        "label": {
+          "control": "text"
+        },
+        "format": {
+          "control": "text"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "error": {
+          "control": "boolean"
+        },
+        "helperText": {
+          "control": "text"
+        },
+        "required": {
+          "control": "boolean"
+        },
+        "tooltip": {
+          "control": "text"
+        },
+        "size": {
+          "control": "radio",
+          "options": ["small", "medium"]
+        },
+        "fullWidth": {
+          "control": "boolean"
+        }
+      }
+    },
+    "dialog": {
+      "name": "Dialog",
+      "category": "UI",
+      "story": "Components/UI/Dialog",
+      "storyFile": "src/stories/04-Components/UI/Dialog/Dialog.stories.tsx",
+      "description": "ダイアログコンポーネント群。FormDialog(フォーム入力)とConfirmDialog(確認・削除・警告)の2種類を提供。ローディング状態やカスタムサイズに対応。",
+      "accessibility": [
+        "role=alertdialog",
+        "aria-labelledby",
+        "aria-describedby"
+      ],
+      "prohibited": ["window.confirm使用禁止"],
+      "props": {
+        "title": {
+          "control": "text"
+        },
+        "confirmColor": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ]
+        },
+        "confirmVariant": {
+          "control": "select",
+          "options": ["text", "outlined", "contained"]
+        },
+        "maxWidth": {
+          "control": "select",
+          "options": ["xs", "sm", "md", "lg", "xl"]
+        },
+        "loading": {
+          "control": "boolean"
+        }
+      }
+    },
+    "drawer": {
+      "name": "Drawer",
+      "category": "UI",
+      "story": "Components/UI/Drawer",
+      "storyFile": "src/stories/04-Components/UI/Drawer/Drawer.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["temporary", "persistent", "permanent"],
+      "props": {
+        "anchor": {
+          "control": "select",
+          "options": ["left", "right", "top", "bottom"],
+          "description": "ドロワーの表示位置"
+        },
+        "variant": {
+          "control": "select",
+          "options": ["temporary", "persistent", "permanent"],
+          "description": "ドロワーのバリアント"
+        }
+      }
+    },
+    "emptyState": {
+      "name": "EmptyState",
+      "category": "Feedback",
+      "story": "Components/Feedback/EmptyState",
+      "storyFile": "src/stories/04-Components/EmptyState.stories.tsx",
+      "import": "@/components/ui/feedback",
+      "description": "一覧が 0 件のときに出す。\n\nただ何も出さないと「読み込み中なのか」「壊れているのか」「本当に無いのか」が\n区別できない。**何が無いのか**と**次に何をすればよいか**を必ず出す。\n\n404 のような「経路の誤り」には NotFoundView を使う。\nこちらは「経路は正しいが中身が無い」ときのもの。",
+      "sizes": ["compact", "page"],
+      "sample": "<EmptyState title='まだ出品がありません' description='商品を登録すると、ここに並びます' size='compact' />",
+      "props": {
+        "title": {
+          "control": "text"
+        },
+        "description": {
+          "control": "text"
+        },
+        "size": {
+          "control": "radio",
+          "options": ["compact", "page"]
+        }
+      }
+    },
+    "fab": {
+      "name": "Fab",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/Fab",
+      "storyFile": "src/stories/04-Components/UI/Button/Fab.stories.tsx",
+      "import": "@/components/ui/fab",
+      "description": "Floating Action Button。ローディング状態、表示/非表示アニメーション、固定位置配置をサポートするカスタムFabコンポーネント。",
+      "variants": ["circular", "extended"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-label", "tooltip"],
+      "props": {
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success",
+            "default",
+            "inherit"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "variant": {
+          "control": "select",
+          "options": ["circular", "extended"]
+        },
+        "loading": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "visible": {
+          "control": "boolean"
+        },
+        "position": {
+          "control": "select",
+          "options": ["fixed", "absolute", "relative"]
+        },
+        "placement": {
+          "control": "select",
+          "options": [
+            "bottom-right",
+            "bottom-left",
+            "bottom-center",
+            "top-right",
+            "top-left"
+          ]
+        }
+      }
+    },
+    "header": {
+      "name": "Header",
+      "category": "Layout",
+      "story": "Components/Layout/Header",
+      "storyFile": "src/stories/04-Components/Layout/Header.stories.tsx",
+      "import": "@/layouts/header",
+      "props": {
+        "open": {
+          "control": "boolean",
+          "description": "ドロワーの開閉状態（矢印の向きに影響）"
+        }
+      }
+    },
+    "icon": {
+      "name": "Icon",
+      "category": "UI",
+      "story": "Components/UI/Icon",
+      "storyFile": "src/stories/04-Components/UI/Icon/Icons.stories.tsx",
+      "description": "MUI標準アイコンコンポーネントの使用例。SvgIconベースでサイズ、カラーに対応。",
+      "props": {}
+    },
+    "iconButton": {
+      "name": "IconButton",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/IconButton",
+      "storyFile": "src/stories/04-Components/UI/Button/IconButton.stories.tsx",
+      "import": "@/components/ui/icon-button",
+      "description": "カスタムIconButtonコンポーネント。default/outlined/filled/ghost の4バリアント、ローディング、アクティブ状態、ツールチップに対応。",
+      "variants": ["default", "outlined", "filled", "ghost"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-label必須", "aria-busy", "tooltip"],
+      "sample": "<IconButton tooltip='Edit' aria-label='Edit'><EditIcon /></IconButton>",
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["default", "outlined", "filled", "ghost"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success",
+            "inherit"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "loading": {
+          "control": "boolean"
+        },
+        "active": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "tooltip": {
+          "control": "text"
+        }
+      }
+    },
+    "layout": {
+      "name": "Layout",
+      "category": "Layout",
+      "story": "Components/Layout/Layout",
+      "storyFile": "src/stories/04-Components/Layout/Layout.stories.tsx",
+      "props": {
+        "open": {
+          "control": "boolean",
+          "description": "サイドナビゲーションの開閉状態"
+        }
+      }
+    },
+    "list": {
+      "name": "List",
+      "category": "UI",
+      "story": "Components/UI/List",
+      "storyFile": "src/stories/04-Components/UI/List/List.stories.tsx",
+      "import": "@mui/material",
+      "sample": "<List dense disablePadding><ListItem><ListItemText primary='項目' /></ListItem></List>",
+      "props": {
+        "dense": {
+          "control": "boolean",
+          "description": "コンパクト表示"
+        },
+        "disablePadding": {
+          "control": "boolean",
+          "description": "パディングを無効化"
+        }
+      }
+    },
+    "loadingButton": {
+      "name": "LoadingButton",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/LoadingButton",
+      "storyFile": "src/stories/04-Components/UI/Button/LoadingButton.stories.tsx",
+      "import": "@/components/ui/button/loadingButton",
+      "description": "非同期処理中のローディング表示に対応したボタン。保存・送信・アップロード等のフローで使用。成功状態やプログレス表示にも対応。",
+      "variants": ["contained", "outlined", "text"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-busy", "aria-disabled"],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["contained", "outlined", "text"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "loading": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "success": {
+          "control": "boolean"
+        },
+        "loadingPosition": {
+          "control": "select",
+          "options": ["start", "end", "center"]
+        }
+      }
+    },
+    "map3D": {
+      "name": "Map3D",
+      "category": "Maps",
+      "story": "Components/Maps/Map3D",
+      "storyFile": "src/stories/04-Components/Maps/Map3D.stories.tsx",
+      "import": "@/components/Map3D",
+      "props": {}
+    },
+    "mapLibre": {
+      "name": "MapLibre",
+      "category": "Maps",
+      "story": "Components/Maps/MapLibre",
+      "storyFile": "src/stories/04-Components/Maps/MapLibre.stories.tsx",
+      "import": "@/components/MapLibre",
+      "props": {}
+    },
+    "menu": {
+      "name": "Menu",
+      "category": "UI/Menu",
+      "story": "Components/UI/Menu/Menu",
+      "storyFile": "src/stories/04-Components/UI/Menu/Menu.stories.tsx",
+      "import": "@mui/material",
+      "description": "MUI Menuコンポーネント。Paper borderRadius、boxShadow、MenuItemのフォントサイズ・パディングがテーマでカスタマイズされている。",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の ActionMenu を使う"
+      ],
+      "props": {
+        "open": {
+          "control": "boolean",
+          "description": "メニューの開閉状態"
+        },
+        "anchorOrigin": {
+          "control": "object",
+          "description": "アンカー位置"
+        },
+        "transformOrigin": {
+          "control": "object",
+          "description": "変換起点"
+        }
+      }
+    },
+    "notFoundView": {
+      "name": "NotFoundView",
+      "category": "UI/Feedback",
+      "story": "Components/UI/Feedback/NotFoundView",
+      "storyFile": "src/stories/04-Components/UI/Feedback/NotFoundView.stories.tsx",
+      "import": "@/components/ui/feedback/notFoundView",
+      "description": "404ページ用のビューコンポーネント。「ホームに戻る」「前のページに戻る」ボタンを提供する。",
+      "props": {
+        "homePath": {
+          "control": "text"
+        }
+      }
+    },
+    "pagination": {
+      "name": "Pagination",
+      "category": "UI",
+      "story": "Components/UI/Pagination",
+      "storyFile": "src/stories/04-Components/UI/Pagination/Pagination.stories.tsx",
+      "import": "@/components/ui/pagination/pagination",
+      "description": "汎用ページネーションコンポーネント。Render Props パターンで子要素にページ済みデータを提供する。ページサイズ変更にも対応。",
+      "accessibility": ["aria-label", "keyboard navigation"],
+      "props": {}
+    },
+    "paper": {
+      "name": "Paper",
+      "category": "UI",
+      "story": "Components/UI/Paper",
+      "storyFile": "src/stories/04-Components/UI/Paper/Paper.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["elevation", "outlined"],
+      "sample": "<Paper variant='outlined' sx={{ p: 2 }}>内容</Paper>",
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["elevation", "outlined"],
+          "description": "バリアント"
+        },
+        "square": {
+          "control": "boolean",
+          "description": "角丸を無効にする"
+        }
+      }
+    },
+    "progress": {
+      "name": "Progress",
+      "exportName": "CircularProgress",
+      "category": "UI",
+      "story": "Components/UI/Progress",
+      "storyFile": "src/stories/04-Components/UI/Progress/Progress.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["determinate", "indeterminate"],
+      "props": {
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success",
+            "inherit"
+          ]
+        },
+        "variant": {
+          "control": "select",
+          "options": ["determinate", "indeterminate"]
+        }
+      }
+    },
+    "resizableDivider": {
+      "name": "ResizableDivider",
+      "category": "UI",
+      "story": "Components/UI/ResizableDivider",
+      "storyFile": "src/stories/04-Components/UI/ResizableDivider/ResizableDivider.stories.tsx",
+      "import": "@/components/ui/ResizableDivider",
+      "description": "ドラッグでパネル幅を調整できるリサイズ用ディバイダー。水平/垂直方向に対応し、最小/最大幅の制約を設定可能。",
+      "props": {
+        "orientation": {
+          "control": "radio",
+          "options": ["vertical", "horizontal"],
+          "description": "ディバイダーの方向"
+        }
+      }
+    },
+    "resourceTable": {
+      "name": "ResourceTable",
+      "category": "UI/Table",
+      "story": "Components/UI/Table/ResourceTable",
+      "storyFile": "src/stories/04-Components/UI/Table/ResourceTable.stories.tsx",
+      "import": "@/components/ui/table/resourceTable",
+      "description": "汎用リソーステーブル。ソート、検索、密度切替、ページネーション機能を備えた再利用可能なデータテーブルコンポーネント。",
+      "props": {}
+    },
+    "saveButton": {
+      "name": "SaveButton",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/SaveButton",
+      "storyFile": "src/stories/04-Components/UI/Button/SaveButton.stories.tsx",
+      "import": "@/components/ui/button/saveButton",
+      "description": "フォーム保存用のボタンコンポーネント。アウトライン形式で、ラベルのカスタマイズと無効化状態に対応。",
+      "sample": "<SaveButton onClick={() => {}} label='保存' />",
+      "props": {
+        "disabled": {
+          "control": "boolean"
+        },
+        "label": {
+          "control": "text"
+        }
+      }
+    },
+    "select": {
+      "name": "Select",
+      "category": "Form",
+      "story": "Components/Form/Select",
+      "storyFile": "src/stories/04-Components/Form/Select.stories.tsx",
+      "exportName": "CustomSelect",
+      "accessibility": ["aria-label", "aria-required", "aria-invalid"],
+      "sample": "<CustomSelect label='都道府県' options={[{value:'tokyo',label:'東京'}]} />",
+      "import": "@/components/Form/CustomSelect",
+      "props": {}
+    },
+    "serviceCard": {
+      "name": "ServiceCard",
+      "category": "UI/Card",
+      "story": "Components/UI/Card/ServiceCard",
+      "storyFile": "src/stories/04-Components/UI/Card/ServiceCard.stories.tsx",
+      "import": "@/components/ui/card/serviceCard",
+      "props": {
+        "title": {
+          "control": "text"
+        },
+        "description": {
+          "control": "text"
+        },
+        "connected": {
+          "control": "boolean"
+        },
+        "loading": {
+          "control": "boolean"
+        },
+        "registerButtonLabel": {
+          "control": "text"
+        }
+      }
+    },
+    "sideNav": {
+      "name": "SideNav",
+      "category": "Layout",
+      "story": "Components/Layout/SideNav",
+      "storyFile": "src/stories/04-Components/Layout/SideNav.stories.tsx",
+      "import": "@/layouts/sideNav",
+      "props": {
+        "open": {
+          "control": "boolean",
+          "description": "サイドナビゲーションの開閉状態"
+        }
+      }
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "category": "UI",
+      "story": "Components/UI/Skeleton",
+      "storyFile": "src/stories/04-Components/UI/Skeleton/Skeleton.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["text", "circular", "rectangular", "rounded"],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["text", "circular", "rectangular", "rounded"]
+        },
+        "animation": {
+          "control": "select",
+          "options": ["pulse", "wave", "false"]
+        },
+        "width": {
+          "control": "text"
+        },
+        "height": {
+          "control": "number"
+        }
+      }
+    },
+    "snackbar": {
+      "name": "Snackbar",
+      "category": "UI",
+      "story": "Components/UI/Snackbar",
+      "storyFile": "src/stories/04-Components/UI/Snackbar/Snackbar.stories.tsx",
+      "import": "@mui/material",
+      "sample": "<Snackbar open message='保存しました' autoHideDuration={3000} />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomToaster を使う"
+      ],
+      "props": {
+        "message": {
+          "control": "text",
+          "description": "メッセージテキスト"
+        }
+      }
+    },
+    "splitButton": {
+      "name": "SplitButton",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/SplitButton",
+      "storyFile": "src/stories/04-Components/UI/Button/SplitButton.stories.tsx",
+      "import": "@/components/ui/split-button",
+      "description": "メインアクション + ドロップダウンメニューの複合ボタン。保存や送信の追加オプションを提供する。danger指定で危険操作を区別。",
+      "variants": ["contained", "outlined", "text"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["aria-controls", "aria-expanded", "aria-haspopup=menu"],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["contained", "outlined", "text"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "loading": {
+          "control": "boolean"
+        },
+        "fullWidth": {
+          "control": "boolean"
+        }
+      }
+    },
+    "statCard": {
+      "name": "StatCard",
+      "category": "Data Display",
+      "story": "Components/Data Display/StatCard",
+      "storyFile": "src/stories/04-Components/StatCard.stories.tsx",
+      "import": "@/components/ui/stat-card",
+      "description": "数値ひとつを主役にするカード。ダッシュボードの KPI、進捗、集計結果に使う。\n\nsaas-dashboard と sky-kaze がそれぞれ独自に組んでいたものを DS に集約した。\n数値は等幅（KAZE_PRINT）で置く。桁が変わったときに横幅が跳ねると、\n並べたカードの端が揃わなくなるため。",
+      "props": {
+        "value": {
+          "control": "text"
+        },
+        "label": {
+          "control": "text"
+        },
+        "caption": {
+          "control": "text"
+        },
+        "interactive": {
+          "control": "boolean"
+        },
+        "accentColor": {
+          "control": "color"
+        }
+      }
+    },
+    "statusTag": {
+      "name": "StatusTag",
+      "category": "UI/Tag",
+      "story": "Components/UI/Tag/StatusTag",
+      "storyFile": "src/stories/04-Components/UI/Tag/StatusTag.stories.tsx",
+      "import": "@/components/ui/tag/statusTag",
+      "description": "ステータスを視覚的に表現するタグコンポーネント。MUI Chipベースで、ステータスに応じた配色を自動適用する。",
+      "sample": "<StatusTag text='承認待ち' status='pending' />",
+      "props": {
+        "text": {
+          "control": "text"
+        },
+        "status": {
+          "control": "select",
+          "options": [
+            "draft",
+            "submitted",
+            "approved",
+            "rejected",
+            "pending",
+            "active",
+            "inactive"
+          ]
+        }
+      }
+    },
+    "stepper": {
+      "name": "Stepper",
+      "category": "UI",
+      "story": "Components/UI/Stepper",
+      "storyFile": "src/stories/04-Components/UI/Stepper/Stepper.stories.tsx",
+      "import": "@mui/material",
+      "props": {
+        "orientation": {
+          "control": "select",
+          "options": ["horizontal", "vertical"],
+          "description": "ステッパーの向き"
+        },
+        "alternativeLabel": {
+          "control": "boolean",
+          "description": "ラベルをステップアイコンの下に配置"
+        },
+        "nonLinear": {
+          "control": "boolean",
+          "description": "非線形ステッパー"
+        }
+      }
+    },
+    "switch": {
+      "name": "Switch",
+      "category": "UI",
+      "story": "Components/UI/Switch",
+      "storyFile": "src/stories/04-Components/UI/Switch/Switch.stories.tsx",
+      "import": "@mui/material",
+      "sizes": ["small", "medium"],
+      "sample": "<Switch defaultChecked size='small' color='primary' />",
+      "props": {
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success",
+            "default"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium"]
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "defaultChecked": {
+          "control": "boolean"
+        }
+      }
+    },
+    "table": {
+      "name": "Table",
+      "category": "UI/Table",
+      "story": "Components/UI/Table/Table",
+      "storyFile": "src/stories/04-Components/UI/Table/Table.stories.tsx",
+      "import": "@mui/material",
+      "description": "MUI Tableコンポーネント。カスタムTableContainer、TableHead、TableBody、TableCellのスタイリングがテーマで適用されている。",
+      "sizes": ["medium", "small"],
+      "sample": "<Table size='small' stickyHeader><TableBody><TableRow><TableCell>値</TableCell></TableRow></TableBody></Table>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTable / ResourceTable / TableToolbar を使う"
+      ],
+      "props": {
+        "size": {
+          "control": "select",
+          "options": ["medium", "small"],
+          "description": "テーブルの密度"
+        },
+        "stickyHeader": {
+          "control": "boolean",
+          "description": "固定ヘッダー"
+        }
+      }
+    },
+    "tableToolbar": {
+      "name": "TableToolbar",
+      "category": "UI/Table",
+      "story": "Components/UI/Table/TableToolbar",
+      "storyFile": "src/stories/04-Components/UI/Table/TableToolbar.stories.tsx",
+      "import": "@/components/ui/table/tableToolbar",
+      "description": "DataGrid内で使用するツールバーコンポーネント。GridToolbarQuickFilterを内包しているため、必ずDataGridのslots.toolbarとして使用してください。",
+      "props": {}
+    },
+    "tabs": {
+      "name": "Tabs",
+      "category": "UI",
+      "story": "Components/UI/Tabs",
+      "storyFile": "src/stories/04-Components/UI/Tabs/Tabs.stories.tsx",
+      "import": "@mui/material",
+      "variants": ["standard", "scrollable", "fullWidth"],
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": ["standard", "scrollable", "fullWidth"]
+        },
+        "orientation": {
+          "control": "select",
+          "options": ["horizontal", "vertical"]
+        },
+        "textColor": {
+          "control": "select",
+          "options": ["primary", "secondary", "inherit"]
+        },
+        "indicatorColor": {
+          "control": "select",
+          "options": ["primary", "secondary"]
+        },
+        "centered": {
+          "control": "boolean"
+        }
+      }
+    },
+    "tailwindButton": {
+      "name": "TailwindButton",
+      "exportName": "Button",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/TailwindButton",
+      "storyFile": "src/stories/04-Components/UI/Button/TailwindButton.stories.tsx",
+      "import": "@/components/ui/Button",
+      "variants": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link"
+      ],
+      "sizes": ["default", "sm", "lg", "icon"],
+      "accessibility": [
+        "focus-visible:ring",
+        "disabled:opacity-50",
+        "aria-disabled"
+      ],
+      "prohibited": ["React.FC使用禁止", "MUI Buttonとの混在禁止"],
+      "sample": "<Button variant='outline' size='sm'>Click</Button>",
+      "props": {
+        "variant": {
+          "control": "select",
+          "options": [
+            "default",
+            "destructive",
+            "outline",
+            "secondary",
+            "ghost",
+            "link"
+          ],
+          "description": "ボタンのスタイルバリアント"
+        },
+        "size": {
+          "control": "select",
+          "options": ["default", "sm", "lg", "icon"],
+          "description": "ボタンのサイズ"
+        },
+        "kaze": {
+          "control": "boolean",
+          "description": "Kaze 骨格を opt-in で適用（sharp radius / mono font / ease-kaze）"
+        }
+      }
+    },
+    "text": {
+      "name": "Text",
+      "exportName": "PageTitle",
+      "category": "UI",
+      "story": "Components/UI/Text",
+      "storyFile": "src/stories/04-Components/UI/Text/Text.stories.tsx",
+      "import": "@/components/ui/text",
+      "description": "テキスト表示コンポーネント群。PageTitle、PageHeader、SectionTitleの各サイズバリエーションを提供する。",
+      "sizes": [
+        "displayLarge",
+        "displayMedium",
+        "displaySmall",
+        "xxl",
+        "xl",
+        "lg",
+        "ml",
+        "md",
+        "sm"
+      ],
+      "props": {
+        "size": {
+          "control": "select",
+          "options": [
+            "displayLarge",
+            "displayMedium",
+            "displaySmall",
+            "xxl",
+            "xl",
+            "lg",
+            "ml",
+            "md",
+            "sm"
+          ],
+          "description": "タイトルサイズ"
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "text.primary",
+            "text.secondary",
+            "text.disabled",
+            "primary",
+            "secondary",
+            "success",
+            "info",
+            "warning",
+            "error"
+          ],
+          "description": "テキストカラー"
+        }
+      }
+    },
+    "textField": {
+      "name": "TextField",
+      "category": "Form",
+      "story": "Components/Form/TextField",
+      "storyFile": "src/stories/04-Components/Form/TextField.stories.tsx",
+      "import": "@mui/material",
+      "description": "MUI TextFieldコンポーネント。テーマでInputLabelのshrink固定、notch非表示、デフォルトsize: small が設定されている。",
+      "variants": ["outlined", "filled", "standard"],
+      "sizes": ["small", "medium"],
+      "sample": "<TextField label='件名' placeholder='入力してください' size='small' required />",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTextField を使う"
+      ],
+      "props": {
+        "label": {
+          "control": "text"
+        },
+        "placeholder": {
+          "control": "text"
+        },
+        "variant": {
+          "control": "select",
+          "options": ["outlined", "filled", "standard"]
+        },
+        "size": {
+          "control": "radio",
+          "options": ["small", "medium"]
+        },
+        "required": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "error": {
+          "control": "boolean"
+        },
+        "helperText": {
+          "control": "text"
+        },
+        "fullWidth": {
+          "control": "boolean"
+        },
+        "multiline": {
+          "control": "boolean"
+        },
+        "rows": {
+          "control": "number"
+        }
+      }
+    },
+    "toast": {
+      "name": "Toast",
+      "exportName": "CustomToaster",
+      "category": "UI",
+      "story": "Components/UI/Toast",
+      "storyFile": "src/stories/04-Components/UI/Toast/Toast.stories.tsx",
+      "import": "@/components/ui/toast/customToaster",
+      "description": "sonnerベースのトースト通知コンポーネント。成功、エラー、警告、情報、ローディングの各バリエーションに対応。",
+      "props": {}
+    },
+    "toggleButton": {
+      "name": "ToggleButton",
+      "exportName": "ToggleButtonGroup",
+      "category": "UI/Button",
+      "story": "Components/UI/Button/ToggleButton",
+      "storyFile": "src/stories/04-Components/UI/Button/ToggleButton.stories.tsx",
+      "import": "@/components/ui/toggle-button",
+      "description": "トグルボタングループ。排他的選択(exclusive)と複数選択に対応。アイコン、ラベル、水平/垂直レイアウトをサポート。",
+      "sizes": ["small", "medium", "large"],
+      "sample": "<ToggleButtonGroup options={[{ value: 'list', label: '一覧' }]} value='list' onChange={() => {}} />",
+      "props": {
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success",
+            "standard"
+          ]
+        },
+        "size": {
+          "control": "select",
+          "options": ["small", "medium", "large"]
+        },
+        "exclusive": {
+          "control": "boolean"
+        },
+        "disabled": {
+          "control": "boolean"
+        },
+        "fullWidth": {
+          "control": "boolean"
+        },
+        "orientation": {
+          "control": "select",
+          "options": ["horizontal", "vertical"]
+        }
+      }
+    },
+    "tooltip": {
+      "name": "Tooltip",
+      "category": "UI",
+      "story": "Components/UI/Tooltip",
+      "storyFile": "src/stories/04-Components/UI/Tooltip/Tooltip.stories.tsx",
+      "import": "@mui/material",
+      "sample": "<Tooltip title='編集' arrow placement='top'><span>対象</span></Tooltip>",
+      "prohibited": [
+        "アプリ（apps/* と src/pages）から直接 import しない。DS の CustomTooltip を使う"
+      ],
+      "props": {
+        "title": {
+          "control": "text",
+          "description": "ツールチップの内容"
+        },
+        "placement": {
+          "control": "select",
+          "options": [
+            "top",
+            "top-start",
+            "top-end",
+            "bottom",
+            "bottom-start",
+            "bottom-end",
+            "left",
+            "left-start",
+            "left-end",
+            "right",
+            "right-start",
+            "right-end"
+          ],
+          "description": "表示位置"
+        },
+        "arrow": {
+          "control": "boolean",
+          "description": "矢印の表示"
+        }
+      }
+    },
+    "userAvatar": {
+      "name": "UserAvatar",
+      "category": "UI/Avatar",
+      "story": "Components/UI/Avatar/UserAvatar",
+      "storyFile": "src/stories/04-Components/UI/Avatar/UserAvatar.stories.tsx",
+      "import": "@/components/ui/avatar/userAvatar",
+      "variants": ["circular", "rounded", "square"],
+      "sizes": ["small", "medium", "large"],
+      "accessibility": ["alt text", "aria-label"],
+      "sample": "<UserAvatar name='山田 太郎' size='medium' />",
+      "props": {
+        "name": {
+          "control": "text"
+        },
+        "size": {
+          "control": "radio",
+          "options": ["small", "medium", "large"]
+        },
+        "variant": {
+          "control": "radio",
+          "options": ["circular", "rounded", "square"]
+        },
+        "color": {
+          "control": "select",
+          "options": [
+            "primary",
+            "secondary",
+            "success",
+            "error",
+            "warning",
+            "info"
+          ]
+        },
+        "src": {
+          "control": "text"
+        }
+      }
+    }
+  }
+}

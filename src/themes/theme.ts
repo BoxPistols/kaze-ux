@@ -1,0 +1,1201 @@
+// src/themes/theme.ts（統合後）
+import {
+  type Components,
+  type CssVarsTheme,
+  type PaletteOptions,
+  type Theme,
+  createTheme,
+} from '@mui/material/styles'
+
+import {
+  breakpointValues,
+  containerMaxWidth,
+  muiBreakpoints,
+} from './breakpoints'
+import {
+  ON_SURFACE_INKS,
+  colorData,
+  createCssVars,
+  createDarkThemeColors,
+  createLightThemeColors,
+} from './colorToken'
+import { bestContrast } from './contrast'
+import {
+  createDarkSchemeElevationOverrides,
+  createShadows,
+  elevation,
+} from './elevation'
+import { createFocusVisibleOverrides } from './focus'
+import {
+  createMotionCssVars,
+  kazeTransitions,
+  motionOf,
+  reducedMotionOverrides,
+} from './motion'
+import {
+  fontSizesVariant,
+  typographyComponentsOverrides,
+  typographyOptions,
+} from './typography'
+
+import type { ColorScheme, DarkColorScheme, ThemeColors } from './colorToken'
+import type { AppTheme } from '../types/theme'
+
+// Button共通
+const CommomButtonStyles = {
+  height: 'auto',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  lineHeight: 1.5,
+  fontWeight: 400,
+  whiteSpace: 'nowrap',
+}
+
+// 共通設定 - kaze-ux準拠
+const commonThemeOptions = {
+  typography: typographyOptions,
+  shape: { borderRadius: 8 }, // モダンな角丸
+  transitions: kazeTransitions,
+  spacing: 4,
+  zIndex: { appBar: 1100, drawer: 1000 },
+  breakpoints: muiBreakpoints,
+  layout: {
+    containerMaxWidth,
+  },
+  // 影スケールは mode 依存のため各テーマ生成側で注入する (src/themes/elevation.ts)
+}
+
+/**
+ * Tailwind が参照する CSS 変数を :root に注入した componentStyles を返す。
+ *
+ * 変数の値を index.css に手打ちすると、MUI 側のトークンを直しても
+ * Tailwind 側が古い値のまま残る。テーマ生成時に注入して同期させる。
+ */
+const withCssVars = (base: typeof componentStyles, colors: ThemeColors) => ({
+  ...base,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...base.MuiCssBaseline.styleOverrides,
+      ':root': { ...createCssVars(colors), ...createMotionCssVars() },
+    },
+  },
+})
+
+// コンポーネントスタイルの定義
+const componentStyles = {
+  ...typographyComponentsOverrides,
+  MuiCssBaseline: {
+    styleOverrides: {
+      // 1rem = 14px に設定
+      html: {
+        fontSize: '14px',
+      },
+      body: ({ theme }: { theme: Theme }) => ({
+        fontSize: '14px',
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        WebkitFontSmoothing: 'antialiased',
+        MozOsxFontSmoothing: 'grayscale',
+      }),
+      // 動きを減らす設定を持つ利用者には意匠より要求を優先する
+      ...reducedMotionOverrides,
+      // フォーカスの所在はキーボード操作の唯一の手がかり。既定を 1 箇所で
+      // 与えて、外したい箇所だけが明示的に上書きする形にする。
+      // 色は --color-ring（テーマ／スキームで自動的に切り替わる）
+      ...createFocusVisibleOverrides('var(--color-ring)'),
+    },
+  },
+  MuiAppBar: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        height: 44,
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+      }),
+    },
+  },
+  MuiToolbar: {
+    styleOverrides: {
+      root: {
+        minHeight: 44,
+        '@media(min-width:0px)': {
+          minHeight: 44,
+        },
+      },
+    },
+  },
+  // Button UI
+  MuiButton: {
+    defaultProps: {
+      variant: 'contained',
+      // disableElevation: true, // デフォルトの影を削除
+      // disableRipple: true, // リップル効果を無効化
+      // disableFocusRipple: true, // フォーカス時のリップル効果を無効化
+      color: 'primary',
+      size: 'medium',
+    },
+    styleOverrides: {
+      root: {
+        textTransform: 'none',
+        borderRadius: 6,
+        minWidth: 80,
+      },
+      sizeSmall: {
+        padding: '0.25em 1.2em',
+        fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+        ...CommomButtonStyles,
+      },
+      sizeMedium: {
+        padding: '0.45em 1.5em',
+        fontSize: fontSizesVariant.sm,
+        ...CommomButtonStyles,
+      },
+      sizeLarge: {
+        padding: '0.5em 1.75em',
+        fontSize: fontSizesVariant.md,
+        ...CommomButtonStyles,
+      },
+      '&.Mui-disabled': {
+        color: colorData.text.disabled,
+        backgroundColor: colorData.grey[300],
+      },
+      // 文字色は色ごとの contrastText に任せる（下の contained* スロット）。
+      // ここで白を一括指定していたため、パレットが持つ濃色の contrastText を
+      // 詳細度で握り潰していた。ライトは main が濃紺なので白で成立していたが、
+      // ダークは main が明るい青になり、実測で 2.46:1 (kaze) / 2.37:1 (dracula)
+      // しか出ていなかった
+      contained: ({ theme }: { theme: Theme }) => ({
+        '&.MuiButton-contained.MuiButton-root.MuiButton-containedInherit': {
+          color: theme.palette.text.primary,
+        },
+        '&.MuiButton-root.Mui-disabled': {
+          color:
+            theme.palette.mode === 'light'
+              ? colorData.text.disabled
+              : colorData.grey[500],
+          backgroundColor:
+            theme.palette.mode === 'light'
+              ? colorData.grey[300]
+              : colorData.grey[700],
+        },
+      }),
+      // text / outlined の Button は文字色に main を使う。main は面のための
+      // 色なので、白地に置くと届かない。実測で Toast の「情報」が 2.52:1、
+      // 「警告」が 2.61:1 だった。Chip と同じく textContrast へ寄せる。
+      //
+      // スロット単位で上書きするのは Chip と同じ理由。複合セレクタ
+      // (&.MuiButton-textWarning) は sx より詳細度が高く、使う側の指定を
+      // 握り潰してしまう
+      ...Object.fromEntries(
+        (
+          [
+            'primary',
+            'secondary',
+            'success',
+            'error',
+            'warning',
+            'info',
+          ] as const
+        ).flatMap((key) => {
+          const cap = key[0].toUpperCase() + key.slice(1)
+          const slot = ({ theme }: { theme: Theme }) => ({
+            color: theme.palette[key].textContrast,
+          })
+          // contained は面が main なので、前景は textContrast ではなく
+          // contrastText（main に対して実測で選ばれた色）を使う。
+          // contained の一括指定と同じ詳細度にして、確実に効かせる
+          const filled = ({ theme }: { theme: Theme }) => ({
+            '&.MuiButton-contained.MuiButton-root': {
+              color: theme.palette[key].contrastText,
+            },
+          })
+          return [
+            [`text${cap}`, slot],
+            [`outlined${cap}`, slot],
+            [`contained${cap}`, filled],
+          ]
+        })
+      ),
+    },
+  },
+  // 補助テキストのエラー表示。MUI 既定は error.main を使うが、これは面の
+  // ための色で、白地の 12px に置くと 4.38:1 にしかならない
+  MuiFormHelperText: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '&.Mui-error': { color: theme.palette.error.textContrast },
+      }),
+    },
+  },
+  // フォームラベル: 分離スタイル（アニメーションなし、常に上部固定）
+  MuiInputLabel: {
+    defaultProps: {
+      shrink: true,
+    },
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        position: 'static',
+        transform: 'none',
+        transition: 'none',
+        pointerEvents: 'auto',
+        fontSize: fontSizesVariant.md,
+        fontWeight: 400,
+        color: theme.palette.text.primary,
+        marginBottom: 4,
+        '&.Mui-focused': {
+          color: theme.palette.text.primary,
+        },
+        // error.main は面のための色。文字に使うと 12px で 4.38:1 になり
+        // 本文 AA を割る
+        '&.Mui-error': {
+          color: theme.palette.error.textContrast,
+        },
+      }),
+      sizeSmall: {
+        fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+      },
+    },
+  },
+  // TextField: デフォルトサイズsmall + ラベル分離
+  MuiTextField: {
+    defaultProps: {
+      size: 'small',
+      InputLabelProps: {
+        shrink: true,
+      },
+    },
+  },
+  // Select: デフォルトサイズsmall
+  MuiSelect: {
+    defaultProps: {
+      size: 'small',
+    },
+  },
+  // Autocomplete: デフォルトサイズsmall
+  MuiAutocomplete: {
+    defaultProps: {
+      size: 'small',
+    },
+  },
+  // OutlinedInput: ラベル分離時のnotch（切り欠き）を非表示
+  MuiOutlinedInput: {
+    styleOverrides: {
+      notchedOutline: {
+        '& legend': {
+          display: 'none',
+        },
+      },
+    },
+  },
+  // FormLabel: 共通のラベルスタイル
+  MuiFormLabel: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '&.Mui-focused': {
+          color: theme.palette.text.primary,
+        },
+      }),
+      // 必須マークも文字。面のための main ではなく前景用の色を使う
+      asterisk: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.error.textContrast,
+      }),
+    },
+  },
+  // MUI 既定のウェイトを 2 値へ寄せる。
+  //
+  // Badge / Slider / StepLabel / DataGrid は MUI 側が fontWeight: 500 を
+  // 持っており、こちらのソースを全部直しても描画には 500 が残る。
+  // ソース走査だけで「0 件」と判断すると必ず取りこぼす（実測で判明した）。
+  MuiBadge: {
+    styleOverrides: {
+      badge: { fontWeight: 700 },
+    },
+  },
+  MuiSlider: {
+    styleOverrides: {
+      valueLabel: { fontWeight: 700 },
+    },
+  },
+  MuiStepLabel: {
+    styleOverrides: {
+      label: {
+        fontWeight: 400,
+        '&.Mui-active, &.Mui-completed': { fontWeight: 700 },
+      },
+    },
+  },
+  MuiDataGrid: {
+    styleOverrides: {
+      columnHeaderTitle: { fontWeight: 700 },
+    },
+  },
+  // ツールチップのカスタマイズ
+  MuiTooltip: {
+    styleOverrides: {
+      tooltip: ({ theme }: { theme: Theme }) => ({
+        fontSize: fontSizesVariant.md,
+        fontWeight: 400,
+        backgroundColor:
+          theme.palette.mode === 'dark'
+            ? theme.palette.grey[700]
+            : theme.palette.grey[900],
+        color:
+          theme.palette.mode === 'dark'
+            ? theme.palette.text.primary
+            : theme.palette.common.white,
+        borderRadius: 6,
+        padding: '8px 12px',
+        boxShadow: theme.shadows[elevation.popover],
+      }),
+      arrow: ({ theme }: { theme: Theme }) => ({
+        color:
+          theme.palette.mode === 'dark'
+            ? theme.palette.grey[700]
+            : theme.palette.grey[900],
+      }),
+    },
+  },
+  // ToggleButtonのダークモード対応
+  MuiToggleButton: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.text.primary,
+        borderColor: theme.palette.divider,
+        '&.Mui-selected': {
+          color: theme.palette.primary.contrastText,
+          backgroundColor: theme.palette.primary.main,
+          '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+          },
+        },
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+      }),
+    },
+  },
+  // ToggleButtonGroupのダークモード対応
+  MuiToggleButtonGroup: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '& .MuiToggleButtonGroup-grouped': {
+          borderColor: theme.palette.divider,
+        },
+      }),
+    },
+  },
+  // ListItemIconのダークモード対応
+  MuiListItemIcon: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.text.secondary,
+        minWidth: 40,
+      }),
+    },
+  },
+  // ListItemButtonのダークモード対応
+  MuiListItemButton: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+        '&.Mui-selected': {
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
+          '& .MuiListItemIcon-root': {
+            color: theme.palette.primary.contrastText,
+          },
+          '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+          },
+        },
+      }),
+    },
+  },
+  // Card - モダンでクリーンなスタイル
+  MuiCard: {
+    defaultProps: {
+      elevation: 0,
+    },
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: 12,
+        border: `1px solid ${theme.palette.divider}`,
+        // 影スケールが mode 別に生成されるため、ここでの light/dark 分岐は不要
+        boxShadow: theme.shadows[elevation.raised],
+        transition: motionOf(['box-shadow', 'border-color'], 'short'),
+        overflow: 'hidden',
+        '&:hover': {
+          boxShadow: theme.shadows[elevation.floating],
+          borderColor: theme.palette.divider,
+        },
+      }),
+    },
+  },
+  MuiCardHeader: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: '16px 20px',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        '& .MuiCardHeader-title': {
+          fontSize: fontSizesVariant.md,
+          fontWeight: 700,
+          color: theme.palette.text.primary,
+        },
+        '& .MuiCardHeader-subheader': {
+          fontSize: fontSizesVariant.sm,
+          color: theme.palette.text.secondary,
+          marginTop: 2,
+        },
+      }),
+    },
+  },
+  MuiCardContent: {
+    styleOverrides: {
+      root: {
+        padding: '20px',
+        '&:last-child': {
+          paddingBottom: '20px',
+        },
+      },
+    },
+  },
+  MuiCardActions: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: '12px 20px',
+        borderTop: `1px solid ${theme.palette.divider}`,
+        gap: 8,
+      }),
+    },
+  },
+  // Chip - kaze-ux準拠
+  MuiChip: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderRadius: 3,
+        fontWeight: 700,
+        fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+        height: 24,
+        '& .MuiChip-label': {
+          paddingLeft: 8,
+          paddingRight: 8,
+        },
+        // outlined Chip の色は MUI 既定 (text.primary 相当) で十分なため
+        // 強制しない。複合セレクタは sx より詳細度が高く、sx や
+        // StatusTag 側の色指定を握り潰してしまう (塗り面に白文字が残り 1.5:1)
+        '&.MuiChip-outlined': {
+          borderColor: theme.palette.divider,
+        },
+      }),
+      // MUI 既定の outlined Chip は文字色に main を使う。main は面のための
+      // 色なので、白地に置くと届かない (warning は 2.73:1)。
+      // 複合セレクタ (&.MuiChip-outlinedWarning) は sx より詳細度が高く
+      // 使う側の指定を握り潰すため、スロット単位で上書きする
+      outlinedPrimary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.primary.textContrast,
+      }),
+      outlinedSecondary: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.secondary.textContrast,
+      }),
+      outlinedSuccess: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.success.textContrast,
+      }),
+      outlinedError: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.error.textContrast,
+      }),
+      outlinedWarning: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.warning.textContrast,
+      }),
+      outlinedInfo: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.info.textContrast,
+      }),
+      sizeSmall: {
+        // 表示専用の Chip は密度を優先して 20 のまま（MUI 既定は 24）
+        height: 20,
+        fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+        '& .MuiChip-label': {
+          paddingLeft: 6,
+          paddingRight: 6,
+        },
+        // 押せる / 消せる Chip は操作対象なので WCAG 2.2 SC 2.5.8 の
+        // 24x24 が要る。拠り所なく 20 に縮めていたので MUI 既定へ戻す。
+        // 表示専用と分けることで、状態表示の見た目は変えずに済む
+        '&.MuiChip-clickable, &.MuiChip-deletable': {
+          height: 24,
+        },
+      },
+    },
+  },
+  // パンくずのリンク。
+  // ライブラリ既定では行の高さぶん（実測 22px）しかなく、WCAG 2.2 SC 2.5.8 の
+  // 24x24 を割る。文中のインラインリンクは同基準の例外だが、パンくずは
+  // ナビゲーションなので例外に当たらない。
+  // 高さだけを確保し、文字サイズと余白は既定のままにする
+  MuiBreadcrumbs: {
+    styleOverrides: {
+      // li スロットではなく ol に当てる。折りたたみ用の «…» ボタン
+      // (aria-label="Show path") は MuiBreadcrumbs-li が付かない素の <li> に
+      // 入るため、li スロットからは届かない（実測して気づいた）
+      ol: {
+        '& li > a, & li > button, & li > .MuiLink-root': {
+          display: 'inline-flex',
+          alignItems: 'center',
+          minHeight: 24,
+        },
+      },
+    },
+  },
+  // Stepper のステップ番号
+  MuiStepIcon: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        // 番号は既定で白。未到達ステップの円は MUI 7 では text.disabled
+        // なので、ライトでは 1.88:1 まで落ちる。円の色は MUI 既定のまま
+        // （控えめに見せる意図がある）、番号側を実測で決める。
+        // completed は CheckCircle を描くため .MuiStepIcon-text を持たない
+        '& .MuiStepIcon-text': {
+          fill: bestContrast(
+            theme.palette.mode === 'dark'
+              ? colorData.dark.text.disabled
+              : colorData.text.disabled,
+            ON_SURFACE_INKS
+          ),
+        },
+        '&.Mui-active .MuiStepIcon-text': {
+          fill: theme.palette.primary.contrastText,
+        },
+      }),
+    },
+  },
+  // Table - モダンでクリーンなスタイル
+  MuiTableContainer: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderRadius: 12,
+        border: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
+        // Container Queries対応: コンテナとして設定
+        containerType: 'inline-size',
+        // 横スクロールを常に許容
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        // スクロールバーのスタイリング
+        '&::-webkit-scrollbar': {
+          height: 6,
+        },
+        '&::-webkit-scrollbar-track': {
+          backgroundColor: theme.palette.action.hover,
+          borderRadius: 3,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: theme.palette.action.active,
+          borderRadius: 3,
+          '&:hover': {
+            backgroundColor: theme.palette.text.secondary,
+          },
+        },
+        // Container Query: tablet(768px)以下でテーブルに最小幅を設定し横スクロールを発生させる
+        '& .MuiTable-root': {
+          [`@container (max-width: ${breakpointValues.tablet}px)`]: {
+            minWidth: 800,
+          },
+        },
+      }),
+    },
+  },
+  MuiTableHead: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '& .MuiTableCell-head': {
+          backgroundColor: theme.palette.action.hover,
+          fontWeight: 700,
+          fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+          color: theme.palette.text.secondary,
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          padding: '12px 16px',
+          whiteSpace: 'nowrap',
+        },
+      }),
+    },
+  },
+  MuiTableBody: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '& .MuiTableRow-root': {
+          transition: motionOf(['background-color'], 'micro'),
+          '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+          },
+        },
+      }),
+    },
+  },
+  MuiTableCell: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        padding: '14px 16px',
+        fontSize: fontSizesVariant.sm,
+        color: theme.palette.text.primary,
+        verticalAlign: 'middle',
+      }),
+      sizeSmall: {
+        padding: '10px 12px',
+        fontSize: fontSizesVariant.sm, // 最小フォントサイズ12px原則に準拠
+      },
+    },
+  },
+  MuiTableRow: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '&:last-child td': {
+          borderBottom: 'none',
+        },
+        '&.Mui-selected': {
+          backgroundColor:
+            theme.palette.mode === 'light'
+              ? `${theme.palette.primary.main}08`
+              : `${theme.palette.primary.main}15`,
+          '&:hover': {
+            backgroundColor:
+              theme.palette.mode === 'light'
+                ? `${theme.palette.primary.main}12`
+                : `${theme.palette.primary.main}20`,
+          },
+        },
+      }),
+    },
+  },
+  MuiTablePagination: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderTop: `1px solid ${theme.palette.divider}`,
+        color: theme.palette.text.secondary,
+        fontSize: fontSizesVariant.sm,
+      }),
+      selectLabel: {
+        fontSize: fontSizesVariant.sm,
+      },
+      displayedRows: {
+        fontSize: fontSizesVariant.sm,
+      },
+    },
+  },
+  // Tab - kaze-ux準拠
+  MuiTabs: {
+    styleOverrides: {
+      root: {
+        minHeight: 40,
+      },
+      indicator: ({ theme }: { theme: Theme }) => ({
+        backgroundColor: theme.palette.primary.main,
+        height: 2,
+      }),
+    },
+  },
+  MuiTab: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        textTransform: 'none',
+        fontWeight: 400,
+        fontSize: fontSizesVariant.sm,
+        minHeight: 40,
+        padding: '8px 16px',
+        color: theme.palette.text.secondary,
+        '&.Mui-selected': {
+          color: theme.palette.primary.main,
+          fontWeight: 700,
+        },
+      }),
+    },
+  },
+  // Avatar - kaze-ux準拠
+  MuiAvatar: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        backgroundColor: theme.palette.primary.light,
+        // 面は primary.light。contrastText は primary.main 基準で測った値なので
+        // ここでは基準がずれる（白文字が 3.95:1 まで落ちていた）。
+        // light 面に対して実測した onLight を使う
+        color: theme.palette.primary.onLight,
+        fontWeight: 700,
+        fontSize: fontSizesVariant.sm,
+      }),
+    },
+  },
+  // Menu - kaze-ux準拠
+  MuiMenu: {
+    styleOverrides: {
+      paper: ({ theme }: { theme: Theme }) => ({
+        borderRadius: 6,
+        boxShadow: theme.shadows[elevation.overlay],
+        border: `1px solid ${theme.palette.divider}`,
+      }),
+    },
+  },
+  MuiMenuItem: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        fontSize: fontSizesVariant.sm,
+        padding: '8px 16px',
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+      }),
+    },
+  },
+  // IconButton
+  MuiIconButton: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderRadius: 8,
+        transition: motionOf(['background-color', 'color'], 'micro'),
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+      }),
+      sizeSmall: {
+        padding: 6,
+      },
+      sizeMedium: {
+        padding: 8,
+      },
+    },
+  },
+  // Dialog - モダンでクリーンなスタイル
+  MuiDialog: {
+    defaultProps: {
+      PaperProps: {
+        elevation: 0,
+      },
+    },
+    styleOverrides: {
+      paper: ({ theme }: { theme: Theme }) => ({
+        borderRadius: 16,
+        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: theme.shadows[elevation.modal],
+        backgroundColor: theme.palette.background.paper,
+        backgroundImage: 'none',
+        overflow: 'hidden',
+      }),
+      paperWidthSm: {
+        maxWidth: 440,
+      },
+      paperWidthMd: {
+        maxWidth: 600,
+      },
+      paperWidthLg: {
+        maxWidth: 900,
+      },
+    },
+  },
+  MuiDialogTitle: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: '20px 24px 16px',
+        fontSize: fontSizesVariant.lg,
+        fontWeight: 700,
+        color: theme.palette.text.primary,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+      }),
+    },
+  },
+  MuiDialogContent: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: '24px',
+        color: theme.palette.text.primary,
+        '&.MuiDialogContent-dividers': {
+          borderTop: `1px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+      }),
+    },
+  },
+  MuiDialogContentText: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        color: theme.palette.text.secondary,
+        fontSize: fontSizesVariant.sm,
+        lineHeight: 1.6,
+      }),
+    },
+  },
+  MuiDialogActions: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: '16px 24px 20px',
+        gap: 12,
+        borderTop: `1px solid ${theme.palette.divider}`,
+        '& > :not(:first-of-type)': {
+          marginLeft: 0,
+        },
+      }),
+    },
+  },
+  MuiBackdrop: {
+    styleOverrides: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        // backdropFilter は削除（ブラー不要の要望対応）
+      },
+    },
+  },
+  // Paper - モダンなスタイル
+  MuiPaper: {
+    defaultProps: {
+      elevation: 0,
+    },
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        backgroundImage: 'none',
+        backgroundColor: theme.palette.background.paper,
+      }),
+      rounded: {
+        borderRadius: 12,
+      },
+      outlined: ({ theme }: { theme: Theme }) => ({
+        border: `1px solid ${theme.palette.divider}`,
+      }),
+    },
+  },
+  // Divider
+  MuiDivider: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        borderColor: theme.palette.divider,
+      }),
+    },
+  },
+  // Alert - モダンなスタイル
+  MuiAlert: {
+    styleOverrides: {
+      root: {
+        borderRadius: 10,
+        padding: '12px 16px',
+        alignItems: 'center',
+        '& .MuiAlert-icon': {
+          marginRight: 12,
+          padding: 0,
+          opacity: 1,
+        },
+        '& .MuiAlert-message': {
+          padding: 0,
+          fontSize: fontSizesVariant.sm,
+        },
+        '& .MuiAlert-action': {
+          padding: 0,
+          marginRight: -4,
+        },
+      },
+      standardSuccess: ({ theme }: { theme: Theme }) => ({
+        backgroundColor:
+          theme.palette.mode === 'light'
+            ? theme.palette.success.lighter
+            : `${theme.palette.success.main}20`,
+        color: theme.palette.success.dark,
+        border: `1px solid ${theme.palette.success.light}`,
+      }),
+      standardError: ({ theme }: { theme: Theme }) => ({
+        backgroundColor:
+          theme.palette.mode === 'light'
+            ? theme.palette.error.lighter
+            : `${theme.palette.error.main}20`,
+        color: theme.palette.error.dark,
+        border: `1px solid ${theme.palette.error.light}`,
+      }),
+      standardWarning: ({ theme }: { theme: Theme }) => ({
+        backgroundColor:
+          theme.palette.mode === 'light'
+            ? theme.palette.warning.lighter
+            : `${theme.palette.warning.main}20`,
+        color: theme.palette.warning.dark,
+        border: `1px solid ${theme.palette.warning.light}`,
+      }),
+      standardInfo: ({ theme }: { theme: Theme }) => ({
+        backgroundColor:
+          theme.palette.mode === 'light'
+            ? theme.palette.info.lighter
+            : `${theme.palette.info.main}20`,
+        color: theme.palette.info.dark,
+        border: `1px solid ${theme.palette.info.light}`,
+      }),
+    },
+  },
+  // Skeleton - モダンなアニメーション
+  MuiSkeleton: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        backgroundColor: theme.palette.action.hover,
+      }),
+      rounded: {
+        borderRadius: 8,
+      },
+    },
+  },
+  // Switchのダークモード対応
+  MuiSwitch: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        '& .MuiSwitch-track': {
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[600]
+              : theme.palette.grey[400],
+        },
+      }),
+    },
+  },
+}
+
+/**
+ * colorSchemes 版テーマ専用のコンポーネント設定。
+ *
+ * theme.shadows はライト基準で固定されるため、ダークスキーム時の影を
+ * CssBaseline 側で上書きする。これが無いと CssVarsProvider を使う画面
+ * (saas-dashboard) だけダークのエレベーションが効かない。
+ */
+const cssVarsComponentStyles = {
+  ...componentStyles,
+  MuiCssBaseline: {
+    styleOverrides: {
+      ...componentStyles.MuiCssBaseline.styleOverrides,
+      // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
+      // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
+      ':root': {
+        ...createCssVars(createLightThemeColors('kaze')),
+        ...createMotionCssVars(),
+      },
+      '[data-mui-color-scheme="dark"], .dark': {
+        ...createDarkSchemeElevationOverrides()[
+          '[data-mui-color-scheme="dark"], .dark'
+        ],
+        ...createCssVars(createDarkThemeColors('dracula')),
+      },
+    },
+  },
+}
+
+// MUI 6のcolorSchemesを使用した統合テーマ
+const theme = createTheme({
+  ...commonThemeOptions,
+  // colorSchemes 版は shadows をスキーム別に持てないためライト基準。
+  // ダークは cssVarsComponentStyles の CssBaseline 上書きで補う
+  shadows: createShadows('light'),
+  defaultColorScheme: 'light',
+  colorSchemes: {
+    light: {
+      palette: {
+        mode: 'light',
+        ...colorData,
+        background: {
+          ...colorData.background,
+          default: colorData.background.default,
+          paper: colorData.background.paper,
+        },
+      },
+    },
+    dark: {
+      palette: {
+        mode: 'dark',
+        ...colorData.dark,
+        background: {
+          ...colorData.dark.background,
+          default: colorData.dark.background.default,
+          paper: colorData.dark.background.paper,
+        },
+      },
+    },
+  },
+  components: cssVarsComponentStyles as Components<
+    Omit<Theme, 'components' | 'palette'> & CssVarsTheme
+  >,
+})
+
+export interface BrandThemeOptions {
+  /** ライトスキームの色定義 */
+  light: ThemeColors
+  /** ダークスキームの色定義 */
+  dark: ThemeColors
+  /**
+   * palette に足すブランド固有スロット（例: logiOrange）。
+   * MUI の型拡張は各アプリ側の module augmentation で行う。
+   */
+  paletteExtras?: { light?: object; dark?: object }
+  /**
+   * createCssVars() が持たないアプリ固有の CSS 変数（例: --color-accent）。
+   * 生成済みの変数と同じ経路に載せることで、手打ちに戻らないようにする。
+   */
+  cssVars?: { light?: Record<string, string>; dark?: Record<string, string> }
+  /** アプリ固有のコンポーネント上書き。createTheme の deep merge で合流する */
+  components?: Components<Theme>
+}
+
+/**
+ * アプリのブランド色から colorSchemes 版テーマを生成する。
+ *
+ * 各アプリが lightTheme / darkTheme を spread して palette だけ差し替える形だと、
+ * Tailwind が参照する `--color-*` は付いてこないため index.css に手打ちされ、
+ * 同じ画面で MUI と Tailwind が別の色を指す状態になっていた
+ * (apps/sky-kaze の primary が MUI=青 / Tailwind=navy だった)。
+ *
+ * ここを通すと両方が同じ ThemeColors から生成されるため、構造的に食い違わない。
+ */
+export const createBrandTheme = ({
+  light,
+  dark,
+  paletteExtras,
+  cssVars,
+  components,
+}: BrandThemeOptions): Theme => {
+  const base = createTheme({
+    ...commonThemeOptions,
+    // colorSchemes 版は shadows をスキーム別に持てないためライト基準。
+    // ダークは下の CssBaseline 上書きで補う
+    shadows: createShadows('light'),
+    defaultColorScheme: 'light',
+    colorSchemes: {
+      light: { palette: { mode: 'light', ...light, ...paletteExtras?.light } },
+      dark: { palette: { mode: 'dark', ...dark, ...paletteExtras?.dark } },
+    },
+    components: {
+      ...componentStyles,
+      MuiCssBaseline: {
+        styleOverrides: {
+          ...componentStyles.MuiCssBaseline.styleOverrides,
+          // :root を先に、ダークスキームを後に出す。両者は同じ詳細度 (0,1,0)
+          // のため、順序が逆だとライトの変数が勝ってダークで白面が残る
+          ':root': {
+            ...createCssVars(light),
+            ...createMotionCssVars(),
+            ...cssVars?.light,
+          },
+          '[data-mui-color-scheme="dark"], .dark': {
+            ...createDarkSchemeElevationOverrides()[
+              '[data-mui-color-scheme="dark"], .dark'
+            ],
+            ...createCssVars(dark),
+            ...cssVars?.dark,
+          },
+        },
+      },
+    } as Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme>,
+  })
+
+  return components ? createTheme(base, { components }) : base
+}
+
+// 後方互換性のために従来のテーマも提供
+const lightThemeColors = createLightThemeColors('kaze')
+const lightTheme = createTheme({
+  ...commonThemeOptions,
+  shadows: createShadows('light'),
+  palette: {
+    mode: 'light',
+    ...colorData,
+    background: {
+      ...colorData.background,
+      default: colorData.background.default,
+      paper: colorData.background.paper,
+    },
+  } as PaletteOptions,
+  components: withCssVars(
+    componentStyles,
+    lightThemeColors
+  ) as Components<Theme>,
+})
+
+const darkThemeColors = createDarkThemeColors('dracula')
+const darkTheme = createTheme({
+  ...commonThemeOptions,
+  shadows: createShadows('dark'),
+  palette: {
+    mode: 'dark',
+    ...colorData.dark,
+    background: {
+      ...colorData.dark.background,
+      default: colorData.dark.background.default,
+      paper: colorData.dark.background.paper,
+    },
+  } as PaletteOptions,
+  components: withCssVars(
+    componentStyles,
+    darkThemeColors
+  ) as Components<Theme>,
+})
+
+export interface BrandModeThemeOptions {
+  /** palette に足すブランド固有スロット（例: keGreen） */
+  paletteExtras?: object
+  /** createCssVars() が持たないアプリ固有の CSS 変数 */
+  cssVars?: Record<string, string>
+  /** アプリ固有のコンポーネント上書き。createTheme の deep merge で合流する */
+  components?: Components<Theme>
+}
+
+/**
+ * 任意の ThemeColors から、単一モードの（palette を直に持つ）テーマを生成する。
+ *
+ * CssVarsProvider を使わず自前でモードを切り替えるアプリ（KazeEats）向け。
+ * createBrandTheme() との違いは colorSchemes を持つかどうかだけで、
+ * Tailwind が読む `--color-*` を同じ定義から生成する点は共通。
+ */
+export const createBrandModeTheme = (
+  colors: ThemeColors,
+  mode: 'light' | 'dark',
+  { paletteExtras, cssVars, components }: BrandModeThemeOptions = {}
+): Theme => {
+  const base = createTheme({
+    ...commonThemeOptions,
+    shadows: createShadows(mode),
+    palette: {
+      mode,
+      ...colors,
+      background: {
+        ...colors.background,
+        default: colors.background.default,
+        paper: colors.background.paper,
+      },
+      ...paletteExtras,
+    } as PaletteOptions,
+    components: {
+      ...withCssVars(componentStyles, colors),
+      ...(cssVars
+        ? {
+            MuiCssBaseline: {
+              styleOverrides: {
+                ...withCssVars(componentStyles, colors).MuiCssBaseline
+                  .styleOverrides,
+                ':root': {
+                  ...createCssVars(colors),
+                  ...createMotionCssVars(),
+                  ...cssVars,
+                },
+              },
+            },
+          }
+        : {}),
+    } as Components<Theme>,
+  })
+
+  return components ? createTheme(base, { components }) : base
+}
+
+/** 指定スキームでダークテーマを生成 */
+const createDarkTheme = (scheme?: DarkColorScheme): Theme =>
+  createBrandModeTheme(createDarkThemeColors(scheme), 'dark')
+
+/** 指定スキームでライトテーマを生成 */
+const createLightTheme = (scheme?: ColorScheme): Theme =>
+  createBrandModeTheme(createLightThemeColors(scheme), 'light')
+
+// Theme 型も明示的にエクスポート
+export type { AppTheme }
+
+export { theme, lightTheme, darkTheme, createDarkTheme, createLightTheme }

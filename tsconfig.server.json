@@ -1,0 +1,26 @@
+{
+  // api/ と lib/ の型検査。
+  //
+  // ルートの tsconfig は include が ["src"] で、api/ にも lib/ にも
+  // tsconfig が無かったため、**サーバー側 API キーを持つ唯一のコードが
+  // 型検査されていなかった**。ルートに足さないのは、あちらが配布する
+  // 型定義の生成（declaration / emitDeclarationOnly）に紐づいていて、
+  // サーバー側のコードを混ぜる場所ではないため。
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["api", "lib"]
+}
